@@ -69,28 +69,9 @@ export function ProjectCards() {
   ]
 
   useEffect(() => {
-    // Simulation de la récupération des données depuis Supabase
-    const fetchProjects = async () => {
-      try {
-        // TODO: Remplacer par l'appel Supabase réel
-        // const { data, error } = await supabase
-        //   .from('projects')
-        //   .select('*')
-        //   .order('created_at', { ascending: false })
-        //   .limit(3)
-
-        // Affichage immédiat des projets
-        setProjects(mockProjects)
-        setLoading(false)
-
-      } catch (error) {
-        console.error('Erreur lors de la récupération des projets:', error)
-        setProjects(mockProjects) // Fallback vers les données mock
-        setLoading(false)
-      }
-    }
-
-    fetchProjects()
+    // Affichage immédiat des projets
+    setProjects(mockProjects)
+    setLoading(false)
   }, [])
 
   const getStatusColor = (status: string) => {
@@ -157,13 +138,13 @@ export function ProjectCards() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {projects.map((project, index) => (
-          <div key={project.id} className={`animate-scaleIn animate-delay-${(index + 1) * 100}`}>
-            <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-700 hover:-translate-y-3 relative overflow-hidden backdrop-blur-sm">
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1200"></div>
+          <div key={project.id} className="animate-fadeInUp animate-delay-200">
+            <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 relative overflow-hidden">
+              {/* Shimmer effect - simplifié */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
               <div className="p-8 h-full flex flex-col relative z-10">
                 {/* Header */}

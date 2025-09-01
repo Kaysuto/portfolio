@@ -47,8 +47,8 @@ export function ProjectsSection() {
           </p>
         </div>
 
-        {/* Project Cards - Connected to Supabase */}
-        <div className="mb-32">
+        {/* Project Cards - Visible immédiatement */}
+        <div className="mb-20 animate-fadeInUp animate-delay-300">
           <ProjectCards />
         </div>
 
