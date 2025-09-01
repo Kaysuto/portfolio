@@ -144,4 +144,12 @@ const defaultTheme = {
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: { ...defaultTheme, ...theme },
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: false, // disable daisyui themes to use custom theme
+    darkTheme: "dark",
+    base: true,
+    styled: true,
+    utils: true,
+  },
 };
