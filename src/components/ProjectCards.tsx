@@ -21,7 +21,7 @@ interface Project {
 
 export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // Changé pour forcer l'affichage immédiat
 
   // Données temporaires en attendant la connexion Supabase
   const mockProjects: Project[] = [
@@ -69,7 +69,8 @@ export function ProjectCards() {
   ]
 
   useEffect(() => {
-    // Affichage immédiat des projets
+    // Affichage immédiat des projets - plus de délai
+    console.log('Chargement des projets...', mockProjects.length)
     setProjects(mockProjects)
     setLoading(false)
   }, [])
@@ -97,52 +98,18 @@ export function ProjectCards() {
     })
   }
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-8 h-96 bg-card border-2 border-border">
-            <div className="animate-pulse">
-              <div className="flex justify-between items-start mb-6">
-                <div className="space-y-3">
-                  <div className="h-6 bg-muted rounded-lg w-32"></div>
-                  <div className="h-5 bg-muted rounded-full w-20"></div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-muted rounded-full"></div>
-                  <div className="h-4 bg-muted rounded w-16"></div>
-                </div>
-              </div>
-              <div className="space-y-3 mb-8">
-                <div className="h-4 bg-muted rounded w-full"></div>
-                <div className="h-4 bg-muted rounded w-3/4"></div>
-                <div className="h-4 bg-muted rounded w-1/2"></div>
-              </div>
-              <div className="flex flex-wrap gap-2 mb-8">
-                {[1, 2, 3].map((j) => (
-                  <div key={j} className="h-8 bg-muted rounded-lg w-16"></div>
-                ))}
-              </div>
-              <div className="flex justify-between items-center pt-6 border-t border-border">
-                <div className="h-10 bg-muted rounded-lg w-32"></div>
-                <div className="flex space-x-4">
-                  <div className="h-6 bg-muted rounded w-8"></div>
-                  <div className="h-6 bg-muted rounded w-8"></div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-    )
+  // Force l'affichage des projets dès le chargement
+  if (!projects.length && !loading) {
+    setProjects(mockProjects)
   }
 
+  // Rendu direct des projets sans condition loading
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto animate-fadeInUp">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {projects.map((project, index) => (
-          <div key={project.id}>
-            <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 relative overflow-hidden">
+        {mockProjects.map((project, index) => (
+          <div key={project.id} className="animate-stagger" style={{animationDelay: `${index * 0.2}s`}}>
+            <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/20 transition-all duration-500 relative overflow-hidden hover:scale-105">
               <div className="p-8 h-full flex flex-col relative z-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">

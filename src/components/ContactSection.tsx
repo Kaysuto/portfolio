@@ -132,8 +132,8 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-20 px-6 bg-secondary/30">
-      <div className="max-w-4xl mx-auto">
+    <section id="contact" className="py-32 px-6 bg-secondary/30">
+      <div className="max-w-7xl mx-auto animate-fadeInUp">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
