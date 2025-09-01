@@ -75,8 +75,8 @@ export function ProjectsSection() {
         </div>
 
         {/* GitHub Stats */}
-        <div className="mb-16">
-          <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="mb-16 flex justify-center">
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">
                 Statistiques GitHub
