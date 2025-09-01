@@ -1,4 +1,4 @@
-import { EnvelopeSimple, LinkedinLogo, GithubLogo, TwitterLogo } from "@phosphor-icons/react"
+import { EnvelopeSimple, LinkedinLogo, GithubLogo } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
@@ -86,18 +86,6 @@ export function ContactSection() {
               onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
             >
               <LinkedinLogo 
-                size={18} 
-                className="text-muted-foreground group-hover:text-accent transition-colors duration-200" 
-              />
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-border hover:border-accent hover:bg-accent/10 group"
-              onClick={() => window.open("https://twitter.com/kimiya", "_blank")}
-            >
-              <TwitterLogo 
                 size={18} 
                 className="text-muted-foreground group-hover:text-accent transition-colors duration-200" 
               />
