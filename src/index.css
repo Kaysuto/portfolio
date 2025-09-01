@@ -9,34 +9,34 @@
 }
 
 :root {
-  /* Noisette Color Palette */
+  /* Refined Noisette Color Palette */
   --background: oklch(0.99 0.01 80);        /* #FFFEF9 - Fond principal */
-  --foreground: oklch(0.15 0.03 45);        /* Texte chocolat très foncé pour meilleur contraste */
+  --foreground: oklch(0.12 0.03 45);        /* #2D1F15 - Texte encore plus sombre pour meilleure lisibilité */
   
   --card: oklch(0.995 0.005 80);            /* #FEFCF9 - Blanc crème */
-  --card-foreground: oklch(0.15 0.03 45);   /* Texte chocolat très foncé pour meilleur contraste */
+  --card-foreground: oklch(0.12 0.03 45);   /* #2D1F15 - Texte encore plus sombre */
   
   --popover: oklch(0.98 0.01 80);           /* #F9F6F1 - Ivoire doux */
-  --popover-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
+  --popover-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
   
-  --primary: oklch(0.55 0.08 45);           /* #A0724B - Chocolat noisette raffiné */
+  --primary: oklch(0.48 0.09 45);           /* #8A5A3C - Chocolat plus riche et intense */
   --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
   
-  --secondary: oklch(0.92 0.02 80);         /* #F5E6D3 - Crème noisette claire */
-  --secondary-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
+  --secondary: oklch(0.88 0.025 60);        /* #E5D4C1 - Crème plus subtile */
+  --secondary-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
   
-  --muted: oklch(0.87 0.015 60);            /* #E8DDD0 - Beige noisette */
+  --muted: oklch(0.83 0.02 55);             /* #D8CCBF - Beige plus nuancé */
   --muted-foreground: oklch(0.35 0.02 50);  /* Texte muted plus foncé */
   
-  --accent: oklch(0.75 0.06 60);            /* #D4A574 - Noisette dorée */
-  --accent-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
+  --accent: oklch(0.68 0.07 55);            /* #B8956A - Plus profond et sophistiqué */
+  --accent-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
   
   --destructive: oklch(0.55 0.2 25);        /* #DC2626 - Rouge d'alerte */
   --destructive-foreground: oklch(0.99 0.01 80); /* Texte blanc sur rouge */
   
-  --border: oklch(0.82 0.02 60);            /* #E0D4C7 - Bordure noisette */
+  --border: oklch(0.78 0.025 55);           /* #CFC3B5 - Bordure plus contrastée */
   --input: oklch(0.94 0.01 70);             /* #F7F3ED - Crème input */
-  --ring: oklch(0.68 0.05 55);              /* #C4A882 - Focus noisette */
+  --ring: oklch(0.68 0.07 55);              /* Focus accent color */
   
   --radius: 0.75rem;
 }
@@ -52,8 +52,8 @@
   --popover: oklch(0.22 0.02 45);           /* Chocolat foncé pour popovers, plus clair */
   --popover-foreground: oklch(0.92 0.02 80); /* Crème claire */
   
-  --primary: oklch(0.75 0.06 60);           /* Noisette dorée plus claire */
-  --primary-foreground: oklch(0.12 0.02 45); /* Chocolat très foncé */
+  --primary: oklch(0.68 0.07 55);           /* Accent sophistiqué en mode sombre */
+  --primary-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
   
   --secondary: oklch(0.28 0.02 50);         /* Chocolat moyen plus clair */
   --secondary-foreground: oklch(0.92 0.02 80); /* Crème claire */
@@ -61,15 +61,15 @@
   --muted: oklch(0.30 0.02 50);             /* Chocolat-beige foncé plus clair */
   --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
   
-  --accent: oklch(0.75 0.06 60);            /* Noisette dorée */
-  --accent-foreground: oklch(0.12 0.02 45); /* Chocolat très foncé */
+  --accent: oklch(0.68 0.07 55);            /* Accent sophistiqué */
+  --accent-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
   
   --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
   --destructive-foreground: oklch(0.92 0.02 80); /* Crème claire */
   
   --border: oklch(0.35 0.02 50);            /* Bordure chocolat moyen plus clair */
   --input: oklch(0.32 0.02 50);             /* Input chocolat moyen plus clair */
-  --ring: oklch(0.68 0.05 55);              /* Focus noisette */
+  --ring: oklch(0.68 0.07 55);              /* Focus accent sophistiqué */
 }
 
 @theme {
