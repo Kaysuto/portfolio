@@ -5,6 +5,7 @@ import { ProjectsSection } from "@/components/ProjectsSection"
 import { ContactSection } from "@/components/ContactSection"
 import { Footer } from "@/components/Footer"
 import { FloatingParticles } from "@/components/FloatingParticles"
+import { Toaster } from "sonner"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         </main>
         <Footer />
       </div>
+      <Toaster />
     </div>
   )
 }

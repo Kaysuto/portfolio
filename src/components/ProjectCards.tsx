@@ -141,11 +141,8 @@ export function ProjectCards() {
     <div className="w-full max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {projects.map((project, index) => (
-          <div key={project.id} className="animate-fadeInUp animate-delay-200">
+          <div key={project.id}>
             <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 relative overflow-hidden">
-              {/* Shimmer effect - simplifié */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
               <div className="p-8 h-full flex flex-col relative z-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">

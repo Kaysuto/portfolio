@@ -135,7 +135,7 @@ export function ContactSection() {
     <section id="contact" className="py-20 px-6 bg-secondary/30">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16 animate-fadeInUp">
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Parlons de votre projet
           </h2>
@@ -147,7 +147,7 @@ export function ContactSection() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <div className="animate-slideInFromLeft">
+          <div>
             <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
               <div className="p-8">
                 <div className="flex items-center space-x-3 mb-6">
@@ -334,7 +334,7 @@ export function ContactSection() {
           </div>
 
           {/* Contact Info & Alternative Methods */}
-          <div className="space-y-6 animate-slideInFromRight">
+          <div className="space-y-6">
             {/* Direct Contact */}
             <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
               <div className="p-8">

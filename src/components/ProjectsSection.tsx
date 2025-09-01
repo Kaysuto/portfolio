@@ -39,7 +39,7 @@ export function ProjectsSection() {
     <section id="projets" className="py-32 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-20 animate-fadeInUp">
+        <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
@@ -48,12 +48,13 @@ export function ProjectsSection() {
         </div>
 
         {/* Project Cards - Visible immédiatement */}
-        <div className="mb-20 animate-fadeInUp animate-delay-300">
+        <div className="mb-20">
+          <h3 className="text-2xl font-bold text-foreground mb-8 text-center">Mes Projets Principaux</h3>
           <ProjectCards />
         </div>
 
         {/* GitHub Stats */}
-        <div className="flex justify-center animate-fadeInUp animate-delay-600">
+        <div className="flex justify-center">
           <div className="bg-card border-2 border-border rounded-3xl p-10 w-full max-w-2xl hover:shadow-xl hover:shadow-accent/15 transition-all duration-500 group hover:border-accent/50">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">Statistiques GitHub</h3>
@@ -107,7 +108,7 @@ export function ProjectsSection() {
         </div>
 
         {/* View More */}
-        <div className="text-center mt-20 animate-fadeInUp animate-delay-800">
+        <div className="text-center mt-20">
           <Button
             variant="outline"
             size="lg"
