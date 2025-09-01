@@ -157,7 +157,7 @@ export function ProjectsSection() {
                 href="https://github.com/Kaysuto"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-accent hover:text-accent/80 transition-all duration-300 hover:scale-105 font-medium"
+                className="flex items-center text-accent font-medium"
               >
                 <GithubLogo size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
                 @Kaysuto
