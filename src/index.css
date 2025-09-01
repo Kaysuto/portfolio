@@ -1,9 +1,14 @@
+/* Contournement Radix Select : forcer la scrollbar visible même quand le dropdown est ouvert */
+.radix-select-content-opened,
+body.radix-select-content-opened {
+  overflow-y: auto !important;
+}
 @import 'tailwindcss';
 @import "tw-animate-css";
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
@@ -72,6 +77,7 @@
   --ring: oklch(0.82 0.03 60);              /* Focus accent sophistiqué */
 }
 
+/* stylelint-disable at-rule-no-unknown */
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -130,6 +136,7 @@ html {
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -137,6 +144,7 @@ html {
 .line-clamp-4 {
   display: -webkit-box;
   -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

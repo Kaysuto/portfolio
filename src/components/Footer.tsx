@@ -35,7 +35,7 @@ export function Footer() {
                   const element = document.getElementById("accueil")
                   element?.scrollIntoView({ behavior: "smooth" })
                 }}
-                className="block text-muted-foreground hover:text-accent transition-colors duration-200 text-sm"
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
               >
                 Accueil
               </button>
@@ -44,7 +44,7 @@ export function Footer() {
                   const element = document.getElementById("apropos")
                   element?.scrollIntoView({ behavior: "smooth" })
                 }}
-                className="block text-muted-foreground hover:text-accent transition-colors duration-200 text-sm"
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
               >
                 À propos
               </button>
@@ -53,7 +53,7 @@ export function Footer() {
                   const element = document.getElementById("projets")
                   element?.scrollIntoView({ behavior: "smooth" })
                 }}
-                className="block text-muted-foreground hover:text-accent transition-colors duration-200 text-sm"
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
               >
                 Projets
               </button>
@@ -62,7 +62,7 @@ export function Footer() {
                   const element = document.getElementById("contact")
                   element?.scrollIntoView({ behavior: "smooth" })
                 }}
-                className="block text-muted-foreground hover:text-accent transition-colors duration-200 text-sm"
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
               >
                 Contact
               </button>
@@ -76,16 +76,16 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-2 hover:bg-accent/10"
+                className="p-2 hover:bg-accent/10 group"
                 onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
               >
-                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200 transform-gpu transition-transform group-hover:rotate-[18deg] group-hover:scale-110" />
+                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-all duration-200 transform-gpu group-hover:rotate-[18deg] group-hover:scale-110" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className="p-2 hover:bg-accent/10 group"
-                onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
+                onClick={() => window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank")}
               >
                 <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
               </Button>
@@ -115,7 +115,7 @@ export function Footer() {
         {/* Easter Egg */}
         <div className="mt-8 text-center animate-fadeInUp animate-delay-500">
           <p className="text-xs text-muted-foreground/60">
-            "Code is poetry, and every bug is just a verse waiting to be perfected."
+            « Le code est une poésie, et chaque bug n’est qu’un vers en attente d’être perfectionné. »
           </p>
         </div>
       </div>

@@ -56,6 +56,7 @@ export function HeroSection() {
             <Button 
               variant="outline"
               className="border-accent text-accent hover:bg-accent/10 px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              onClick={() => window.open('https://www.youtube.com/watch?v=LD8P8Mq3rVU', '_blank')}
             >
               <Download 
                 size={20} 
@@ -65,6 +66,19 @@ export function HeroSection() {
             </Button>
           </div>
         </div>
+      </div>
+      {/* Curseur animé bas */}
+      {/* Curseur souris animé bas */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
+        <span className="flex flex-col items-center">
+          <svg className="w-9 h-14 text-accent" viewBox="0 0 36 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="32" height="52" rx="16" stroke="currentColor" strokeWidth="3" fill="none" className="animate-mouse-outline"/>
+            <rect x="15" y="10" width="6" height="12" rx="3" fill="currentColor">
+              <animate attributeName="y" values="10;30;10" keyTimes="0;0.7;1" dur="1.4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.6;0.7;0.9;1" dur="1.4s" repeatCount="indefinite" />
+            </rect>
+          </svg>
+        </span>
       </div>
     </section>
   )

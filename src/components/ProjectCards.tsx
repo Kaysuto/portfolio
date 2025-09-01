@@ -149,10 +149,10 @@ export function ProjectCards() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px]"
+                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group"
                       onClick={() => window.open(project.demo_url, '_blank')}
                     >
-                      <ArrowSquareOut size={14} />
+                      <ArrowSquareOut size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                       <span>Demo</span>
                     </Button>
                   )}

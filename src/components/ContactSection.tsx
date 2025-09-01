@@ -212,7 +212,7 @@ export function ContactSection() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="company" className="text-sm font-medium text-foreground">
-                        Entreprise
+                        Entreprise <span className="text-muted-foreground text-xs">(facultatif)</span>
                       </Label>
                       <div className="relative">
                         <Buildings size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
@@ -222,6 +222,7 @@ export function ContactSection() {
                           onChange={(e) => handleInputChange("company", e.target.value)}
                           className="pl-10 focus:border-accent transition-all duration-200"
                           placeholder="Nom de votre entreprise"
+                          autoComplete="new-password"
                         />
                       </div>
                     </div>
@@ -247,7 +248,7 @@ export function ContactSection() {
                         Type de projet
                       </Label>
                       <Select value={formData.projectType} onValueChange={(value) => handleInputChange("projectType", value)}>
-                        <SelectTrigger className="focus:border-accent transition-all duration-200">
+                        <SelectTrigger className="transition-all duration-200">
                           <SelectValue placeholder="Sélectionnez un type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -305,7 +306,7 @@ export function ContactSection() {
                   <Button
                     type="submit"
                     disabled={isSubmitting || isSuccess}
-                    className={`w-full py-3 text-lg font-medium transition-all duration-300 ${
+                    className={`w-full py-3 text-lg font-medium transition-all duration-300 shadow-sm hover:shadow-lg hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group ${
                       isSuccess 
                         ? 'bg-green-500 hover:bg-green-500 text-white' 
                         : 'bg-accent hover:bg-accent/90 text-accent-foreground'
@@ -323,7 +324,7 @@ export function ContactSection() {
                       </>
                     ) : (
                       <>
-                        <PaperPlaneTilt size={20} className="mr-2" />
+                        <PaperPlaneTilt size={20} className="mr-2 group-hover:rotate-12 transition-transform duration-200" />
                         Envoyer le message
                       </>
                     )}
@@ -338,13 +339,14 @@ export function ContactSection() {
             {/* Direct Contact */}
             <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
               <div className="p-8">
-                <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6">
-                  <EnvelopeSimple size={32} className="text-accent" />
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <EnvelopeSimple size={20} className="text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-foreground">
+                    Contact direct
+                  </h3>
                 </div>
-                
-                <h3 className="text-2xl font-semibold text-foreground mb-4">
-                  Contact direct
-                </h3>
                 
                 <p className="text-muted-foreground mb-6 leading-relaxed">
                   Vous préférez m'écrire directement ? Pas de problème !
@@ -360,75 +362,45 @@ export function ContactSection() {
                   <Button
                     onClick={handleEmailClick}
                     variant="outline"
-                    className="w-full border-accent hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                    className="w-full py-3 text-lg font-medium transition-all duration-300 shadow-sm hover:shadow-lg hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group"
+                    style={{
+                      backgroundColor: typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? '#D3C0B1' : '#C39B81',
+                      color: typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? '#2A1F1A' : '#080000',
+                    }}
                   >
-                    <EnvelopeSimple size={18} className="mr-2" />
+                    <EnvelopeSimple size={18} className="mr-2 group-hover:animate-bounce" />
                     Ouvrir dans votre client email
                   </Button>
                 </div>
               </div>
             </Card>
 
-            {/* Social Links */}
-            <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
-              <div className="p-8">
-                <h3 className="text-xl font-semibold text-foreground mb-4">
-                  Réseaux
-                </h3>
-                
-                <div className="flex space-x-3">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="flex-1 border-border hover:border-accent hover:bg-accent/10 group"
-                    onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
-                  >
-                    <GithubLogo 
-                      size={20} 
-                      className="text-muted-foreground group-hover:text-accent transition-colors duration-200" 
-                    />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="flex-1 border-border hover:border-accent hover:bg-accent/10 group"
-                    onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
-                  >
-                    <LinkedinLogo 
-                      size={20} 
-                      className="text-muted-foreground group-hover:text-accent transition-colors duration-200" 
-                    />
-                  </Button>
-                </div>
-              </div>
-            </Card>
 
             {/* Availability Status */}
-            <Card className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+            <Card className="bg-green-600/60 dark:bg-green-800/60 border border-green-700 shadow-xl">
               <div className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="font-semibold text-green-800 dark:text-green-200">
+                  <span className="font-semibold text-white dark:text-green-200">
                     Disponible pour de nouveaux projets
                   </span>
                 </div>
-                <p className="text-green-700 dark:text-green-300 text-sm">
+                <p className="text-white dark:text-green-300 text-sm">
                   Je suis actuellement ouvert à de nouvelles opportunités et collaborations passionnantes.
                 </p>
               </div>
             </Card>
 
             {/* Response Time */}
-            <Card className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+            <Card className="bg-blue-600/60 dark:bg-blue-800/60 border border-blue-700 shadow-xl">
               <div className="p-6">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="font-semibold text-blue-800 dark:text-blue-200">
+                  <span className="font-semibold text-white dark:text-blue-200">
                     Réponse sous 24h
                   </span>
                 </div>
-                <p className="text-blue-700 dark:text-blue-300 text-sm">
+                <p className="text-white dark:text-blue-300 text-sm">
                   Je m'engage à répondre à tous les messages dans les 24 heures ouvrables.
                 </p>
               </div>

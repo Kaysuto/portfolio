@@ -9,7 +9,21 @@ import { cn } from "@/lib/utils"
 function Select({
   ...props
 }: ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot="select" {...props} />
+  // Ajout d'un effet pour la classe body radix-select-content-opened
+  return (
+    <SelectPrimitive.Root
+      data-slot="select"
+      onOpenChange={(open: boolean) => {
+        if (open) {
+          document.body.classList.add('radix-select-content-opened')
+        } else {
+          document.body.classList.remove('radix-select-content-opened')
+        }
+        if (props.onOpenChange) props.onOpenChange(open)
+      }}
+      {...props}
+    />
+  )
 }
 
 function SelectGroup({
@@ -55,7 +69,7 @@ function SelectContent({
   children,
   position = "popper",
   ...props
-}: ComponentProps<typeof SelectPrimitive.Content>) {
+}: ComponentProps<typeof SelectPrimitive.Content> & { children: React.ReactNode; position?: "popper" | "item-aligned" }) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
