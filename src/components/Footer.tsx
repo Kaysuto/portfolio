@@ -1,4 +1,4 @@
-import { Code, Heart, GithubLogo, LinkedinLogo, TwitterLogo } from "@phosphor-icons/react"
+import { Code, Heart, GithubLogo, LinkedinLogo } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 
 export function Footer() {
@@ -88,14 +88,6 @@ export function Footer() {
                 onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
               >
                 <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 hover:bg-accent/10"
-                onClick={() => window.open("https://twitter.com/kimiya", "_blank")}
-              >
-                <TwitterLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
               </Button>
             </div>
           </div>
