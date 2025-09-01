@@ -97,7 +97,7 @@ export function Footer() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <span>© {currentYear} Kimiya. Made with</span>
+              <span>© {currentYear} Kimiya. Fait avec</span>
               <Heart size={14} className="text-accent" />
               <span>et beaucoup de café ☕</span>
             </div>
