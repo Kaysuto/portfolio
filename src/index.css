@@ -19,7 +19,7 @@
   --popover: oklch(0.98 0.01 80);           /* #F9F6F1 - Ivoire doux */
   --popover-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
   
-  --primary: oklch(0.48 0.09 45);           /* #8A5A3C - Chocolat plus riche et intense */
+  --primary: oklch(0.42 0.10 42);           /* #7A4F32 - Chocolat encore plus foncé et intense */
   --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
   
   --secondary: oklch(0.88 0.025 60);        /* #E5D4C1 - Crème plus subtile */
