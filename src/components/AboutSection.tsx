@@ -1,4 +1,4 @@
-import { Brain, Code, Heart, Server } from "@phosphor-icons/react"
+import { Brain, Code, Heart } from "@phosphor-icons/react"
 
 export function AboutSection() {
   return (
@@ -54,7 +54,8 @@ export function AboutSection() {
             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-1 group">
               <div className="flex items-start space-x-4">
                 <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                  <Server size={24} className="text-accent group-hover:animate-pulse" />
+                  {/* Remplacer Server par Code ou une autre icône existante */}
+                  <Code size={24} className="text-accent group-hover:animate-pulse" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">

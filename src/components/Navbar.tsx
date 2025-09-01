@@ -1,10 +1,9 @@
 import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { useKV } from "@github/spark/hooks"
 import { useEffect, useState } from "react"
 
 export function Navbar() {
-  const [isDark, setIsDark, deleteTheme] = useKV("theme-dark", false)
+  const [isDark, setIsDark] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { useKV } from "@github/spark/hooks"
+// ...existing code...
 
 interface FormData {
   name: string
@@ -41,7 +41,7 @@ export function ContactSection() {
   const [isSuccess, setIsSuccess] = useState(false)
   
   // Store submitted messages for later review
-  const [messages, setMessages] = useKV("contact-messages", [])
+  const [messages, setMessages] = useState<any[]>([])
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)

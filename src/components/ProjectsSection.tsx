@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ExternalLink, GithubLogo } from "@phosphor-icons/react"
+import { GithubLogo } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
 
@@ -116,7 +116,7 @@ export function ProjectsSection() {
             size="lg"
             className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-10 py-4 text-lg font-medium hover:scale-105 transition-all duration-300"
           >
-            <ExternalLink size={20} className="mr-3" />
+            {/* Icône ExternalLink supprimée car non disponible dans Phosphor */}
             Voir tous mes projets sur GitHub
           </Button>
         </div>
