@@ -57,49 +57,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Skills Icons */}
-        <div className="animate-fadeInUp animate-delay-400">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-            {/* Frontend */}
-            <div className="group cursor-default">
-              <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-accent/20 transition-colors duration-300">
-                  <div className="w-6 h-6 bg-accent/20 rounded-md"></div>
-                </div>
-                <h3 className="font-semibold text-lg mb-2 text-foreground">Frontend</h3>
-                <p className="text-muted-foreground text-sm">
-                  React, Vue.js, TypeScript
-                </p>
-              </div>
-            </div>
 
-            {/* Backend */}
-            <div className="group cursor-default">
-              <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-accent/20 transition-colors duration-300">
-                  <div className="w-6 h-6 bg-accent/30 rounded-full"></div>
-                </div>
-                <h3 className="font-semibold text-lg mb-2 text-foreground">Backend</h3>
-                <p className="text-muted-foreground text-sm">
-                  PHP, Node.js, MySQL
-                </p>
-              </div>
-            </div>
-
-            {/* Design */}
-            <div className="group cursor-default">
-              <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:bg-accent/20 transition-colors duration-300">
-                  <div className="w-6 h-6 bg-accent/40 rounded-lg rotate-12"></div>
-                </div>
-                <h3 className="font-semibold text-lg mb-2 text-foreground">Design</h3>
-                <p className="text-muted-foreground text-sm">
-                  UI/UX, Design System, Responsive
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
