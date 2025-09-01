@@ -23,6 +23,8 @@ export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(false) // Changé pour forcer l'affichage immédiat
 
+  console.log('ProjectCards component rendered, projects:', projects.length)
+
   // Données temporaires en attendant la connexion Supabase
   const mockProjects: Project[] = [
     {
@@ -98,17 +100,15 @@ export function ProjectCards() {
     })
   }
 
-  // Force l'affichage des projets dès le chargement
-  if (!projects.length && !loading) {
-    setProjects(mockProjects)
-  }
+  // Always render projects
+  const projectsToRender = projects.length > 0 ? projects : mockProjects
 
-  // Rendu direct des projets sans condition loading
   return (
-    <div className="w-full max-w-7xl mx-auto animate-fadeInUp">
+    <div className="w-full max-w-7xl mx-auto" style={{minHeight: '500px', border: '2px solid red', padding: '20px'}}>
+      <p style={{color: 'red', fontSize: '18px', fontWeight: 'bold'}}>DEBUG: ProjectCards container - {projectsToRender.length} projects</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {mockProjects.map((project, index) => (
-          <div key={project.id} className="animate-stagger" style={{animationDelay: `${index * 0.2}s`}}>
+        {projectsToRender.map((project, index) => (
+          <div key={project.id} className=""
             <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/20 transition-all duration-500 relative overflow-hidden hover:scale-105">
               <div className="p-8 h-full flex flex-col relative z-10">
                 {/* Header */}

@@ -26,6 +26,7 @@ interface FormErrors {
 }
 
 export function ContactSection() {
+  console.log('ContactSection rendered')
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -133,7 +134,7 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="py-32 px-6 bg-secondary/30">
-      <div className="max-w-7xl mx-auto animate-fadeInUp">
+      <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -145,7 +146,8 @@ export function ContactSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8" style={{border: '2px solid blue', padding: '20px'}}>
+          <p style={{color: 'blue', fontSize: '18px', fontWeight: 'bold', gridColumn: '1 / -1'}}>DEBUG: ContactForm container</p>
           {/* Contact Form */}
           <div>
             <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
