@@ -47,12 +47,10 @@ export function ProjectsSection() {
           </p>
         </div>
 
-        {/* Project Cards - Section mise en évidence */}
-        <div className="mb-20 bg-accent/5 rounded-3xl p-12 border-2 border-accent/20">
-          <h3 className="text-3xl font-bold text-foreground mb-10 text-center">Mes Projets Principaux</h3>
-          <div className="min-h-96">
-            <ProjectCards />
-          </div>
+
+        {/* Project Cards - affichage direct */}
+        <div className="mb-20">
+          <ProjectCards />
         </div>
 
         {/* GitHub Stats */}

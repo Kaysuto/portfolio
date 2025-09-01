@@ -79,12 +79,12 @@ export function Footer() {
                 className="p-2 hover:bg-accent/10"
                 onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
               >
-                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200 transform-gpu transition-transform group-hover:rotate-[18deg] group-hover:scale-110" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-2 hover:bg-accent/10"
+                className="p-2 hover:bg-accent/10 group"
                 onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
               >
                 <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />

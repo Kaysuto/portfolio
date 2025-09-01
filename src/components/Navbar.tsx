@@ -1,11 +1,15 @@
+
 import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
+
 
 export function Navbar() {
   const [isDark, setIsDark] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState<string>("accueil")
 
   useEffect(() => {
     if (isDark) {
@@ -15,28 +19,50 @@ export function Navbar() {
     }
   }, [isDark])
 
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
+      // Détection de la section active
+      const sections = [
+        { id: "accueil" },
+        { id: "apropos" },
+        { id: "projets" },
+        { id: "contact" },
+      ]
+      let found = "accueil"
+      for (const section of sections) {
+        const el = document.getElementById(section.id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= 80 && rect.bottom > 80) {
+            found = section.id
+            break
+          }
+        }
+      }
+      setActiveSection(found)
     }
     window.addEventListener('scroll', handleScroll)
+    handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
-    // Close mobile menu after clicking
     setIsMobileMenuOpen(false)
+    setActiveSection(sectionId)
   }
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 animate-fadeIn ${
-      isScrolled 
-        ? 'bg-background/95 backdrop-blur-md shadow-lg shadow-accent/5 border-b border-border/50' 
-        : 'bg-background/80 backdrop-blur-sm border-b border-border'
+      isScrolled
+        ? 'bg-background/95 backdrop-blur-md shadow-lg shadow-accent/5 border-b border-border/50'
+        : 'bg-transparent backdrop-blur-0 border-none shadow-none'
     }`}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
@@ -52,22 +78,31 @@ export function Navbar() {
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8 animate-fadeIn animate-delay-200">
+          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200">
             {[
               { id: "accueil", label: "Accueil" },
               { id: "apropos", label: "À propos" },
               { id: "projets", label: "Projets" },
               { id: "contact", label: "Contact" }
             ].map((item, index) => (
-              <button
+              <Button
                 key={item.id}
+                variant={activeSection === item.id ? "default" : "ghost"}
+                size="sm"
                 onClick={() => scrollToSection(item.id)}
-                className="text-muted-foreground hover:text-accent transition-all duration-300 relative group animate-fadeInUp"
+                className={cn(
+                  "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                  activeSection === item.id
+                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    : "hover:bg-accent/10 hover:text-accent"
+                )}
                 style={{ animationDelay: `${(index + 3) * 0.1}s` }}
               >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
-              </button>
+                <span className="z-10">{item.label}</span>
+                {activeSection === item.id && (
+                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
+                )}
+              </Button>
             ))}
           </div>
 
@@ -122,15 +157,24 @@ export function Navbar() {
               { id: "projets", label: "Projets" },
               { id: "contact", label: "Contact" }
             ].map((item, index) => (
-              <button
+              <Button
                 key={item.id}
+                variant={activeSection === item.id ? "default" : "ghost"}
+                size="sm"
                 onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left py-2 text-muted-foreground hover:text-accent hover:translate-x-2 transition-all duration-300 animate-stagger ${
-                  isMobileMenuOpen ? 'animate-delay-' + ((index + 1) * 100) : ''
-                }`}
+                className={cn(
+                  "w-full text-left px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                  activeSection === item.id
+                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    : "hover:bg-accent/10 hover:text-accent"
+                )}
+                style={{ animationDelay: isMobileMenuOpen ? `${(index + 1) * 0.1}s` : undefined }}
               >
-                {item.label}
-              </button>
+                <span className="z-10">{item.label}</span>
+                {activeSection === item.id && (
+                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
+                )}
+              </Button>
             ))}
           </div>
         </div>
