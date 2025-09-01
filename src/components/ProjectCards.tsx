@@ -79,11 +79,9 @@ export function ProjectCards() {
         //   .order('created_at', { ascending: false })
         //   .limit(3)
 
-        // Simulation d'un délai d'API
-        setTimeout(() => {
-          setProjects(mockProjects)
-          setLoading(false)
-        }, 1000)
+        // Affichage immédiat des projets
+        setProjects(mockProjects)
+        setLoading(false)
 
       } catch (error) {
         console.error('Erreur lors de la récupération des projets:', error)
@@ -159,105 +157,107 @@ export function ProjectCards() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-      {projects.map((project, index) => (
-        <div key={project.id} className={`animate-scaleIn animate-delay-${(index + 1) * 100}`}>
-          <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-700 hover:-translate-y-3 relative overflow-hidden backdrop-blur-sm">
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1200"></div>
-            
-            <div className="p-8 h-full flex flex-col relative z-10">
-              {/* Header */}
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <div className="flex items-center gap-3 mb-2">
-                    <Badge 
-                      variant="secondary" 
-                      className="bg-accent/15 text-accent border-accent/30 text-sm font-medium group-hover:bg-accent/25 transition-colors duration-300 px-3 py-1"
-                    >
-                      {project.type}
-                    </Badge>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <Calendar size={14} className="mr-1" />
-                      {formatDate(project.created_at)}
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {projects.map((project, index) => (
+          <div key={project.id} className={`animate-scaleIn animate-delay-${(index + 1) * 100}`}>
+            <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-700 hover:-translate-y-3 relative overflow-hidden backdrop-blur-sm">
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1200"></div>
+              
+              <div className="p-8 h-full flex flex-col relative z-10">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Badge 
+                        variant="secondary" 
+                        className="bg-accent/15 text-accent border-accent/30 text-sm font-medium group-hover:bg-accent/25 transition-colors duration-300 px-3 py-1"
+                      >
+                        {project.type}
+                      </Badge>
+                      <div className="flex items-center text-muted-foreground text-sm">
+                        <Calendar size={14} className="mr-1" />
+                        {formatDate(project.created_at)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full animate-pulse ${getStatusColor(project.status)}`}></div>
+                    <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">
+                      {project.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <p className="text-muted-foreground leading-relaxed mb-8 flex-grow group-hover:text-foreground/80 transition-colors duration-300 line-clamp-4">
+                  {project.description}
+                </p>
+
+                {/* Tech Stack */}
+                <div className="mb-8">
+                  <div className="flex items-center mb-3">
+                    <Code size={16} className="mr-2 text-accent" />
+                    <span className="text-sm font-medium text-muted-foreground">Technologies</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech_stack.map((tech) => (
+                      <span 
+                        key={tech} 
+                        className="px-3 py-1.5 bg-muted/70 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent/20 hover:text-accent transition-all duration-200 cursor-default border border-transparent hover:border-accent/30"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-6 border-t border-border group-hover:border-accent/50 transition-colors duration-300 mt-auto">
+                  <div className="flex gap-2">
+                    {project.demo_url && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 group/btn font-medium"
+                        onClick={() => window.open(project.demo_url, '_blank')}
+                      >
+                        <ExternalLink size={16} className="mr-2 group-hover/btn:translate-x-0.5 transition-transform duration-200" />
+                        Demo
+                      </Button>
+                    )}
+                    {project.github_url && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-accent/30 text-accent hover:bg-accent/10 hover:border-accent px-4 py-2 group/btn font-medium"
+                        onClick={() => window.open(project.github_url, '_blank')}
+                      >
+                        <Code size={16} className="mr-2 group-hover/btn:scale-110 transition-transform duration-200" />
+                        Code
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-4 text-muted-foreground">
+                    <div className="flex items-center space-x-1.5 hover:text-accent transition-colors duration-200">
+                      <Star size={16} />
+                      <span className="text-sm font-medium">{project.stars}</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5 hover:text-accent transition-colors duration-200">
+                      <GitBranch size={16} />
+                      <span className="text-sm font-medium">{project.forks}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full animate-pulse ${getStatusColor(project.status)}`}></div>
-                  <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">
-                    {project.status}
-                  </span>
-                </div>
               </div>
-
-              {/* Description */}
-              <p className="text-muted-foreground leading-relaxed mb-8 flex-grow group-hover:text-foreground/80 transition-colors duration-300 line-clamp-4">
-                {project.description}
-              </p>
-
-              {/* Tech Stack */}
-              <div className="mb-8">
-                <div className="flex items-center mb-3">
-                  <Code size={16} className="mr-2 text-accent" />
-                  <span className="text-sm font-medium text-muted-foreground">Technologies</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {project.tech_stack.map((tech) => (
-                    <span 
-                      key={tech} 
-                      className="px-3 py-1.5 bg-muted/70 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent/20 hover:text-accent transition-all duration-200 cursor-default border border-transparent hover:border-accent/30"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-6 border-t border-border group-hover:border-accent/50 transition-colors duration-300 mt-auto">
-                <div className="flex gap-2">
-                  {project.demo_url && (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 group/btn font-medium"
-                      onClick={() => window.open(project.demo_url, '_blank')}
-                    >
-                      <ExternalLink size={16} className="mr-2 group-hover/btn:translate-x-0.5 transition-transform duration-200" />
-                      Demo
-                    </Button>
-                  )}
-                  {project.github_url && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-accent/30 text-accent hover:bg-accent/10 hover:border-accent px-4 py-2 group/btn font-medium"
-                      onClick={() => window.open(project.github_url, '_blank')}
-                    >
-                      <Code size={16} className="mr-2 group-hover/btn:scale-110 transition-transform duration-200" />
-                      Code
-                    </Button>
-                  )}
-                </div>
-                <div className="flex items-center space-x-4 text-muted-foreground">
-                  <div className="flex items-center space-x-1.5 hover:text-accent transition-colors duration-200">
-                    <Star size={16} />
-                    <span className="text-sm font-medium">{project.stars}</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5 hover:text-accent transition-colors duration-200">
-                    <GitBranch size={16} />
-                    <span className="text-sm font-medium">{project.forks}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      ))}
+            </Card>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

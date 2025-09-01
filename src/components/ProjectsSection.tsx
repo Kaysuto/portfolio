@@ -37,7 +37,7 @@ export function ProjectsSection() {
 
   return (
     <section id="projets" className="py-32 px-6 lg:px-12">
-      <div className="max-w-8xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-20 animate-fadeInUp">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
