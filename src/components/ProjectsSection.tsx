@@ -61,21 +61,21 @@ export function ProjectsSection() {
   ]
 
   return (
-    <section id="projets" className="py-20 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="projets" className="py-24 px-4 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Mes Projets
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
             d'expériences numériques innovantes et performantes.
           </p>
         </div>
 
         {/* Featured Projects */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {projects.map((project, index) => (
             <div key={project.title} className={`animate-stagger animate-delay-${(index + 1) * 100}`}>
               <Card className="group h-full bg-card border border-border hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-2 animate-card-hover relative overflow-hidden">
@@ -151,8 +151,8 @@ export function ProjectsSection() {
         </div>
 
         {/* GitHub Stats */}
-        <div className="flex justify-center animate-fadeInUp">
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300 group">
+        <div className="flex justify-center animate-fadeInUp mt-16">
+          <div className="bg-card border border-border rounded-2xl p-8 w-full max-w-xl hover:shadow-lg hover:shadow-accent/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
                 Statistiques GitHub
@@ -207,11 +207,11 @@ export function ProjectsSection() {
         </div>
 
         {/* View More */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-16">
           <Button
             variant="outline"
             size="lg"
-            className="border-accent text-accent hover:bg-accent/10"
+            className="border-accent text-accent hover:bg-accent/10 px-8 py-4"
           >
             <ExternalLink size={18} className="mr-2" />
             Voir tous mes projets sur GitHub
