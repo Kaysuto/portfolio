@@ -9,34 +9,34 @@
 }
 
 :root {
-  /* Refined Noisette Color Palette */
-  --background: oklch(0.99 0.01 80);        /* #FFFEF9 - Fond principal */
-  --foreground: oklch(0.12 0.03 45);        /* #2D1F15 - Texte encore plus sombre pour meilleure lisibilité */
+  /* Refined Noisette Color Palette - Couleurs renforcées */
+  --background: oklch(0.98 0.015 80);       /* #F9F6F0 - Fond principal plus contrasté */
+  --foreground: oklch(0.08 0.04 45);        /* #1A0F08 - Texte très sombre et fort */
   
-  --card: oklch(0.995 0.005 80);            /* #FEFCF9 - Blanc crème */
-  --card-foreground: oklch(0.12 0.03 45);   /* #2D1F15 - Texte encore plus sombre */
+  --card: oklch(0.99 0.01 80);              /* #FEFCF9 - Blanc crème */
+  --card-foreground: oklch(0.08 0.04 45);   /* #1A0F08 - Texte très sombre */
   
-  --popover: oklch(0.98 0.01 80);           /* #F9F6F1 - Ivoire doux */
-  --popover-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
+  --popover: oklch(0.96 0.02 80);           /* #F5F0E8 - Ivoire plus marqué */
+  --popover-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
   
-  --primary: oklch(0.42 0.10 42);           /* #7A4F32 - Chocolat encore plus foncé et intense */
+  --primary: oklch(0.35 0.12 42);           /* #5D3A25 - Chocolat très foncé et riche */
   --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
   
-  --secondary: oklch(0.88 0.025 60);        /* #E5D4C1 - Crème plus subtile */
-  --secondary-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
+  --secondary: oklch(0.82 0.05 60);         /* #D4BE9F - Crème plus marquée */
+  --secondary-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
   
-  --muted: oklch(0.83 0.02 55);             /* #D8CCBF - Beige plus nuancé */
-  --muted-foreground: oklch(0.35 0.02 50);  /* Texte muted plus foncé */
+  --muted: oklch(0.76 0.04 55);             /* #C4B5A3 - Beige plus intense */
+  --muted-foreground: oklch(0.25 0.03 50);  /* Texte muted plus contrasté */
   
-  --accent: oklch(0.82 0.03 60);            /* #dec1a9 - Accent clair et doux */
-  --accent-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
+  --accent: oklch(0.72 0.06 55);            /* #B8956A - Accent plus profond et visible */
+  --accent-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
   
-  --destructive: oklch(0.55 0.2 25);        /* #DC2626 - Rouge d'alerte */
-  --destructive-foreground: oklch(0.99 0.01 80); /* Texte blanc sur rouge */
+  --destructive: oklch(0.50 0.25 25);       /* #C41E3A - Rouge plus intense */
+  --destructive-foreground: oklch(0.98 0.01 80); /* Texte blanc sur rouge */
   
-  --border: oklch(0.78 0.025 55);           /* #CFC3B5 - Bordure plus contrastée */
-  --input: oklch(0.94 0.01 70);             /* #F7F3ED - Crème input */
-  --ring: oklch(0.82 0.03 60);              /* Focus accent color */
+  --border: oklch(0.70 0.04 55);            /* #B3A28F - Bordure plus forte */
+  --input: oklch(0.90 0.02 70);             /* #EDE6D8 - Input plus contrasté */
+  --ring: oklch(0.72 0.06 55);              /* Focus accent renforcé */
   
   --radius: 0.75rem;
 }
