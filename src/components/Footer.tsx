@@ -1,4 +1,4 @@
-import { Code, Heart, GithubLogo, LinkedinLogo } from "@phosphor-icons/react"
+import { Code, GithubLogo, LinkedinLogo } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 
 export function Footer() {
@@ -98,7 +98,7 @@ export function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span>© {currentYear} Kimiya. Fait avec</span>
-              <Heart size={14} className="text-accent" />
+              <span className="text-accent">❤️</span>
               <span>et beaucoup de café ☕</span>
             </div>
             
