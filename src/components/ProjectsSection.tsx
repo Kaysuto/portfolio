@@ -65,9 +65,7 @@ export function ProjectsSection() {
       <div className="max-w-8xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Mes Projets
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
             d'expériences numériques innovantes et performantes.
@@ -154,9 +152,7 @@ export function ProjectsSection() {
         <div className="flex justify-center animate-fadeInUp mt-20">
           <div className="bg-card border-2 border-border rounded-3xl p-10 w-full max-w-2xl hover:shadow-xl hover:shadow-accent/15 transition-all duration-500 group hover:border-accent/50">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">
-                Statistiques GitHub
-              </h3>
+              <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">Statistiques GitHub</h3>
               <a
                 href="https://github.com/Kaysuto"
                 target="_blank"
@@ -219,5 +215,5 @@ export function ProjectsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
