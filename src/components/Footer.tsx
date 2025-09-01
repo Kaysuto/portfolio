@@ -99,7 +99,7 @@ export function Footer() {
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span>© {currentYear} Kimiya. Made with</span>
               <Heart size={14} className="text-accent" />
-              <span>and lots of coffee ☕</span>
+              <span>et beaucoup de café ☕</span>
             </div>
             
             <div className="flex items-center space-x-6 text-xs text-muted-foreground">
@@ -120,5 +120,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
