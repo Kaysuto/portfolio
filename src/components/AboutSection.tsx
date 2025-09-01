@@ -35,19 +35,15 @@ export function AboutSection() {
               </p>
             </div>
 
-            {/* Age & Location */}
+            {/* Age & Experience */}
             <div className="flex items-center space-x-8 pt-4">
               <div className="group cursor-default">
                 <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">23</span>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans</p>
               </div>
               <div className="group cursor-default">
-                <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">3</span>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans Datacenter</p>
-              </div>
-              <div className="group cursor-default">
-                <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">10+</span>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans développement</p>
+                <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">15+</span>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans expérience</p>
               </div>
             </div>
           </div>
