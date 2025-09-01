@@ -28,7 +28,7 @@
   --muted: oklch(0.83 0.02 55);             /* #D8CCBF - Beige plus nuancé */
   --muted-foreground: oklch(0.35 0.02 50);  /* Texte muted plus foncé */
   
-  --accent: oklch(0.68 0.07 55);            /* #B8956A - Plus profond et sophistiqué */
+  --accent: oklch(0.82 0.03 60);            /* #dec1a9 - Accent clair et doux */
   --accent-foreground: oklch(0.12 0.03 45); /* #2D1F15 - Texte encore plus sombre */
   
   --destructive: oklch(0.55 0.2 25);        /* #DC2626 - Rouge d'alerte */
@@ -36,7 +36,7 @@
   
   --border: oklch(0.78 0.025 55);           /* #CFC3B5 - Bordure plus contrastée */
   --input: oklch(0.94 0.01 70);             /* #F7F3ED - Crème input */
-  --ring: oklch(0.68 0.07 55);              /* Focus accent color */
+  --ring: oklch(0.82 0.03 60);              /* Focus accent color */
   
   --radius: 0.75rem;
 }
@@ -61,7 +61,7 @@
   --muted: oklch(0.30 0.02 50);             /* Chocolat-beige foncé plus clair */
   --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
   
-  --accent: oklch(0.68 0.07 55);            /* Accent sophistiqué */
+  --accent: oklch(0.82 0.03 60);            /* Accent clair et doux */
   --accent-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
   
   --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
@@ -69,7 +69,7 @@
   
   --border: oklch(0.35 0.02 50);            /* Bordure chocolat moyen plus clair */
   --input: oklch(0.32 0.02 50);             /* Input chocolat moyen plus clair */
-  --ring: oklch(0.68 0.07 55);              /* Focus accent sophistiqué */
+  --ring: oklch(0.82 0.03 60);              /* Focus accent sophistiqué */
 }
 
 @theme {
