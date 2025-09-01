@@ -69,49 +69,34 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Contact & Social */}
+          {/* Social Networks */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Restons connectés</h4>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm text-muted-foreground mb-2">Email</p>
-                <button
-                  onClick={() => window.location.href = "mailto:contact@kimiya.pro"}
-                  className="text-accent hover:text-accent/80 transition-colors duration-200 text-sm font-medium"
-                >
-                  contact@kimiya.pro
-                </button>
-              </div>
-              
-              <div>
-                <p className="text-sm text-muted-foreground mb-3">Réseaux sociaux</p>
-                <div className="flex space-x-3">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 hover:bg-accent/10"
-                    onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
-                  >
-                    <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 hover:bg-accent/10"
-                    onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
-                  >
-                    <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 hover:bg-accent/10"
-                    onClick={() => window.open("https://twitter.com/kimiya", "_blank")}
-                  >
-                    <TwitterLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
-                  </Button>
-                </div>
-              </div>
+            <h4 className="font-semibold text-foreground">Réseaux</h4>
+            <div className="flex space-x-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 hover:bg-accent/10"
+                onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
+              >
+                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 hover:bg-accent/10"
+                onClick={() => window.open("https://linkedin.com/in/kimiya", "_blank")}
+              >
+                <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 hover:bg-accent/10"
+                onClick={() => window.open("https://twitter.com/kimiya", "_blank")}
+              >
+                <TwitterLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+              </Button>
             </div>
           </div>
         </div>
