@@ -1,4 +1,4 @@
-import { Brain, Code, Heart } from "@phosphor-icons/react"
+import { Brain, Code, Heart, Server } from "@phosphor-icons/react"
 
 export function AboutSection() {
   return (
@@ -10,8 +10,8 @@ export function AboutSection() {
             À propos de moi
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Développeur passionné de 23 ans, je crée des solutions numériques 
-            qui allient performance technique et expérience utilisateur exceptionnelle.
+            Développeur passionné et Technicien Datacenter de 23 ans, je combine 
+            expertise technique infrastructure et développement pour créer des solutions robustes.
           </p>
         </div>
 
@@ -24,13 +24,15 @@ export function AboutSection() {
                 Mon parcours
               </h3>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                En tant que Full-Stack Maker, je m'épanouis dans la création d'expériences 
-                numériques complètes, de la conception à la mise en production. Mon approche 
-                combine créativité technique et attention minutieuse aux détails.
+                En tant que Full-Stack Maker et Technicien Datacenter depuis 3 ans, 
+                je maîtrise l'ensemble de la chaîne technologique, de l'infrastructure 
+                physique aux applications web. Cette double expertise me permet de créer 
+                des solutions complètes et performantes.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Âgé de 23 ans, je suis constamment en quête d'innovation, explorant 
-                les dernières technologies pour créer des solutions qui font la différence.
+                Mon expérience en datacenter m'apporte une compréhension approfondie 
+                des systèmes, de la sécurité et de la fiabilité, que j'applique 
+                dans mes développements pour garantir robustesse et scalabilité.
               </p>
             </div>
 
@@ -41,14 +43,36 @@ export function AboutSection() {
                 <p className="text-sm text-muted-foreground">ans</p>
               </div>
               <div>
+                <span className="text-3xl font-bold text-accent">3</span>
+                <p className="text-sm text-muted-foreground">ans Datacenter</p>
+              </div>
+              <div>
                 <span className="text-3xl font-bold text-accent">3+</span>
-                <p className="text-sm text-muted-foreground">années d'expérience</p>
+                <p className="text-sm text-muted-foreground">ans développement</p>
               </div>
             </div>
           </div>
 
           {/* Right - Skills & Interests */}
           <div className="space-y-6">
+            {/* Infrastructure Expertise */}
+            <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0">
+                  <Server size={24} className="text-accent" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2">
+                    Expertise Infrastructure
+                  </h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    3 ans d'expérience en datacenter m'ont appris l'importance de 
+                    la fiabilité, de la sécurité et de la performance au niveau matériel.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* LLM Interest */}
             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
               <div className="flex items-start space-x-4">
@@ -113,7 +137,7 @@ export function AboutSection() {
           <div className="flex flex-wrap justify-center gap-3">
             {[
               "React", "TypeScript", "Vue.js", "Node.js", "PHP", "MySQL", 
-              "Tailwind CSS", "Git", "Docker", "Linux"
+              "Tailwind CSS", "Git", "Docker", "Linux", "VMware", "Windows Server"
             ].map((tech, index) => (
               <span
                 key={tech}
