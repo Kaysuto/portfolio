@@ -4,18 +4,22 @@ import { AboutSection } from "@/components/AboutSection"
 import { ProjectsSection } from "@/components/ProjectsSection"
 import { ContactSection } from "@/components/ContactSection"
 import { Footer } from "@/components/Footer"
+import { FloatingParticles } from "@/components/FloatingParticles"
 
 function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main>
-        <HeroSection />
-        <AboutSection />
-        <ProjectsSection />
-        <ContactSection />
-      </main>
-      <Footer />
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      <FloatingParticles />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <HeroSection />
+          <AboutSection />
+          <ProjectsSection />
+          <ContactSection />
+        </main>
+        <Footer />
+      </div>
     </div>
   )
 }

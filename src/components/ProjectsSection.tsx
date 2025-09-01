@@ -78,23 +78,26 @@ export function ProjectsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {projects.map((project, index) => (
             <div key={project.title} className={`animate-stagger animate-delay-${(index + 1) * 100}`}>
-              <Card className="group h-full bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:-translate-y-1">
-                <div className="p-6 h-full flex flex-col">
+              <Card className="group h-full bg-card border border-border hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-2 animate-card-hover relative overflow-hidden">
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                
+                <div className="p-6 h-full flex flex-col relative z-10">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-200">
+                      <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
                         {project.title}
                       </h3>
                       <Badge 
                         variant="secondary" 
-                        className="bg-accent/10 text-accent border-accent/20 text-xs"
+                        className="bg-accent/10 text-accent border-accent/20 text-xs group-hover:bg-accent/20 transition-colors duration-300"
                       >
                         {project.type}
                       </Badge>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <div className={`w-2 h-2 rounded-full ${
+                      <div className={`w-2 h-2 rounded-full animate-pulse ${
                         project.status === 'En production' ? 'bg-green-500' :
                         project.status === 'En développement' ? 'bg-yellow-500' : 'bg-blue-500'
                       }`}></div>
@@ -105,7 +108,7 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed mb-6 flex-grow text-sm">
+                  <p className="text-muted-foreground leading-relaxed mb-6 flex-grow text-sm group-hover:text-foreground/80 transition-colors duration-300">
                     {project.description}
                   </p>
 
@@ -113,7 +116,7 @@ export function ProjectsSection() {
                   <div className="mb-6">
                     <div className="flex flex-wrap gap-2">
                       {project.tech.map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-muted rounded text-xs font-medium text-muted-foreground">
+                        <span key={tech} className="px-2 py-1 bg-muted rounded text-xs font-medium text-muted-foreground hover:bg-accent/20 hover:text-accent transition-colors duration-200 cursor-default">
                           {tech}
                         </span>
                       ))}
@@ -121,21 +124,21 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <div className="flex items-center justify-between pt-4 border-t border-border group-hover:border-accent/30 transition-colors duration-300">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-accent hover:text-accent/80 hover:bg-accent/10 p-0"
+                      className="text-accent hover:text-accent/80 hover:bg-accent/10 p-0 group/btn"
                     >
-                      <ExternalLink size={16} className="mr-2" />
+                      <ExternalLink size={16} className="mr-2 group-hover/btn:translate-x-1 transition-transform duration-200" />
                       Voir le projet
                     </Button>
                     <div className="flex items-center space-x-3 text-muted-foreground">
-                      <div className="flex items-center space-x-1">
+                      <div className="flex items-center space-x-1 hover:text-accent transition-colors duration-200">
                         <Star size={14} />
                         <span className="text-xs">{index === 0 ? '24' : index === 1 ? '15' : '31'}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
+                      <div className="flex items-center space-x-1 hover:text-accent transition-colors duration-200">
                         <GitBranch size={14} />
                         <span className="text-xs">{index === 0 ? '8' : index === 1 ? '5' : '12'}</span>
                       </div>
@@ -148,19 +151,19 @@ export function ProjectsSection() {
         </div>
 
         {/* GitHub Stats */}
-        <div className="flex justify-center">
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg">
+        <div className="flex justify-center animate-fadeInUp">
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg hover:shadow-lg hover:shadow-accent/10 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-foreground">
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
                 Statistiques GitHub
               </h3>
               <a
                 href="https://github.com/Kaysuto"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-accent hover:text-accent/80 transition-colors"
+                className="flex items-center text-accent hover:text-accent/80 transition-all duration-300 hover:scale-105"
               >
-                <ExternalLink size={18} className="mr-1" />
+                <ExternalLink size={18} className="mr-1 hover:rotate-12 transition-transform duration-300" />
                 @Kaysuto
               </a>
             </div>
@@ -176,23 +179,23 @@ export function ProjectsSection() {
               </div>
             ) : githubStats ? (
               <div className="grid grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
+                <div className="text-center group/stat">
+                  <div className="text-3xl font-bold text-accent mb-1 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.public_repos}
                   </div>
-                  <p className="text-muted-foreground text-sm">Repositories</p>
+                  <p className="text-muted-foreground text-sm group-hover/stat:text-foreground transition-colors duration-300">Repositories</p>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
+                <div className="text-center group/stat">
+                  <div className="text-3xl font-bold text-accent mb-1 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.followers}
                   </div>
-                  <p className="text-muted-foreground text-sm">Followers</p>
+                  <p className="text-muted-foreground text-sm group-hover/stat:text-foreground transition-colors duration-300">Followers</p>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
+                <div className="text-center group/stat">
+                  <div className="text-3xl font-bold text-accent mb-1 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.following}
                   </div>
-                  <p className="text-muted-foreground text-sm">Following</p>
+                  <p className="text-muted-foreground text-sm group-hover/stat:text-foreground transition-colors duration-300">Following</p>
                 </div>
               </div>
             ) : (
