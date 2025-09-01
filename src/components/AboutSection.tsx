@@ -29,17 +29,13 @@ export function AboutSection() {
         <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-secondary/20 rounded-full animate-bounce-slow"></div>
         <div className="absolute top-20 left-1/3 w-12 h-12 bg-accent/15 rounded-full animate-pulse-slow"></div>
       </div>
-      
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Section Header */}
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 hover:text-accent transition-colors duration-300">
             À propos de moi
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Développeur passionné et Technicien Datacenter de 23 ans, je combine 
-            expertise technique infrastructure et développement pour créer des solutions robustes.
-          </p>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Développeur passionné et Technicien Datacenter de 23 ans, je combine expertise technique infrastructure et développement pour créer des solutions robustes.</p>
         </div>
 
         {/* Main Content */}

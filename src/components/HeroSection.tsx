@@ -41,7 +41,7 @@ export function HeroSection() {
         {/* Subtitle */}
         <div className={`transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-            Maker Full-Stack passionné par la création d'expériences numériques{" "}
+            Full-Stack Maker passionné par la création d'expériences numériques{" "}
             <br className="hidden sm:block" />
             <span className="text-accent font-medium hover:text-primary transition-colors duration-300">élégantes et performantes</span>
           </p>
