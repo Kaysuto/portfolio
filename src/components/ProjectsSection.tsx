@@ -14,7 +14,6 @@ export function ProjectsSection() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log('ProjectsSection chargée')
     const fetchGitHubStats = async () => {
       try {
         const response = await fetch("https://api.github.com/users/Kaysuto")

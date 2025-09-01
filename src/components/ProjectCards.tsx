@@ -21,9 +21,7 @@ interface Project {
 
 export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(false) // Changé pour forcer l'affichage immédiat
-
-  console.log('ProjectCards component rendered, projects:', projects.length)
+  const [loading, setLoading] = useState(false)
 
   // Données temporaires en attendant la connexion Supabase
   const mockProjects: Project[] = [
@@ -71,8 +69,7 @@ export function ProjectCards() {
   ]
 
   useEffect(() => {
-    // Affichage immédiat des projets - plus de délai
-    console.log('Chargement des projets...', mockProjects.length)
+    // Affichage immédiat des projets
     setProjects(mockProjects)
     setLoading(false)
   }, [])
@@ -104,11 +101,13 @@ export function ProjectCards() {
   const projectsToRender = projects.length > 0 ? projects : mockProjects
 
   return (
-    <div className="w-full max-w-7xl mx-auto" style={{minHeight: '500px', border: '2px solid red', padding: '20px'}}>
-      <p style={{color: 'red', fontSize: '18px', fontWeight: 'bold'}}>DEBUG: ProjectCards container - {projectsToRender.length} projects</p>
+    <div className="w-full max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {projectsToRender.map((project, index) => (
-          <div key={project.id} className=""
+          <div 
+            key={project.id} 
+            className={`animate-fadeIn animate-delay-${index * 100 + 200}`}
+          >
             <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/20 transition-all duration-500 relative overflow-hidden hover:scale-105">
               <div className="p-8 h-full flex flex-col relative z-10">
                 {/* Header */}
