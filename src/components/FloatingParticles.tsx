@@ -21,7 +21,7 @@ export function FloatingParticles() {
         id: i,
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        size: Math.random() * 8 + 4,
+        size: Math.random() * 3 + 2,
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
         opacity: Math.random() * 0.3 + 0.1
