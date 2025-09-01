@@ -34,7 +34,7 @@ export function HeroSection() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="text-foreground hover:text-accent transition-colors duration-300">Salut, je suis</span>
             <br />
-            <span className="text-accent bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent animate-gradient-x">Kimiya</span>
+            <span className="text-accent">Kimiya</span>
           </h1>
         </div>
 
