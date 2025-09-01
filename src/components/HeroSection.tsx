@@ -32,7 +32,7 @@ export function HeroSection() {
         {/* Main Title */}
         <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="text-foreground hover:text-accent transition-colors duration-300">Salut, je suis</span>
+            <span className="text-foreground">Salut, je suis</span>
             <br />
             <span className="text-accent">Kimiya</span>
           </h1>
