@@ -11,7 +11,7 @@ export function ContactSection() {
     <section id="contact" className="py-20 px-6 bg-secondary/30">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 animate-fadeInUp">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Restons en contact
           </h2>
@@ -22,7 +22,7 @@ export function ContactSection() {
         </div>
 
         {/* Main Contact Card */}
-        <div className="mb-12">
+        <div className="mb-12 animate-scaleIn animate-delay-200">
           <Card className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300">
             <div className="p-8 text-center">
               <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -61,7 +61,7 @@ export function ContactSection() {
         </div>
 
         {/* Alternative Contact Methods */}
-        <div className="text-center">
+        <div className="text-center animate-fadeInUp animate-delay-300">
           <p className="text-muted-foreground mb-6">
             Ou retrouvez-moi sur les réseaux
           </p>
@@ -94,7 +94,7 @@ export function ContactSection() {
         </div>
 
         {/* Availability Status */}
-        <div className="mt-12">
+        <div className="mt-12 animate-fadeInUp animate-delay-400">
           <Card className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
             <div className="p-6 text-center">
               <div className="flex items-center justify-center space-x-3 mb-3">

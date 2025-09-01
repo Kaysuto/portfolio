@@ -64,7 +64,7 @@ export function ProjectsSection() {
     <section id="projets" className="py-32 px-6 lg:px-12">
       <div className="max-w-8xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-20 animate-fadeInUp">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
@@ -75,7 +75,7 @@ export function ProjectsSection() {
         {/* Featured Projects */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-24">
           {projects.map((project, index) => (
-            <div key={project.title} className={`animate-stagger animate-delay-${(index + 1) * 100}`}>
+            <div key={project.title} className={`animate-scaleIn animate-delay-${(index + 2) * 100}`}>
               <Card className="group h-full bg-card border-2 border-border hover:border-accent/50 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-700 hover:-translate-y-3 animate-card-hover relative overflow-hidden backdrop-blur-sm">
                 {/* Enhanced Shimmer effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1200"></div>
@@ -149,7 +149,7 @@ export function ProjectsSection() {
         </div>
 
         {/* GitHub Stats */}
-        <div className="flex justify-center animate-fadeInUp mt-20">
+        <div className="flex justify-center animate-fadeInUp animate-delay-600 mt-20">
           <div className="bg-card border-2 border-border rounded-3xl p-10 w-full max-w-2xl hover:shadow-xl hover:shadow-accent/15 transition-all duration-500 group hover:border-accent/50">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">Statistiques GitHub</h3>
@@ -203,7 +203,7 @@ export function ProjectsSection() {
         </div>
 
         {/* View More */}
-        <div className="text-center mt-20">
+        <div className="text-center mt-20 animate-fadeInUp animate-delay-800">
           <Button
             variant="outline"
             size="lg"

@@ -34,7 +34,7 @@ export function Navbar() {
   }
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 animate-fadeIn ${
       isScrolled 
         ? 'bg-background/95 backdrop-blur-md shadow-lg shadow-accent/5 border-b border-border/50' 
         : 'bg-background/80 backdrop-blur-sm border-b border-border'
@@ -42,7 +42,7 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2 group cursor-pointer">
+          <div className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft">
             <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
               <Code size={20} className="text-accent group-hover:animate-pulse" />
             </div>
@@ -53,7 +53,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8 animate-fadeIn animate-delay-200">
             {[
               { id: "accueil", label: "Accueil" },
               { id: "apropos", label: "À propos" },
@@ -63,8 +63,8 @@ export function Navbar() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-muted-foreground hover:text-accent transition-all duration-300 relative group animate-stagger"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="text-muted-foreground hover:text-accent transition-all duration-300 relative group animate-fadeInUp"
+                style={{ animationDelay: `${(index + 3) * 0.1}s` }}
               >
                 {item.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
@@ -73,7 +73,7 @@ export function Navbar() {
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 animate-slideInFromRight animate-delay-100">
             {/* Theme Toggle */}
             <Button
               variant="ghost"

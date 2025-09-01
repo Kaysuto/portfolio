@@ -5,12 +5,12 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-card border-t border-border py-12 px-6">
+    <footer className="bg-card border-t border-border py-12 px-6 animate-fadeInUp">
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-4 animate-slideInFromLeft animate-delay-100">
             <div className="flex items-center space-x-2">
               <div className="p-2 bg-accent/10 rounded-lg">
                 <Code size={20} className="text-accent" />
@@ -27,7 +27,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fadeInUp animate-delay-200">
             <h4 className="font-semibold text-foreground">Navigation</h4>
             <div className="space-y-2">
               <button
@@ -70,7 +70,7 @@ export function Footer() {
           </div>
 
           {/* Social Networks */}
-          <div className="space-y-4">
+          <div className="space-y-4 animate-slideInFromRight animate-delay-300">
             <h4 className="font-semibold text-foreground">Réseaux</h4>
             <div className="flex space-x-3">
               <Button
@@ -94,7 +94,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border">
+        <div className="pt-8 border-t border-border animate-fadeInUp animate-delay-400">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span>© {currentYear} Kimiya. Fait avec</span>
@@ -113,7 +113,7 @@ export function Footer() {
         </div>
 
         {/* Easter Egg */}
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center animate-fadeInUp animate-delay-500">
           <p className="text-xs text-muted-foreground/60">
             "Code is poetry, and every bug is just a verse waiting to be perfected."
           </p>
