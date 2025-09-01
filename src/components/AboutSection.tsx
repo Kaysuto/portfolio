@@ -24,10 +24,10 @@ export function AboutSection() {
                 Mon parcours
               </h3>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                En tant que Full-Stack Maker et Technicien Datacenter depuis 3 ans, 
-                je maîtrise l'ensemble de la chaîne technologique, de l'infrastructure 
-                physique aux applications web. Cette double expertise me permet de créer 
-                des solutions complètes et performantes.
+                En tant que Full-Stack Maker avec plus de 10 ans d'expérience et 
+                Technicien Datacenter depuis 3 ans, je maîtrise l'ensemble de la chaîne 
+                technologique, de l'infrastructure physique aux applications web. Cette 
+                double expertise me permet de créer des solutions complètes et performantes.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Mon expérience en datacenter m'apporte une compréhension approfondie 
@@ -47,7 +47,7 @@ export function AboutSection() {
                 <p className="text-sm text-muted-foreground">ans Datacenter</p>
               </div>
               <div>
-                <span className="text-3xl font-bold text-accent">3+</span>
+                <span className="text-3xl font-bold text-accent">10+</span>
                 <p className="text-sm text-muted-foreground">ans développement</p>
               </div>
             </div>
