@@ -24,7 +24,7 @@ export function HeroSection() {
         {/* Subtitle */}
         <div className="animate-fadeInUp animate-delay-200">
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-            Maker Full-Stack passionné par la création d'expériences numériques
+            Maker Full-Stack passionné par la création d'expériences numériques{" "}
             <br className="hidden sm:block" />
             <span className="text-accent font-medium">élégantes et performantes</span>
           </p>

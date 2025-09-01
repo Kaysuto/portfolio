@@ -43,7 +43,7 @@
 
 /* Dark theme with warmer tones */
 .dark {
-  --background: oklch(0.12 0.02 45);        /* Chocolat très foncé */
+  --background: oklch(0.18 0.02 45);        /* Chocolat foncé mais plus doux */
   --foreground: oklch(0.92 0.02 80);        /* Crème claire */
   
   --card: oklch(0.15 0.02 45);              /* Chocolat foncé pour cartes */
