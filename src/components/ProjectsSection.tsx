@@ -74,62 +74,6 @@ export function ProjectsSection() {
           </p>
         </div>
 
-        {/* GitHub Stats */}
-        <div className="mb-16 flex justify-center">
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-foreground">
-                Statistiques GitHub
-              </h3>
-              <a
-                href="https://github.com/Kaysuto"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-accent hover:text-accent/80 transition-colors"
-              >
-                <ExternalLink size={18} className="mr-1" />
-                @Kaysuto
-              </a>
-            </div>
-            
-            {loading ? (
-              <div className="grid grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="text-center">
-                    <div className="w-16 h-8 bg-muted rounded animate-pulse mb-2 mx-auto"></div>
-                    <div className="w-20 h-4 bg-muted rounded animate-pulse mx-auto"></div>
-                  </div>
-                ))}
-              </div>
-            ) : githubStats ? (
-              <div className="grid grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
-                    {githubStats.public_repos}
-                  </div>
-                  <p className="text-muted-foreground text-sm">Repositories</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
-                    {githubStats.followers}
-                  </div>
-                  <p className="text-muted-foreground text-sm">Followers</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-1">
-                    {githubStats.following}
-                  </div>
-                  <p className="text-muted-foreground text-sm">Following</p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground">
-                Impossible de charger les statistiques GitHub
-              </p>
-            )}
-          </div>
-        </div>
-
         {/* Projects Grid - 3 Featured Projects */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Clover Games */}
@@ -363,6 +307,62 @@ export function ProjectsSection() {
                 </div>
               </div>
             </Card>
+          </div>
+        </div>
+
+        {/* GitHub Stats */}
+        <div className="mb-16 flex justify-center">
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">
+                Statistiques GitHub
+              </h3>
+              <a
+                href="https://github.com/Kaysuto"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-accent hover:text-accent/80 transition-colors"
+              >
+                <ExternalLink size={18} className="mr-1" />
+                @Kaysuto
+              </a>
+            </div>
+            
+            {loading ? (
+              <div className="grid grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="text-center">
+                    <div className="w-16 h-8 bg-muted rounded animate-pulse mb-2 mx-auto"></div>
+                    <div className="w-20 h-4 bg-muted rounded animate-pulse mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            ) : githubStats ? (
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-accent mb-1">
+                    {githubStats.public_repos}
+                  </div>
+                  <p className="text-muted-foreground text-sm">Repositories</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-accent mb-1">
+                    {githubStats.followers}
+                  </div>
+                  <p className="text-muted-foreground text-sm">Followers</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-accent mb-1">
+                    {githubStats.following}
+                  </div>
+                  <p className="text-muted-foreground text-sm">Following</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                Impossible de charger les statistiques GitHub
+              </p>
+            )}
           </div>
         </div>
 
