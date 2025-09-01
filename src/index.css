@@ -11,25 +11,25 @@
 :root {
   /* Noisette Color Palette */
   --background: oklch(0.99 0.01 80);        /* #FFFEF9 - Fond principal */
-  --foreground: oklch(0.25 0.03 45);        /* #3C2A1E - Texte chocolat foncé */
+  --foreground: oklch(0.15 0.03 45);        /* Texte chocolat très foncé pour meilleur contraste */
   
   --card: oklch(0.995 0.005 80);            /* #FEFCF9 - Blanc crème */
-  --card-foreground: oklch(0.25 0.03 45);   /* #3C2A1E - Texte chocolat foncé */
+  --card-foreground: oklch(0.15 0.03 45);   /* Texte chocolat très foncé pour meilleur contraste */
   
   --popover: oklch(0.98 0.01 80);           /* #F9F6F1 - Ivoire doux */
-  --popover-foreground: oklch(0.25 0.03 45); /* #3C2A1E - Texte chocolat foncé */
+  --popover-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
   
   --primary: oklch(0.55 0.08 45);           /* #A0724B - Chocolat noisette raffiné */
-  --primary-foreground: oklch(0.92 0.02 80); /* #F5E6D3 - Crème noisette claire */
+  --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
   
   --secondary: oklch(0.92 0.02 80);         /* #F5E6D3 - Crème noisette claire */
-  --secondary-foreground: oklch(0.25 0.03 45); /* #3C2A1E - Texte chocolat foncé */
+  --secondary-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
   
   --muted: oklch(0.87 0.015 60);            /* #E8DDD0 - Beige noisette */
-  --muted-foreground: oklch(0.45 0.02 50);  /* Texte muted */
+  --muted-foreground: oklch(0.35 0.02 50);  /* Texte muted plus foncé */
   
   --accent: oklch(0.75 0.06 60);            /* #D4A574 - Noisette dorée */
-  --accent-foreground: oklch(0.25 0.03 45); /* #3C2A1E - Texte chocolat foncé */
+  --accent-foreground: oklch(0.15 0.03 45); /* Texte chocolat très foncé pour meilleur contraste */
   
   --destructive: oklch(0.55 0.2 25);        /* #DC2626 - Rouge d'alerte */
   --destructive-foreground: oklch(0.99 0.01 80); /* Texte blanc sur rouge */
@@ -43,22 +43,22 @@
 
 /* Dark theme with warmer tones */
 .dark {
-  --background: oklch(0.18 0.02 45);        /* Chocolat foncé mais plus doux */
+  --background: oklch(0.25 0.02 45);        /* Chocolat foncé mais plus doux et plus clair */
   --foreground: oklch(0.92 0.02 80);        /* Crème claire */
   
-  --card: oklch(0.15 0.02 45);              /* Chocolat foncé pour cartes */
+  --card: oklch(0.22 0.02 45);              /* Chocolat foncé pour cartes, plus clair */
   --card-foreground: oklch(0.92 0.02 80);   /* Crème claire */
   
-  --popover: oklch(0.15 0.02 45);           /* Chocolat foncé pour popovers */
+  --popover: oklch(0.22 0.02 45);           /* Chocolat foncé pour popovers, plus clair */
   --popover-foreground: oklch(0.92 0.02 80); /* Crème claire */
   
   --primary: oklch(0.75 0.06 60);           /* Noisette dorée plus claire */
   --primary-foreground: oklch(0.12 0.02 45); /* Chocolat très foncé */
   
-  --secondary: oklch(0.20 0.02 50);         /* Chocolat moyen */
+  --secondary: oklch(0.28 0.02 50);         /* Chocolat moyen plus clair */
   --secondary-foreground: oklch(0.92 0.02 80); /* Crème claire */
   
-  --muted: oklch(0.18 0.02 50);             /* Chocolat-beige foncé */
+  --muted: oklch(0.30 0.02 50);             /* Chocolat-beige foncé plus clair */
   --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
   
   --accent: oklch(0.75 0.06 60);            /* Noisette dorée */
@@ -67,8 +67,8 @@
   --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
   --destructive-foreground: oklch(0.92 0.02 80); /* Crème claire */
   
-  --border: oklch(0.25 0.02 50);            /* Bordure chocolat moyen */
-  --input: oklch(0.20 0.02 50);             /* Input chocolat moyen */
+  --border: oklch(0.35 0.02 50);            /* Bordure chocolat moyen plus clair */
+  --input: oklch(0.32 0.02 50);             /* Input chocolat moyen plus clair */
   --ring: oklch(0.68 0.05 55);              /* Focus noisette */
 }
 
