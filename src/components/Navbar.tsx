@@ -66,10 +66,6 @@ export function Navbar() {
 
           {/* Theme Toggle & Status */}
           <div className="flex items-center space-x-4">
-            <div className="hidden sm:flex items-center space-x-2 text-sm">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-muted-foreground">Disponible pour de nouveaux projets</span>
-            </div>
             
             <Button
               variant="ghost"
