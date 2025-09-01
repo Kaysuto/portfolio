@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ExternalLink, Star, GitBranch } from "@phosphor-icons/react"
+import { ExternalLink, Star, GitBranch, GithubLogo } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -159,7 +159,7 @@ export function ProjectsSection() {
                 rel="noopener noreferrer"
                 className="flex items-center text-accent hover:text-accent/80 transition-all duration-300 hover:scale-105 font-medium"
               >
-                <ExternalLink size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
+                <GithubLogo size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
                 @Kaysuto
               </a>
             </div>
