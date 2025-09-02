@@ -28,17 +28,13 @@
     
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#4f46e5" />
+    <!-- Theme color alignée sur la palette noisette -->
+    <meta name="theme-color" content="#F9F6F0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#23160F" media="(prefers-color-scheme: dark)" />
     <meta name="color-scheme" content="dark light" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-    <!-- Performance optimizations -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <!-- Fonts: utiliser les polices système (self-host possible ultérieurement) -->
     
     <!-- Critical CSS inline for LCP -->
     <style>
@@ -59,10 +55,6 @@
                         else document.documentElement.classList.remove('dark');
                     } catch(e) {}
                 })();
-                // Active le scroll fluide sur tous les navigateurs modernes
-                document.addEventListener('DOMContentLoaded', function () {
-                        document.documentElement.style.scrollBehavior = 'smooth';
-                });
         </script>
     <!-- Les styles de l'app sont importés via Vite (src/main.tsx -> index.css).
          On évite un double chargement bloquant ici. -->

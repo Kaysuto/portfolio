@@ -3,10 +3,11 @@ import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
 import { FloatingParticles } from "@/components/FloatingParticles"
 import { Toaster } from "sonner"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 
 function App() {
+  const [showToaster, setShowToaster] = useState(false)
   // Register Service Worker for PWA
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -15,6 +16,20 @@ function App() {
         .catch(() => console.log('SW registration failed'));
     }
   }, []);
+
+  // Monte le Toaster quand le thread est idle pour ne pas impacter le LCP
+  useEffect(() => {
+    const id = (window as any).requestIdleCallback
+      ? (window as any).requestIdleCallback(() => setShowToaster(true), { timeout: 1200 })
+      : (setTimeout(() => setShowToaster(true), 300) as unknown as number)
+    return () => {
+      if ((window as any).cancelIdleCallback && id) {
+        ;(window as any).cancelIdleCallback(id)
+      } else if (id) {
+        clearTimeout(id as unknown as number)
+      }
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
@@ -35,7 +50,7 @@ function App() {
         </main>
         <Footer />
       </div>
-      <Toaster />
+  {showToaster ? <Toaster /> : null}
       
       {/* JSON-LD structured data for SEO */}
       <script
