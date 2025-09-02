@@ -12,7 +12,6 @@ interface GitHubStats {
 export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     const fetchGitHubStats = async () => {
       try {
@@ -26,7 +25,9 @@ export function ProjectsSection() {
           })
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des stats GitHub:", error)
+        if (import.meta.env.DEV) {
+          console.error("Erreur lors de la récupération des stats GitHub:", error)
+        }
       } finally {
         setLoading(false)
       }
@@ -36,7 +37,7 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 lg:px-12">
+    <section id="projets" className="py-32 px-6 lg:px-12 cv-auto">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-20">
@@ -63,6 +64,7 @@ export function ProjectsSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center text-accent font-medium"
+                aria-label="Ouvrir le profil GitHub de Kaysuto dans un nouvel onglet"
               >
                 <GithubLogo size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
                 @Kaysuto
@@ -108,16 +110,13 @@ export function ProjectsSection() {
         </div>
 
         {/* View More */}
-        <div className="text-center mt-20">
-          <Button
-            variant="outline"
-            size="lg"
-            className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-10 py-4 text-lg font-medium hover:scale-105 transition-all duration-300"
-          >
-            {/* Icône ExternalLink supprimée car non disponible dans Phosphor */}
-            Voir tous mes projets sur GitHub
-          </Button>
-        </div>
+          <div className="text-center mt-20">
+            <Button asChild variant="outline" size="lg" className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-10 py-4 text-lg font-medium hover:scale-105 transition-all duration-300">
+              <a href="https://github.com/Kaysuto" target="_blank" rel="noopener noreferrer" aria-label="Voir tous mes projets sur GitHub (nouvel onglet)">
+                Voir tous mes projets sur GitHub
+              </a>
+            </Button>
+          </div>
       </div>
     </section>
   );

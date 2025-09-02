@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
+  const [decorReady, setDecorReady] = useState(false)
   const scrollToProjects = () => {
     const element = document.getElementById("projets")
     if (element) {
@@ -39,16 +40,34 @@ export function HeroSection() {
     return () => document.removeEventListener("keydown", onKey)
   }, [isModalOpen])
 
+  // Diffère le rendu des décorations animées pour ne pas impacter le LCP
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+    const idleId: number | undefined = (window as any).requestIdleCallback
+      ? (window as any).requestIdleCallback(() => setDecorReady(true), { timeout: 1200 })
+      : (setTimeout(() => setDecorReady(true), 300) as unknown as number)
+    return () => {
+      if ((window as any).cancelIdleCallback && idleId) {
+        ;(window as any).cancelIdleCallback(idleId)
+      } else if (idleId) {
+        clearTimeout(idleId as unknown as number)
+      }
+    }
+  }, [])
+
   return (
-    <section id="accueil" className="min-h-screen flex items-center justify-center px-6 pt-32 relative" role="banner" aria-labelledby="hero-title">
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-20 left-10 w-24 h-24 bg-accent/10 rounded-full animate-float-slow animate-delay-700"></div>
-        <div className="absolute top-1/3 right-16 w-16 h-16 bg-primary/15 rounded-full animate-float-medium animate-delay-800"></div>
-        <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-secondary/20 rounded-full animate-float-fast animate-delay-900"></div>
-        <div className="absolute top-1/2 left-8 w-8 h-8 bg-accent/20 rounded-full animate-bounce-slow animate-delay-1000"></div>
-        <div className="absolute bottom-1/4 right-20 w-20 h-20 bg-muted/30 rounded-full animate-pulse-slow animate-delay-600"></div>
-      </div>
+  <section id="accueil" className="min-h-screen flex items-center justify-center px-6 pt-32 relative cv-auto" role="banner" aria-labelledby="hero-title">
+      {/* Animated background shapes (différées) */}
+      {decorReady && (
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-20 left-10 w-24 h-24 bg-accent/10 rounded-full animate-float-slow animate-delay-700"></div>
+          <div className="absolute top-1/3 right-16 w-16 h-16 bg-primary/15 rounded-full animate-float-medium animate-delay-800"></div>
+          <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-secondary/20 rounded-full animate-float-fast animate-delay-900"></div>
+          <div className="absolute top-1/2 left-8 w-8 h-8 bg-accent/20 rounded-full animate-bounce-slow animate-delay-1000"></div>
+          <div className="absolute bottom-1/4 right-20 w-20 h-20 bg-muted/30 rounded-full animate-pulse-slow animate-delay-600"></div>
+        </div>
+      )}
       
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Main Title */}
@@ -126,9 +145,13 @@ export function HeroSection() {
         </div>
       )}
 
-      {/* Curseur animé bas */}
-      {/* Curseur souris animé bas */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
+      {/* Curseur souris animé bas (bouton accessible) */}
+      <button
+        type="button"
+        className="absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full"
+        onClick={scrollToProjects}
+        aria-label="Voir la suite"
+      >
         <span className="flex flex-col items-center">
           <svg className="w-9 h-14 text-accent" viewBox="0 0 36 56" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="2" width="32" height="52" rx="16" stroke="currentColor" strokeWidth="3" fill="none" className="animate-mouse-outline"/>
@@ -138,7 +161,7 @@ export function HeroSection() {
             </rect>
           </svg>
         </span>
-      </div>
+      </button>
     </section>
   )
 }

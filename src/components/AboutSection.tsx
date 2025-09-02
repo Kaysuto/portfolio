@@ -2,7 +2,7 @@ import { Brain, Code, Heart } from "@phosphor-icons/react"
 
 export function AboutSection() {
   return (
-    <section id="apropos" className="py-20 px-6 bg-secondary/30 relative overflow-hidden">
+  <section id="apropos" className="py-20 px-6 bg-secondary/30 relative overflow-hidden cv-auto">
       {/* Animated background elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-10 right-10 w-32 h-32 bg-accent/5 rounded-full animate-float-slow animate-delay-700"></div>

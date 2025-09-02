@@ -5,12 +5,8 @@ import App from './App.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 import './index.css'
 
-// Critical resource hints for performance
-const preloadCriticalResources = () => {
-  // Preload critical fonts
-  const font = new FontFace('Inter', 'url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2)');
-  font.load().then(() => document.fonts.add(font));
-};
+// Les polices sont chargées via <link rel="preload/stylesheet"> dans index.html pour éviter le CLS
+const preloadCriticalResources = () => {};
 
 // Performance monitoring
 const reportWebVitals = (metric: any) => {
@@ -27,7 +23,9 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary 
       FallbackComponent={ErrorFallback}
       onError={(error, errorInfo) => {
-        console.error('App Error:', error, errorInfo);
+        if (import.meta.env.DEV) {
+          console.error('App Error:', error, errorInfo);
+        }
       }}
       onReset={() => window.location.reload()}
     >
@@ -37,9 +35,9 @@ createRoot(document.getElementById('root')!).render(
 )
 
 // Report web vitals for performance monitoring
-import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
   onCLS(reportWebVitals);
-  onFID(reportWebVitals);
+  onINP(reportWebVitals);
   onFCP(reportWebVitals);
   onLCP(reportWebVitals);
   onTTFB(reportWebVitals);

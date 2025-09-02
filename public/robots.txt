@@ -1,0 +1,6 @@
+# Allow all crawling
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://kimiya-portfolio.vercel.app/sitemap.xml

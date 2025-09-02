@@ -73,21 +73,15 @@ export function Footer() {
           <div className="space-y-4 animate-slideInFromRight animate-delay-300">
             <h4 className="font-semibold text-foreground">Réseaux</h4>
             <div className="flex space-x-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 hover:bg-accent/10 group"
-                onClick={() => window.open("https://github.com/Kaysuto", "_blank")}
-              >
-                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-all duration-200 transform-gpu group-hover:rotate-[18deg] group-hover:scale-110" />
+              <Button asChild variant="ghost" size="sm" className="p-2 hover:bg-accent/10 group">
+                <a href="https://github.com/Kaysuto" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir GitHub dans un nouvel onglet">
+                  <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-all duration-200 transform-gpu group-hover:rotate-[18deg] group-hover:scale-110" />
+                </a>
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 hover:bg-accent/10 group"
-                onClick={() => window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank")}
-              >
-                <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+              <Button asChild variant="ghost" size="sm" className="p-2 hover:bg-accent/10 group">
+                <a href="https://www.linkedin.com/in/enzo-lauret/" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir LinkedIn dans un nouvel onglet">
+                  <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+                </a>
               </Button>
             </div>
           </div>

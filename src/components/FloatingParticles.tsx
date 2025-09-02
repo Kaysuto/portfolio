@@ -12,8 +12,22 @@ interface Particle {
 
 export function FloatingParticles() {
   const [particles, setParticles] = useState<Particle[]>([])
+  const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
+    // Respect reduced motion and defer until after first paint to not affect LCP
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+    // Defer mount to next frame to avoid main-thread contention around LCP
+    const id = requestIdleCallback ? requestIdleCallback(() => setEnabled(true), { timeout: 1000 }) : setTimeout(() => setEnabled(true), 0) as unknown as number
+    return () => {
+      if (typeof id === 'number') cancelIdleCallback?.(id as unknown as number)
+      else clearTimeout(id as unknown as number)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!enabled) return
     // Initialize particles
     const initialParticles: Particle[] = []
     for (let i = 0; i < 15; i++) {
@@ -48,11 +62,11 @@ export function FloatingParticles() {
 
     const interval = setInterval(animateParticles, 50)
     return () => clearInterval(interval)
-  }, [])
+  }, [enabled])
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {particles.map(particle => (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      {enabled && particles.map(particle => (
         <div
           key={particle.id}
           className="absolute rounded-full bg-accent/20 dark:bg-primary/15 animate-pulse"

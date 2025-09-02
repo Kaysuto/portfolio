@@ -107,6 +107,7 @@ export function Navbar() {
               size="sm"
               onClick={toggleTheme}
               className="p-2 hover:bg-accent/10 group transition-all duration-300 hover:scale-110"
+              aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
             >
               <div className="relative">
                 {theme === 'dark' ? (
@@ -123,6 +124,9 @@ export function Navbar() {
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 hover:bg-accent/10 transition-all duration-300 hover:scale-110"
+              aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               <div className="relative">
                 {isMobileMenuOpen ? (
@@ -137,7 +141,7 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+  <div id="mobile-menu" className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
         isMobileMenuOpen 
           ? 'max-h-64 opacity-100' 
           : 'max-h-0 opacity-0'

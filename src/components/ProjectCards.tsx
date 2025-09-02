@@ -33,7 +33,7 @@ export function ProjectCards() {
     setDebug(null)
     try {
       const data = await getProjects()
-      console.log('Supabase projects:', data)
+  if (import.meta.env.DEV) console.log('Supabase projects:', data)
       if (Array.isArray(data)) {
         // Mapping des champs pour correspondre à l'interface Project attendue
         const mapStatus = (status: string): Project["status"] => {
@@ -123,10 +123,13 @@ export function ProjectCards() {
             >
               {/* Image projet */}
               {project.image_url && (
-                <div className="relative h-48 w-full overflow-hidden">
+        <div className="relative h-48 w-full overflow-hidden">
                   <img
                     src={project.image_url}
                     alt={project.image_alt || project.title}
+          loading="lazy"
+          width={640}
+          height={256}
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent pointer-events-none"></div>
@@ -158,14 +161,11 @@ export function ProjectCards() {
                     {project.status}
                   </span>
                   {project.demo_url && (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group"
-                      onClick={() => window.open(project.demo_url, '_blank')}
-                    >
-                      <ArrowSquareOut size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                      <span>Demo</span>
+                    <Button asChild variant="default" size="sm" className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group">
+                      <a href={project.demo_url} target="_blank" rel="noopener noreferrer" aria-label={`Ouvrir la démo de ${project.title} dans un nouvel onglet`}>
+                        <ArrowSquareOut size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                        <span>Demo</span>
+                      </a>
                     </Button>
                   )}
                   <span className="text-xs text-muted-foreground">

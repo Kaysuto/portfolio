@@ -14,71 +14,72 @@ body.radix-select-content-opened {
 }
 
 :root {
-  /* Refined Noisette Color Palette - Couleurs renforcées */
-  --background: oklch(0.98 0.015 80);       /* #F9F6F0 - Fond principal plus contrasté */
-  --foreground: oklch(0.08 0.04 45);        /* #1A0F08 - Texte très sombre et fort */
-  
-  --card: oklch(0.99 0.01 80);              /* #FEFCF9 - Blanc crème */
-  --card-foreground: oklch(0.08 0.04 45);   /* #1A0F08 - Texte très sombre */
-  
-  --popover: oklch(0.96 0.02 80);           /* #F5F0E8 - Ivoire plus marqué */
-  --popover-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
-  
-  --primary: oklch(0.35 0.12 42);           /* #5D3A25 - Chocolat très foncé et riche */
-  --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
-  
-  --secondary: oklch(0.82 0.05 60);         /* #D4BE9F - Crème plus marquée */
-  --secondary-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
-  
-  --muted: oklch(0.76 0.04 55);             /* #C4B5A3 - Beige plus intense */
-  --muted-foreground: oklch(0.25 0.03 50);  /* Texte muted plus contrasté */
-  
-  --accent: oklch(0.72 0.06 55);            /* #B8956A - Accent plus profond et visible */
-  --accent-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
-  
-  --destructive: oklch(0.50 0.25 25);       /* #C41E3A - Rouge plus intense */
-  --destructive-foreground: oklch(0.98 0.01 80); /* Texte blanc sur rouge */
-  
-  --border: oklch(0.70 0.04 55);            /* #B3A28F - Bordure plus forte */
-  --input: oklch(0.90 0.02 70);             /* #EDE6D8 - Input plus contrasté */
-  --ring: oklch(0.72 0.06 55);              /* Focus accent renforcé */
-  
+  /* Refined Noisette Color Palette - clair crème noisette */
+  --background: oklch(0.98 0.015 80);       /* #F9F6F0 */
+  --foreground: oklch(0.08 0.04 45);        /* #1A0F08 */
+
+  --card: oklch(0.99 0.01 80);              /* #FEFCF9 */
+  --card-foreground: oklch(0.08 0.04 45);   /* #1A0F08 */
+
+  --popover: oklch(0.96 0.02 80);           /* #F5F0E8 */
+  --popover-foreground: oklch(0.08 0.04 45); /* #1A0F08 */
+
+  --primary: oklch(0.35 0.12 42);           /* #5D3A25 - chocolat profond */
+  --primary-foreground: oklch(0.98 0.01 80); /* crème */
+
+  --secondary: oklch(0.82 0.05 60);         /* #D4BE9F */
+  --secondary-foreground: oklch(0.08 0.04 45);
+
+  --muted: oklch(0.76 0.04 55);             /* #C4B5A3 */
+  --muted-foreground: oklch(0.25 0.03 50);
+
+  --accent: oklch(0.72 0.06 55);            /* #B8956A - noisette */
+  --accent-foreground: oklch(0.08 0.04 45);
+
+  --destructive: oklch(0.50 0.25 25);       /* #C41E3A */
+  --destructive-foreground: oklch(0.98 0.01 80);
+
+  --border: oklch(0.70 0.04 55);            /* #B3A28F */
+  --input: oklch(0.90 0.02 70);             /* #EDE6D8 */
+  --ring: oklch(0.72 0.06 55);
+
   --radius: 0.75rem;
 }
 
 /* Dark theme with warmer tones */
 .dark {
-  --background: oklch(0.25 0.02 45);        /* Chocolat foncé mais plus doux et plus clair */
-  --foreground: oklch(0.92 0.02 80);        /* Crème claire */
-  
-  --card: oklch(0.22 0.02 45);              /* Chocolat foncé pour cartes, plus clair */
-  --card-foreground: oklch(0.92 0.02 80);   /* Crème claire */
-  
-  --popover: oklch(0.22 0.02 45);           /* Chocolat foncé pour popovers, plus clair */
-  --popover-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --primary: oklch(0.68 0.07 55);           /* Accent sophistiqué en mode sombre */
-  --primary-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
-  
-  --secondary: oklch(0.28 0.02 50);         /* Chocolat moyen plus clair */
-  --secondary-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --muted: oklch(0.30 0.02 50);             /* Chocolat-beige foncé plus clair */
-  --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
-  
-  --accent: oklch(0.82 0.03 60);            /* Accent clair et doux */
-  --accent-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
-  
-  --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
-  --destructive-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --border: oklch(0.35 0.02 50);            /* Bordure chocolat moyen plus clair */
-  --input: oklch(0.32 0.02 50);             /* Input chocolat moyen plus clair */
-  --ring: oklch(0.82 0.03 60);              /* Focus accent sophistiqué */
+  /* Thème sombre chocolat noisette */
+  --background: oklch(0.25 0.02 45);
+  --foreground: oklch(0.92 0.02 80);
+
+  --card: oklch(0.22 0.02 45);
+  --card-foreground: oklch(0.92 0.02 80);
+
+  --popover: oklch(0.22 0.02 45);
+  --popover-foreground: oklch(0.92 0.02 80);
+
+  --primary: oklch(0.68 0.07 55);
+  --primary-foreground: oklch(0.10 0.02 45);
+
+  --secondary: oklch(0.28 0.02 50);
+  --secondary-foreground: oklch(0.92 0.02 80);
+
+  --muted: oklch(0.30 0.02 50);
+  --muted-foreground: oklch(0.65 0.03 60);
+
+  --accent: oklch(0.82 0.03 60);
+  --accent-foreground: oklch(0.10 0.02 45);
+
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.92 0.02 80);
+
+  --border: oklch(0.35 0.02 50);
+  --input: oklch(0.32 0.02 50);
+  --ring: oklch(0.82 0.03 60);
 }
 
-/* stylelint-disable at-rule-no-unknown */
-@theme {
+/* Expose color tokens as CSS variables consumed by Tailwind v4 */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -130,6 +131,20 @@ body.radix-select-content-opened {
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
+}
+
+/* Performance: hide non-visible heavy sections from layout/paint until visible */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px; /* reserve space to avoid layout shift */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Line clamp utilities */

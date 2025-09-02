@@ -7,6 +7,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function getProjects() {
   try {
+    // Évite les requêtes non sécurisées qui font échouer Lighthouse en local
+    if (!supabaseUrl || !supabaseUrl.startsWith('https://')) {
+      if (import.meta.env.DEV) {
+        console.warn('[Supabase] URL non sécurisée détectée, fetch ignoré pour éviter le mixed content:', supabaseUrl)
+      }
+      return []
+    }
     const { data, error } = await supabase.from('projects').select('*');
     if (error) throw error;
     return data;
