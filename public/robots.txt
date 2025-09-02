@@ -1,6 +1,67 @@
-# Allow all crawling
+# Robots.txt pour Portfolio Kimiya Kaysuto - Full-Stack Maker
+# Généré le 2 septembre 2025
+
+# Autoriser tous les robots d'indexation
 User-agent: *
 Allow: /
 
-# Sitemaps
+# Interdire l'accès aux fichiers de développement et configuration
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /.git/
+Disallow: /dist/
+Disallow: /build/
+Disallow: /*.ts
+Disallow: /*.tsx
+Disallow: /*.map
+Disallow: /vite.config.*
+Disallow: /tsconfig.*
+Disallow: /package*.json
+Disallow: /.env*
+
+# Interdire l'accès aux fichiers temporaires et de cache
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /.cache/
+Disallow: /.vscode/
+Disallow: /.idea/
+
+# Autoriser explicitement les ressources importantes
+Allow: /assets/
+Allow: /images/
+Allow: /icons/
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /favicon.ico
+Allow: /favicon.svg
+
+# Directives spécifiques pour les principaux moteurs de recherche
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Interdire les bots malveillants connus
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Localisation du sitemap
 Sitemap: https://kimiya-portfolio.vercel.app/sitemap.xml
+
+# Informations supplémentaires
+# Portfolio: https://kimiya-portfolio.vercel.app
+# Propriétaire: Kimiya Kaysuto - Full-Stack Maker
+# Contact: [email sera ajouté si nécessaire]

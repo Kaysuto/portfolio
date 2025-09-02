@@ -5,8 +5,12 @@ import App from './App.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 import './index.css'
 
-// Les polices sont chargées via <link rel="preload/stylesheet"> dans index.html pour éviter le CLS
-const preloadCriticalResources = () => {};
+// Critical resource hints for performance
+const preloadCriticalResources = () => {
+  // Preload critical fonts
+  const font = new FontFace('Inter', 'url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2)');
+  font.load().then(() => document.fonts.add(font));
+};
 
 // Performance monitoring
 const reportWebVitals = (metric: any) => {
@@ -23,9 +27,7 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary 
       FallbackComponent={ErrorFallback}
       onError={(error, errorInfo) => {
-        if (import.meta.env.DEV) {
-          console.error('App Error:', error, errorInfo);
-        }
+        console.error('App Error:', error, errorInfo);
       }}
       onReset={() => window.location.reload()}
     >
