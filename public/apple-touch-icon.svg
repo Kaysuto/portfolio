@@ -1,4 +1,30 @@
-<svg width="180" height="180" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="12" fill="#4f46e5"/>
-  <text x="32" y="42" text-anchor="middle" font-family="Inter" font-size="24" font-weight="700" fill="white">K</text>
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B2F28"/>
+      <stop offset="50%" style="stop-color:#2D221C"/>
+      <stop offset="100%" style="stop-color:#3B2F28"/>
+    </linearGradient>
+    <linearGradient id="letterApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0EBE3"/>
+      <stop offset="100%" style="stop-color:#D4BE9F"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond principal pour iOS -->
+  <rect width="180" height="180" rx="32" fill="url(#bgApple)"/>
+  
+  <!-- Particules subtiles -->
+  <circle cx="35" cy="35" r="2.5" fill="#D4BE9F" opacity="0.6"/>
+  <circle cx="145" cy="145" r="3" fill="#D4BE9F" opacity="0.6"/>
+  <circle cx="145" cy="35" r="2" fill="#D4BE9F" opacity="0.6"/>
+  <circle cx="35" cy="145" r="2.5" fill="#D4BE9F" opacity="0.6"/>
+  
+  <!-- Lettre K -->
+  <text x="90" y="120" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="90" font-weight="700" fill="url(#letterApple)">
+    K
+  </text>
+  
+  <!-- Accent discret -->
+  <rect x="30" y="155" width="120" height="2" fill="#B5A089" opacity="0.4"/>
 </svg>

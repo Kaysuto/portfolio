@@ -1,5 +1,27 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#4f46e5"/>
-  <path d="M8 10h16v2H8zM8 15h12v2H8zM8 20h16v2H8z" fill="white"/>
-  <circle cx="24" cy="8" r="3" fill="#7c3aed"/>
+  <defs>
+    <!-- Gradient cohérent avec le thème -->
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B2F28"/>
+      <stop offset="100%" style="stop-color:#2D221C"/>
+    </linearGradient>
+    <linearGradient id="letterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0EBE3"/>
+      <stop offset="100%" style="stop-color:#D4BE9F"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond avec coins arrondis -->
+  <rect width="32" height="32" rx="6" fill="url(#iconBg)"/>
+  
+  <!-- Accent subtil -->
+  <rect x="4" y="28" width="24" height="1" fill="#B5A089" opacity="0.4"/>
+  
+  <!-- Lettre K stylisée -->
+  <text x="16" y="22" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700" fill="url(#letterGradient)">
+    K
+  </text>
+  
+  <!-- Point décoratif -->
+  <circle cx="24" cy="8" r="1.5" fill="#D4BE9F" opacity="0.6"/>
 </svg>
