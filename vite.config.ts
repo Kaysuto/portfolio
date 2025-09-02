@@ -18,4 +18,29 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  build: {
+    // Optimisations Lighthouse invisibles
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          phosphor: ['@phosphor-icons/react']
+        }
+      }
+    },
+    cssCodeSplit: true,
+    sourcemap: false,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
+  },
+  server: {
+    hmr: {
+      overlay: false
+    }
+  }
 });

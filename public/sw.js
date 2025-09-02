@@ -1,24 +1,29 @@
-const CACHE_NAME = 'kimiya-portfolio-v1';
-const STATIC_CACHE = 'static-v1';
+const CACHE_NAME = 'kimiya-portfolio-v1.1';
+const STATIC_CACHE = 'static-v1.1';
 
 const STATIC_ASSETS = [
   '/',
   '/src/index.css',
   '/src/main.tsx',
   '/manifest.json',
+  '/robots.txt',
+  '/sitemap.xml',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
 
-// Install SW
+// Install SW avec stratégie aggressive
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then((cache) => {
+        // Preload critical resources
+        return cache.addAll(STATIC_ASSETS);
+      })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate SW
+// Activate SW avec nettoyage optimisé
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) =>

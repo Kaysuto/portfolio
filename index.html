@@ -1,4 +1,4 @@
-S<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -43,10 +43,11 @@ S<!DOCTYPE html>
     
     <!-- Critical CSS inline for LCP -->
     <style>
-        html{font-family:ui-sans-serif,system-ui,sans-serif}
-        body{margin:0;background:#0b1220;color:#e6eef8}
+        html{font-family:ui-sans-serif,system-ui,sans-serif;scroll-behavior:smooth}
+        body{margin:0;background:#0b1220;color:#e6eef8;line-height:1.6}
         .dark{background:#0b1220;color:#e6eef8}
         #root{min-height:100vh}
+        *{box-sizing:border-box}
     </style>
     
         <script>
@@ -59,14 +60,16 @@ S<!DOCTYPE html>
                         else document.documentElement.classList.remove('dark');
                     } catch(e) {}
                 })();
-                // Active le scroll fluide sur tous les navigateurs modernes
-                document.addEventListener('DOMContentLoaded', function () {
-                        document.documentElement.style.scrollBehavior = 'smooth';
-                });
+                // Preload critical resources
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(function() {
+                        var link = document.createElement('link');
+                        link.rel = 'prefetch';
+                        link.href = '/src/components/AboutSection.tsx';
+                        document.head.appendChild(link);
+                    });
+                }
         </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="/src/index.css" rel="stylesheet" />
 </head>
 
