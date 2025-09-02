@@ -1,16 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kimiya - Full-Stack Maker</title>
-    <script>
-        // Active le scroll fluide sur tous les navigateurs modernes
-        document.addEventListener('DOMContentLoaded', function () {
-            document.documentElement.style.scrollBehavior = 'smooth';
-        });
-    </script>
+    <title>Kimiya Kaysuto - Full-Stack Maker | Portfolio</title>
+    <meta name="description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
+    <meta name="keywords" content="full-stack maker, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya Kaysuto" />
+    <meta name="author" content="Kimiya Kaysuto" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://kimiya-portfolio.vercel.app" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kimiya-portfolio.vercel.app" />
+    <meta property="og:title" content="Kimiya Kaysuto - Full-Stack Maker" />
+    <meta property="og:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="og:image" content="https://kimiya-portfolio.vercel.app/og-image.jpg" />
+    <meta property="og:locale" content="fr_FR" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://kimiya-portfolio.vercel.app" />
+    <meta property="twitter:title" content="Kimiya Kaysuto - Full-Stack Maker" />
+    <meta property="twitter:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="twitter:image" content="https://kimiya-portfolio.vercel.app/og-image.jpg" />
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Critical CSS inline for LCP -->
+    <style>
+        html{font-family:ui-sans-serif,system-ui,sans-serif}
+        body{margin:0;background:#0b1220;color:#e6eef8}
+        .dark{background:#0b1220;color:#e6eef8}
+        #root{min-height:100vh}
+    </style>
+    
+        <script>
+                // Applique le thème avant le rendu (évite FOUC)
+                (function() {
+                    try {
+                        var match = document.cookie.match(/(?:^|; )theme=(dark|light)(?:;|$)/);
+                        var theme = match ? match[1] : 'dark';
+                        if (theme === 'dark') document.documentElement.classList.add('dark');
+                        else document.documentElement.classList.remove('dark');
+                    } catch(e) {}
+                })();
+                // Active le scroll fluide sur tous les navigateurs modernes
+                document.addEventListener('DOMContentLoaded', function () {
+                        document.documentElement.style.scrollBehavior = 'smooth';
+                });
+        </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

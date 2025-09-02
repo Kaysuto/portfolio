@@ -32,14 +32,17 @@ export function FloatingParticles() {
     // Animation loop
     const animateParticles = () => {
       setParticles(prev => 
-        prev.map(particle => ({
-          ...particle,
-          x: particle.x + particle.speedX,
-          y: particle.y + particle.speedY,
-          // Wrap around screen edges
-          x: particle.x > window.innerWidth ? 0 : particle.x < 0 ? window.innerWidth : particle.x,
-          y: particle.y > window.innerHeight ? 0 : particle.y < 0 ? window.innerHeight : particle.y
-        }))
+        prev.map(particle => {
+          const newX = particle.x + particle.speedX;
+          const newY = particle.y + particle.speedY;
+          
+          return {
+            ...particle,
+            // Update position and wrap around screen edges
+            x: newX > window.innerWidth ? 0 : newX < 0 ? window.innerWidth : newX,
+            y: newY > window.innerHeight ? 0 : newY < 0 ? window.innerHeight : newY
+          };
+        })
       )
     }
 

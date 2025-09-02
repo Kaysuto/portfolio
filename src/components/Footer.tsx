@@ -21,8 +21,8 @@ export function Footer() {
               </div>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Full-Stack Maker passionné par la création d'expériences numériques 
-              élégantes et performantes. Toujours en quête d'innovation et de nouveaux défis.
+              Full-Stack Maker polyvalent spécialisé en réseau, développement, 
+              design pixel art et création de mini-jeux. Toujours en quête d'innovation et de nouveaux défis.
             </p>
           </div>
 
@@ -110,13 +110,6 @@ export function Footer() {
               <span>Passionné par les LLM</span>
             </div>
           </div>
-        </div>
-
-        {/* Easter Egg */}
-        <div className="mt-8 text-center animate-fadeInUp animate-delay-500">
-          <p className="text-xs text-muted-foreground/60">
-            « Le code est une poésie, et chaque bug n’est qu’un vers en attente d’être perfectionné. »
-          </p>
         </div>
       </div>
     </footer>

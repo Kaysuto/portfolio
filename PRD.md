@@ -1,6 +1,6 @@
 # Portfolio Minimaliste pour Kimiya - PRD
 
-Portfolio élégant pour Kimiya, Full-Stack Maker de 23 ans passionné par la création d'expériences numériques performantes et les modèles de langage.
+Portfolio élégant pour Kimiya, Full-Stack Maker polyvalent de 23 ans avec une expertise multi-domaines : réseau, développement, programmation, design pixel art, création de mini-jeux Minecraft et plus encore.
 
 **Experience Qualities**:
 1. **Sophistiqué** - Design raffiné avec une palette noisette chaleureuse qui reflète l'expertise technique

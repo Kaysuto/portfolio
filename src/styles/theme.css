@@ -260,3 +260,36 @@
     --color-bg-overlay: var(--color-neutral-3);
   }
 }
+
+/* Theme transition helpers (smooth color transitions, respects reduced motion) */
+@layer base {
+  :root {
+    --transition-duration: 220ms;
+    --transition-easing: cubic-bezier(.2,.9,.2,1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing);
+    }
+    .theme-fade {
+      transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing), border-color var(--transition-duration) var(--transition-easing), box-shadow var(--transition-duration) var(--transition-easing);
+    }
+    .modal-overlay {
+      transition: opacity var(--transition-duration) var(--transition-easing);
+    }
+    .modal-panel {
+      transition: transform var(--transition-duration) var(--transition-easing), opacity var(--transition-duration) var(--transition-easing);
+      transform-origin: center center;
+    }
+  }
+
+  /* Reduced motion: disable transforms/transitions */
+  @media (prefers-reduced-motion: reduce) {
+    html, .theme-fade, .modal-overlay, .modal-panel {
+      transition: none !important;
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+}

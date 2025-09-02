@@ -16,7 +16,7 @@ export function AboutSection() {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 hover:text-accent transition-colors duration-300">
             À propos de moi
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Développeur passionné et Technicien Datacenter de 23 ans, je combine expertise technique infrastructure et développement pour créer des solutions robustes.</p>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Full-Stack Maker polyvalent et Technicien Datacenter de 23 ans, j'ai acquis une expertise dans de nombreux domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft et bien plus encore.</p>
         </div>
 
         {/* Main Content */}
@@ -27,11 +27,11 @@ export function AboutSection() {
               <h3 className="text-2xl font-semibold text-foreground mb-4 hover:text-accent transition-colors duration-300">
                 Mon parcours
               </h3>
-              <p className="text-muted-foreground leading-relaxed mb-6 hover:text-foreground/80 transition-colors duration-300">En tant que Full-Stack Maker et Technicien Datacenter, je maîtrise l'ensemble de la chaîne technologique, de l'infrastructure physique aux applications web. Cette double expertise me permet de créer des solutions complètes et performantes.</p>
+              <p className="text-muted-foreground leading-relaxed mb-6 hover:text-foreground/80 transition-colors duration-300">En tant que Full-Stack Maker polyvalent et Technicien Datacenter, ma force réside dans ma diversité d'expertise : de l'infrastructure réseau au développement web, du design pixel art à la création de mini-jeux Minecraft. Cette polyvalence unique me permet d'aborder chaque projet avec une vision globale et créative.</p>
               <p className="text-muted-foreground leading-relaxed hover:text-foreground/80 transition-colors duration-300">
                 Mon expérience en datacenter m'apporte une compréhension approfondie 
                 des systèmes, de la sécurité et de la fiabilité, que j'applique 
-                dans mes développements pour garantir robustesse et scalabilité.
+                dans mes créations pour garantir innovation et qualité.
               </p>
             </div>
 
@@ -99,7 +99,7 @@ export function AboutSection() {
                   </h4>
                   <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
                     J'accorde une grande importance à la qualité du code, à l'architecture 
-                    propre et aux bonnes pratiques de développement.
+                    propre et aux standards d'excellence dans chaque domaine.
                   </p>
                 </div>
               </div>

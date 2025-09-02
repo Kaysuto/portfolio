@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ArrowSquareOut, Star, GitBranch, Calendar, Code } from "@phosphor-icons/react"
+import { ArrowSquareOut, Calendar } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -21,54 +21,60 @@ interface Project {
   image_alt?: string;
 }
 
-
 export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(false)
   const [debug, setDebug] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchProjects = async () => {
     setLoading(true)
-    getProjects()
-      .then((data) => {
-  console.log('Supabase projects:', data)
-        if (Array.isArray(data)) {
-          // Mapping des champs pour correspondre à l'interface Project attendue
-          const mapStatus = (status: string): Project["status"] => {
-            switch (status) {
-              case 'published': return 'En production';
-              case 'dev': return 'En développement';
-              case 'alpha': return 'Alpha';
-              case 'beta': return 'Beta';
-              default: return 'En production';
-            }
+    setError(null)
+    setDebug(null)
+    try {
+      const data = await getProjects()
+      console.log('Supabase projects:', data)
+      if (Array.isArray(data)) {
+        // Mapping des champs pour correspondre à l'interface Project attendue
+        const mapStatus = (status: string): Project["status"] => {
+          switch (status) {
+            case 'published': return 'En production';
+            case 'dev': return 'En développement';
+            case 'alpha': return 'Alpha';
+            case 'beta': return 'Beta';
+            default: return 'En production';
           }
-          const mapped = data.map((p: any) => ({
-            id: p.id,
-            title: p.title,
-            description: p.description,
-            tech_stack: p.technologies || [],
-            status: mapStatus(p.status),
-            type: p.type || '',
-            github_url: p.github_url || undefined,
-            demo_url: p.live_url || undefined,
-            stars: p.stars || 0,
-            forks: p.forks || 0,
-            created_at: p.created_at,
-            image_url: p.image_url || undefined,
-            image_alt: p.image_alt || p.title,
-          }))
-          setProjects(mapped)
-        } else {
-          setProjects([])
         }
-      })
-      .catch((e) => {
+        const mapped = data.map((p: any) => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          tech_stack: p.technologies || [],
+          status: mapStatus(p.status),
+          type: p.type || '',
+          github_url: p.github_url || undefined,
+          demo_url: p.live_url || undefined,
+          stars: p.stars || 0,
+          forks: p.forks || 0,
+          created_at: p.created_at,
+          image_url: p.image_url || undefined,
+          image_alt: p.image_alt || p.title,
+        }))
+        setProjects(mapped)
+      } else {
         setProjects([])
-        setError(e?.message || String(e))
-      })
-      .finally(() => setLoading(false))
+      }
+    } catch (e: any) {
+      setProjects([])
+      setError(e?.message || String(e))
+      setDebug((e && (e.cause || e)) || e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProjects()
   }, [])
 
   const getStatusColor = (status: string) => {
@@ -99,10 +105,17 @@ export function ProjectCards() {
   return (
     <div className="w-full max-w-7xl mx-auto">
       {error && (
-        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">Erreur Supabase : {error}</div>
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded flex items-center justify-between">
+          <div>Erreur Supabase : {error}</div>
+          <div className="ml-4">
+            <Button size="sm" variant="ghost" onClick={fetchProjects}>Réessayer</Button>
+          </div>
+        </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {projectsToRender.length > 0 ? (
+        {loading ? (
+          <div className="col-span-3 text-center text-muted-foreground py-12">Chargement…</div>
+        ) : projectsToRender.length > 0 ? (
           projectsToRender.map((project, index) => (
             <Card
               key={project.id}
@@ -139,7 +152,6 @@ export function ProjectCards() {
                     <span className="text-muted-foreground text-xs">Aucune technologie</span>
                   )}
                 </div>
-                {/* Bouton Demo déplacé dans le footer */}
                 {/* Footer : statut, bouton Demo & date */}
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-border gap-2">
                   <span className="text-xs font-semibold px-2 py-1 rounded bg-accent/10 text-accent">
@@ -170,6 +182,9 @@ export function ProjectCards() {
           </div>
         )}
       </div>
+      {debug && (
+        <pre className="text-xs text-muted-foreground bg-background p-3 rounded">{JSON.stringify(debug, null, 2)}</pre>
+      )}
     </div>
   )
 }

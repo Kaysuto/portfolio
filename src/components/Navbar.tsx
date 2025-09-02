@@ -3,21 +3,14 @@ import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/hooks/use-theme"
 
 
 export function Navbar() {
-  const [isDark, setIsDark] = useState(false)
+  const { theme, toggle: toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("accueil")
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [isDark])
 
 
   useEffect(() => {
@@ -112,11 +105,11 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsDark(!isDark)}
+              onClick={toggleTheme}
               className="p-2 hover:bg-accent/10 group transition-all duration-300 hover:scale-110"
             >
               <div className="relative">
-                {isDark ? (
+                {theme === 'dark' ? (
                   <Sun size={18} className="text-accent group-hover:rotate-180 transition-transform duration-500" />
                 ) : (
                   <Moon size={18} className="text-accent group-hover:-rotate-12 transition-transform duration-300" />
