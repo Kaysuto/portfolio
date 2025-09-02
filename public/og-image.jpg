@@ -33,7 +33,7 @@
   
   <!-- Nom principal avec couleur foreground -->
   <text x="600" y="240" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="700" fill="#F0EBE3">
-    Kimiya
+    Kaysuto Kimiya
   </text>
   
   <!-- Sous-titre avec couleur accent -->
@@ -50,14 +50,8 @@
   <rect x="380" y="420" width="80" height="1" fill="#B5A089" opacity="0.6"/>
   <rect x="740" y="420" width="80" height="1" fill="#B5A089" opacity="0.6"/>
   
-  <!-- URL du portfolio -->
+  <!-- URL du portfolio - vraie URL -->
   <text x="600" y="500" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="500" fill="#D4BE9F">
-    kimiya-portfolio.vercel.app
-  </text>
-  
-  <!-- Badge discret "100% Lighthouse" -->
-  <rect x="480" y="540" width="240" height="30" rx="15" fill="#B5A089" opacity="0.2"/>
-  <text x="600" y="560" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#F0EBE3">
-    🎯 LIGHTHOUSE 100%
+    https://kaysuto.fr
   </text>
 </svg>
