@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kimiya-portfolio-v1.1';
-const STATIC_CACHE = 'static-v1.1';
+const CACHE_NAME = 'kimiya-portfolio-v1.2';
+const STATIC_CACHE = 'static-v1.2';
 
 const STATIC_ASSETS = [
   '/',
@@ -8,9 +8,15 @@ const STATIC_ASSETS = [
   '/sitemap.xml',
   '/favicon.svg',
   '/icon-192.svg',
-  '/icon-512.svg',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
+  '/icon-512.svg'
+  // Fonts supprimées pour optimisation
 ];
+
+// Headers de cache optimisés
+const CACHE_HEADERS = {
+  'Cache-Control': 'public, max-age=31536000, immutable', // 1 an pour assets avec hash
+  'Expires': new Date(Date.now() + 31536000000).toUTCString()
+};
 
 // Install SW avec stratégie sécurisée
 self.addEventListener('install', (event) => {

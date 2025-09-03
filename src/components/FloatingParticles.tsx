@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo, useMemo } from 'react'
 
 interface Particle {
   id: number
@@ -10,13 +10,18 @@ interface Particle {
   opacity: number
 }
 
-export function FloatingParticles() {
+const FloatingParticles = memo(function FloatingParticles() {
   const [particles, setParticles] = useState<Particle[]>([])
 
+  // Optimization: Reduce particle count for better performance
+  const particleCount = useMemo(() => {
+    return window.innerWidth < 768 ? 20 : 50
+  }, [])
+
   useEffect(() => {
-    // Initialize particles
+    // Initialize particles with optimized count
     const initialParticles: Particle[] = []
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < particleCount; i++) {
       initialParticles.push({
         id: i,
         x: Math.random() * window.innerWidth,
@@ -68,4 +73,6 @@ export function FloatingParticles() {
       ))}
     </div>
   )
-}
+})
+
+export { FloatingParticles }

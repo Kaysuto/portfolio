@@ -12,6 +12,15 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kaysuto.fr" />
     
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.github.com" />
+    
+    <!-- Critical CSS preload -->
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="preload" href="/src/main.tsx" as="script" />
+    
     <!-- Prevent prefetching of source files -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="x-robots-tag" content="noindex, nofollow" />
