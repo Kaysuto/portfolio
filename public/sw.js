@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kimiya-portfolio-v1.2';
-const STATIC_CACHE = 'static-v1.2';
+const CACHE_NAME = 'kimiya-portfolio-v1.6';
+const STATIC_CACHE = 'static-v1.6';
 
 const STATIC_ASSETS = [
   '/',
@@ -75,42 +75,50 @@ self.addEventListener('fetch', (event) => {
   // Skip chrome-extension and other non-http requests
   if (!event.request.url.startsWith('http')) return;
 
-  // Gestion optimisée du cache pour les ressources statiques
   const url = new URL(event.request.url);
 
-  // Ressources statiques avec cache agressif (1 an)
+  // Skip external services that should not be cached
+  const skipPatterns = [
+    'cloudflareinsights.com',
+    'google-analytics.com',
+    'googletagmanager.com',
+    'supabase',
+    '100.79.95.114',
+    'db.kaysuto.fr',
+    'chrome-extension://',
+    'moz-extension://'
+  ];
+
+  if (skipPatterns.some(pattern => event.request.url.includes(pattern))) {
+    return; // Let browser handle these requests normally
+  }
+
+  // Skip source files and development paths
+  if (url.pathname.includes('/src/') ||
+      url.pathname.includes('.tsx') ||
+      url.pathname.includes('.ts') ||
+      url.pathname.includes('.jsx') ||
+      url.pathname.includes('.js.map')) {
+    return; // Ignore source file requests completely
+  }
+
+  // Ressources statiques avec cache agressif
   if (url.pathname.match(/\.(js|css|woff2?|png|jpg|jpeg|gif|svg|ico)$/)) {
     event.respondWith(
       caches.open(CACHE_NAME).then(cache =>
         cache.match(event.request).then(cachedResponse => {
           if (cachedResponse) {
-            // Vérifier si la ressource n'est pas trop vieille (simuler max-age)
-            const cacheTime = cachedResponse.headers.get('sw-cache-time');
-            const now = Date.now();
-            const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 an en ms
-
-            if (cacheTime && (now - parseInt(cacheTime)) < maxAge) {
-              return cachedResponse;
-            }
+            return cachedResponse;
           }
 
-          // Fetch et cache avec timestamp
           return fetch(event.request).then(response => {
             if (response.status === 200) {
-              const responseClone = response.clone();
-              // Ajouter un timestamp personnalisé pour simuler max-age
-              const headers = new Headers(responseClone.headers);
-              headers.set('sw-cache-time', Date.now().toString());
-
-              const modifiedResponse = new Response(responseClone.body, {
-                status: responseClone.status,
-                statusText: responseClone.statusText,
-                headers: headers
-              });
-
-              cache.put(event.request, modifiedResponse);
+              cache.put(event.request, response.clone());
             }
             return response;
+          }).catch(() => {
+            // Silent fail for static assets
+            return new Response('', { status: 404 });
           });
         })
       )
@@ -118,40 +126,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Skip source files and development paths
-  if (event.request.url.includes('/src/') ||
-      event.request.url.includes('.tsx') ||
-      event.request.url.includes('.ts') ||
-      event.request.url.includes('.jsx') ||
-      event.request.url.includes('.js.map')) {
-    return; // Ignore source file requests completely
-  }
-
-  // Skip external API requests (Supabase, etc.)
-  if (event.request.url.includes('supabase') ||
-      event.request.url.includes('100.79.95.114') ||
-      event.request.url.includes('db.kaysuto.fr') ||
-      event.request.url.includes('kaysuto.fr')) {
-    return; // Let the browser handle these requests normally
-  }
-
+  // Handle other requests with network-first strategy
   event.respondWith(
-    caches.open(CACHE_NAME).then((cache) =>
-      fetch(event.request)
-        .then((response) => {
-          // Cache successful responses
-          if (response.status === 200) {
-            cache.put(event.request, response.clone());
-          }
-          return response;
-        })
-        .catch((error) => {
-          console.log('SW: Network failed, trying cache for:', event.request.url);
-          // Fallback to cache
-          return cache.match(event.request) ||
-                 caches.match(event.request) ||
-                 fetch(event.request); // Try network again as last resort
-        })
-    )
+    fetch(event.request)
+      .then((response) => {
+        // Cache successful responses - clone BEFORE using
+        if (response.status === 200 && response.ok) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          }).catch(() => {
+            // Silent cache error, don't break the response
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Fallback to cache silently
+        return caches.match(event.request).then(cached => {
+          return cached || new Response('', { status: 404 });
+        });
+      })
   );
 });

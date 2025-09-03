@@ -5,12 +5,22 @@ import App from './App.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 import './index.css'
 
-// Critical resource hints for performance
-const preloadCriticalResources = () => {
-  // Preload critical fonts
-  const font = new FontFace('Inter', 'url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2)');
-  font.load().then(() => document.fonts.add(font));
-};
+// Error handling for runtime issues
+window.addEventListener('error', (event) => {
+  if (event.error?.message?.includes('unstable_now')) {
+    event.preventDefault();
+    console.warn('Scheduler warning suppressed:', event.error.message);
+  }
+});
+
+// Suppress Chrome extension runtime errors
+window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason?.message?.includes('runtime.lastError') || 
+      event.reason?.message?.includes('message channel closed')) {
+    event.preventDefault();
+    console.warn('Extension error suppressed:', event.reason.message);
+  }
+});
 
 // Performance monitoring
 const reportWebVitals = (metric: any) => {
@@ -20,8 +30,6 @@ const reportWebVitals = (metric: any) => {
 };
 
 // Initialize app
-preloadCriticalResources();
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary 

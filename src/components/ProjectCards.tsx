@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -26,6 +26,9 @@ export function ProjectCards() {
   const [loading, setLoading] = useState(false)
   const [debug, setDebug] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  
+  // Prevent multiple calls
+  const hasFetched = useRef(false)
   
   // Modal state
   const [modalProject, setModalProject] = useState<Project | null>(null)
@@ -61,12 +64,20 @@ export function ProjectCards() {
   }, [isModalOpen])
 
   const fetchProjects = async () => {
+    if (loading || hasFetched.current) return; // Prevent duplicate calls
+    
+    hasFetched.current = true;
     setLoading(true)
     setError(null)
     setDebug(null)
     try {
       const data = await getProjects()
-      console.log('Supabase projects:', data)
+      
+      // Only log in development
+      if (import.meta.env.DEV) {
+        console.log('Supabase projects:', data)
+      }
+      
       if (Array.isArray(data)) {
         // Mapping des champs pour correspondre à l'interface Project attendue
         const mapStatus = (status: string): Project["status"] => {
@@ -194,10 +205,10 @@ export function ProjectCards() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group"
+                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
                       onClick={() => openModal(project)}
                     >
-                      <ArrowSquareOut size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                      <ArrowSquareOut size={14} className="group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5 transition-transform duration-200" />
                       <span>Demo</span>
                     </Button>
                   )}

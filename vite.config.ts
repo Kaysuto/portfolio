@@ -19,34 +19,13 @@ export default defineConfig({
     }
   },
   build: {
-    // Optimisations Lighthouse améliorées
+    // Optimisations simplifiées pour éviter les erreurs
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Vendor chunks séparés
-          if (id.includes('node_modules')) {
-            if (id.includes('react')) {
-              return 'react-vendor'
-            }
-            if (id.includes('@phosphor-icons')) {
-              return 'phosphor-icons'
-            }
-            if (id.includes('@radix-ui')) {
-              return 'radix-ui'
-            }
-            if (id.includes('sonner')) {
-              return 'sonner'
-            }
-            return 'vendor'
-          }
-          // Composants UI en chunk séparé
-          if (id.includes('/components/ui/')) {
-            return 'ui-components'
-          }
-          // Sections principales en chunks séparés
-          if (id.includes('Section.tsx')) {
-            return 'sections'
-          }
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          icons: ['@phosphor-icons/react'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select']
         },
         // Noms de fichiers avec hash pour cache busting optimal
         entryFileNames: 'assets/[name]-[hash].js',
