@@ -1,0 +1,81 @@
+# Apache .htaccess pour optimisation du cache Lighthouse
+# Placez ce fichier à la racine de votre site web
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Ressources statiques - Cache agressif (1 an)
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+
+  # HTML - Cache court
+  ExpiresByType text/html "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Cache-Control pour les ressources statiques
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Cache-Control pour les fonts Google
+  <FilesMatch "fonts\.googleapis\.com">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  <FilesMatch "fonts\.gstatic\.com">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Service Worker - Pas de cache
+  <FilesMatch "sw\.js$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+  # API - Cache court
+  <LocationMatch "/api/">
+    Header set Cache-Control "public, max-age=300"
+  </LocationMatch>
+
+  # Compression GZIP
+  <FilesMatch "\.(js|css|html|xml|txt|woff2|woff)$">
+    Header append Vary: Accept-Encoding
+  </FilesMatch>
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Optimisations de performance
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirection HTTP vers HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Compression des ressources
+  RewriteCond %{HTTP:Accept-Encoding} gzip
+  RewriteCond %{REQUEST_FILENAME} \.(js|css)$
+  RewriteCond %{REQUEST_FILENAME}.gz -f
+  RewriteRule ^(.*)$ $1.gz [L]
+</IfModule>

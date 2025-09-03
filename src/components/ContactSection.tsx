@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { EnvelopeSimple, LinkedinLogo, GithubLogo, User, Buildings, ChatCircle, PaperPlaneTilt, CheckCircle, Warning } from "@phosphor-icons/react"
+import { EnvelopeSimple, LinkedinLogo, GithubLogo, User, Buildings, ChatCircle, PaperPlaneTilt, CheckCircle, Warning, Copy, Check } from "@phosphor-icons/react"
 import { toast } from "sonner"
 // ...existing code...
 
@@ -148,6 +148,15 @@ export function ContactSection() {
 
   const handleEmailClick = () => {
     window.location.href = "mailto:contact@kimiya.pro"
+  }
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("contact@kimiya.pro")
+      toast.success("Email copié dans le presse-papiers !")
+    } catch (err) {
+      toast.error("Erreur lors de la copie de l'email")
+    }
   }
 
   return (
@@ -426,9 +435,19 @@ export function ContactSection() {
 
                 <div className="space-y-4">
                   <div className="p-4 bg-secondary/50 rounded-xl">
-                    <span className="text-lg font-medium text-foreground">
-                      contact@kimiya.pro
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium text-foreground">
+                        contact@kimiya.pro
+                      </span>
+                      <button
+                        onClick={handleCopyEmail}
+                        className="p-2 hover:bg-accent/10 rounded-lg transition-colors duration-200 group"
+                        title="Copier l'email"
+                        aria-label="Copier l'email dans le presse-papiers"
+                      >
+                        <Copy size={18} className="text-muted-foreground group-hover:text-accent transition-colors duration-200" />
+                      </button>
+                    </div>
                   </div>
 
                   <button

@@ -104,7 +104,7 @@ export function HeroSection() {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
           <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
             role="dialog"
             aria-modal="true"
           >
@@ -126,16 +126,39 @@ export function HeroSection() {
         </div>
       )}
 
-      {/* Curseur animé bas */}
-      {/* Curseur souris animé bas */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
+      {/* Curseur animé - Version Desktop */}
+      <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
         <span className="flex flex-col items-center">
           <svg className="w-9 h-14 text-accent" viewBox="0 0 36 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="32" height="52" rx="16" stroke="currentColor" strokeWidth="3" fill="none" className="animate-mouse-outline"/>
+            <rect x="2" y="2" width="32" height="52" rx="16" stroke="currentColor" strokeWidth="3" fill="none"/>
             <rect x="15" y="10" width="6" height="12" rx="3" fill="currentColor">
               <animate attributeName="y" values="10;30;10" keyTimes="0;0.7;1" dur="1.4s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.6;0.7;0.9;1" dur="1.4s" repeatCount="indefinite" />
             </rect>
+          </svg>
+        </span>
+      </div>
+
+      {/* Curseur animé - Version Mobile */}
+      <div className="flex md:hidden absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
+        <span className="flex flex-col items-center">
+          {/* Flèche mobile avec doigt stylisé */}
+          <svg className="w-8 h-12 text-accent animate-pulse-slow" viewBox="0 0 32 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Corps du doigt */}
+            <ellipse cx="16" cy="35" rx="8" ry="10" fill="currentColor" opacity="0.8"/>
+            {/* Phalange supérieure */}
+            <ellipse cx="16" cy="25" rx="6" ry="8" fill="currentColor"/>
+            {/* Phalange moyenne */}
+            <ellipse cx="16" cy="15" rx="5" ry="6" fill="currentColor"/>
+            {/* Phalange supérieure */}
+            <ellipse cx="16" cy="8" rx="4" ry="5" fill="currentColor"/>
+            {/* Ongle */}
+            <ellipse cx="16" cy="3" rx="3" ry="3" fill="currentColor" opacity="0.9"/>
+
+            {/* Animation de glissement vers le bas - plus subtile */}
+            <g className="animate-bounce" style={{animationDuration: '2s'}}>
+              <path d="M12 42 L16 46 L20 42" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
+            </g>
           </svg>
         </span>
       </div>

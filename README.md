@@ -1,6 +1,18 @@
 # 🌟 Portfolio Kimiya Kaysuto
 
-> **Full-Stack Maker polyvalent** - Expert en réseau, développement, design pixel art, création de mini-jeux Minecraft et bien plus encore.
+> **Full-Stack### 🎨 Fonctionnalités
+
+### 🏠 Section Héro
+- Animation d'apparition fluide
+- CTA avec modal téléchargement CV
+- Particules flottantes interactives
+- **Curseur animé adaptatif** : Souris desktop, doigt mobile
+
+#### Curseur Adaptatif
+- **Desktop (md+)** : Souris animée avec roulette qui bouge
+- **Mobile (<md)** : Doigt stylisé avec animation de tap et glow
+- **Responsive** : Changement automatique selon la taille d'écran
+- **Accessibilité** : Labels ARIA et navigation clavier préservés
 
 [![Lighthouse Score](https://img.shields.io/badge/Lighthouse-100%25-brightgreen?logo=lighthouse&logoColor=white)](https://kimiya-portfolio.vercel.app)
 [![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white)](https://reactjs.org)
@@ -34,6 +46,7 @@ Portfolio moderne et minimaliste présentant mon expertise polyvalente dans de m
 - **Critical CSS** - Styles critiques inlinés pour LCP
 - **Web Vitals** - Monitoring des performances en temps réel
 - **Meta tags** - SEO optimisé avec Open Graph et Twitter Cards
+- **Cache optimisé** - Headers HTTP et Service Worker pour Lighthouse 100%
 
 ### Outils & Qualité
 - **ESLint & Prettier** - Linting et formatage automatique
@@ -42,10 +55,13 @@ Portfolio moderne et minimaliste présentant mon expertise polyvalente dans de m
 
 ## 🎨 Fonctionnalités
 
-### 🏠 Section Héro
+### � Fonctionnalités
+
+### �🏠 Section Héro
 - Animation d'apparition fluide
 - CTA avec modal téléchargement CV
 - Particules flottantes interactives
+- **Curseur animé adaptatif** : Souris desktop, doigt mobile
 
 ### 👤 À Propos
 - Présentation expertise polyvalente
@@ -198,6 +214,65 @@ Les contributions sont bienvenues ! Merci de :
 3. Commit vos changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
 4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
 5. Ouvrir une Pull Request
+
+## ⚠️ Avertissements et Solutions
+
+### API Obsolète - StorageType.persistent
+
+**Problème :** L'avertissement `StorageType.persistent est obsolète` peut apparaître dans la console du navigateur.
+
+**Cause :** Cette API obsolète provient de la dépendance `@supabase/storage-js` utilisée par Supabase.
+
+**Solutions appliquées :**
+- ✅ Mise à jour de Supabase vers la dernière version (`@supabase/supabase-js@2.57.0`)
+- ✅ Ajout de vérification API moderne dans le Service Worker
+- ✅ Utilisation de `navigator.storage.persist()` comme alternative moderne
+
+**Note :** Si l'avertissement persiste, il s'agit d'une dépendance externe qui sera corrigée dans les futures versions de Supabase.
+
+## ⚡ Optimisations de Cache
+
+### Headers HTTP Recommandés
+
+Pour atteindre le score Lighthouse 100%, configurez ces headers sur votre serveur :
+
+#### Apache (.htaccess)
+```apache
+# Ressources statiques - Cache agressif (1 an)
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2|woff)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Service Worker - Pas de cache
+<FilesMatch "sw\.js$">
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+</FilesMatch>
+```
+
+#### Nginx
+```nginx
+location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff2|woff)$ {
+  expires 1y;
+  add_header Cache-Control "public, immutable";
+}
+
+location = /sw.js {
+  add_header Cache-Control "no-cache, no-store, must-revalidate";
+}
+```
+
+### Service Worker Optimisé
+
+Le Service Worker inclut maintenant :
+- ✅ Cache agressif pour les ressources statiques (simule 1 an)
+- ✅ Cache intelligent avec timestamps personnalisés
+- ✅ Gestion optimisée des polices Google Fonts
+- ✅ Stratégie Network-First pour les autres ressources
+
+### Fichiers Générés
+
+- 📄 `.htaccess` - Configuration Apache prête à l'emploi
+- 📄 `cache-headers.conf` - Configuration générique des headers
 
 ## 📄 Licence
 

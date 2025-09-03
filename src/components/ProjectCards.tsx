@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ArrowSquareOut, Calendar } from "@phosphor-icons/react"
+import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -26,6 +26,39 @@ export function ProjectCards() {
   const [loading, setLoading] = useState(false)
   const [debug, setDebug] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  
+  // Modal state
+  const [modalProject, setModalProject] = useState<Project | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMounted, setModalMounted] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
+  const openModal = (project: Project) => {
+    setModalProject(project)
+    setIsClosing(false)
+    setModalMounted(true)
+    // Allow DOM to mount, then trigger animation
+    setTimeout(() => setIsModalOpen(true), 10)
+  }
+
+  const closeModal = () => {
+    setIsClosing(true)
+    setIsModalOpen(false)
+    // Wait for exit animation to complete
+    setTimeout(() => {
+      setModalMounted(false)
+      setModalProject(null)
+      setIsClosing(false)
+    }, 300)
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal()
+    }
+    if (isModalOpen) document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [isModalOpen])
 
   const fetchProjects = async () => {
     setLoading(true)
@@ -162,7 +195,7 @@ export function ProjectCards() {
                       variant="default"
                       size="sm"
                       className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group"
-                      onClick={() => window.open(project.demo_url, '_blank')}
+                      onClick={() => openModal(project)}
                     >
                       <ArrowSquareOut size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                       <span>Demo</span>
@@ -184,6 +217,51 @@ export function ProjectCards() {
       </div>
       {debug && (
         <pre className="text-xs text-muted-foreground bg-background p-3 rounded">{JSON.stringify(debug, null, 2)}</pre>
+      )}
+
+      {/* Modal for Demo project */}
+      {modalMounted && modalProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+          <div
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              aria-label="Fermer"
+              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
+              onClick={closeModal}
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-lg font-semibold mb-2">Voir la démo</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Vous allez être redirigé vers la démo du projet <strong>{modalProject.title}</strong>.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={closeModal}
+                className="px-4 py-2"
+              >
+                Annuler
+              </Button>
+              <a 
+                href={modalProject.demo_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-block"
+                onClick={closeModal}
+              >
+                <Button className="bg-accent text-accent-foreground px-4 py-2">
+                  <ArrowSquareOut size={16} className="mr-2" />
+                  Voir la démo
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

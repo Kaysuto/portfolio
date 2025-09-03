@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { GithubLogo } from "@phosphor-icons/react"
+import { GithubLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
 
@@ -12,6 +12,32 @@ interface GitHubStats {
 export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMounted, setModalMounted] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
+  const openModal = () => {
+    setIsClosing(false)
+    setModalMounted(true)
+    setTimeout(() => setIsModalOpen(true), 10)
+  }
+
+  const closeModal = () => {
+    setIsClosing(true)
+    setIsModalOpen(false)
+    setTimeout(() => {
+      setModalMounted(false)
+      setIsClosing(false)
+    }, 300)
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsModalOpen(false)
+    }
+    if (isModalOpen) document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [isModalOpen])
 
   useEffect(() => {
     const fetchGitHubStats = async () => {
@@ -79,24 +105,24 @@ export function ProjectsSection() {
                 ))}
               </div>
             ) : githubStats ? (
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 <div className="text-center group/stat">
-                  <div className="text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
+                  <div className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.public_repos}
                   </div>
-                  <p className="text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Repositories</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Repositories</p>
                 </div>
                 <div className="text-center group/stat">
-                  <div className="text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
+                  <div className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.followers}
                   </div>
-                  <p className="text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Followers</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Followers</p>
                 </div>
                 <div className="text-center group/stat">
-                  <div className="text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
+                  <div className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300">
                     {githubStats.following}
                   </div>
-                  <p className="text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Following</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Following</p>
                 </div>
               </div>
             ) : (
@@ -110,15 +136,49 @@ export function ProjectsSection() {
         {/* View More */}
         <div className="text-center mt-20">
           <Button
+            onClick={openModal}
             variant="outline"
             size="lg"
-            className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-10 py-4 text-lg font-medium hover:scale-105 transition-all duration-300"
+            className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-medium hover:scale-105 transition-all duration-300"
           >
             {/* Icône ExternalLink supprimée car non disponible dans Phosphor */}
             Voir tous mes projets sur GitHub
           </Button>
         </div>
       </div>
+
+      {/* Modal for GitHub projects */}
+      {modalMounted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+          <div
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              aria-label="Fermer"
+              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
+              onClick={closeModal}
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-lg font-semibold mb-2">Voir mes projets GitHub</h3>
+            <p className="text-sm text-muted-foreground mb-4">Vous pouvez consulter tous mes projets directement sur mon profil GitHub.</p>
+            <div className="flex justify-end">
+              <a 
+                href="https://github.com/Kaysuto" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-block"
+                onClick={closeModal}
+              >
+                <Button className="bg-accent text-accent-foreground px-4 py-2">Voir sur GitHub</Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

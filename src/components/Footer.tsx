@@ -97,17 +97,13 @@ export function Footer() {
         <div className="pt-8 border-t border-border animate-fadeInUp animate-delay-400">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <span>© {currentYear} Kimiya. Fait avec</span>
-              <span className="text-accent">❤️</span>
-              <span>et beaucoup de café ☕</span>
+              <span>© {currentYear} Kimiya</span>
             </div>
             
-            <div className="flex items-center space-x-6 text-xs text-muted-foreground">
-              <span>Full-Stack Maker</span>
+            <div className="flex items-center space-x-3 text-xs text-muted-foreground">
+              <span>Full-Stack</span>
               <span>•</span>
-              <span>23 ans</span>
-              <span>•</span>
-              <span>Passionné par les LLM</span>
+              <span>Passionné LLM</span>
             </div>
           </div>
         </div>

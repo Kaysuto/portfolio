@@ -1,0 +1,68 @@
+# Configuration Supabase Self-Hosted pour diagnostic
+# Basé sur https://supabase.com/docs/guides/self-hosting/docker
+
+version: '3.8'
+
+services:
+  supabase:
+    image: supabase/supabase:latest
+    container_name: supabase-local
+    ports:
+      - "8000:8000"
+    environment:
+      # Configuration de base
+      - POSTGRES_PASSWORD=your-super-secret-and-long-postgres-password
+      - JWT_SECRET=your-super-secret-jwt-token-with-at-least-32-characters-long
+      - ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      - SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+
+      # Configuration CORS pour développement
+      - ADDITIONAL_REDIRECT_URLS=http://localhost:5173,http://127.0.0.1:5173
+      - SITE_URL=http://localhost:5173
+
+      # Configuration de la base de données
+      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+
+      # Configuration des services
+      - STUDIO_DEFAULT_ORGANIZATION=Default Organization
+      - STUDIO_DEFAULT_PROJECT=Default Project
+      - STUDIO_PORT=3000
+      - STUDIO_PG_META_PORT=8080
+      - STUDIO_DB_PORT=5432
+
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+      - ./volumes/storage:/var/lib/storage
+      - ./volumes/logs:/var/log
+
+    depends_on:
+      - db
+
+  db:
+    image: supabase/postgres:15.1.0.147
+    container_name: supabase-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=your-super-secret-and-long-postgres-password
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+
+  studio:
+    image: supabase/studio:latest
+    container_name: supabase-studio
+    ports:
+      - "3000:3000"
+    environment:
+      - STUDIO_PG_META_URL=http://meta:8080
+      - STUDIO_URL=http://localhost:3000
+      - SUPABASE_URL=http://localhost:8000
+      - SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      - SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+
+networks:
+  default:
+    name: supabase-network

@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/supabase/:path*",
+      "destination": "http://100.79.95.114:8000/:path*"
+    }
+  ]
+}

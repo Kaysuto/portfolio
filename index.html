@@ -5,26 +5,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kimiya Kaysuto - Full-Stack Maker | Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
     <meta name="keywords" content="full-stack maker, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya Kaysuto" />
     <meta name="author" content="Kimiya Kaysuto" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://kimiya-portfolio.vercel.app" />
+    <link rel="canonical" href="https://kaysuto.fr" />
+    
+    <!-- Prevent prefetching of source files -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="x-robots-tag" content="noindex, nofollow" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://kimiya-portfolio.vercel.app" />
+    <meta property="og:url" content="https://kaysuto.fr" />
     <meta property="og:title" content="Kimiya Kaysuto - Full-Stack Maker" />
     <meta property="og:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
-    <meta property="og:image" content="https://kimiya-portfolio.vercel.app/og-image.jpg" />
+    <meta property="og:image" content="https://kaysuto.fr/og-image.jpg" />
     <meta property="og:locale" content="fr_FR" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://kimiya-portfolio.vercel.app" />
+    <meta property="twitter:url" content="https://kaysuto.fr" />
     <meta property="twitter:title" content="Kimiya Kaysuto - Full-Stack Maker" />
     <meta property="twitter:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
-    <meta property="twitter:image" content="https://kimiya-portfolio.vercel.app/og-image.jpg" />
+    <meta property="twitter:image" content="https://kaysuto.fr/og-image.jpg" />
     
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
@@ -44,8 +49,8 @@
     <!-- Critical CSS inline for LCP -->
     <style>
         html{font-family:ui-sans-serif,system-ui,sans-serif;scroll-behavior:smooth}
-        body{margin:0;background:#0b1220;color:#e6eef8;line-height:1.6}
-        .dark{background:#0b1220;color:#e6eef8}
+        body{margin:0;background:#f9f6f0;color:#1a0f08;line-height:1.6}
+        .dark{background:#1a0f08;color:#e6eef8}
         #root{min-height:100vh}
         *{box-sizing:border-box}
     </style>
@@ -54,24 +59,34 @@
                 // Applique le thème avant le rendu (évite FOUC)
                 (function() {
                     try {
-                        var match = document.cookie.match(/(?:^|; )theme=(dark|light)(?:;|$)/);
-                        var theme = match ? match[1] : 'dark';
-                        if (theme === 'dark') document.documentElement.classList.add('dark');
-                        else document.documentElement.classList.remove('dark');
-                    } catch(e) {}
+                        // Vérifier d'abord localStorage, puis les cookies
+                        var theme = localStorage.getItem('theme');
+                        if (!theme) {
+                            var match = document.cookie.match(/(?:^|; )theme=(dark|light)(?:;|$)/);
+                            theme = match ? match[1] : 'dark';
+                        }
+                        if (theme === 'dark') {
+                            document.documentElement.classList.add('dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                        }
+                    } catch(e) {
+                        // Fallback au thème sombre par défaut
+                        document.documentElement.classList.add('dark');
+                    }
                 })();
                 // Preload critical resources
                 if ('requestIdleCallback' in window) {
                     requestIdleCallback(function() {
+                        // Précharger les ressources critiques au lieu des fichiers source
                         var link = document.createElement('link');
                         link.rel = 'prefetch';
-                        link.href = '/src/components/AboutSection.tsx';
+                        link.href = '/assets/index-BTCAK2Ao.js';
                         document.head.appendChild(link);
                     });
                 }
         </script>
-    <link href="/src/index.css" rel="stylesheet" />
-</head>
+    </head>
 
 <body>
     <div id="root"></div>
