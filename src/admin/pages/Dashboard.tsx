@@ -1,203 +1,160 @@
-import { useEffect, useState } from 'react';
+import { AdminLayout } from '../components/AdminLayout';
+import { Button } from '@/components/ui/button';
 import { 
-  EyeIcon, 
-  CursorArrowRaysIcon, 
-  LinkIcon, 
-  UserGroupIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
-  WrenchIcon,
-  ShieldExclamationIcon
-} from '@heroicons/react/24/outline';
-import { DashboardCard } from '../components/ui/DashboardCard';
-import { AnalyticsService } from '../services/adminServices';
-import type { DashboardMetrics } from '../types/admin';
+  ChartBar, 
+  Users, 
+  Eye, 
+  TrendUp,
+  Shield,
+  Gear,
+  Warning,
+  CheckCircle
+} from '@phosphor-icons/react';
 
 export const Dashboard: React.FC = () => {
-  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
-  const [loading, setLoading] = useState(true);
+  const stats = [
+    {
+      title: 'Vues totales',
+      value: '12,543',
+      change: '+12%',
+      icon: Eye,
+      color: 'accent'
+    },
+    {
+      title: 'Visiteurs uniques',
+      value: '8,921',
+      change: '+8%',
+      icon: Users,
+      color: 'primary'
+    },
+    {
+      title: 'Taux de conversion',
+      value: '3.2%',
+      change: '+0.5%',
+      icon: TrendUp,
+      color: 'secondary'
+    },
+    {
+      title: 'Performance',
+      value: '98%',
+      change: '+2%',
+      icon: ChartBar,
+      color: 'accent'
+    }
+  ];
 
-  useEffect(() => {
-    const loadMetrics = async () => {
-      try {
-        const data = await AnalyticsService.getDashboardMetrics();
-        setMetrics(data);
-      } catch (error) {
-        console.error('Erreur chargement métriques:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadMetrics();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="loading loading-spinner loading-lg text-primary"></div>
-      </div>
-    );
-  }
-
-  if (!metrics) {
-    return (
-      <div className="alert alert-error">
-        <span>Erreur lors du chargement des métriques</span>
-      </div>
-    );
-  }
+  const recentActivity = [
+    { type: 'info', message: 'Nouvelle visite depuis la France', time: 'Il y a 2 minutes' },
+    { type: 'success', message: 'Système mis à jour avec succès', time: 'Il y a 1 heure' },
+    { type: 'warning', message: 'Espace disque à 85%', time: 'Il y a 3 heures' },
+    { type: 'info', message: 'Nouvelle connexion admin', time: 'Il y a 5 heures' }
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-base-content">Tableau de bord</h1>
-          <p className="text-base-content/70 mt-1">
-            Vue d'ensemble de votre portfolio et analytics
-          </p>
-        </div>
-        <div className="text-sm text-base-content/50">
-          Dernière mise à jour: {new Date().toLocaleTimeString('fr-FR')}
-        </div>
-      </div>
-
-      {/* Métriques principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <DashboardCard
-          title="Visiteurs aujourd'hui"
-          value={metrics.visitorsToday}
-          description="↗︎ +12% par rapport à hier"
-          icon={<UserGroupIcon className="w-6 h-6" />}
-          trend="up"
-        />
-        
-        <DashboardCard
-          title="Pages vues"
-          value={metrics.pageViewsToday}
-          description="↗︎ +8% par rapport à hier"
-          icon={<EyeIcon className="w-6 h-6" />}
-          trend="up"
-        />
-        
-        <DashboardCard
-          title="Liens actifs"
-          value={`${metrics.activeLinks}/${metrics.totalLinks}`}
-          description={`${metrics.totalLinks - metrics.activeLinks} inactifs`}
-          icon={<LinkIcon className="w-6 h-6" />}
-          trend="neutral"
-        />
-        
-        <DashboardCard
-          title="Total clics"
-          value={metrics.totalClicks}
-          description="Tous les liens confondus"
-          icon={<CursorArrowRaysIcon className="w-6 h-6" />}
-          trend="neutral"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top liens */}
-        <div className="card bg-base-100 shadow-lg border border-base-300">
-          <div className="card-body">
-            <h2 className="card-title flex items-center">
-              <ArrowTrendingUpIcon className="w-5 h-5 text-primary" />
-              Liens les plus populaires
-            </h2>
-            
-            <div className="space-y-3 mt-4">
-              {metrics.topLinks.length > 0 ? (
-                metrics.topLinks.map((link, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-base-200 rounded-lg">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-base-content truncate">
-                        {link.title}
-                      </p>
-                      <p className="text-xs text-base-content/70 truncate">
-                        {link.url}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="badge badge-primary">{link.clicks}</span>
-                      <span className="text-xs text-base-content/50">clics</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-base-content/50">
-                  <LinkIcon className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                  <p>Aucun lien trouvé</p>
-                  <p className="text-xs">Ajoutez des liens pour voir les statistiques</p>
-                </div>
-              )}
-            </div>
-            
-            {metrics.topLinks.length > 0 && (
-              <div className="card-actions justify-end mt-4">
-                <a href="/admin/links" className="btn btn-primary btn-sm">
-                  Gérer les liens
-                </a>
-              </div>
-            )}
+    <AdminLayout>
+      <div className="min-h-screen px-6 py-8">
+        {/* Hero Section - style page d'accueil */}
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 animate-fadeInUp">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <span className="text-foreground">Tableau de</span>
+              <br />
+              <span className="text-accent">Bord</span>
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Vue d'ensemble de votre portfolio
+            </p>
           </div>
-        </div>
 
-        {/* Activité récente */}
-        <div className="card bg-base-100 shadow-lg border border-base-300">
-          <div className="card-body">
-            <h2 className="card-title flex items-center">
-              <EyeIcon className="w-5 h-5 text-primary" />
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 animate-fadeInUp animate-delay-200">
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div
+                  key={stat.title}
+                  className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6 hover:bg-background/60 transition-all duration-300 hover:scale-105 group"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent size={24} className="text-accent" />
+                    </div>
+                    <span className="text-sm text-green-500 font-medium">
+                      {stat.change}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {stat.title}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Quick Actions - style boutons page d'accueil */}
+          <div className="mb-12 animate-fadeInUp animate-delay-400">
+            <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
+              Actions rapides
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
+                <ChartBar size={20} className="mr-2 group-hover:rotate-12 transition-transform duration-200" />
+                Voir Analytics
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-accent text-accent hover:bg-accent/10 px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              >
+                <Gear size={20} className="mr-2 group-hover:rotate-180 transition-transform duration-500" />
+                Paramètres
+              </Button>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="animate-fadeInUp animate-delay-600">
+            <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
               Activité récente
             </h2>
-            
-            <div className="space-y-3 mt-4">
-              <div className="alert alert-info">
-                <span className="text-sm">
-                  Système d'analytics en cours de développement
-                </span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-base-content/70">Nouveau visiteur</span>
-                  <span className="text-xs text-base-content/50">Il y a 5 min</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-base-content/70">Clic sur GitHub</span>
-                  <span className="text-xs text-base-content/50">Il y a 12 min</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-base-content/70">Page projet visitée</span>
-                  <span className="text-xs text-base-content/50">Il y a 18 min</span>
-                </div>
+            <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6">
+              <div className="space-y-4">
+                {recentActivity.map((activity, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-start gap-4 p-4 rounded-lg hover:bg-background/20 transition-all duration-300"
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      activity.type === 'success' ? 'bg-green-500/20' :
+                      activity.type === 'warning' ? 'bg-yellow-500/20' :
+                      'bg-accent/20'
+                    }`}>
+                      {activity.type === 'success' ? (
+                        <CheckCircle size={16} className="text-green-500" />
+                      ) : activity.type === 'warning' ? (
+                        <Warning size={16} className="text-yellow-500" />
+                      ) : (
+                        <Shield size={16} className="text-accent" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-foreground font-medium">
+                        {activity.message}
+                      </p>
+                      <p className="text-muted-foreground text-sm">
+                        {activity.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Actions rapides */}
-      <div className="card bg-base-100 shadow-lg border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title">Actions rapides</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <a href="/admin/links" className="btn btn-outline btn-primary">
-              <LinkIcon className="w-4 h-4 mr-2" />
-              Ajouter un lien
-            </a>
-            <a href="/admin/maintenance" className="btn btn-outline btn-warning">
-              <WrenchIcon className="w-4 h-4 mr-2" />
-              Mode maintenance
-            </a>
-            <a href="/admin/security" className="btn btn-outline btn-secondary">
-              <ShieldExclamationIcon className="w-4 h-4 mr-2" />
-              Gérer la sécurité
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    </AdminLayout>
   );
 };

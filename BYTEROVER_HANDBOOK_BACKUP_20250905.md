@@ -1,6 +1,7 @@
-# Byterover Handbook
+# Byterover Handbook - BACKUP
 
 *Generated: 4 septembre 2025*
+*Backup created: 5 septembre 2025*
 
 ## Layer 1: System Overview
 
@@ -141,19 +142,7 @@
 - Composants UI shadcn/ui intégrés
 - PWA complète avec service worker
 - Performance optimizations avec lazy loading
-- **ADMIN SYSTEM REDESIGN** - Refonte complète du système admin (septembre 2025)
-- **Admin Components** - AdminLayout, Dashboard, AnalyticsPage avec design cohérent
-- **Login Page Redesign** - Page de connexion admin avec thème principal
-- **Glassmorphism UI** - Composants admin avec effets backdrop-blur et animations
-
-**New Admin Modules Added**:
-- **AdminLayout.tsx** - Layout principal admin avec navbar et thème toggle
-- **Dashboard.tsx** - Page d'accueil admin avec statistiques et actions rapides  
-- **AnalyticsPage.tsx** - Analytics et métriques avec graphiques
-- **LoginPage.tsx** - Authentification admin avec design moderne
-- **Admin Routing** - Structure de navigation admin complète
 
 ---
 
 *Byterover handbook optimized for agent navigation and human developer onboarding*
-*Last updated: 5 septembre 2025 - Admin system redesign*

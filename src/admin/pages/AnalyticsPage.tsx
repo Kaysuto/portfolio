@@ -1,352 +1,193 @@
-import { useEffect, useState } from 'react';
+import { AdminLayout } from '../components/AdminLayout';
+import { Button } from '@/components/ui/button';
 import { 
-  ChartBarIcon, 
-  CursorArrowRaysIcon, 
-  EyeIcon, 
-  UserGroupIcon,
-  DevicePhoneMobileIcon,
-  ComputerDesktopIcon,
-  GlobeAltIcon,
-  CalendarIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
-} from '@heroicons/react/24/outline';
-import { DashboardCard } from '../components/ui/DashboardCard';
-import { AnalyticsService } from '../services/adminServices';
-
-interface AnalyticsData {
-  visitors: {
-    today: number;
-    week: number;
-    month: number;
-    total: number;
-  };
-  pageViews: {
-    today: number;
-    week: number;
-    month: number;
-    total: number;
-  };
-  devices: {
-    mobile: number;
-    desktop: number;
-    tablet: number;
-  };
-  countries: {
-    name: string;
-    visitors: number;
-    percentage: number;
-  }[];
-  topPages: {
-    path: string;
-    views: number;
-    percentage: number;
-  }[];
-  recentActivity: {
-    timestamp: string;
-    page: string;
-    country: string;
-    device: string;
-  }[];
-}
+  ChartLine, 
+  Users, 
+  Eye, 
+  TrendUp,
+  Globe,
+  Clock,
+  DeviceMobile,
+  Monitor
+} from '@phosphor-icons/react';
 
 export const AnalyticsPage: React.FC = () => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month'>('today');
+  const analyticsData = [
+    {
+      title: 'Visiteurs uniques',
+      value: '8,921',
+      change: '+12.5%',
+      icon: Users,
+      trend: 'up'
+    },
+    {
+      title: 'Pages vues',
+      value: '24,356',
+      change: '+8.2%',
+      icon: Eye,
+      trend: 'up'
+    },
+    {
+      title: 'Durée moyenne',
+      value: '3m 42s',
+      change: '+15.3%',
+      icon: Clock,
+      trend: 'up'
+    },
+    {
+      title: 'Taux de rebond',
+      value: '32.4%',
+      change: '-2.1%',
+      icon: TrendUp,
+      trend: 'down'
+    }
+  ];
 
-  useEffect(() => {
-    const loadAnalytics = async () => {
-      try {
-        // Simulation de données analytics
-        const mockData: AnalyticsData = {
-          visitors: {
-            today: 127,
-            week: 1043,
-            month: 4521,
-            total: 12847
-          },
-          pageViews: {
-            today: 298,
-            week: 2105,
-            month: 8934,
-            total: 25691
-          },
-          devices: {
-            mobile: 65,
-            desktop: 30,
-            tablet: 5
-          },
-          countries: [
-            { name: 'France', visitors: 1247, percentage: 42 },
-            { name: 'Canada', visitors: 684, percentage: 23 },
-            { name: 'Belgique', visitors: 432, percentage: 15 },
-            { name: 'Suisse', visitors: 298, percentage: 10 },
-            { name: 'Autres', visitors: 290, percentage: 10 }
-          ],
-          topPages: [
-            { path: '/', views: 1523, percentage: 35 },
-            { path: '/bio', views: 1124, percentage: 26 },
-            { path: '/projects', views: 892, percentage: 21 },
-            { path: '/about', views: 543, percentage: 12 },
-            { path: '/contact', views: 267, percentage: 6 }
-          ],
-          recentActivity: [
-            { timestamp: '2024-01-15 14:23', page: '/', country: 'France', device: 'Mobile' },
-            { timestamp: '2024-01-15 14:19', page: '/bio', country: 'Canada', device: 'Desktop' },
-            { timestamp: '2024-01-15 14:15', page: '/projects', country: 'Belgique', device: 'Mobile' },
-            { timestamp: '2024-01-15 14:12', page: '/', country: 'France', device: 'Tablet' },
-            { timestamp: '2024-01-15 14:08', page: '/about', country: 'Suisse', device: 'Desktop' }
-          ]
-        };
-        setAnalyticsData(mockData);
-      } catch (error) {
-        console.error('Erreur chargement analytics:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const deviceStats = [
+    { device: 'Desktop', percentage: 65, icon: Monitor },
+    { device: 'Mobile', percentage: 30, icon: DeviceMobile },
+    { device: 'Tablet', percentage: 5, icon: Globe }
+  ];
 
-    loadAnalytics();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="loading loading-spinner loading-lg text-primary"></div>
-      </div>
-    );
-  }
-
-  if (!analyticsData) {
-    return (
-      <div className="alert alert-error">
-        <span>Erreur lors du chargement des analytics</span>
-      </div>
-    );
-  }
+  const topPages = [
+    { page: '/', views: 12543, percentage: 45 },
+    { page: '/projets', views: 8921, percentage: 32 },
+    { page: '/apropos', views: 4532, percentage: 16 },
+    { page: '/contact', views: 1876, percentage: 7 }
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-base-content">Analytics</h1>
-          <p className="text-base-content/70 mt-1">
-            Analyse détaillée du trafic et des performances
-          </p>
-        </div>
-        
-        {/* Sélecteur de période */}
-        <div className="tabs tabs-boxed">
-          <button 
-            className={`tab ${selectedPeriod === 'today' ? 'tab-active' : ''}`}
-            onClick={() => setSelectedPeriod('today')}
-          >
-            Aujourd'hui
-          </button>
-          <button 
-            className={`tab ${selectedPeriod === 'week' ? 'tab-active' : ''}`}
-            onClick={() => setSelectedPeriod('week')}
-          >
-            Cette semaine
-          </button>
-          <button 
-            className={`tab ${selectedPeriod === 'month' ? 'tab-active' : ''}`}
-            onClick={() => setSelectedPeriod('month')}
-          >
-            Ce mois
-          </button>
-        </div>
-      </div>
+    <AdminLayout>
+      <div className="min-h-screen px-6 py-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-12 animate-fadeInUp">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <span className="text-foreground">Analytics &</span>
+              <br />
+              <span className="text-accent">Statistiques</span>
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Analysez les performances de votre portfolio
+            </p>
+          </div>
 
-      {/* Métriques principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <DashboardCard
-          title="Visiteurs"
-          value={analyticsData.visitors[selectedPeriod]}
-          description="Visiteurs uniques"
-          icon={<UserGroupIcon className="w-6 h-6" />}
-          trend="up"
-        />
-        
-        <DashboardCard
-          title="Pages vues"
-          value={analyticsData.pageViews[selectedPeriod]}
-          description="Vues de pages totales"
-          icon={<EyeIcon className="w-6 h-6" />}
-          trend="up"
-        />
-        
-        <DashboardCard
-          title="Taux de rebond"
-          value="24.5%"
-          description="↓ -2.1% vs période précédente"
-          icon={<ChartBarIcon className="w-6 h-6" />}
-          trend="down"
-        />
-        
-        <DashboardCard
-          title="Durée moyenne"
-          value="3m 42s"
-          description="Temps passé sur le site"
-          icon={<CalendarIcon className="w-6 h-6" />}
-          trend="up"
-        />
-      </div>
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 animate-fadeInUp animate-delay-200">
+            {analyticsData.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div
+                  key={stat.title}
+                  className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6 hover:bg-background/60 transition-all duration-300 hover:scale-105 group"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent size={24} className="text-accent" />
+                    </div>
+                    <span className={`text-sm font-medium ${
+                      stat.trend === 'up' ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {stat.change}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {stat.title}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
 
-      {/* Graphiques et données détaillées */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Types d'appareils */}
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body">
-            <h3 className="card-title flex items-center gap-2">
-              <DevicePhoneMobileIcon className="w-5 h-5" />
-              Répartition par appareil
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DevicePhoneMobileIcon className="w-4 h-4 text-primary" />
-                  <span>Mobile</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            {/* Device Stats */}
+            <div className="animate-fadeInUp animate-delay-400">
+              <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6">
+                <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <Monitor size={24} className="text-accent" />
+                  Répartition par appareil
+                </h2>
+                <div className="space-y-4">
+                  {deviceStats.map((device, index) => {
+                    const IconComponent = device.icon;
+                    return (
+                      <div key={device.device} className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                          <IconComponent size={16} className="text-accent" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-foreground font-medium">{device.device}</span>
+                            <span className="text-muted-foreground text-sm">{device.percentage}%</span>
+                          </div>
+                          <div className="w-full bg-border/30 rounded-full h-2">
+                            <div
+                              className="bg-accent rounded-full h-2 transition-all duration-500"
+                              style={{ width: `${device.percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <span className="font-semibold">{analyticsData.devices.mobile}%</span>
               </div>
-              <progress 
-                className="progress progress-primary w-full" 
-                value={analyticsData.devices.mobile} 
-                max="100"
-              />
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ComputerDesktopIcon className="w-4 h-4 text-secondary" />
-                  <span>Desktop</span>
+            </div>
+
+            {/* Top Pages */}
+            <div className="animate-fadeInUp animate-delay-500">
+              <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6">
+                <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <ChartLine size={24} className="text-accent" />
+                  Pages les plus visitées
+                </h2>
+                <div className="space-y-4">
+                  {topPages.map((page, index) => (
+                    <div key={page.page} className="flex items-center justify-between p-3 rounded-lg hover:bg-background/20 transition-all duration-300">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="text-foreground font-medium">{page.page}</p>
+                          <p className="text-muted-foreground text-sm">{page.views.toLocaleString()} vues</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-accent font-medium">{page.percentage}%</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <span className="font-semibold">{analyticsData.devices.desktop}%</span>
               </div>
-              <progress 
-                className="progress progress-secondary w-full" 
-                value={analyticsData.devices.desktop} 
-                max="100"
-              />
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ComputerDesktopIcon className="w-4 h-4 text-accent" />
-                  <span>Tablette</span>
-                </div>
-                <span className="font-semibold">{analyticsData.devices.tablet}%</span>
-              </div>
-              <progress 
-                className="progress progress-accent w-full" 
-                value={analyticsData.devices.tablet} 
-                max="100"
-              />
             </div>
           </div>
-        </div>
 
-        {/* Top pays */}
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body">
-            <h3 className="card-title flex items-center gap-2">
-              <GlobeAltIcon className="w-5 h-5" />
-              Top pays
-            </h3>
-            <div className="space-y-3">
-              {analyticsData.countries.map((country, index) => (
-                <div key={country.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="badge badge-outline badge-sm">{index + 1}</span>
-                    <span>{country.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-semibold">{country.visitors}</div>
-                    <div className="text-xs text-base-content/60">{country.percentage}%</div>
-                  </div>
-                </div>
-              ))}
+          {/* Actions */}
+          <div className="text-center animate-fadeInUp animate-delay-600">
+            <h2 className="text-2xl font-bold text-foreground mb-6">
+              Outils d'analyse
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
+                <ChartLine size={20} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
+                Exporter rapport
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-accent text-accent hover:bg-accent/10 px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              >
+                <Globe size={20} className="mr-2 group-hover:rotate-12 transition-transform duration-200" />
+                Vue détaillée
+              </Button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Pages populaires */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h3 className="card-title">Pages les plus visitées</h3>
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Page</th>
-                  <th>Vues</th>
-                  <th>Pourcentage</th>
-                  <th>Tendance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {analyticsData.topPages.map((page, index) => (
-                  <tr key={page.path}>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <span className="badge badge-ghost badge-sm">{index + 1}</span>
-                        <code className="text-sm">{page.path}</code>
-                      </div>
-                    </td>
-                    <td className="font-semibold">{page.views.toLocaleString()}</td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <progress 
-                          className="progress progress-primary w-16" 
-                          value={page.percentage} 
-                          max="100"
-                        />
-                        <span className="text-sm">{page.percentage}%</span>
-                      </div>
-                    </td>
-                    <td>
-                      {index < 2 ? (
-                        <ArrowTrendingUpIcon className="w-4 h-4 text-success" />
-                      ) : (
-                        <ArrowTrendingDownIcon className="w-4 h-4 text-error" />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* Activité récente */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h3 className="card-title">Activité en temps réel</h3>
-          <div className="space-y-3">
-            {analyticsData.recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-base-200 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                  <div>
-                    <div className="font-medium">
-                      Visite sur <code className="text-sm">{activity.page}</code>
-                    </div>
-                    <div className="text-sm text-base-content/60">
-                      {activity.country} • {activity.device}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-sm text-base-content/50">
-                  {activity.timestamp}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    </AdminLayout>
   );
 };
