@@ -1,231 +1,451 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { Gear, Play, Pause, Calendar, Users, Shield } from '@phosphor-icons/react';
-import { AdminLayout } from '../components/AdminLayout';
-import { AnimatedContainer, StaggeredGrid } from '../components/AnimatedComponents';
+import { 
+  WrenchIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  CpuChipIcon,
+  ServerIcon,
+  CloudIcon,
+  CircleStackIcon,
+  BeakerIcon,
+  CodeBracketIcon,
+  DocumentTextIcon,
+  ArrowPathIcon
+} from '@heroicons/react/24/outline';
 
-export const MaintenancePage = () => {
-  const navigate = useNavigate();
-  const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
-  const [customMessage, setCustomMessage] = useState('Site en maintenance. Nous serons de retour bientôt !');
-  const [scheduledMaintenance, setScheduledMaintenance] = useState('');
-  const [whitelistIPs, setWhitelistIPs] = useState(['127.0.0.1', '192.168.1.1']);
+interface SystemStatus {
+  name: string;
+  status: 'healthy' | 'warning' | 'error';
+  lastCheck: string;
+  details: string;
+  uptime?: string;
+}
 
-  // Vérifier authentification
+interface MaintenanceTask {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'pending' | 'in-progress' | 'completed';
+  assignedTo: string;
+  dueDate: string;
+  estimatedDuration: string;
+}
+
+export const MaintenancePage: React.FC = () => {
+  const [systemStatus, setSystemStatus] = useState<SystemStatus[]>([]);
+  const [maintenanceTasks, setMaintenanceTasks] = useState<MaintenanceTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'status' | 'tasks' | 'logs'>('status');
+
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('admin_authenticated');
-    if (!isAuthenticated) {
-      navigate('/admin/login');
+    const loadMaintenanceData = async () => {
+      try {
+        // Simulation des données de maintenance
+        const mockSystemStatus: SystemStatus[] = [
+          {
+            name: 'Serveur Web',
+            status: 'healthy',
+            lastCheck: '2024-01-15 14:30:00',
+            details: 'Fonctionnement normal',
+            uptime: '99.9%'
+          },
+          {
+            name: 'Base de données',
+            status: 'healthy',
+            lastCheck: '2024-01-15 14:29:45',
+            details: 'Connexions: 23/100, Latence: 12ms',
+            uptime: '99.8%'
+          },
+          {
+            name: 'CDN',
+            status: 'warning',
+            lastCheck: '2024-01-15 14:25:12',
+            details: 'Latence élevée détectée sur certains nodes',
+            uptime: '98.5%'
+          },
+          {
+            name: 'Service de cache',
+            status: 'healthy',
+            lastCheck: '2024-01-15 14:30:15',
+            details: 'Taux de hit: 94.2%',
+            uptime: '99.9%'
+          },
+          {
+            name: 'Monitoring',
+            status: 'healthy',
+            lastCheck: '2024-01-15 14:30:30',
+            details: 'Toutes les métriques collectées',
+            uptime: '100%'
+          }
+        ];
+
+        const mockMaintenanceTasks: MaintenanceTask[] = [
+          {
+            id: '1',
+            title: 'Mise à jour sécurité serveur',
+            description: 'Application des derniers correctifs de sécurité sur le serveur principal',
+            priority: 'high',
+            status: 'pending',
+            assignedTo: 'DevOps Team',
+            dueDate: '2024-01-20',
+            estimatedDuration: '2h'
+          },
+          {
+            id: '2',
+            title: 'Optimisation base de données',
+            description: 'Nettoyage des logs anciens et optimisation des index',
+            priority: 'medium',
+            status: 'in-progress',
+            assignedTo: 'DBA Team',
+            dueDate: '2024-01-18',
+            estimatedDuration: '4h'
+          },
+          {
+            id: '3',
+            title: 'Sauvegarde complète',
+            description: 'Sauvegarde complète du système et test de restauration',
+            priority: 'high',
+            status: 'completed',
+            assignedTo: 'Backup Team',
+            dueDate: '2024-01-15',
+            estimatedDuration: '6h'
+          },
+          {
+            id: '4',
+            title: 'Audit de sécurité',
+            description: 'Audit complet de la sécurité du système et des accès',
+            priority: 'critical',
+            status: 'pending',
+            assignedTo: 'Security Team',
+            dueDate: '2024-01-22',
+            estimatedDuration: '8h'
+          }
+        ];
+
+        setSystemStatus(mockSystemStatus);
+        setMaintenanceTasks(mockMaintenanceTasks);
+      } catch (error) {
+        console.error('Erreur chargement données maintenance:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMaintenanceData();
+  }, []);
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return <CheckCircleIcon className="w-5 h-5 text-success" />;
+      case 'warning':
+        return <ExclamationTriangleIcon className="w-5 h-5 text-warning" />;
+      case 'error':
+        return <ExclamationTriangleIcon className="w-5 h-5 text-error" />;
+      default:
+        return <ClockIcon className="w-5 h-5 text-base-content/50" />;
     }
-  }, [navigate]);
-
-  const toggleMaintenanceMode = () => {
-    setIsMaintenanceMode(!isMaintenanceMode);
-    // TODO: Implementer la logique réelle
   };
 
-  const addWhitelistIP = () => {
-    const ip = prompt('Entrez une adresse IP à whitelist:');
-    if (ip && !whitelistIPs.includes(ip)) {
-      setWhitelistIPs([...whitelistIPs, ip]);
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return <div className="badge badge-success badge-sm">Sain</div>;
+      case 'warning':
+        return <div className="badge badge-warning badge-sm">Alerte</div>;
+      case 'error':
+        return <div className="badge badge-error badge-sm">Erreur</div>;
+      default:
+        return <div className="badge badge-ghost badge-sm">Inconnu</div>;
     }
   };
 
-  const removeWhitelistIP = (ip: string) => {
-    setWhitelistIPs(whitelistIPs.filter(whiteIP => whiteIP !== ip));
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'critical':
+        return <div className="badge badge-error badge-sm">Critique</div>;
+      case 'high':
+        return <div className="badge badge-warning badge-sm">Haute</div>;
+      case 'medium':
+        return <div className="badge badge-info badge-sm">Moyenne</div>;
+      case 'low':
+        return <div className="badge badge-ghost badge-sm">Basse</div>;
+      default:
+        return <div className="badge badge-ghost badge-sm">-</div>;
+    }
   };
+
+  const getTaskStatusBadge = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <div className="badge badge-success badge-sm">Terminé</div>;
+      case 'in-progress':
+        return <div className="badge badge-primary badge-sm">En cours</div>;
+      case 'pending':
+        return <div className="badge badge-warning badge-sm">En attente</div>;
+      default:
+        return <div className="badge badge-ghost badge-sm">-</div>;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <AdminLayout 
-      title="Mode Maintenance" 
-      subtitle="Configurez et gérez le mode maintenance de votre site"
-      actions={
-        <Button
-          onClick={toggleMaintenanceMode}
-          className={`transition-all duration-300 ${
-            isMaintenanceMode 
-              ? 'bg-red-500 hover:bg-red-600 text-white' 
-              : 'bg-green-500 hover:bg-green-600 text-white'
-          }`}
-        >
-          {isMaintenanceMode ? (
-            <>
-              <Pause size={16} className="mr-2" />
-              Désactiver Maintenance
-            </>
-          ) : (
-            <>
-              <Play size={16} className="mr-2" />
-              Activer Maintenance
-            </>
-          )}
-        </Button>
-      }
-    >
-      {/* Status actuel */}
-      <AnimatedContainer delay={0} className="mb-8">
-        <div className={`bg-card/80 backdrop-blur-sm rounded-xl p-6 border transition-all duration-300 ${
-          isMaintenanceMode 
-            ? 'border-red-500/30 bg-red-500/5' 
-            : 'border-green-500/30 bg-green-500/5'
-        }`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className={`p-3 rounded-full ${
-                isMaintenanceMode ? 'bg-red-500/20' : 'bg-green-500/20'
-              }`}>
-                <Gear size={24} className={isMaintenanceMode ? 'text-red-500' : 'text-green-500'} />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-foreground">
-                  {isMaintenanceMode ? 'Site en Maintenance' : 'Site Opérationnel'}
-                </h2>
-                <p className="text-muted-foreground">
-                  {isMaintenanceMode 
-                    ? 'Les visiteurs voient la page de maintenance' 
-                    : 'Le site fonctionne normalement'
-                  }
-                </p>
-              </div>
-            </div>
-            <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
-              isMaintenanceMode 
-                ? 'bg-red-500/20 text-red-600' 
-                : 'bg-green-500/20 text-green-600'
-            }`}>
-              {isMaintenanceMode ? 'MAINTENANCE' : 'OPÉRATIONNEL'}
-            </div>
-          </div>
-        </div>
-      </AnimatedContainer>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Configuration du message */}
-        <AnimatedContainer delay={1} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-          <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-            <Gear size={20} className="mr-2 text-accent" />
-            Message de Maintenance
-          </h3>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-foreground block mb-2">
-                Message personnalisé
-              </label>
-              <textarea 
-                value={customMessage}
-                onChange={(e) => setCustomMessage(e.target.value)}
-                placeholder="Message affiché aux visiteurs..."
-                className="w-full px-4 py-3 bg-input rounded-lg border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-200 text-foreground placeholder:text-muted-foreground resize-none"
-                rows={4}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-foreground block mb-2">
-                Maintenance programmée
-              </label>
-              <input 
-                type="datetime-local"
-                value={scheduledMaintenance}
-                onChange={(e) => setScheduledMaintenance(e.target.value)}
-                className="w-full px-4 py-3 bg-input rounded-lg border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-200 text-foreground"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Optionnel : programmer l'activation automatique
-              </p>
-            </div>
-
-            <Button 
-              variant="outline" 
-              className="w-full border-accent/30 hover:bg-accent/10"
-            >
-              Sauvegarder Configuration
-            </Button>
-          </div>
-        </AnimatedContainer>
-
-        {/* Whitelist IP */}
-        <AnimatedContainer delay={2} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-          <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-            <Shield size={20} className="mr-2 text-accent" />
-            IP Autorisées
-            <span className="ml-2 text-xs bg-accent/20 text-accent px-2 py-1 rounded">
-              {whitelistIPs.length}
-            </span>
-          </h3>
-          
-          <div className="space-y-3 mb-4">
-            {whitelistIPs.map((ip, index) => (
-              <div 
-                key={index}
-                className="flex items-center justify-between p-3 bg-accent/5 rounded-lg"
-              >
-                <span className="text-sm font-mono text-foreground">{ip}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeWhitelistIP(ip)}
-                  className="text-destructive hover:bg-destructive/10"
-                >
-                  Supprimer
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <Button 
-            onClick={addWhitelistIP}
-            variant="outline" 
-            className="w-full border-accent/30 hover:bg-accent/10"
-          >
-            Ajouter IP
-          </Button>
-          
-          <p className="text-xs text-muted-foreground mt-2">
-            Les IP de cette liste peuvent accéder au site même en mode maintenance
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-base-content flex items-center gap-3">
+            <WrenchIcon className="w-8 h-8" />
+            Maintenance
+          </h1>
+          <p className="text-base-content/70 mt-1">
+            Gestion de la maintenance système et des tâches
           </p>
-        </AnimatedContainer>
+        </div>
+        
+        <button className="btn btn-primary">
+          <ArrowPathIcon className="w-4 h-4" />
+          Actualiser
+        </button>
       </div>
 
-      {/* Prévisualisation */}
-      <AnimatedContainer delay={3} className="mt-8 bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-        <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-          <Users size={20} className="mr-2 text-accent" />
-          Prévisualisation - Page de Maintenance
-        </h3>
-        
-        <div className="border border-border rounded-lg p-8 bg-background/50 text-center">
-          <div className="text-4xl mb-4">🔧</div>
-          <h2 className="text-2xl font-bold mb-4 text-foreground">Site en Maintenance</h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            {customMessage}
-          </p>
-          {scheduledMaintenance && (
-            <p className="text-sm text-accent">
-              Retour prévu : {new Date(scheduledMaintenance).toLocaleString('fr-FR')}
-            </p>
-          )}
-        </div>
-      </AnimatedContainer>
+      {/* Navigation par onglets */}
+      <div className="tabs tabs-boxed">
+        <button 
+          className={`tab ${activeTab === 'status' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('status')}
+        >
+          <ServerIcon className="w-4 h-4 mr-2" />
+          État du système
+        </button>
+        <button 
+          className={`tab ${activeTab === 'tasks' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('tasks')}
+        >
+          <WrenchIcon className="w-4 h-4 mr-2" />
+          Tâches de maintenance
+        </button>
+        <button 
+          className={`tab ${activeTab === 'logs' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('logs')}
+        >
+          <DocumentTextIcon className="w-4 h-4 mr-2" />
+          Logs système
+        </button>
+      </div>
 
-      {/* Statistiques de maintenance */}
-      <StaggeredGrid 
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8"
-        startDelay={4}
-      >
-        {[
-          { label: "Dernière Maintenance", value: "Il y a 15 jours" },
-          { label: "Durée Moyenne", value: "2h 30min" },
-          { label: "Uptime", value: "99.8%", color: "text-green-500" }
-        ].map((stat, index) => (
-          <div key={index} className="bg-card/80 backdrop-blur-sm rounded-xl p-4 border border-border text-center hover:border-accent/20 transition-all duration-300">
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
-            <p className={`text-lg font-bold ${stat.color || 'text-foreground'}`}>{stat.value}</p>
+      {/* Contenu des onglets */}
+      {activeTab === 'status' && (
+        <div className="space-y-6">
+          {/* Vue d'ensemble du système */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-figure text-success">
+                  <CheckCircleIcon className="w-8 h-8" />
+                </div>
+                <div className="stat-title">Services actifs</div>
+                <div className="stat-value text-success">4/5</div>
+                <div className="stat-desc">1 alerte</div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-figure text-primary">
+                  <CpuChipIcon className="w-8 h-8" />
+                </div>
+                <div className="stat-title">CPU moyen</div>
+                <div className="stat-value">23%</div>
+                <div className="stat-desc">↗︎ +2% (1h)</div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-figure text-info">
+                  <CircleStackIcon className="w-8 h-8" />
+                </div>
+                <div className="stat-title">Mémoire</div>
+                <div className="stat-value">67%</div>
+                <div className="stat-desc">5.4GB / 8GB</div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-figure text-warning">
+                  <CloudIcon className="w-8 h-8" />
+                </div>
+                <div className="stat-title">Stockage</div>
+                <div className="stat-value">45%</div>
+                <div className="stat-desc">180GB / 400GB</div>
+              </div>
+            </div>
           </div>
-        ))}
-      </StaggeredGrid>
-    </AdminLayout>
+
+          {/* État détaillé des services */}
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h3 className="card-title">État des services</h3>
+              <div className="overflow-x-auto">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Service</th>
+                      <th>État</th>
+                      <th>Dernière vérification</th>
+                      <th>Détails</th>
+                      <th>Uptime</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {systemStatus.map((service, index) => (
+                      <tr key={index}>
+                        <td>
+                          <div className="flex items-center gap-2">
+                            {getStatusIcon(service.status)}
+                            <span className="font-medium">{service.name}</span>
+                          </div>
+                        </td>
+                        <td>{getStatusBadge(service.status)}</td>
+                        <td className="text-sm text-base-content/60">
+                          {service.lastCheck}
+                        </td>
+                        <td className="text-sm">{service.details}</td>
+                        <td>
+                          <div className="badge badge-outline badge-sm">
+                            {service.uptime}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'tasks' && (
+        <div className="space-y-6">
+          {/* Résumé des tâches */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Total</div>
+                <div className="stat-value">{maintenanceTasks.length}</div>
+                <div className="stat-desc">Tâches de maintenance</div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">En attente</div>
+                <div className="stat-value text-warning">
+                  {maintenanceTasks.filter(t => t.status === 'pending').length}
+                </div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">En cours</div>
+                <div className="stat-value text-primary">
+                  {maintenanceTasks.filter(t => t.status === 'in-progress').length}
+                </div>
+              </div>
+            </div>
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Terminées</div>
+                <div className="stat-value text-success">
+                  {maintenanceTasks.filter(t => t.status === 'completed').length}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Liste des tâches */}
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="card-title">Tâches de maintenance</h3>
+                <button className="btn btn-primary btn-sm">
+                  <WrenchIcon className="w-4 h-4" />
+                  Nouvelle tâche
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {maintenanceTasks.map((task) => (
+                  <div key={task.id} className="card bg-base-200 shadow">
+                    <div className="card-body p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h4 className="font-semibold">{task.title}</h4>
+                            {getPriorityBadge(task.priority)}
+                            {getTaskStatusBadge(task.status)}
+                          </div>
+                          <p className="text-sm text-base-content/70 mb-3">
+                            {task.description}
+                          </p>
+                          <div className="flex items-center gap-4 text-sm text-base-content/60">
+                            <span>Assigné à: {task.assignedTo}</span>
+                            <span>Échéance: {task.dueDate}</span>
+                            <span>Durée estimée: {task.estimatedDuration}</span>
+                          </div>
+                        </div>
+                        <div className="dropdown dropdown-end">
+                          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm">
+                            ⋮
+                          </div>
+                          <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                            <li><a>Modifier</a></li>
+                            <li><a>Marquer terminé</a></li>
+                            <li><a>Supprimer</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'logs' && (
+        <div className="space-y-6">
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h3 className="card-title">Logs système récents</h3>
+              <div className="mockup-code">
+                <pre data-prefix="[2024-01-15 14:30:15]"><code>INFO: Service web démarré avec succès</code></pre>
+                <pre data-prefix="[2024-01-15 14:29:45]"><code>INFO: Connexion base de données établie</code></pre>
+                <pre data-prefix="[2024-01-15 14:25:12]" className="text-warning"><code>WARN: Latence élevée détectée sur CDN node eu-west-1</code></pre>
+                <pre data-prefix="[2024-01-15 14:20:03]"><code>INFO: Sauvegarde automatique terminée</code></pre>
+                <pre data-prefix="[2024-01-15 14:15:21]"><code>INFO: Nettoyage des logs temporaires effectué</code></pre>
+                <pre data-prefix="[2024-01-15 14:10:55]"><code>INFO: Vérification de sécurité planifiée</code></pre>
+                <pre data-prefix="[2024-01-15 14:05:33]"><code>INFO: Mise à jour système appliquée</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

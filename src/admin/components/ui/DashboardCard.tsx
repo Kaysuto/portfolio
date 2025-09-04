@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { cn } from "../../../lib/utils";
 
 interface DashboardCardProps {
@@ -27,19 +26,23 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
   };
 
   return (
-    <Card className={cn(
+    <div className={cn(
+      "card bg-base-100 border border-base-300 shadow-sm",
       "transition-all duration-300 hover:shadow-lg",
-      "bg-base-100 border border-base-300",
       className
     )}>
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-sm font-medium text-base-content">
-          {title}
-          {icon && <div className="text-primary text-xl">{icon}</div>}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-primary mb-1">
+      <div className="card-body p-6">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-medium text-base-content/70">
+            {title}
+          </h3>
+          {icon && (
+            <div className="text-primary">
+              {icon}
+            </div>
+          )}
+        </div>
+        <div className="text-2xl font-bold text-base-content mb-1">
           {value}
         </div>
         {description && (
@@ -47,7 +50,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
             {description}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

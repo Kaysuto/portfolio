@@ -1,217 +1,352 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { Download, Eye, Users, Globe, TrendUp, Calendar, Share } from '@phosphor-icons/react';
-import { AdminLayout } from '../components/AdminLayout';
-import { StaggeredGrid, AnimatedContainer } from '../components/AnimatedComponents';
+import { useEffect, useState } from 'react';
+import { 
+  ChartBarIcon, 
+  CursorArrowRaysIcon, 
+  EyeIcon, 
+  UserGroupIcon,
+  DevicePhoneMobileIcon,
+  ComputerDesktopIcon,
+  GlobeAltIcon,
+  CalendarIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon
+} from '@heroicons/react/24/outline';
+import { DashboardCard } from '../components/ui/DashboardCard';
+import { AnalyticsService } from '../services/adminServices';
 
-export const AnalyticsPage = () => {
-  const navigate = useNavigate();
+interface AnalyticsData {
+  visitors: {
+    today: number;
+    week: number;
+    month: number;
+    total: number;
+  };
+  pageViews: {
+    today: number;
+    week: number;
+    month: number;
+    total: number;
+  };
+  devices: {
+    mobile: number;
+    desktop: number;
+    tablet: number;
+  };
+  countries: {
+    name: string;
+    visitors: number;
+    percentage: number;
+  }[];
+  topPages: {
+    path: string;
+    views: number;
+    percentage: number;
+  }[];
+  recentActivity: {
+    timestamp: string;
+    page: string;
+    country: string;
+    device: string;
+  }[];
+}
 
-  // Vérifier authentification
+export const AnalyticsPage: React.FC = () => {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month'>('today');
+
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('admin_authenticated');
-    if (!isAuthenticated) {
-      navigate('/admin/login');
-    }
-  }, [navigate]);
+    const loadAnalytics = async () => {
+      try {
+        // Simulation de données analytics
+        const mockData: AnalyticsData = {
+          visitors: {
+            today: 127,
+            week: 1043,
+            month: 4521,
+            total: 12847
+          },
+          pageViews: {
+            today: 298,
+            week: 2105,
+            month: 8934,
+            total: 25691
+          },
+          devices: {
+            mobile: 65,
+            desktop: 30,
+            tablet: 5
+          },
+          countries: [
+            { name: 'France', visitors: 1247, percentage: 42 },
+            { name: 'Canada', visitors: 684, percentage: 23 },
+            { name: 'Belgique', visitors: 432, percentage: 15 },
+            { name: 'Suisse', visitors: 298, percentage: 10 },
+            { name: 'Autres', visitors: 290, percentage: 10 }
+          ],
+          topPages: [
+            { path: '/', views: 1523, percentage: 35 },
+            { path: '/bio', views: 1124, percentage: 26 },
+            { path: '/projects', views: 892, percentage: 21 },
+            { path: '/about', views: 543, percentage: 12 },
+            { path: '/contact', views: 267, percentage: 6 }
+          ],
+          recentActivity: [
+            { timestamp: '2024-01-15 14:23', page: '/', country: 'France', device: 'Mobile' },
+            { timestamp: '2024-01-15 14:19', page: '/bio', country: 'Canada', device: 'Desktop' },
+            { timestamp: '2024-01-15 14:15', page: '/projects', country: 'Belgique', device: 'Mobile' },
+            { timestamp: '2024-01-15 14:12', page: '/', country: 'France', device: 'Tablet' },
+            { timestamp: '2024-01-15 14:08', page: '/about', country: 'Suisse', device: 'Desktop' }
+          ]
+        };
+        setAnalyticsData(mockData);
+      } catch (error) {
+        console.error('Erreur chargement analytics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Données simulées
-  const stats = [
-    { icon: Eye, label: "Vues Aujourd'hui", value: "1,284", change: "+12.5%", color: "text-blue-500" },
-    { icon: Users, label: "Visiteurs Uniques", value: "892", change: "+8.2%", color: "text-green-500" },
-    { icon: Globe, label: "Pages Vues", value: "2,547", change: "+15.3%", color: "text-purple-500" },
-    { icon: TrendUp, label: "Taux de Rebond", value: "23.8%", change: "-2.1%", color: "text-orange-500" },
-  ];
+    loadAnalytics();
+  }, []);
 
-  const topPages = [
-    { page: "/", views: 1284, percentage: 45 },
-    { page: "/admin", views: 423, percentage: 15 },
-    { page: "/projects", views: 312, percentage: 11 },
-    { page: "/contact", views: 198, percentage: 7 },
-    { page: "/about", views: 156, percentage: 5 },
-  ];
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+    );
+  }
 
-  const topCountries = [
-    { country: "France", flag: "🇫🇷", visits: 542, percentage: 42 },
-    { country: "États-Unis", flag: "🇺🇸", visits: 234, percentage: 18 },
-    { country: "Canada", flag: "🇨🇦", visits: 123, percentage: 9 },
-    { country: "Allemagne", flag: "🇩🇪", visits: 98, percentage: 8 },
-    { country: "Royaume-Uni", flag: "🇬🇧", visits: 76, percentage: 6 },
-  ];
-
-  const recentActivity = [
-    { time: "Il y a 2 min", action: "Nouvelle visite", page: "/", country: "🇫🇷 France" },
-    { time: "Il y a 5 min", action: "Page consultée", page: "/projects", country: "🇺🇸 États-Unis" },
-    { time: "Il y a 8 min", action: "Nouvelle visite", page: "/admin", country: "🇨🇦 Canada" },
-    { time: "Il y a 12 min", action: "Page consultée", page: "/contact", country: "🇫🇷 France" },
-  ];
+  if (!analyticsData) {
+    return (
+      <div className="alert alert-error">
+        <span>Erreur lors du chargement des analytics</span>
+      </div>
+    );
+  }
 
   return (
-    <AdminLayout 
-      title="Analytics & Statistiques" 
-      subtitle="Suivez les performances de votre portfolio en temps réel"
-      actions={
-        <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            className="border-accent/30 hover:bg-accent/10"
-          >
-            <Share size={16} className="mr-2" />
-            Partager
-          </Button>
-          <Button
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
-          >
-            <Download size={16} className="mr-2" />
-            Exporter
-          </Button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-base-content">Analytics</h1>
+          <p className="text-base-content/70 mt-1">
+            Analyse détaillée du trafic et des performances
+          </p>
         </div>
-      }
-    >
-      {/* Stats principales */}
-      <StaggeredGrid 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        startDelay={0}
-      >
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border hover:border-accent/50 transition-all duration-300 hover:scale-105">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 rounded-lg bg-accent/10">
-                <stat.icon size={20} className="text-accent" />
-              </div>
-              <span className={`text-xs font-medium ${
-                stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'
-              }`}>
-                {stat.change}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-accent">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </StaggeredGrid>
-
-      {/* Graphiques et données */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Pages populaires */}
-        <AnimatedContainer delay={4} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-          <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-            <Eye size={20} className="mr-2 text-accent" />
-            Pages Populaires
-          </h3>
-          <div className="space-y-4">
-            {topPages.map((page, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">{page.page}</p>
-                  <div className="w-full bg-accent/10 rounded-full h-2 mt-1">
-                    <div 
-                      className="bg-accent h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${page.percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="ml-4 text-right">
-                  <p className="text-sm font-medium text-accent">{page.views}</p>
-                  <p className="text-xs text-muted-foreground">{page.percentage}%</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </AnimatedContainer>
-
-        {/* Pays */}
-        <AnimatedContainer delay={5} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-          <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-            <Globe size={20} className="mr-2 text-accent" />
-            Visiteurs par Pays
-          </h3>
-          <div className="space-y-4">
-            {topCountries.map((country, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <span className="text-lg">{country.flag}</span>
-                  <span className="text-sm font-medium text-foreground">{country.country}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-20 bg-accent/10 rounded-full h-2">
-                    <div 
-                      className="bg-accent h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${country.percentage * 2}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-sm text-accent font-medium w-12 text-right">{country.visits}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </AnimatedContainer>
+        
+        {/* Sélecteur de période */}
+        <div className="tabs tabs-boxed">
+          <button 
+            className={`tab ${selectedPeriod === 'today' ? 'tab-active' : ''}`}
+            onClick={() => setSelectedPeriod('today')}
+          >
+            Aujourd'hui
+          </button>
+          <button 
+            className={`tab ${selectedPeriod === 'week' ? 'tab-active' : ''}`}
+            onClick={() => setSelectedPeriod('week')}
+          >
+            Cette semaine
+          </button>
+          <button 
+            className={`tab ${selectedPeriod === 'month' ? 'tab-active' : ''}`}
+            onClick={() => setSelectedPeriod('month')}
+          >
+            Ce mois
+          </button>
+        </div>
       </div>
 
-      {/* Activité en temps réel */}
-      <AnimatedContainer delay={6} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border">
-        <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center">
-          <TrendUp size={20} className="mr-2 text-accent" />
-          Activité en Temps Réel
-          <span className="ml-2 text-xs bg-green-500/20 text-green-600 px-2 py-1 rounded-full flex items-center">
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
-            Live
-          </span>
-        </h3>
-        <div className="space-y-3">
-          {recentActivity.map((activity, index) => (
-            <div 
-              key={index} 
-              className="flex items-center justify-between p-3 bg-accent/5 rounded-lg hover:bg-accent/10 transition-all duration-200"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">{activity.action}</p>
-                  <p className="text-xs text-muted-foreground">{activity.page}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">{activity.time}</p>
-                <p className="text-xs text-accent">{activity.country}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </AnimatedContainer>
+      {/* Métriques principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <DashboardCard
+          title="Visiteurs"
+          value={analyticsData.visitors[selectedPeriod]}
+          description="Visiteurs uniques"
+          icon={<UserGroupIcon className="w-6 h-6" />}
+          trend="up"
+        />
+        
+        <DashboardCard
+          title="Pages vues"
+          value={analyticsData.pageViews[selectedPeriod]}
+          description="Vues de pages totales"
+          icon={<EyeIcon className="w-6 h-6" />}
+          trend="up"
+        />
+        
+        <DashboardCard
+          title="Taux de rebond"
+          value="24.5%"
+          description="↓ -2.1% vs période précédente"
+          icon={<ChartBarIcon className="w-6 h-6" />}
+          trend="down"
+        />
+        
+        <DashboardCard
+          title="Durée moyenne"
+          value="3m 42s"
+          description="Temps passé sur le site"
+          icon={<CalendarIcon className="w-6 h-6" />}
+          trend="up"
+        />
+      </div>
 
-      {/* Intégrations */}
-      <StaggeredGrid 
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8"
-        startDelay={7}
-      >
-        {[
-          {
-            title: "Google Analytics",
-            description: "Connecté et synchronisé avec votre compte GA4",
-            status: "Actif",
-            action: "Configurer"
-          },
-          {
-            title: "Cloudflare Analytics", 
-            description: "Statistiques de performance et sécurité",
-            status: "Actif",
-            action: "Voir Dashboard"
-          }
-        ].map((integration, index) => (
-          <div key={index} className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border hover:border-accent/20 transition-all duration-300">
-            <h3 className="text-lg font-semibold mb-3 text-foreground">{integration.title}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{integration.description}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-xs bg-green-500/20 text-green-600 px-2 py-1 rounded">{integration.status}</span>
-              <Button variant="outline" size="sm">{integration.action}</Button>
+      {/* Graphiques et données détaillées */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Types d'appareils */}
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body">
+            <h3 className="card-title flex items-center gap-2">
+              <DevicePhoneMobileIcon className="w-5 h-5" />
+              Répartition par appareil
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <DevicePhoneMobileIcon className="w-4 h-4 text-primary" />
+                  <span>Mobile</span>
+                </div>
+                <span className="font-semibold">{analyticsData.devices.mobile}%</span>
+              </div>
+              <progress 
+                className="progress progress-primary w-full" 
+                value={analyticsData.devices.mobile} 
+                max="100"
+              />
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ComputerDesktopIcon className="w-4 h-4 text-secondary" />
+                  <span>Desktop</span>
+                </div>
+                <span className="font-semibold">{analyticsData.devices.desktop}%</span>
+              </div>
+              <progress 
+                className="progress progress-secondary w-full" 
+                value={analyticsData.devices.desktop} 
+                max="100"
+              />
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ComputerDesktopIcon className="w-4 h-4 text-accent" />
+                  <span>Tablette</span>
+                </div>
+                <span className="font-semibold">{analyticsData.devices.tablet}%</span>
+              </div>
+              <progress 
+                className="progress progress-accent w-full" 
+                value={analyticsData.devices.tablet} 
+                max="100"
+              />
             </div>
           </div>
-        ))}
-      </StaggeredGrid>
-    </AdminLayout>
+        </div>
+
+        {/* Top pays */}
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body">
+            <h3 className="card-title flex items-center gap-2">
+              <GlobeAltIcon className="w-5 h-5" />
+              Top pays
+            </h3>
+            <div className="space-y-3">
+              {analyticsData.countries.map((country, index) => (
+                <div key={country.name} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="badge badge-outline badge-sm">{index + 1}</span>
+                    <span>{country.name}</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold">{country.visitors}</div>
+                    <div className="text-xs text-base-content/60">{country.percentage}%</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pages populaires */}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h3 className="card-title">Pages les plus visitées</h3>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Vues</th>
+                  <th>Pourcentage</th>
+                  <th>Tendance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analyticsData.topPages.map((page, index) => (
+                  <tr key={page.path}>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <span className="badge badge-ghost badge-sm">{index + 1}</span>
+                        <code className="text-sm">{page.path}</code>
+                      </div>
+                    </td>
+                    <td className="font-semibold">{page.views.toLocaleString()}</td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <progress 
+                          className="progress progress-primary w-16" 
+                          value={page.percentage} 
+                          max="100"
+                        />
+                        <span className="text-sm">{page.percentage}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      {index < 2 ? (
+                        <ArrowTrendingUpIcon className="w-4 h-4 text-success" />
+                      ) : (
+                        <ArrowTrendingDownIcon className="w-4 h-4 text-error" />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Activité récente */}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h3 className="card-title">Activité en temps réel</h3>
+          <div className="space-y-3">
+            {analyticsData.recentActivity.map((activity, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-base-200 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                  <div>
+                    <div className="font-medium">
+                      Visite sur <code className="text-sm">{activity.page}</code>
+                    </div>
+                    <div className="text-sm text-base-content/60">
+                      {activity.country} • {activity.device}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-base-content/50">
+                  {activity.timestamp}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

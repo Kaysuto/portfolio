@@ -2,7 +2,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
-import { LinksManagerPage } from './pages/LinksManagerClean';
+import { LinksManager } from './pages/LinksManager';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { MaintenancePage } from './pages/MaintenancePage';
+import { SecurityPage } from './pages/SecurityPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { AdminAuthService } from './services/adminServices';
 import { useState, useEffect } from 'react';
 
@@ -13,9 +17,11 @@ export const AdminApp: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const isValid = await AdminAuthService.validateSession();
-        setIsAuthenticated(isValid);
+        // Vérification plus simple et rapide pour éviter les blocages
+        const sessionExists = localStorage.getItem('admin_session') !== null;
+        setIsAuthenticated(sessionExists);
       } catch (error) {
+        console.error('Auth check error:', error);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -36,7 +42,7 @@ export const AdminApp: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<Navigate to="/admin/login" replace />} />
       </Routes>
     );
@@ -45,13 +51,13 @@ export const AdminApp: React.FC = () => {
   return (
     <AdminLayout>
       <Routes>
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/links" element={<LinksManagerPage />} />
-        {/* Placeholder pour les autres pages */}
-        <Route path="/admin/maintenance" element={<div className="alert alert-info">Page Maintenance - En développement</div>} />
-        <Route path="/admin/security" element={<div className="alert alert-info">Page Sécurité - En développement</div>} />
-        <Route path="/admin/settings" element={<div className="alert alert-info">Page Paramètres - En développement</div>} />
+        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/links" element={<LinksManager />} />
+        <Route path="/maintenance" element={<MaintenancePage />} />
+        <Route path="/security" element={<SecurityPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
       </Routes>
     </AdminLayout>

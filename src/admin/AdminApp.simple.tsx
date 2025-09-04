@@ -1,45 +1,63 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AdminLayout } from './components/layout/AdminLayout';
+import { LoginPage } from './pages/LoginPage';
+import { Dashboard } from './pages/Dashboard';
+import { LinksManager } from './pages/LinksManager';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { MaintenancePage } from './pages/MaintenancePage';
+import { SecurityPage } from './pages/SecurityPage';
+import { SettingsPage } from './pages/SettingsPage';
+import { AdminAuthService } from './services/adminServices';
+import { useState, useEffect } from 'react';
 
-// Version simple pour tester le routing sans dépendances
-export const AdminApp: React.FC = () => {
-  return (
-    <div className="min-h-screen bg-base-100 text-base-content">
-      <div className="container mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8 text-primary">
-          Panel Admin - Test
-        </h1>
-        
-        <Routes>
-          <Route 
-            path="/login" 
-            element={
-              <div className="card bg-base-200 shadow-xl max-w-md mx-auto">
-                <div className="card-body">
-                  <h2 className="card-title">Connexion Admin</h2>
-                  <p>Page de connexion - Test</p>
-                  <div className="card-actions justify-end">
-                    <button className="btn btn-primary">Se connecter</button>
-                  </div>
-                </div>
-              </div>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard" 
-            element={
-              <div className="card bg-base-200 shadow-xl">
-                <div className="card-body">
-                  <h2 className="card-title">Dashboard Admin</h2>
-                  <p>Dashboard fonctionnel !</p>
-                </div>
-              </div>
-            } 
-          />
-          
-          <Route path="*" element={<div>Admin - 404</div>} />
-        </Routes>
+export const AdminAppSimple: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isValid = await AdminAuthService.validateSession();
+        setIsAuthenticated(isValid);
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg text-primary"></div>
       </div>
-    </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <AdminLayout>
+      <Routes>
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/analytics" element={<AnalyticsPage />} />
+        <Route path="/admin/links" element={<LinksManager />} />
+        <Route path="/admin/maintenance" element={<MaintenancePage />} />
+        <Route path="/admin/security" element={<SecurityPage />} />
+        <Route path="/admin/settings" element={<SettingsPage />} />
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+      </Routes>
+    </AdminLayout>
   );
 };

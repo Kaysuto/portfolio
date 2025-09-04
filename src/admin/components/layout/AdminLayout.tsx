@@ -7,9 +7,11 @@ import {
   Cog6ToothIcon,
   ShieldCheckIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  ChartPieIcon
 } from '@heroicons/react/24/outline';
 import { AdminButton } from '../ui/AdminButton';
+import '../../styles/admin.css';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -20,6 +22,11 @@ const menuItems = [
     path: '/admin/dashboard',
     label: 'Tableau de bord',
     icon: ChartBarIcon
+  },
+  {
+    path: '/admin/analytics',
+    label: 'Analytics',
+    icon: ChartPieIcon
   },
   {
     path: '/admin/links',
@@ -53,7 +60,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open admin-container" data-theme="light">
       <input 
         id="admin-drawer" 
         type="checkbox" 

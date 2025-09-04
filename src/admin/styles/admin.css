@@ -1,0 +1,166 @@
+/* CSS spécifique pour l'interface d'administration */
+
+/* Force l'application du thème DaisyUI light sur toute l'interface admin */
+[data-theme="light"] {
+  /* Variables DaisyUI personnalisées pour le thème golden */
+  --p: 32 37% 35%;           /* #B8956A - Primary golden */
+  --pf: 0 0% 98%;            /* Text on primary */
+  --pc: 0 0% 98%;            /* Primary content */
+  
+  --s: 35 23% 82%;           /* #E5D5B7 - Secondary */
+  --sf: 0 0% 10%;            /* Text on secondary */
+  --sc: 0 0% 10%;            /* Secondary content */
+  
+  --a: 32 30% 72%;           /* #C4B5A3 - Accent */
+  --af: 0 0% 10%;            /* Text on accent */
+  --ac: 0 0% 10%;            /* Accent content */
+  
+  --n: 25 15% 8%;            /* #1A0F08 - Neutral dark */
+  --nf: 0 0% 98%;            /* Text on neutral */
+  --nc: 0 0% 98%;            /* Neutral content */
+  
+  --b1: 34 22% 97%;          /* #F9F6F0 - Base 100 (cream) */
+  --b2: 33 18% 95%;          /* #F2E8D7 - Base 200 */
+  --b3: 32 20% 90%;          /* #E5D5B7 - Base 300 */
+  --bc: 25 15% 8%;           /* #1A0F08 - Base content (dark text) */
+  
+  --in: 198 93% 60%;         /* Info */
+  --inc: 0 0% 98%;           /* Info content */
+  
+  --su: 158 64% 52%;         /* Success */
+  --suc: 0 0% 98%;           /* Success content */
+  
+  --wa: 43 96% 56%;          /* Warning */
+  --wac: 0 0% 10%;           /* Warning content */
+  
+  --er: 0 91% 71%;           /* Error */
+  --erc: 0 0% 98%;           /* Error content */
+  
+  --rounded-box: 0.75rem;
+  --rounded-btn: 0.5rem;
+  --rounded-badge: 0.25rem;
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+  --btn-text-case: uppercase;
+  --btn-focus-scale: 0.95;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.5rem;
+}
+
+/* Force les styles sur les composants admin spécifiques */
+.admin-container {
+  color-scheme: light;
+}
+
+.admin-container .btn-primary {
+  background-color: oklch(var(--p));
+  border-color: oklch(var(--p));
+  color: oklch(var(--pc));
+}
+
+.admin-container .btn-primary:hover {
+  background-color: oklch(calc(var(--p) - 0.1));
+  border-color: oklch(calc(var(--p) - 0.1));
+}
+
+.admin-container .bg-base-100 {
+  background-color: oklch(var(--b1));
+  color: oklch(var(--bc));
+}
+
+.admin-container .bg-base-200 {
+  background-color: oklch(var(--b2));
+  color: oklch(var(--bc));
+}
+
+.admin-container .bg-base-300 {
+  background-color: oklch(var(--b3));
+  color: oklch(var(--bc));
+}
+
+.admin-container .text-primary {
+  color: oklch(var(--p));
+}
+
+.admin-container .text-base-content {
+  color: oklch(var(--bc));
+}
+
+.admin-container .border {
+  border-color: oklch(var(--b3));
+}
+
+/* Force les styles des cartes */
+.admin-container .card {
+  background-color: oklch(var(--b1));
+  color: oklch(var(--bc));
+  border: 1px solid oklch(var(--b3));
+}
+
+.admin-container .card-title {
+  color: oklch(var(--p));
+}
+
+/* Force les styles des badges */
+.admin-container .badge-primary {
+  background-color: oklch(var(--p));
+  color: oklch(var(--pc));
+}
+
+.admin-container .badge-secondary {
+  background-color: oklch(var(--s));
+  color: oklch(var(--sc));
+}
+
+.admin-container .badge-accent {
+  background-color: oklch(var(--a));
+  color: oklch(var(--ac));
+}
+
+/* Styles pour les tableaux */
+.admin-container .table {
+  color: oklch(var(--bc));
+}
+
+.admin-container .table th {
+  background-color: oklch(var(--b2));
+  color: oklch(var(--bc));
+  border-bottom-color: oklch(var(--b3));
+}
+
+.admin-container .table td {
+  border-bottom-color: oklch(var(--b3));
+}
+
+.admin-container .table tbody tr:hover {
+  background-color: oklch(var(--b2));
+}
+
+/* Styles pour les modals */
+.admin-container .modal-box {
+  background-color: oklch(var(--b1));
+  color: oklch(var(--bc));
+}
+
+.admin-container .input {
+  background-color: oklch(var(--b1));
+  border-color: oklch(var(--b3));
+  color: oklch(var(--bc));
+}
+
+.admin-container .input:focus {
+  border-color: oklch(var(--p));
+  outline-color: oklch(var(--p));
+}
+
+.admin-container .textarea {
+  background-color: oklch(var(--b1));
+  border-color: oklch(var(--b3));
+  color: oklch(var(--bc));
+}
+
+.admin-container .textarea:focus {
+  border-color: oklch(var(--p));
+  outline-color: oklch(var(--p));
+}

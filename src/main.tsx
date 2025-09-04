@@ -1,26 +1,41 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from "react-error-boundary";
-import AppRouter from './AppRouter.real.tsx'
+import AppRouter from './AppRouter.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
 import './index.css'
 
 // Error handling for runtime issues
 window.addEventListener('error', (event) => {
-  if (event.error?.message?.includes('unstable_now')) {
+  if (event.error?.message?.includes('unstable_now') ||
+      event.error?.message?.includes('runtime.lastError') ||
+      event.error?.message?.includes('message channel closed')) {
     event.preventDefault();
-    console.warn('Scheduler warning suppressed:', event.error.message);
+    console.warn('Runtime warning suppressed:', event.error.message);
   }
 });
 
 // Suppress Chrome extension runtime errors
 window.addEventListener('unhandledrejection', (event) => {
   if (event.reason?.message?.includes('runtime.lastError') || 
-      event.reason?.message?.includes('message channel closed')) {
+      event.reason?.message?.includes('message channel closed') ||
+      event.reason?.message?.includes('listener indicated an asynchronous response')) {
     event.preventDefault();
     console.warn('Extension error suppressed:', event.reason.message);
   }
 });
+
+// Suppress console errors from extensions
+const originalError = console.error;
+console.error = (...args) => {
+  const message = args.join(' ');
+  if (message.includes('runtime.lastError') || 
+      message.includes('message channel closed') ||
+      message.includes('listener indicated an asynchronous response')) {
+    return; // Ignore extension errors
+  }
+  originalError.apply(console, args);
+};
 
 // Performance monitoring
 const reportWebVitals = (metric: any) => {
