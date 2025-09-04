@@ -5,7 +5,7 @@ import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 
-function App() {
+export function PortfolioApp() {
   // Register Service Worker for PWA with better error handling
   useEffect(() => {
     if ('serviceWorker' in navigator && 'caches' in window) {
@@ -79,5 +79,3 @@ function App() {
     </div>
   )
 }
-
-export default App

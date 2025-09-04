@@ -385,6 +385,15 @@ html {
   animation: float-fast 3s ease-in-out infinite;
 }
 
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-medium 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
 .animate-bounce-slow {
   animation: bounce-slow 3s ease-in-out infinite;
 }

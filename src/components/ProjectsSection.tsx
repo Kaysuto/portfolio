@@ -62,8 +62,16 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 lg:px-12 section-lazy">
-      <div className="max-w-7xl mx-auto">
+    <section id="projets" className="py-32 px-6 lg:px-12 section-lazy relative">
+      {/* Animated background shapes - positionnés pour éviter les composants */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-16 right-10 w-16 h-16 bg-accent/8 rounded-full animate-float-slow animate-delay-300"></div>
+        <div className="absolute top-1/3 left-12 w-12 h-12 bg-primary/10 rounded-full animate-float-medium animate-delay-500"></div>
+        <div className="absolute bottom-20 right-1/4 w-8 h-8 bg-secondary/15 rounded-full animate-bounce-slow animate-delay-700"></div>
+        <div className="absolute top-2/3 right-8 w-20 h-20 bg-muted/20 rounded-full animate-pulse-slow animate-delay-400"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>

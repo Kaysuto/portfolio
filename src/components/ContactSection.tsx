@@ -160,8 +160,16 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-32 px-6 bg-secondary/30">
-      <div className="max-w-7xl mx-auto">
+    <section id="contact" className="py-32 px-6 bg-secondary/30 relative">
+      {/* Animated background shapes - positionnés pour éviter les composants */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-20 left-16 w-14 h-14 bg-accent/8 rounded-full animate-float-slow animate-delay-200"></div>
+        <div className="absolute top-1/4 right-10 w-10 h-10 bg-primary/10 rounded-full animate-float-medium animate-delay-600"></div>
+        <div className="absolute bottom-24 left-1/3 w-18 h-18 bg-secondary/15 rounded-full animate-pulse-slow animate-delay-800"></div>
+        <div className="absolute top-2/3 left-8 w-6 h-6 bg-muted/20 rounded-full animate-bounce-slow animate-delay-400"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">

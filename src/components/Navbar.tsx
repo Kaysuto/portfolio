@@ -16,7 +16,14 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
-      // Détection de la section active
+      
+      // Si on est sur la page bio, mettre bio comme actif
+      if (window.location.pathname === '/bio') {
+        setActiveSection('bio')
+        return
+      }
+      
+      // Détection de la section active pour la page d'accueil
       const sections = [
         { id: "accueil" },
         { id: "apropos" },
@@ -36,13 +43,30 @@ export function Navbar() {
       }
       setActiveSection(found)
     }
+    
+    // Écouter les changements de navigation
+    const handlePopState = () => {
+      handleScroll()
+    }
+    
     window.addEventListener('scroll', handleScroll)
+    window.addEventListener('popstate', handlePopState)
     handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('popstate', handlePopState)
+    }
   }, [])
 
 
   const scrollToSection = (sectionId: string) => {
+    // Si on est sur la page bio, rediriger vers l'accueil avec l'ancre
+    if (window.location.pathname === '/bio') {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
@@ -97,6 +121,25 @@ export function Navbar() {
                 )}
               </Button>
             ))}
+            
+            {/* Bouton Bio */}
+            <Button
+              variant={activeSection === 'bio' ? "default" : "ghost"}
+              size="sm"
+              onClick={() => window.location.href = '/bio'}
+              className={cn(
+                "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                activeSection === 'bio'
+                  ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                  : "hover:bg-accent/10 hover:text-accent"
+              )}
+              style={{ animationDelay: `${7 * 0.1}s` }}
+            >
+              <span className="z-10">Bio</span>
+              {activeSection === 'bio' && (
+                <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
+              )}
+            </Button>
           </div>
 
           {/* Right side buttons */}
@@ -169,6 +212,20 @@ export function Navbar() {
                 )}
               </Button>
             ))}
+            
+            {/* Lien Bio Mobile */}
+            <a
+              href="/bio"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "w-full text-left px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                "hover:bg-accent/10 hover:text-accent"
+              )}
+              style={{ animationDelay: isMobileMenuOpen ? `${5 * 0.1}s` : undefined }}
+            >
+              <span className="z-10">Bio</span>
+            </a>
           </div>
         </div>
       </div>

@@ -142,11 +142,44 @@ const defaultTheme = {
 }
 
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html", 
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/admin/**/*.{js,ts,jsx,tsx}" // Support pour admin panel
+  ],
   theme: { ...defaultTheme, ...theme },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: false, // disable daisyui themes to use custom theme
+    themes: [
+      {
+        light: {
+          "primary": "#B8956A",
+          "secondary": "#5D3A25", 
+          "accent": "#F9F6F0",
+          "neutral": "#1a0f08",
+          "base-100": "#F9F6F0",
+          "base-200": "#F2E8D7",
+          "base-300": "#E5D5B7",
+          "info": "#3ABFF8",
+          "success": "#36D399",
+          "warning": "#FBBD23",
+          "error": "#F87272"
+        },
+        dark: {
+          "primary": "#B8956A",
+          "secondary": "#5D3A25",
+          "accent": "#1a0f08", 
+          "neutral": "#e6eef8",
+          "base-100": "#1a0f08",
+          "base-200": "#2a1f18",
+          "base-300": "#3a2f28",
+          "info": "#3ABFF8",
+          "success": "#36D399",
+          "warning": "#FBBD23",
+          "error": "#F87272"
+        }
+      }
+    ],
     darkTheme: "dark",
     base: true,
     styled: true,
