@@ -10,7 +10,7 @@ body.radix-select-content-opened {
 @layer base {
   * {
     border-color: var(--border);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
 }
 
@@ -171,6 +171,12 @@ body.radix-select-content-opened {
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.section-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }
 
 /* Line clamp utilities */

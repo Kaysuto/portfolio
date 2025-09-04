@@ -62,7 +62,7 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 lg:px-12">
+    <section id="projets" className="py-32 px-6 lg:px-12 section-lazy">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-20">

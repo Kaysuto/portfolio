@@ -7,12 +7,30 @@ import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 
 function App() {
-  // Register Service Worker for PWA
+  // Register Service Worker for PWA with better error handling
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('SW registered'))
-        .catch(() => console.log('SW registration failed'));
+    if ('serviceWorker' in navigator && 'caches' in window) {
+      const registerSW = async () => {
+        try {
+          const registration = await navigator.serviceWorker.register('/sw.js', {
+            scope: '/',
+            updateViaCache: 'none'
+          });
+          if (registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+          console.log('SW registered successfully');
+        } catch (error) {
+          console.warn('SW registration failed:', error);
+        }
+      };
+      
+      // Register on idle if possible
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(registerSW);
+      } else {
+        registerSW();
+      }
     }
   }, []);
 

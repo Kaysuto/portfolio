@@ -3,33 +3,36 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kimiya Kaysuto - Full-Stack Maker | Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>Kimiya - Full-Stack Maker</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <meta name="description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
+    <meta name="description" content="Portfolio de Kimiya, Full-Stack Maker polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
     <meta name="keywords" content="full-stack maker, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya Kaysuto" />
     <meta name="author" content="Kimiya Kaysuto" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kaysuto.fr" />
     
     <!-- Performance optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://api.github.com" />
+    <link rel="preconnect" href="https://db.kaysuto.fr" crossorigin />
+    
+    <!-- Critical CSS preload -->
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="modulepreload" href="/src/main.tsx" />
     
     <!-- Remove problematic preloads that cause warnings -->
     
     <!-- Prevent prefetching of source files -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta http-equiv="x-robots-tag" content="noindex, nofollow" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kaysuto.fr" />
     <meta property="og:title" content="Kimiya Kaysuto - Full-Stack Maker" />
-    <meta property="og:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="og:description" content="Portfolio de Kimiya, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="og:image" content="https://kaysuto.fr/og-image.jpg" />
     <meta property="og:locale" content="fr_FR" />
     
@@ -37,7 +40,7 @@
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://kaysuto.fr" />
     <meta property="twitter:title" content="Kimiya Kaysuto - Full-Stack Maker" />
-    <meta property="twitter:description" content="Portfolio de Kimiya Kaysuto, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="twitter:description" content="Portfolio de Kimiya, Full-Stack Maker polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="twitter:image" content="https://kaysuto.fr/og-image.jpg" />
     
     <!-- PWA -->
@@ -47,25 +50,20 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <!-- Performance optimizations -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-    
     <!-- Critical CSS inline for LCP -->
     <style>
-        html{font-family:ui-sans-serif,system-ui,sans-serif;scroll-behavior:smooth}
-        body{margin:0;background:#f9f6f0;color:#1a0f08;line-height:1.6}
+        /* System font stack for maximum performance */
+        html{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;scroll-behavior:smooth}
+        body{margin:0;background:#f9f6f0;color:#1a0f08;line-height:1.6;font-display:swap}
         .dark{background:#1a0f08;color:#e6eef8}
         #root{min-height:100vh}
         *{box-sizing:border-box}
+        /* Prevent CLS during font loading */
+        .font-inter{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
     </style>
     
         <script>
-                // Applique le thème avant le rendu (évite FOUC)
+                // Applique le thème avant le rendu (évite FOUC) - Version optimisée
                 (function() {
                     try {
                         // Vérifier d'abord localStorage, puis les cookies
@@ -84,22 +82,49 @@
                         document.documentElement.classList.add('dark');
                     }
                 })();
-                // Preload critical resources
-                if ('requestIdleCallback' in window) {
-                    requestIdleCallback(function() {
-                        // Précharger les ressources critiques au lieu des fichiers source
-                        var link = document.createElement('link');
-                        link.rel = 'prefetch';
-                        link.href = '/assets/index-BTCAK2Ao.js';
-                        document.head.appendChild(link);
-                    });
+                
+                // Service Worker registration optimisé
+                if ('serviceWorker' in navigator && location.protocol === 'https:') {
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(function() {
+                            navigator.serviceWorker.register('/sw.js').catch(function() {});
+                        });
+                    } else {
+                        setTimeout(function() {
+                            navigator.serviceWorker.register('/sw.js').catch(function() {});
+                        }, 1000);
+                    }
                 }
+        </script>
+        
+        <!-- Structured Data JSON-LD -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Kimiya Kaysuto",
+            "jobTitle": "Full-Stack Maker",
+            "description": "Full-Stack Maker polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux Minecraft",
+            "url": "https://kaysuto.fr",
+            "image": "https://kaysuto.fr/og-image.jpg",
+            "sameAs": [
+                "https://github.com/Kaysuto",
+                "https://linkedin.com/in/kimiya-kaysuto"
+            ],
+            "knowsAbout": [
+                "React", "TypeScript", "Node.js", "PHP", "MySQL", "Docker", "Linux", "Network Administration"
+            ],
+            "worksFor": {
+                "@type": "Organization",
+                "name": "Freelance"
+            }
+        }
         </script>
     </head>
 
 <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx" defer></script>
 </body>
 
 </html>

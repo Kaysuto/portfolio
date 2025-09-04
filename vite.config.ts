@@ -25,7 +25,8 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           icons: ['@phosphor-icons/react'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select']
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          supabase: ['@supabase/supabase-js']
         },
         // Noms de fichiers avec hash pour cache busting optimal
         entryFileNames: 'assets/[name]-[hash].js',

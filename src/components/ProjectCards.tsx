@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo, memo } from "react"
 import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -121,7 +121,7 @@ export function ProjectCards() {
     fetchProjects()
   }, [])
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useMemo(() => (status: string) => {
     switch (status) {
       case 'En production':
         return 'bg-green-500'
@@ -134,17 +134,20 @@ export function ProjectCards() {
       default:
         return 'bg-gray-500'
     }
-  }
+  }, [])
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useMemo(() => (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
     })
-  }
+  }, [])
 
-  const projectsToRender = Array.isArray(projects) ? projects : []
+  const projectsToRender = useMemo(() => 
+    Array.isArray(projects) ? projects : [], 
+    [projects]
+  )
 
   return (
     <div className="w-full max-w-7xl mx-auto">
@@ -171,6 +174,10 @@ export function ProjectCards() {
                   <img
                     src={project.image_url}
                     alt={project.image_alt || project.title}
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent pointer-events-none"></div>
