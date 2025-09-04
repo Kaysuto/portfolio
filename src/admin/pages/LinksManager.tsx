@@ -11,7 +11,6 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { DashboardCard } from '../components/ui/DashboardCard';
-import ThemeDebug from '../debug/ThemeDebug';
 
 // Icônes Phosphor pour les liens sociaux
 import { 
@@ -241,9 +240,6 @@ export const LinksManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Composant de débogage thème - À SUPPRIMER EN PROD */}
-      <ThemeDebug />
-      
       {/* Header - Style identique au Dashboard */}
       <div className="flex items-center justify-between">
         <div>
