@@ -1,12 +1,13 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LoginPage } from './pages/LoginPage';
-import { Dashboard } from './pages/Dashboard';
-import { LinksManager } from './pages/LinksManager';
-import { AnalyticsPage } from './pages/AnalyticsPage';
-import { MaintenancePage } from './pages/MaintenancePage';
-import { SecurityPage } from './pages/SecurityPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { AdminAuthService } from './services/adminServices';
+import { Login } from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import LinksManager from './pages/LinksManager';
+import { lazy, Suspense } from 'react';
+const AnalyticsPage = lazy(() => import('./pages/Analytics').then(m => ({ default: (m as any).default ?? (m as any).Analytics })));
+import Maintenance from './pages/Maintenance';
+import { Security } from './pages/Security';
+import { Settings } from './pages/Settings';
+import { AdminLayout } from './components/AdminLayout';
 import { useState, useEffect } from 'react';
 
 export const AdminApp: React.FC = () => {
@@ -28,6 +29,29 @@ export const AdminApp: React.FC = () => {
     };
 
     checkAuth();
+
+    // Écouter les changements de localStorage pour détecter la déconnexion
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'admin_session' && e.newValue === null) {
+        setIsAuthenticated(false);
+      }
+    };
+
+    // Écouter les événements de storage sur la même page
+    const handleLocalStorageChange = () => {
+      const sessionExists = localStorage.getItem('admin_session') !== null;
+      setIsAuthenticated(sessionExists);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Ajouter un listener personnalisé pour les changements locaux
+    window.addEventListener('admin-logout', handleLocalStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('admin-logout', handleLocalStorageChange);
+    };
   }, []);
 
   if (loading) {
@@ -41,22 +65,28 @@ export const AdminApp: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/analytics" element={<AnalyticsPage />} />
-      <Route path="/links" element={<LinksManager />} />
-      <Route path="/maintenance" element={<MaintenancePage />} />
-      <Route path="/security" element={<SecurityPage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
-    </Routes>
+    <AdminLayout>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/analytics" element={
+          <Suspense fallback={<div className="p-6">Chargement…</div>}>
+            <AnalyticsPage />
+          </Suspense>
+        } />
+        <Route path="/links" element={<LinksManager />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </AdminLayout>
   );
 };

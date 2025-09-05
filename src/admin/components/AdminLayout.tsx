@@ -4,6 +4,7 @@ import { Sun, Moon, List, X, SignOut, Code } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { AdminAuthService } from '../services/adminServices';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -25,15 +26,31 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_session');
-    localStorage.removeItem('admin_user');
-    navigate('/admin/login');
+  const handleLogout = async () => {
+    try {
+      // Utiliser le service d'authentification pour se déconnecter
+      await AdminAuthService.logout();
+      
+      // Nettoyer aussi admin_user
+      localStorage.removeItem('admin_user');
+      
+      // Déclencher un événement personnalisé pour notifier le changement
+      window.dispatchEvent(new Event('admin-logout'));
+      
+      // Naviguer vers la page de login
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      // En cas d'erreur, forcer quand même la déconnexion
+      localStorage.clear();
+      navigate('/admin/login');
+    }
   };
 
   const adminNavItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard' },
     { id: 'analytics', label: 'Analytics', path: '/admin/analytics' },
+    { id: 'links', label: 'Liens', path: '/admin/links' },
     { id: 'maintenance', label: 'Maintenance', path: '/admin/maintenance' },
     { id: 'security', label: 'Sécurité', path: '/admin/security' },
     { id: 'settings', label: 'Paramètres', path: '/admin/settings' }
