@@ -69,6 +69,11 @@ export default function LinksManager() {
     setShowModal(false);
   };
 
+  const handleOpenNewLinkModal = () => {
+    resetForm();
+    setShowModal(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -189,7 +194,7 @@ export default function LinksManager() {
       setDebugResult(createResult);
       await checkTable();
     } catch (error) {
-      setDebugResult({ success: false, error: error.message });
+      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
       setDebugLoading(false);
     }
@@ -204,7 +209,7 @@ export default function LinksManager() {
       setDebugResult(migrationResult);
       await loadLinks();
     } catch (error) {
-      setDebugResult({ success: false, error: error.message });
+      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
       setDebugLoading(false);
     }
@@ -219,7 +224,7 @@ export default function LinksManager() {
       setDebugResult(cleanResult);
       await loadLinks();
     } catch (error) {
-      setDebugResult({ success: false, error: error.message });
+      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
       setDebugLoading(false);
     }
@@ -233,7 +238,7 @@ export default function LinksManager() {
       const testResult = await testLinksService();
       setDebugResult(testResult);
     } catch (error) {
-      setDebugResult({ success: false, error: error.message });
+      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
       setDebugLoading(false);
     }
@@ -247,7 +252,7 @@ export default function LinksManager() {
       const testResult = await testSupabaseConnection();
       setDebugResult(testResult);
     } catch (error) {
-      setDebugResult({ success: false, error: error.message });
+      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
       setDebugLoading(false);
     }
@@ -543,7 +548,7 @@ export default function LinksManager() {
                           variant="outline"
                           className="h-12 flex items-center gap-3 border-blue-500/20 hover:bg-blue-500/5"
                         >
-                          {debugLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : '🔄'}
+                          {debugLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowsClockwise className="h-5 w-5" />}
                           <div className="text-left">
                             <p className="font-medium">Actualiser l'état</p>
                             <p className="text-xs text-muted-foreground">Recharger les informations</p>
@@ -875,7 +880,7 @@ export default function LinksManager() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setShowModal(true)}
+                  onClick={handleOpenNewLinkModal}
                   className="h-12 flex items-center justify-center gap-2 text-xs hover:bg-green-500/5 px-2"
                 >
                   <Plus className="h-4 w-4" />
