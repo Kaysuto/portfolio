@@ -11,6 +11,9 @@ const AppRouter: React.FC = () => {
         <Route path="/" element={<PortfolioApp />} />
         <Route path="/bio" element={<BioPage />} />
         
+        {/* Redirection de /login vers /admin/login */}
+        <Route path="/login" element={<Navigate to="/admin/login" replace />} />
+        
         {/* Routes admin - Sans sécurité pour le développement */}
         <Route 
           path="/admin/*" 

@@ -1,21 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, X } from '@phosphor-icons/react';
+import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, X, LinkSimple } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
+import { BioLinksService, BioLink } from '@/services/bioLinksService';
 
 const BioPage: React.FC = () => {
+  // États pour les liens depuis la base de données
+  const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   // États pour le modal de confirmation
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMounted, setModalMounted] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
 
-  // Animation des éléments avec des délais échelonnés
-  const animationDelay = (index: number) => ({
-    animationDelay: `${index * 0.1}s`,
-    animationFillMode: 'backwards' as const
-  });
+  // Mapping des icônes Phosphor
+  const getIcon = (iconName: string) => {
+    const iconMap: Record<string, any> = {
+      'EnvelopeSimple': EnvelopeSimple,
+      'DiscordLogo': DiscordLogo,
+      'Globe': Globe,
+      'GameController': GameController,
+      'Palette': Palette,
+      'SmileyXEyes': SmileyXEyes,
+      'PaintBrush': PaintBrush,
+      'GithubLogo': GithubLogo,
+      'LinkSimple': LinkSimple
+    };
+    return iconMap[iconName] || LinkSimple;
+  };
+
+  // Charger les liens bio depuis la base de données
+  useEffect(() => {
+    const loadBioLinks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const links = await BioLinksService.getBioLinks();
+        setBioLinks(links);
+      } catch (err) {
+        console.error('Erreur chargement liens bio:', err);
+        setError('Erreur lors du chargement des liens');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBioLinks();
+  }, []);
 
   // Fonctions pour gérer le modal
   const openModal = (link: {name: string, url: string, description: string}) => {
@@ -51,58 +86,6 @@ const BioPage: React.FC = () => {
     return () => document.removeEventListener("keydown", onKey);
   }, [isModalOpen]);
 
-  // Liens sociaux basés sur solo.to/kaysuto
-  const socialLinks = [
-    {
-      name: 'Email',
-      url: 'mailto:contact@kaysuto.fr',
-      description: 'Me contacter directement',
-      icon: EnvelopeSimple
-    },
-    {
-      name: 'Discord',
-      url: 'https://discord.gg/wJTfwPen',
-      description: 'Rejoins mon serveur',
-      icon: DiscordLogo
-    },
-    {
-      name: 'Site personnel',
-      url: 'https://kaysuto.fr',
-      description: 'Mon portfolio principal',
-      icon: Globe
-    },
-    {
-      name: 'Clover Games',
-      url: 'https://www.clovergames.fr',
-      description: 'Mon projet gaming',
-      icon: GameController
-    },
-    {
-      name: 'DeviantArt',
-      url: 'https://www.deviantart.com/kaysuto',
-      description: 'Mes créations artistiques',
-      icon: Palette
-    },
-    {
-      name: 'Emoji.gg',
-      url: 'https://emoji.gg/user/kaysuto',
-      description: 'Profil emoji (+100k)',
-      icon: SmileyXEyes
-    },
-    {
-      name: 'Pinterest',
-      url: 'https://www.pinterest.fr/kaysuto/',
-      description: 'Mes inspirations',
-      icon: PaintBrush
-    },
-    {
-      name: 'GitHub',
-      url: 'https://github.com/Kaysuto',
-      description: 'Code & projets open source',
-      icon: GithubLogo
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
       <div className="relative z-10">
@@ -132,41 +115,62 @@ const BioPage: React.FC = () => {
               </div>
 
               {/* Grille de liens sociaux */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                {socialLinks.map((link, index) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <button
-                      key={link.name}
-                      onClick={() => openModal(link)}
-                      className="group relative p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 animate-fadeInUp text-left w-full"
-                      style={animationDelay(index)}
-                    >
-                      {/* Effet de brillance sur hover */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
-                      
-                      <div className="relative flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="bg-accent/10 p-3 rounded-xl group-hover:bg-accent/20 transition-colors duration-300">
-                            <IconComponent size={24} className="text-accent group-hover:text-accent-foreground transition-colors duration-300" />
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Chargement des liens...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-destructive mb-4">❌ {error}</p>
+                  <Button onClick={() => window.location.reload()} variant="outline">
+                    Réessayer
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                  {bioLinks.map((link, index) => {
+                    const IconComponent = getIcon(link.icon || 'LinkSimple');
+                    return (
+                      <button
+                        key={link.id}
+                        onClick={() => openModal({
+                          name: link.title,
+                          url: link.url,
+                          description: link.description || ''
+                        })}
+                        className="group relative p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 animate-fadeInUp text-left w-full"
+                        style={{
+                          animationDelay: `${index * 0.1}s`,
+                          animationFillMode: 'backwards'
+                        }}
+                      >
+                        {/* Effet de brillance sur hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                        
+                        <div className="relative flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div className="bg-accent/10 p-3 rounded-xl group-hover:bg-accent/20 transition-colors duration-300">
+                              <IconComponent size={24} className="text-accent group-hover:text-accent-foreground transition-colors duration-300" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
+                                {link.title}
+                              </h3>
+                              <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                                {link.description}
+                              </p>
+                            </div>
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
-                              {link.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                              {link.description}
-                            </p>
+                          <div className="bg-accent/10 p-2 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                            <ArrowUpRight className="w-5 h-5 text-accent group-hover:text-accent-foreground transition-colors duration-300" />
                           </div>
                         </div>
-                        <div className="bg-accent/10 p-2 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                          <ArrowUpRight className="w-5 h-5 text-accent group-hover:text-accent-foreground transition-colors duration-300" />
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </section>
         </main>
@@ -205,12 +209,12 @@ const BioPage: React.FC = () => {
                 <div className="flex items-center space-x-4 mb-6">
                   <div className="bg-accent/10 p-3 rounded-xl">
                     {(() => {
-                      const link = socialLinks.find(l => l.name === selectedLink.name);
+                      const link = bioLinks.find(l => l.title === selectedLink.name);
                       if (link) {
-                        const IconComponent = link.icon;
+                        const IconComponent = getIcon(link.icon || 'LinkSimple');
                         return <IconComponent size={24} className="text-accent" />;
                       }
-                      return null;
+                      return <LinkSimple size={24} className="text-accent" />;
                     })()}
                   </div>
                   <div>

@@ -4,7 +4,7 @@ export interface PortfolioLink {
   id: string;
   title: string;
   url: string;
-  type: 'github' | 'live' | 'social' | 'other';
+  type: 'github' | 'live' | 'social' | 'bio_link' | 'other';
   description?: string;
   is_active: boolean;
   click_count: number;
@@ -28,7 +28,7 @@ export class LinksService {
   static async getAllLinks(): Promise<PortfolioLink[]> {
     try {
       const { data, error } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -47,7 +47,7 @@ export class LinksService {
   static async createLink(linkData: CreateLinkData): Promise<PortfolioLink> {
     try {
       const { data, error } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .insert([{
           ...linkData,
           is_active: linkData.is_active ?? true,
@@ -72,7 +72,7 @@ export class LinksService {
     try {
       const { id, ...data } = updateData;
       const { data: updatedLink, error } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .update({
           ...data,
           updated_at: new Date().toISOString()
@@ -96,7 +96,7 @@ export class LinksService {
   static async deleteLink(id: string): Promise<void> {
     try {
       const { error } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .delete()
         .eq('id', id);
 
@@ -114,7 +114,7 @@ export class LinksService {
     try {
       // Récupérer le statut actuel
       const { data: currentLink, error: fetchError } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .select('is_active')
         .eq('id', id)
         .single();
@@ -126,7 +126,7 @@ export class LinksService {
 
       // Inverser le statut
       const { data: updatedLink, error: updateError } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .update({
           is_active: !currentLink.is_active,
           updated_at: new Date().toISOString()

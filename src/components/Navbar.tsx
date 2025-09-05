@@ -82,7 +82,7 @@ export function Navbar() {
         : 'bg-transparent backdrop-blur-0 border-none shadow-none'
     }`}>
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft">
             <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
@@ -94,8 +94,8 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200">
+          {/* Desktop Navigation Links - Centré */}
+          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200 flex-1 justify-center">
             {[
               { id: "accueil", label: "Accueil" },
               { id: "apropos", label: "À propos" },

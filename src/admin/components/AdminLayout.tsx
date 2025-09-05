@@ -74,27 +74,27 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg"
           : "bg-transparent"
       )}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo/Brand */}
-            <Link to="/admin/dashboard" className="flex items-center gap-3 animate-slideInFromLeft">
-              <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                <Code size={20} className="text-accent" />
+            <Link to="/admin/dashboard" className="flex items-center gap-2 sm:gap-3 animate-slideInFromLeft min-w-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                <Code size={16} className="sm:hidden text-accent" />
+                <Code size={20} className="hidden sm:block text-accent" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-foreground">Admin Panel</span>
-                <span className="text-xs text-muted-foreground">Kimiya Portfolio</span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-base sm:text-lg font-bold text-foreground truncate">Admin</span>
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1 animate-slideInFromTop animate-delay-200">
+            {/* Desktop Navigation - Centré */}
+            <div className="hidden lg:flex items-center space-x-1 animate-slideInFromTop animate-delay-200">
               {adminNavItems.map((item) => (
                 <Link
                   key={item.id}
                   to={item.path}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105",
+                    "px-3 xl:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap",
                     location.pathname === item.path
                       ? "text-accent bg-accent/10 shadow-sm"
                       : "text-foreground/80 hover:text-accent hover:bg-accent/5"
@@ -106,82 +106,131 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </div>
 
             {/* Right side buttons */}
-            <div className="flex items-center space-x-2 animate-slideInFromRight animate-delay-100">
+            <div className="flex items-center space-x-1 sm:space-x-2 animate-slideInFromRight animate-delay-100 flex-shrink-0">
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="p-2 hover:bg-accent/10 group transition-all duration-300 hover:scale-110"
+                className="p-1.5 sm:p-2 hover:bg-accent/10 group transition-all duration-300 hover:scale-110"
               >
                 <div className="relative">
                   {theme === 'dark' ? (
-                    <Sun size={18} className="text-accent group-hover:rotate-180 transition-transform duration-500" />
+                    <Sun size={16} className="sm:hidden text-accent group-hover:rotate-180 transition-transform duration-500" />
                   ) : (
-                    <Moon size={18} className="text-accent group-hover:-rotate-12 transition-transform duration-300" />
+                    <Moon size={16} className="sm:hidden text-accent group-hover:-rotate-12 transition-transform duration-300" />
+                  )}
+                  {theme === 'dark' ? (
+                    <Sun size={18} className="hidden sm:block text-accent group-hover:rotate-180 transition-transform duration-500" />
+                  ) : (
+                    <Moon size={18} className="hidden sm:block text-accent group-hover:-rotate-12 transition-transform duration-300" />
                   )}
                 </div>
               </Button>
 
-              {/* Logout Button */}
+              {/* Logout Button - Hidden on mobile */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleLogout}
-                className="p-2 hover:bg-destructive/10 group transition-all duration-300 hover:scale-110"
+                className="hidden md:flex p-1.5 sm:p-2 hover:bg-destructive/10 group transition-all duration-300 hover:scale-110"
               >
-                <SignOut size={18} className="text-destructive group-hover:translate-x-1 transition-transform duration-200" />
+                <SignOut size={16} className="sm:hidden text-destructive group-hover:translate-x-1 transition-transform duration-200" />
+                <SignOut size={18} className="hidden sm:block text-destructive group-hover:translate-x-1 transition-transform duration-200" />
               </Button>
 
               {/* Mobile menu button */}
               <Button
                 variant="ghost"
                 size="sm"
-                className="md:hidden p-2 hover:bg-accent/10 transition-all duration-300"
+                className="lg:hidden p-2 hover:bg-accent/10 transition-all duration-300"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
-                {isMobileMenuOpen ? (
-                  <X size={20} className="text-accent" />
-                ) : (
-                  <List size={20} className="text-accent" />
-                )}
+                <div className="w-5 h-5 flex flex-col justify-center items-center">
+                  <div className={cn(
+                    "w-4 h-0.5 bg-accent transition-all duration-300 ease-out",
+                    isMobileMenuOpen ? "rotate-45 translate-y-0.5" : "translate-y-0"
+                  )} />
+                  <div className={cn(
+                    "w-4 h-0.5 bg-accent transition-all duration-300 ease-out my-0.5",
+                    isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                  )} />
+                  <div className={cn(
+                    "w-4 h-0.5 bg-accent transition-all duration-300 ease-out",
+                    isMobileMenuOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-0"
+                  )} />
+                </div>
               </Button>
             </div>
           </div>
+        </div>
 
-          {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden mt-4 py-4 border-t border-border/50 animate-fadeInUp">
-              <div className="flex flex-col space-y-2">
-                {adminNavItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
-                      location.pathname === item.path
-                        ? "text-accent bg-accent/10 shadow-sm"
-                        : "text-foreground/80 hover:text-accent hover:bg-accent/5"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all duration-300 text-left"
+        {/* Mobile Navigation Overlay */}
+        <div className={cn(
+          "lg:hidden fixed inset-0 z-40 transition-all duration-300 top-20",
+          isMobileMenuOpen ? "visible opacity-100" : "invisible opacity-0"
+        )}>
+          {/* Backdrop */}
+          <div 
+            className={cn(
+              "absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300",
+              isMobileMenuOpen ? "opacity-100" : "opacity-0"
+            )}
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Mobile Menu */}
+          <div className={cn(
+            "absolute top-4 left-4 right-4 bg-background/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-2xl transition-all duration-300",
+            isMobileMenuOpen 
+              ? "opacity-100 translate-y-0 scale-100" 
+              : "opacity-0 -translate-y-4 scale-95"
+          )}>
+            <div className="p-4 space-y-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+              {adminNavItems.map((item, index) => (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300",
+                    "hover:scale-[1.02] hover:shadow-sm",
+                    location.pathname === item.path
+                      ? "text-accent bg-accent/10 shadow-sm border border-accent/20"
+                      : "text-foreground/80 hover:text-accent hover:bg-accent/5"
+                  )}
+                  style={{
+                    animationDelay: isMobileMenuOpen ? `${index * 30}ms` : '0ms'
+                  }}
                 >
-                  Déconnexion
-                </button>
-              </div>
+                  <span>{item.label}</span>
+                  {location.pathname === item.path && (
+                    <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                  )}
+                </Link>
+              ))}
+              
+              {/* Divider */}
+              <div className="my-3 border-t border-border/50" />
+              
+              {/* Logout Button for Mobile */}
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-all duration-300 hover:scale-[1.02]"
+              >
+                <span>Déconnexion</span>
+                <SignOut size={16} className="text-destructive" />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-10 pt-24">
+      <main className="relative z-10 pt-28">
         {children}
       </main>
     </div>
