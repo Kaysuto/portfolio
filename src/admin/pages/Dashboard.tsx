@@ -79,17 +79,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade flex items-center justify-center">
-        {/* Animated background shapes - identiques à la page principale */}
-        <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-20 left-10 w-24 h-24 bg-accent/5 rounded-full animate-float-slow animate-delay-700"></div>
-          <div className="absolute top-1/3 right-16 w-16 h-16 bg-primary/8 rounded-full animate-float-medium animate-delay-800"></div>
-          <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-secondary/10 rounded-full animate-float-fast animate-delay-900"></div>
-          <div className="absolute top-1/2 left-8 w-8 h-8 bg-accent/10 rounded-full animate-bounce-slow animate-delay-1000"></div>
-          <div className="absolute bottom-1/4 right-20 w-20 h-20 bg-muted/15 rounded-full animate-pulse-slow animate-delay-600"></div>
-        </div>
-
-        <div className="relative z-10 text-center space-y-4">
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center space-y-4">
           <Loader2 className="h-12 w-12 animate-spin text-accent mx-auto" />
           <p className="text-muted-foreground text-lg">Chargement du tableau de bord...</p>
         </div>
@@ -99,7 +90,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade flex items-center justify-center p-6">
+      <div className="flex items-center justify-center p-6">
         <Alert className="max-w-md">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
@@ -109,19 +100,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
-      {/* Animated background shapes - identiques à la page principale */}
-      <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-20 left-10 w-24 h-24 bg-accent/5 rounded-full animate-float-slow animate-delay-700"></div>
-        <div className="absolute top-1/3 right-16 w-16 h-16 bg-primary/8 rounded-full animate-float-medium animate-delay-800"></div>
-        <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-secondary/10 rounded-full animate-float-fast animate-delay-900"></div>
-        <div className="absolute top-1/2 left-8 w-8 h-8 bg-accent/10 rounded-full animate-bounce-slow animate-delay-1000"></div>
-        <div className="absolute bottom-1/4 right-20 w-20 h-20 bg-muted/15 rounded-full animate-pulse-slow animate-delay-600"></div>
-      </div>
-
-      <div className="relative z-10 p-6 space-y-8 pt-24">
-        {/* Hero Section - style minimaliste comme la page d'accueil */}
-        <div className="text-center space-y-6 py-12 animate-fadeIn">
+    <div className="relative">
+      <div className="relative z-10 px-6 py-8">
+        <div className="max-w-6xl mx-auto h-full">
+          {/* Hero Section - style minimaliste comme la page d'accueil */}
+          <div className="text-center space-y-6 py-12 animate-fadeIn">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground">
               Tableau de Bord
@@ -499,6 +482,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

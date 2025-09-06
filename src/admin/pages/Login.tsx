@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.tsx';
 import { useTheme } from '@/hooks/use-theme';
@@ -13,9 +13,26 @@ export const Login: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [showResetForm, setShowResetForm] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const navigate = useNavigate();
   const { theme, toggle: toggleTheme } = useTheme();
-  const { signIn, loading, user, isAdmin } = useAuth();
+  const { signIn, loading, user, isAdmin, profile } = useAuth();
+
+  // Redirection automatique une fois que le profil admin est chargé
+  useEffect(() => {
+    console.log('🔍 DEBUG Login useEffect: user=', !!user, 'profile=', !!profile, 'isAdmin=', isAdmin, 'isLoggingIn=', isLoggingIn);
+    
+    if (user && profile && isLoggingIn) {
+      if (isAdmin) {
+        console.log('✅ DEBUG: Redirection vers dashboard');
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        console.log('❌ DEBUG: Utilisateur non admin');
+        setError('Accès non autorisé. Vous devez être administrateur.');
+        setIsLoggingIn(false);
+      }
+    }
+  }, [user, profile, isAdmin, isLoggingIn, navigate]);
 
   // Fonction pour traduire les erreurs Supabase en français
   const translateAuthError = (error: any): string => {
@@ -63,17 +80,15 @@ export const Login: React.FC = () => {
     setSuccess('');
 
     try {
+      console.log('🔍 DEBUG Login: Début de la connexion');
+      setIsLoggingIn(true);
       await signIn(email, password);
-
-      // Redirection après connexion réussie
-      if (isAdmin) {
-        navigate('/admin/dashboard', { replace: true });
-      } else {
-        setError('Accès non autorisé. Vous devez être administrateur.');
-      }
+      console.log('🔍 DEBUG Login: signIn terminé, attente du profil...');
+      // La redirection se fera dans useEffect une fois le profil chargé
     } catch (error: any) {
       console.error('Erreur de connexion:', error);
       setError(translateAuthError(error));
+      setIsLoggingIn(false);
     }
   };
 

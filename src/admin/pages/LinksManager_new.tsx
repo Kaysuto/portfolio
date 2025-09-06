@@ -118,7 +118,7 @@ export default function LinksManager() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-muted-foreground">Chargement des liens...</p>
@@ -128,8 +128,8 @@ export default function LinksManager() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl space-y-6">
+    <div className="">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-6xl space-y-6">
         
         {/* En-tête de page */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

@@ -29,7 +29,7 @@ export class DashboardService {
 
       // Récupérer les liens
       const { data: links, error: linksError } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .select('*');
 
       // Récupérer la configuration maintenance
@@ -78,7 +78,7 @@ export class DashboardService {
     try {
       // Récupérer les liens récents
       const { data: recentLinks, error } = await supabase
-        .from('portfolio_links')
+        .from('links')
         .select('*')
         .order('updated_at', { ascending: false })
         .limit(5);

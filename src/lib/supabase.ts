@@ -7,8 +7,11 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1N
 // Client Supabase principal
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    autoRefreshToken: false,
-    persistSession: false
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    storageKey: 'kimiyas-admin-auth',
+    storage: window.localStorage
   }
 })
 

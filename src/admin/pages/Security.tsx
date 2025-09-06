@@ -205,7 +205,7 @@ export const Security: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background px-6 py-8">
+    <div className="px-6 py-8">
       <div className="max-w-6xl mx-auto h-full">
         {/* Hero Section */}
         <div className="text-center mb-8 animate-fadeInUp">

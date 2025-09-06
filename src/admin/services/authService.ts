@@ -51,17 +51,26 @@ export class AuthService {
 
   // Récupérer le profil de l'utilisateur
   static async getProfile(userId: string): Promise<Profile | null> {
+    console.log('🔍 DEBUG AuthService.getProfile: userId=', userId);
+    
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
+    console.log('🔍 DEBUG AuthService.getProfile: data=', data, 'error=', error);
+
     if (error) {
-      if (error.code === 'PGRST116') return null; // No rows found
+      if (error.code === 'PGRST116') {
+        console.log('⚠️ DEBUG: Aucun profil trouvé pour cet utilisateur');
+        return null; // No rows found
+      }
+      console.error('❌ DEBUG: Erreur lors de la récupération du profil:', error);
       throw error;
     }
 
+    console.log('✅ DEBUG: Profil récupéré avec succès:', data);
     return data;
   }
 

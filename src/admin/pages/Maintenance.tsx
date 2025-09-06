@@ -86,8 +86,8 @@ export default function Maintenance() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-6 py-8">
-      <div className="max-w-7xl mx-auto h-full">
+    <div className="px-6 py-8">
+      <div className="max-w-6xl mx-auto h-full">
         <div className="text-center mb-8 animate-fadeInUp">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-foreground">Mode</span>
