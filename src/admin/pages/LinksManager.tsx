@@ -10,6 +10,7 @@ import { migrateBioLinks, cleanBioLinks } from '../../scripts/migrateBioLinks';
 import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/createLinksTable';
 import { testLinksService } from '../../scripts/testLinksService';
 import { testSupabaseConnection } from '../../scripts/testSupabaseConnection';
+import { notifications } from '../../components/NotificationProvider';
 
 export default function LinksManager() {
   const [links, setLinks] = useState<PortfolioLink[]>([]);
@@ -85,9 +86,11 @@ export default function LinksManager() {
           ...formData
         };
         await LinksService.updateLink(updateData);
+        notifications.success('Lien modifié avec succès !');
       } else {
         const createData: CreateLinkData = formData;
         await LinksService.createLink(createData);
+        notifications.success('Lien créé avec succès !');
       }
 
       await loadLinks();
@@ -95,6 +98,7 @@ export default function LinksManager() {
     } catch (err) {
       console.error('Erreur sauvegarde lien:', err);
       setError('Erreur lors de la sauvegarde du lien');
+      notifications.error('Erreur lors de la sauvegarde du lien');
     }
   };
 
@@ -117,9 +121,11 @@ export default function LinksManager() {
     try {
       await LinksService.deleteLink(id);
       await loadLinks();
+      notifications.success('Lien supprimé avec succès !');
     } catch (err) {
       console.error('Erreur suppression lien:', err);
       setError('Erreur lors de la suppression du lien');
+      notifications.error('Erreur lors de la suppression du lien');
     }
   };
 
@@ -951,7 +957,7 @@ export default function LinksManager() {
                         variant="ghost"
                         size="sm"
                         onClick={() => window.open(link.url, '_blank')}
-                        className="h-6 w-6 p-0 shrink-0"
+                        className="h-6 w-6 p-0 shrink-0 opacity-60 hover:opacity-100"
                       >
                         <LinkIcon className="h-3 w-3" />
                       </Button>

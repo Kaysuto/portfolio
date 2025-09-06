@@ -6,27 +6,14 @@ import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 import { getMaintenanceStatus } from "@/admin/services/maintenanceService"
 import { useQuery } from '@tanstack/react-query';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 export function PortfolioApp() {
-  console.log('Debug: PortfolioApp component loaded, attempting to import MaintenancePage');
-  const location = useLocation();
   const { data: maintenanceStatus, isLoading } = useQuery({
     queryKey: ['maintenanceStatus'],
     queryFn: getMaintenanceStatus,
   });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
-  }
-
-  if (maintenanceStatus && maintenanceStatus.is_enabled) {
-    return <Navigate to="/maintenance" replace />;
-  }
   // Register Service Worker for PWA with better error handling
   useEffect(() => {
     console.log('PortfolioApp: Checking maintenance status');
@@ -76,6 +63,19 @@ export function PortfolioApp() {
       }
     }
   }, []);
+
+  // Gestion des états de chargement et de maintenance
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (maintenanceStatus && maintenanceStatus.is_enabled) {
+    return <Navigate to="/maintenance" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
