@@ -37,11 +37,9 @@ export interface SpotifyConfig {
 
 export interface MaintenanceConfig {
   id: string;
-  is_active: boolean;
-  title: string;
+  is_enabled: boolean;
   message?: string;
-  show_progress: boolean;
-  progress_percentage: number;
+  estimated_time?: string;
   updated_at: string;
 }
 

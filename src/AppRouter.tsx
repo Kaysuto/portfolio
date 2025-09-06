@@ -15,12 +15,7 @@ const AppRouter: React.FC = () => {
         {/* Routes admin - Sans sécurité pour le développement */}
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin/dashboard" element={<AdminApp />} />
-        <Route path="/admin/analytics" element={<AdminApp />} />
-        <Route path="/admin/links" element={<AdminApp />} />
-        <Route path="/admin/maintenance" element={<AdminApp />} />
-        <Route path="/admin/security" element={<AdminApp />} />
-        <Route path="/admin/settings" element={<AdminApp />} />
+        <Route path="/admin/*" element={<AdminApp />} />
 
         {/* Redirection de /login vers /admin/login */}
         <Route path="/login" element={<Navigate to="/admin/login" replace />} />

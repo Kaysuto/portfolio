@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ErrorBoundary } from "react-error-boundary";
 import AppRouter from './AppRouter.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
@@ -45,17 +46,28 @@ const reportWebVitals = (metric: any) => {
 };
 
 // Initialize app
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ErrorBoundary 
-      FallbackComponent={ErrorFallback}
-      onError={(error, errorInfo) => {
-        console.error('App Error:', error, errorInfo);
-      }}
-      onReset={() => window.location.reload()}
-    >
-      <AppRouter />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={(error, errorInfo) => {
+          console.error('App Error:', error, errorInfo);
+        }}
+        onReset={() => window.location.reload()}
+      >
+        <AppRouter />
+      </ErrorBoundary>
+    </QueryClientProvider>
   </StrictMode>
 )
 

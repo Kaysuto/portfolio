@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Login } from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import LinksManager from './pages/LinksManager';
@@ -11,16 +11,20 @@ import { AdminLayout } from './components/AdminLayout';
 import { useState, useEffect } from 'react';
 
 export const AdminApp: React.FC = () => {
+  const location = useLocation();
+  console.log('AdminApp rendered at path:', location.pathname);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('AdminApp useEffect: checking auth');
     const checkAuth = async () => {
       try {
         // Temporairement désactivé pour le développement
         // const sessionExists = localStorage.getItem('admin_session') !== null;
         // setIsAuthenticated(sessionExists);
         setIsAuthenticated(true); // Toujours authentifié en mode développement
+        console.log('AdminApp: Set isAuthenticated to true (dev mode)');
       } catch (error) {
         console.error('Auth check error:', error);
         setIsAuthenticated(true); // En cas d'erreur, permettre l'accès
@@ -58,6 +62,7 @@ export const AdminApp: React.FC = () => {
   }, []);
 
   if (loading) {
+    console.log('AdminApp: Loading state active');
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
@@ -66,6 +71,7 @@ export const AdminApp: React.FC = () => {
   }
 
   if (!isAuthenticated) {
+    console.log('AdminApp: Not authenticated, redirecting to /admin/login from', location.pathname);
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -74,21 +80,28 @@ export const AdminApp: React.FC = () => {
     );
   }
 
+  console.log('AdminApp: Authenticated, rendering protected routes at', location.pathname);
+
   return (
     <AdminLayout>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/analytics" element={
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="analytics" element={
           <Suspense fallback={<div className="p-6">Chargement…</div>}>
             <AnalyticsPage />
           </Suspense>
         } />
-        <Route path="/links" element={<LinksManager />} />
-        <Route path="/maintenance" element={<Maintenance />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="links" element={<LinksManager />} />
+        <Route path="maintenance" element={<Maintenance />} />
+        <Route path="security" element={<Security />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="*" element={
+          <>
+            {console.log('AdminApp: Catch-all route hit at', location.pathname)}
+            <Navigate to="dashboard" replace />
+          </>
+        } />
       </Routes>
     </AdminLayout>
   );

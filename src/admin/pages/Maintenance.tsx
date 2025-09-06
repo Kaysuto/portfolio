@@ -10,11 +10,8 @@ import { Switch } from '../../components/ui/switch'; // Assurez-vous que ce comp
 import { getMaintenanceStatus, setMaintenanceStatus } from '../../admin/services/maintenanceService';
 
 // Type pour la configuration de maintenance
-interface MaintenanceConfig {
-  is_enabled: boolean;
-  message?: string;
-  estimated_time?: string;
-}
+import { MaintenanceConfig } from '../types/admin';
+
 
 export default function Maintenance() {
   const queryClient = useQueryClient();
@@ -32,8 +29,18 @@ export default function Maintenance() {
     queryFn: getMaintenanceStatus,
   });
 
+  React.useEffect(() => {
+    if (maintenanceStatus) {
+      console.log('Maintenance query success:', maintenanceStatus);
+      setFormData({
+        message: maintenanceStatus.message || '',
+        estimated_time: maintenanceStatus.estimated_time || '',
+      });
+    }
+  }, [maintenanceStatus]);
+
   const mutation = useMutation({
-    mutationFn: setMaintenanceStatus,
+    mutationFn: (config: MaintenanceConfig) => setMaintenanceStatus(config),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['maintenanceStatus'] });
     },
@@ -41,13 +48,29 @@ export default function Maintenance() {
 
   const handleToggleMaintenance = () => {
     if (maintenanceStatus) {
-      mutation.mutate(!maintenanceStatus.is_enabled);
+      const newStatus = !maintenanceStatus.is_enabled;
+      console.log('Toggle maintenance from', maintenanceStatus.is_enabled, 'to', newStatus);
+      mutation.mutate({
+        is_enabled: newStatus,
+        message: formData.message,
+        estimated_time: formData.estimated_time,
+        id: '1',
+        updated_at: new Date().toISOString()
+      });
     }
   };
   
   const handleSave = () => {
-    // La logique de sauvegarde pour le message et le temps estimé sera ajoutée ici
-    console.log('Sauvegarde des autres configurations...');
+    console.log('Saving maintenance config:', formData);
+    if (maintenanceStatus) {
+      mutation.mutate({
+        is_enabled: maintenanceStatus.is_enabled,
+        message: formData.message,
+        estimated_time: formData.estimated_time,
+        id: '1',
+        updated_at: new Date().toISOString()
+      });
+    }
   };
 
   if (isLoading) {
@@ -155,12 +178,12 @@ export default function Maintenance() {
                 <div className="text-center py-8 space-y-4">
                   <Wrench className="h-16 w-16 mx-auto text-orange-9" />
                   <h2 className="text-2xl font-bold text-orange-11">Site en maintenance</h2>
-                  {formData.message && (
-                    <p className="text-orange-11">{formData.message}</p>
+                  {maintenanceStatus?.message && (
+                    <p className="text-orange-11">{maintenanceStatus.message}</p>
                   )}
-                  {formData.estimated_time && (
+                  {maintenanceStatus?.estimated_time && (
                     <p className="text-orange-11 opacity-80">
-                      Retour prévu : {formData.estimated_time}
+                      Retour prévu : {maintenanceStatus.estimated_time}
                     </p>
                   )}
                 </div>
