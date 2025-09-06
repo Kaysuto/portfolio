@@ -38,7 +38,7 @@ export class BioLinksService {
       }));
       
     } catch (error) {
-      console.error('Erreur lors de la récupération des liens bio:', error);
+      // console.error('Erreur lors de la récupération des liens bio:', error);
       throw error;
     }
   }
@@ -57,7 +57,7 @@ export class BioLinksService {
       }));
       
     } catch (error) {
-      console.error('Erreur lors de la récupération de tous les liens bio:', error);
+      // console.error('Erreur lors de la récupération de tous les liens bio:', error);
       throw error;
     }
   }

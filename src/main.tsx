@@ -15,7 +15,7 @@ window.addEventListener('error', (event) => {
       event.error?.message?.includes('runtime.lastError') ||
       event.error?.message?.includes('message channel closed')) {
     event.preventDefault();
-    console.warn('Runtime warning suppressed:', event.error.message);
+    // console.warn('Runtime warning suppressed:', event.error.message);
   }
 });
 
@@ -25,26 +25,26 @@ window.addEventListener('unhandledrejection', (event) => {
       event.reason?.message?.includes('message channel closed') ||
       event.reason?.message?.includes('listener indicated an asynchronous response')) {
     event.preventDefault();
-    console.warn('Extension error suppressed:', event.reason.message);
+    // console.warn('Extension error suppressed:', event.reason.message);
   }
 });
 
 // Suppress console errors from extensions
-const originalError = console.error;
-console.error = (...args) => {
-  const message = args.join(' ');
-  if (message.includes('runtime.lastError') || 
-      message.includes('message channel closed') ||
-      message.includes('listener indicated an asynchronous response')) {
-    return; // Ignore extension errors
-  }
-  originalError.apply(console, args);
-};
+// const originalError = console.error;
+// console.error = (...args) => {
+//   const message = args.join(' ');
+//   if (message.includes('runtime.lastError') || 
+//       message.includes('message channel closed') ||
+//       message.includes('listener indicated an asynchronous response')) {
+//     return; // Ignore extension errors
+//   }
+//   originalError.apply(console, args);
+// };
 
 // Performance monitoring
 const reportWebVitals = (metric: any) => {
   if (import.meta.env.PROD) {
-    console.log(metric);
+    // console.log(metric);
   }
 };
 
@@ -55,7 +55,7 @@ createRoot(document.getElementById('root')!).render(
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onError={(error, errorInfo) => {
-          console.error('App Error:', error, errorInfo);
+          // console.error('App Error:', error, errorInfo);
         }}
         onReset={() => window.location.reload()}
       >

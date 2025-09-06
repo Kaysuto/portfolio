@@ -11,7 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 });
 
 async function updateDefaults() {
-  console.log('Mise à jour des valeurs par défaut pour message et estimated_time...\n');
+  // console.log('Mise à jour des valeurs par défaut pour message et estimated_time...\n');
 
   try {
     const { error } = await supabase
@@ -26,10 +26,10 @@ async function updateDefaults() {
       throw new Error(`Erreur lors de la mise à jour : ${error.message}`);
     }
 
-    console.log('✅ Valeurs par défaut mises à jour avec succès!');
+    // console.log('✅ Valeurs par défaut mises à jour avec succès!');
 
   } catch (error) {
-    console.error('\n💥 Erreur critique lors de la mise à jour:', error.message);
+    // console.error('\n💥 Erreur critique lors de la mise à jour:', error.message);
     process.exit(1);
   }
 }

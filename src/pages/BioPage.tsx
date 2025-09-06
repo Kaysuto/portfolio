@@ -42,7 +42,6 @@ const BioPage: React.FC = () => {
         const links = await BioLinksService.getBioLinks();
         setBioLinks(links);
       } catch (err) {
-        console.error('Erreur chargement liens bio:', err);
         setError('Erreur lors du chargement des liens');
       } finally {
         setIsLoading(false);

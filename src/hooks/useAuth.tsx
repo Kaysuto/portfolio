@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext, ReactNode } from 'react
 import { AuthService } from '../admin/services/authService';
 import type { AuthContextType, Profile } from '../admin/types/admin';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -28,20 +28,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const loadProfile = async (userId: string) => {
     // Vérifier le cache d'abord (instantané)
     if (profileCache[userId]) {
-      console.log('🔍 DEBUG: Profil trouvé en cache (instantané)');
+      // console.log('🔍 DEBUG: Profil trouvé en cache (instantané)');
       setProfile(profileCache[userId]);
       return;
     }
 
     // Éviter double chargement
     if (profileLoading) {
-      console.log('🔍 DEBUG: Chargement profil déjà en cours, ignoré');
+      // console.log('🔍 DEBUG: Chargement profil déjà en cours, ignoré');
       return;
     }
 
     try {
       setProfileLoading(true);
-      console.log('🔍 DEBUG: Tentative de chargement du profil pour userId:', userId);
+      // console.log('🔍 DEBUG: Tentative de chargement du profil pour userId:', userId);
       
       // Approche optimiste : mettre loading à false immédiatement pour débloquer l'UI
       setLoading(false);
@@ -54,13 +54,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       );
       
       const userProfile = await Promise.race([profilePromise, timeoutPromise]) as Profile | null;
-      console.log('✅ DEBUG: Profil chargé avec succès:', userProfile);
+      // console.log('✅ DEBUG: Profil chargé avec succès:', userProfile);
       
       // Mettre en cache pour la prochaine fois
       setProfileCache(prev => ({...prev, [userId]: userProfile}));
       setProfile(userProfile);
     } catch (error) {
-      console.error('❌ DEBUG: Timeout/Erreur profil, utilisation fallback');
+      // console.error('❌ DEBUG: Timeout/Erreur profil, utilisation fallback');
       // En cas de timeout, utiliser un profil fallback basé sur la session
       const fallbackProfile: Profile = {
         id: userId,
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         await loadProfile(authUser.id);
       }
     } catch (error) {
-      console.error('Erreur de connexion:', error);
+      // console.error('Erreur de connexion:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(null);
       setProfile(null);
     } catch (error) {
-      console.error('Erreur de déconnexion:', error);
+      // console.error('Erreur de déconnexion:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           
           // Charger le profil en arrière-plan (non-bloquant)
           if (!profileLoading) {
-            loadProfile(session.user.id).catch(console.error);
+            loadProfile(session.user.id).catch(() => {});
           }
         } else {
           // Pas de session, terminer l'initialisation
@@ -145,7 +145,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setInitializing(false);
         }
       } catch (error) {
-        console.error('Erreur lors de l\'initialisation de l\'auth:', error);
+        // console.error('Erreur lors de l\'initialisation de l\'auth:', error);
         setLoading(false);
         setInitializing(false);
       }
@@ -158,7 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       async (event, session) => {
         if (!mounted) return;
 
-        console.log('Auth state changed:', event, session?.user?.email);
+        // console.log('Auth state changed:', event, session?.user?.email);
 
         if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user);
@@ -167,7 +167,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           
           // Chargement du profil en arrière-plan (non-bloquant)
           if (!profileLoading && (!profile || profile.id !== session.user.id)) {
-            loadProfile(session.user.id).catch(console.error);
+            loadProfile(session.user.id).catch(() => {});
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);

@@ -16,7 +16,6 @@ export function PortfolioApp() {
 
   // Register Service Worker for PWA with better error handling
   useEffect(() => {
-    console.log('PortfolioApp: Checking maintenance status');
     // Check maintenance status
     const checkMaintenance = async () => {
       try {
@@ -28,13 +27,10 @@ export function PortfolioApp() {
         if (!response.ok) throw new Error('Failed to fetch maintenance status');
         const data = await response.json();
         if (data && data.length > 0 && data[0].is_enabled) {
-          console.log('PortfolioApp: Maintenance mode active, redirecting to /maintenance');
           window.location.href = '/maintenance';
-        } else {
-          console.log('PortfolioApp: No maintenance, continuing with portfolio');
         }
       } catch (error) {
-        console.error('PortfolioApp: Error checking maintenance:', error);
+        // Silently fail, as the main app can still function
       }
     };
 
@@ -49,9 +45,8 @@ export function PortfolioApp() {
           if (registration.waiting) {
             registration.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
-          console.log('SW registered successfully');
         } catch (error) {
-          console.warn('SW registration failed:', error);
+          // Silently fail, as the main app can still function
         }
       };
       

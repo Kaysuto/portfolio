@@ -71,11 +71,11 @@ export default defineConfig({
             proxyReq.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
             proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey');
             
-            console.log(`🔄 Proxy Supabase: ${req.method} ${req.url}`);
-            console.log(`📋 Headers transmis:`, {
-              apikey: req.headers['apikey'] ? 'présent' : 'absent',
-              authorization: req.headers['authorization'] ? 'présent' : 'absent'
-            });
+            // console.log(`🔄 Proxy Supabase: ${req.method} ${req.url}`);
+            // console.log(`📋 Headers transmis:`, {
+            //   apikey: req.headers['apikey'] ? 'présent' : 'absent',
+            //   authorization: req.headers['authorization'] ? 'présent' : 'absent'
+            // });
           });
           
           proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -104,7 +104,7 @@ export default defineConfig({
             proxyReq.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
             proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey');
             
-            console.log(`🔄 Proxy Tailscale: ${req.method} ${req.url}`);
+            // console.log(`🔄 Proxy Tailscale: ${req.method} ${req.url}`);
           });
           
           proxy.on('proxyRes', (proxyRes, req, res) => {
