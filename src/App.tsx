@@ -4,8 +4,26 @@ import { Footer } from "@/components/Footer"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
+import { useQuery } from '@tanstack/react-query';
+import { getMaintenanceStatus } from './admin/services/maintenanceService';
+import { Wrench } from "@phosphor-icons/react";
+
+function MaintenancePage() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground">
+      <Wrench className="w-16 h-16 mb-4 text-accent" />
+      <h1 className="text-4xl font-bold mb-2">Site en maintenance</h1>
+      <p className="text-lg text-muted-foreground">Nous serons bientôt de retour.</p>
+    </div>
+  );
+}
 
 function App() {
+  const { data: maintenanceStatus, isLoading } = useQuery({
+    queryKey: ['maintenanceStatus'],
+    queryFn: getMaintenanceStatus,
+  });
+
   // Register Service Worker for PWA with better error handling
   useEffect(() => {
     if ('serviceWorker' in navigator && 'caches' in window) {
@@ -32,6 +50,18 @@ function App() {
       }
     }
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (maintenanceStatus?.is_enabled) {
+    return <MaintenancePage />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">

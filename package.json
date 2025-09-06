@@ -56,6 +56,7 @@
         "d3": "^7.9.0",
         "daisyui": "^5.1.6",
         "date-fns": "^3.6.0",
+        "dotenv": "^17.2.2",
         "embla-carousel-react": "^8.5.2",
         "framer-motion": "^12.6.2",
         "input-otp": "^1.4.2",
@@ -94,6 +95,9 @@
         "globals": "^16.0.0",
         "tailwindcss": "^4.1.11",
         "terser": "^5.44.0",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "tsx": "^4.20.5",
         "typescript": "~5.7.2",
         "typescript-eslint": "^8.38.0",
         "vite": "^6.3.5"

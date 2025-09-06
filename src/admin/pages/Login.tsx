@@ -19,13 +19,18 @@ export const Login: React.FC = () => {
     setError('');
 
     try {
-      const user = await AdminAuthService.login(email, password);
-      if (user) {
+      // Pour le développement, simuler une connexion réussie
+      // const user = await AdminAuthService.login(email, password);
+      // if (user) {
+        // Simuler la création d'une session
+        localStorage.setItem('admin_session', 'true');
+        localStorage.setItem('admin_user', email);
+
         setTimeout(() => {
-          navigate('/admin/dashboard');
-          window.location.reload();
+          // Utiliser window.location pour une navigation forcée
+          window.location.href = '/admin/dashboard';
         }, 100);
-      }
+      // }
     } catch (error: any) {
       setError(error.message || 'Erreur de connexion');
     } finally {

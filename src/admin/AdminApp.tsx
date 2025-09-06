@@ -17,12 +17,13 @@ export const AdminApp: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Vérification plus simple et rapide pour éviter les blocages
-        const sessionExists = localStorage.getItem('admin_session') !== null;
-        setIsAuthenticated(sessionExists);
+        // Temporairement désactivé pour le développement
+        // const sessionExists = localStorage.getItem('admin_session') !== null;
+        // setIsAuthenticated(sessionExists);
+        setIsAuthenticated(true); // Toujours authentifié en mode développement
       } catch (error) {
         console.error('Auth check error:', error);
-        setIsAuthenticated(false);
+        setIsAuthenticated(true); // En cas d'erreur, permettre l'accès
       } finally {
         setLoading(false);
       }
@@ -30,27 +31,29 @@ export const AdminApp: React.FC = () => {
 
     checkAuth();
 
+    // Temporairement désactivé pour le développement
     // Écouter les changements de localStorage pour détecter la déconnexion
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'admin_session' && e.newValue === null) {
-        setIsAuthenticated(false);
-      }
-    };
+    // const handleStorageChange = (e: StorageEvent) => {
+    //   if (e.key === 'admin_session' && e.newValue === null) {
+    //     setIsAuthenticated(false);
+    //   }
+    // };
 
     // Écouter les événements de storage sur la même page
-    const handleLocalStorageChange = () => {
-      const sessionExists = localStorage.getItem('admin_session') !== null;
-      setIsAuthenticated(sessionExists);
-    };
+    // const handleLocalStorageChange = () => {
+    //   const sessionExists = localStorage.getItem('admin_session') !== null;
+    //   setIsAuthenticated(sessionExists);
+    // };
 
-    window.addEventListener('storage', handleStorageChange);
-    
+    // window.addEventListener('storage', handleStorageChange);
+
     // Ajouter un listener personnalisé pour les changements locaux
-    window.addEventListener('admin-logout', handleLocalStorageChange);
+    // window.addEventListener('admin-logout', handleLocalStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('admin-logout', handleLocalStorageChange);
+      // Temporairement désactivé pour le développement
+      // window.removeEventListener('storage', handleStorageChange);
+      // window.removeEventListener('admin-logout', handleLocalStorageChange);
     };
   }, []);
 

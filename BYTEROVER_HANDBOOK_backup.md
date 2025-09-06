@@ -155,10 +155,6 @@
 - **CRUD liens basique** - Gestion simple avec drag & drop simulé
 - **Maintenance configurable** - Toggle et message personnalisable
 - **Analytics de base** - Statistiques essentielles sans complexité excessive
-- **MAINTENANCE SYSTEM** - Nouveau système de maintenance avec table dédiée (septembre 2025)
-- **Database Migration Scripts** - Scripts automatisés pour création des tables
-- **Maintenance Service** - Service backend pour gestion de la maintenance
-- **Migration Tools** - Outils de migration pour base de données
 
 **New Admin Modules Added**:
 - **AdminLayout.tsx** - Layout principal admin avec navbar et thème toggle
@@ -169,14 +165,7 @@
 - **Security.tsx & SecurityPage.tsx** - Protection IP et gestion de la sécurité
 - **Admin Routing** - Structure de navigation admin complète (/admin/*)
 - **CLEANUP COMPLETED** - Suppression des doublons et composants inutiles
-- **Simplified Architecture** - Versions simplifiées selon recommandations Byterover
-- **Maintenance System** - Système de maintenance avec base de données
-- **Database Scripts** - Scripts de création et migration des tables
-- **Maintenance Service** - Service pour gestion de la maintenance
-- **Migration Runner** - Outil d'exécution des migrations---
-
-*Byterover handbook optimized for agent navigation and human developer onboarding*
-*Last updated: 5 septembre 2025 - Maintenance system and database updates*
+- **Simplified Architecture** - Versions simplifiées selon recommandations Byterover---
 
 *Byterover handbook optimized for agent navigation and human developer onboarding*
 *Last updated: 5 septembre 2025 - Admin system cleanup and simplified architecture*

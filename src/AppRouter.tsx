@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PortfolioApp } from '@/PortfolioApp';
 import { AdminApp } from './admin/AdminApp';
+import { Login } from './admin/pages/Login';
 import BioPage from './pages/BioPage';
 
 const AppRouter: React.FC = () => {
@@ -10,17 +11,21 @@ const AppRouter: React.FC = () => {
         {/* Routes publiques - Portfolio */}
         <Route path="/" element={<PortfolioApp />} />
         <Route path="/bio" element={<BioPage />} />
-        
+
+        {/* Routes admin - Sans sécurité pour le développement */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin/dashboard" element={<AdminApp />} />
+        <Route path="/admin/analytics" element={<AdminApp />} />
+        <Route path="/admin/links" element={<AdminApp />} />
+        <Route path="/admin/maintenance" element={<AdminApp />} />
+        <Route path="/admin/security" element={<AdminApp />} />
+        <Route path="/admin/settings" element={<AdminApp />} />
+
         {/* Redirection de /login vers /admin/login */}
         <Route path="/login" element={<Navigate to="/admin/login" replace />} />
-        
-        {/* Routes admin - Sans sécurité pour le développement */}
-        <Route 
-          path="/admin/*" 
-          element={<AdminApp />}
-        />
-        
-        {/* 404 pour toute autre route */}
+
+        {/* 404 pour toute autre route - PLACÉ EN DERNIER */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
