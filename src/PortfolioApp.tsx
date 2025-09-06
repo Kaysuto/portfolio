@@ -4,10 +4,54 @@ import { Footer } from "@/components/Footer"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
+import { getMaintenanceStatus } from "@/admin/services/maintenanceService"
+import { useQuery } from '@tanstack/react-query';
+import { Navigate, useLocation } from 'react-router-dom';
 
 export function PortfolioApp() {
+  console.log('Debug: PortfolioApp component loaded, attempting to import MaintenancePage');
+  const location = useLocation();
+  const { data: maintenanceStatus, isLoading } = useQuery({
+    queryKey: ['maintenanceStatus'],
+    queryFn: getMaintenanceStatus,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (maintenanceStatus && maintenanceStatus.is_enabled) {
+    return <Navigate to="/maintenance" replace />;
+  }
   // Register Service Worker for PWA with better error handling
   useEffect(() => {
+    console.log('PortfolioApp: Checking maintenance status');
+    // Check maintenance status
+    const checkMaintenance = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/maintenance?select=*`, {
+          headers: {
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+          },
+        });
+        if (!response.ok) throw new Error('Failed to fetch maintenance status');
+        const data = await response.json();
+        if (data && data.length > 0 && data[0].is_enabled) {
+          console.log('PortfolioApp: Maintenance mode active, redirecting to /maintenance');
+          window.location.href = '/maintenance';
+        } else {
+          console.log('PortfolioApp: No maintenance, continuing with portfolio');
+        }
+      } catch (error) {
+        console.error('PortfolioApp: Error checking maintenance:', error);
+      }
+    };
+
+    checkMaintenance();
     if ('serviceWorker' in navigator && 'caches' in window) {
       const registerSW = async () => {
         try {

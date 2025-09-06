@@ -1,40 +1,105 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AdminAuthService } from '../services/adminServices';
+import { useAuth } from '../../hooks/useAuth.tsx';
 import { useTheme } from '@/hooks/use-theme';
 import { CaretLeft, Sun, Moon, Lock, User } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '../../lib/supabase';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showResetForm, setShowResetForm] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
   const navigate = useNavigate();
   const { theme, toggle: toggleTheme } = useTheme();
+  const { signIn, loading, user, isAdmin } = useAuth();
+
+  // Fonction pour traduire les erreurs Supabase en français
+  const translateAuthError = (error: any): string => {
+    if (!error) return 'Erreur de connexion inconnue';
+
+    // Erreurs courantes de Supabase Auth
+    const errorMessages: { [key: string]: string } = {
+      'Invalid login credentials': 'Identifiants de connexion invalides',
+      'Email not confirmed': 'Email non confirmé. Vérifiez votre boîte mail.',
+      'Too many requests': 'Trop de tentatives. Veuillez réessayer plus tard.',
+      'User not found': 'Utilisateur non trouvé',
+      'Invalid email': 'Adresse email invalide',
+      'Password should be at least 6 characters': 'Le mot de passe doit contenir au moins 6 caractères',
+      'Signup is disabled': 'Les inscriptions sont désactivées',
+      'Email link is invalid or has expired': 'Le lien email est invalide ou a expiré',
+      'Token has expired or is invalid': 'Le token a expiré ou est invalide',
+      'User already registered': 'Cet utilisateur est déjà enregistré',
+      'Weak password': 'Mot de passe trop faible',
+      'Server error': 'Erreur du serveur. Veuillez réessayer.',
+      'Network error': 'Erreur de réseau. Vérifiez votre connexion.',
+    };
+
+    // Chercher par message d'erreur
+    const message = error.message || error.error_description || error.msg || error.toString();
+
+    // Recherche exacte
+    if (errorMessages[message]) {
+      return errorMessages[message];
+    }
+
+    // Recherche partielle
+    for (const [key, value] of Object.entries(errorMessages)) {
+      if (message.includes(key)) {
+        return value;
+      }
+    }
+
+    // Si aucune correspondance trouvée, retourner le message original ou un message générique
+    return message || 'Une erreur inattendue s\'est produite';
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      // Pour le développement, simuler une connexion réussie
-      // const user = await AdminAuthService.login(email, password);
-      // if (user) {
-        // Simuler la création d'une session
-        localStorage.setItem('admin_session', 'true');
-        localStorage.setItem('admin_user', email);
+      await signIn(email, password);
 
-        setTimeout(() => {
-          // Utiliser window.location pour une navigation forcée
-          window.location.href = '/admin/dashboard';
-        }, 100);
-      // }
+      // Redirection après connexion réussie
+      if (isAdmin) {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        setError('Accès non autorisé. Vous devez être administrateur.');
+      }
     } catch (error: any) {
-      setError(error.message || 'Erreur de connexion');
-    } finally {
-      setLoading(false);
+      console.error('Erreur de connexion:', error);
+      setError(translateAuthError(error));
+    }
+  };
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!resetEmail) {
+      setError('Veuillez saisir votre adresse email.');
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/admin/reset-password`,
+      });
+
+      if (error) throw error;
+
+      setSuccess('Un email de réinitialisation a été envoyé à votre adresse.');
+      setResetEmail('');
+      setTimeout(() => setShowResetForm(false), 3000);
+    } catch (error: any) {
+      console.error('Erreur réinitialisation:', error);
+      setError(translateAuthError(error));
     }
   };
 
@@ -93,75 +158,146 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Login Form */}
-          <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-8 hover:bg-background/50 transition-all duration-300 hover:scale-[1.02] shadow-lg">
+          <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-8 hover:bg-background/60 hover:border-accent/30 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/10 group">
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
                 <Lock size={32} className="text-accent" />
               </div>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={showResetForm ? handlePasswordReset : handleLogin} className="space-y-6">
               {error && (
                 <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm animate-shake">
                   {error}
                 </div>
               )}
 
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@kimiya.dev"
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
-                    required
-                  />
+              {success && (
+                <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-500 text-sm">
+                  {success}
                 </div>
-              </div>
+              )}
 
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Mot de passe
-                </label>
-                <div className="relative">
-                  <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
-                    required
-                  />
-                </div>
-              </div>
+              {showResetForm ? (
+                // Formulaire de réinitialisation
+                <>
+                  <div className="text-center mb-4">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      Réinitialiser le mot de passe
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Entrez votre adresse email pour recevoir un lien de réinitialisation.
+                    </p>
+                  </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
-              >
-                {loading ? (
-                  <div className="w-6 h-6 border-2 border-accent-foreground border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <Lock size={20} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
-                    Se connecter
-                  </>
-                )}
-              </Button>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                      <input
+                        type="email"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        placeholder="admin@kimiya.dev"
+                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowResetForm(false);
+                        setError('');
+                        setSuccess('');
+                      }}
+                      className="flex-1"
+                    >
+                      Annuler
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                    >
+                      {loading ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                      ) : (
+                        'Envoyer'
+                      )}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                // Formulaire de connexion normal
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="admin@kimiya.dev"
+                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Mot de passe
+                    </label>
+                    <div className="relative">
+                      <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setShowResetForm(true)}
+                      className="text-sm text-accent hover:text-accent/80 transition-colors duration-200"
+                    >
+                      Mot de passe oublié ?
+                    </button>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                  >
+                    {loading ? (
+                      <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                      <>
+                        <Lock size={20} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
+                        Se connecter
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </form>
 
-            <div className="mt-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
-              <p className="text-sm text-accent text-center">
-                <strong>Demo:</strong> admin@kimiya.dev / admin123
-              </p>
-            </div>
           </div>
         </div>
       </div>

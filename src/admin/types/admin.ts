@@ -1,11 +1,4 @@
-// Types pour l'administration
-export interface AdminUser {
-  id: string;
-  email: string;
-  mfa_enabled: boolean;
-  created_at: string;
-  last_login?: string;
-}
+// Types pour l'administration (ancien AdminUser supprimé - remplacé par Profile)
 
 export interface IPWhitelist {
   id: string;
@@ -94,4 +87,25 @@ export interface SecurityCheck {
   ipAllowed: boolean;
   sessionValid: boolean;
   userAuthenticated: boolean;
+}
+
+// Nouveaux types pour Supabase Auth
+export interface Profile {
+  id: string;
+  email: string;
+  nickname?: string;
+  is_admin: boolean;
+  role: 'admin' | 'moderator' | 'user';
+  updated_at: string;
+  created_at: string;
+}
+
+export interface AuthContextType {
+  user: any | null; // Supabase User type
+  profile: Profile | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  isAdmin: boolean;
+  refreshProfile: () => Promise<void>;
 }

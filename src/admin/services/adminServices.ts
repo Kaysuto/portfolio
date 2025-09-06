@@ -1,62 +1,13 @@
 import { supabase } from '../../lib/supabase';
-import type { 
-  AdminUser, 
-  IPWhitelist, 
-  PageLink, 
-  SpotifyConfig, 
+import type {
+  IPWhitelist,
+  PageLink,
+  SpotifyConfig,
   MaintenanceConfig,
-  DashboardMetrics 
+  DashboardMetrics
 } from '../types/admin';
 
-// Service d'authentification admin
-export class AdminAuthService {
-  static async login(email: string, password: string): Promise<AdminUser | null> {
-    try {
-      // Authentification simple pour démonstration
-      if ((email === 'admin@kimiya.dev' || email === 'admin@kaysuto.fr') && password === 'admin123') {
-        const user = {
-          id: '1',
-          email: email,
-          mfa_enabled: false,
-          created_at: new Date().toISOString()
-        };
-        
-        // Sauvegarder dans localStorage
-        localStorage.setItem('admin_session', JSON.stringify(user));
-        localStorage.setItem('admin_user', JSON.stringify(user));
-        
-        return user;
-      }
-      
-      throw new Error('Identifiants incorrects');
-    } catch (error) {
-      console.error('Erreur login admin:', error);
-      throw error;
-    }
-  }
-
-  static async validateSession(): Promise<boolean> {
-    // TODO: Validation session réelle
-    return localStorage.getItem('admin_session') !== null;
-  }
-
-  static async logout(): Promise<void> {
-    try {
-      // Nettoyer toutes les données de session
-      localStorage.removeItem('admin_session');
-      localStorage.removeItem('admin_user');
-      
-      // TODO: Invalider la session côté serveur si nécessaire
-      
-      console.log('Déconnexion réussie');
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-      // En cas d'erreur, forcer quand même le nettoyage local
-      localStorage.removeItem('admin_session');
-      localStorage.removeItem('admin_user');
-    }
-  }
-}
+// Ancien service d'authentification supprimé - remplacé par AuthService Supabase
 
 // Service de gestion de la liste blanche IP
 export class WhitelistService {

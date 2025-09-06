@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ErrorBoundary } from "react-error-boundary";
 import AppRouter from './AppRouter.tsx'
 import { ErrorFallback } from './ErrorFallback.tsx'
+import { AuthProvider } from './hooks/useAuth.tsx'
 import './index.css'
 
 // Error handling for runtime issues
@@ -65,7 +66,9 @@ createRoot(document.getElementById('root')!).render(
         }}
         onReset={() => window.location.reload()}
       >
-        <AppRouter />
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
       </ErrorBoundary>
     </QueryClientProvider>
   </StrictMode>

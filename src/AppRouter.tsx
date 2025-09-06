@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PortfolioApp } from '@/PortfolioApp';
 import { AdminApp } from './admin/AdminApp';
 import { Login } from './admin/pages/Login';
+import MaintenancePage from './pages/MaintenancePage';
 import BioPage from './pages/BioPage';
 
 const AppRouter: React.FC = () => {
@@ -11,6 +12,7 @@ const AppRouter: React.FC = () => {
         {/* Routes publiques - Portfolio */}
         <Route path="/" element={<PortfolioApp />} />
         <Route path="/bio" element={<BioPage />} />
+        <Route path="/maintenance" element={<MaintenancePage />} />
 
         {/* Routes admin - Sans sécurité pour le développement */}
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />

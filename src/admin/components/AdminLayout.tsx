@@ -1,10 +1,10 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/hooks/use-theme';
-import { Sun, Moon, List, X, SignOut, Code } from '@phosphor-icons/react';
+import { useAuth } from '../../hooks/useAuth.tsx';
+import { Sun, Moon, List, X, SignOut, Code, User } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { AdminAuthService } from '../services/adminServices';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { theme, toggle: toggleTheme } = useTheme();
+  const { signOut, profile, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -28,21 +29,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      // Utiliser le service d'authentification pour se déconnecter
-      await AdminAuthService.logout();
-      
-      // Nettoyer aussi admin_user
-      localStorage.removeItem('admin_user');
-      
-      // Déclencher un événement personnalisé pour notifier le changement
-      window.dispatchEvent(new Event('admin-logout'));
-      
-      // Naviguer vers la page de login
+      await signOut();
       navigate('/admin/login');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
-      // En cas d'erreur, forcer quand même la déconnexion
-      localStorage.clear();
+      // En cas d'erreur, forcer la navigation
       navigate('/admin/login');
     }
   };
@@ -103,6 +94,21 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   {item.label}
                 </Link>
               ))}
+            </div>
+
+            {/* User Info - Desktop */}
+            <div className="hidden md:flex items-center space-x-3 mr-2">
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-accent/10 rounded-lg border border-accent/20">
+                <User size={16} className="text-accent" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground truncate max-w-32">
+                    {profile?.nickname || user?.email?.split('@')[0] || 'Admin'}
+                  </span>
+                  <span className="text-xs text-muted-foreground capitalize">
+                    {profile?.role || 'admin'}
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Right side buttons */}
@@ -210,9 +216,26 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </Link>
               ))}
               
+              {/* User Info for Mobile */}
+              <div className="px-4 py-3 bg-accent/5 rounded-xl border border-accent/20">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                    <User size={20} className="text-accent" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground">
+                      {profile?.nickname || user?.email?.split('@')[0] || 'Admin'}
+                    </span>
+                    <span className="text-xs text-muted-foreground capitalize">
+                      {profile?.role || 'admin'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* Divider */}
               <div className="my-3 border-t border-border/50" />
-              
+
               {/* Logout Button for Mobile */}
               <button
                 onClick={() => {
