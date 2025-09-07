@@ -130,7 +130,7 @@ export const Login: React.FC = () => {
       </div>
 
       {/* Floating Controls */}
-      <div className="fixed top-6 left-6 z-50 flex gap-3 animate-slideInFromLeft">
+      <div className="fixed top-6 left-20 z-50 flex gap-3 animate-slideInFromLeft">
         <Link to="/">
           <Button
             variant="ghost"
@@ -142,7 +142,7 @@ export const Login: React.FC = () => {
         </Link>
       </div>
 
-      <div className="fixed top-6 right-6 z-50 animate-slideInFromRight">
+      <div className="fixed top-6 right-20 z-50 animate-slideInFromRight">
         <Button
           variant="ghost"
           size="sm"
@@ -173,7 +173,11 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Login Form */}
-          <div className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-8 hover:bg-background/60 hover:border-accent/30 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/10 group">
+          <div className={`backdrop-blur-md border rounded-xl p-8 hover:border-accent/30 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/10 group ${
+            theme === 'dark' 
+              ? 'bg-[#231813]/90 border-[#231813]/50 hover:bg-[#231813]/95' 
+              : 'bg-[#FFFBF4]/90 border-[#FFFBF4]/50 hover:bg-[#FFFBF4]/95'
+          }`}>
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
                 <Lock size={32} className="text-accent" />
@@ -216,7 +220,11 @@ export const Login: React.FC = () => {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="admin@kimiya.dev"
-                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                          theme === 'dark' 
+                            ? 'bg-[#231813]/60' 
+                            : 'bg-[#FFFBF4]/60'
+                        }`}
                         required
                       />
                     </div>
@@ -262,7 +270,11 @@ export const Login: React.FC = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="admin@kimiya.dev"
-                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                          theme === 'dark' 
+                            ? 'bg-[#231813]/60' 
+                            : 'bg-[#FFFBF4]/60'
+                        }`}
                         required
                       />
                     </div>
@@ -279,7 +291,11 @@ export const Login: React.FC = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-4 py-3 rounded-lg bg-background/60 border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300"
+                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                          theme === 'dark' 
+                            ? 'bg-[#231813]/60' 
+                            : 'bg-[#FFFBF4]/60'
+                        }`}
                         required
                       />
                     </div>
