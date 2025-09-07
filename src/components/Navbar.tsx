@@ -3,11 +3,13 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 
 
 export function Navbar() {
   const { theme, toggle: toggleTheme } = useTheme()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("accueil")
@@ -17,8 +19,22 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
       
+      // Vérifier si on doit scroller vers une section (venant de la page bio)
+      const sectionToScroll = sessionStorage.getItem('scrollToSection')
+      if (sectionToScroll && location.pathname === '/') {
+        // Attendre que le DOM soit prêt
+        setTimeout(() => {
+          const element = document.getElementById(sectionToScroll)
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" })
+            setActiveSection(sectionToScroll)
+            sessionStorage.removeItem('scrollToSection')
+          }
+        }, 100)
+      }
+      
       // Si on est sur la page bio, mettre bio comme actif
-      if (window.location.pathname === '/bio') {
+      if (location.pathname === '/bio') {
         setActiveSection('bio')
         return
       }
@@ -57,14 +73,16 @@ export function Navbar() {
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('popstate', handlePopState)
     }
-  }, [])
+  }, [location.pathname])
 
 
   const scrollToSection = (sectionId: string) => {
-    // Si on est sur la page bio, rediriger vers l'accueil avec l'ancre
-    if (window.location.pathname === '/bio') {
-      window.location.href = `/#${sectionId}`;
-      return;
+    // Si on est sur la page bio, naviguer vers l'accueil avec l'ancre
+    if (location.pathname === '/bio') {
+      // Stocker la section cible dans sessionStorage
+      sessionStorage.setItem('scrollToSection', sectionId)
+      navigate('/')
+      return
     }
     
     const element = document.getElementById(sectionId)
@@ -123,23 +141,24 @@ export function Navbar() {
             ))}
             
             {/* Bouton Bio */}
-            <Button
-              variant={activeSection === 'bio' ? "default" : "ghost"}
-              size="sm"
-              onClick={() => window.location.href = '/bio'}
-              className={cn(
-                "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
-                activeSection === 'bio'
-                  ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
-                  : "hover:bg-accent/10 hover:text-accent"
-              )}
-              style={{ animationDelay: `${7 * 0.1}s` }}
-            >
-              <span className="z-10">Bio</span>
-              {activeSection === 'bio' && (
-                <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
-              )}
-            </Button>
+            <Link to="/bio">
+              <Button
+                variant={activeSection === 'bio' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                  activeSection === 'bio'
+                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    : "hover:bg-accent/10 hover:text-accent"
+                )}
+                style={{ animationDelay: `${7 * 0.1}s` }}
+              >
+                <span className="z-10">Bio</span>
+                {activeSection === 'bio' && (
+                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
+                )}
+              </Button>
+            </Link>
           </div>
 
           {/* Right side buttons */}
@@ -214,8 +233,8 @@ export function Navbar() {
             ))}
             
             {/* Lien Bio Mobile */}
-            <a
-              href="/bio"
+            <Link
+              to="/bio"
               onClick={() => setIsMobileMenuOpen(false)}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
@@ -225,7 +244,7 @@ export function Navbar() {
               style={{ animationDelay: isMobileMenuOpen ? `${5 * 0.1}s` : undefined }}
             >
               <span className="z-10">Bio</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
