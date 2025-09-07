@@ -4,6 +4,7 @@ import { Footer } from '@/components/Footer';
 import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, X, LinkSimple } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
+import { useModal } from '@/hooks/useModal';
 
 const BioPage: React.FC = () => {
   // États pour les liens depuis la base de données
@@ -12,10 +13,8 @@ const BioPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   // États pour le modal de confirmation
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMounted, setModalMounted] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
+  const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
 
   // Mapping des icônes Phosphor
   const getIcon = (iconName: string) => {
@@ -51,22 +50,9 @@ const BioPage: React.FC = () => {
     loadBioLinks();
   }, []);
 
-  // Fonctions pour gérer le modal
   const openModal = (link: {name: string, url: string, description: string}) => {
     setSelectedLink(link);
-    setIsClosing(false);
-    setModalMounted(true);
-    setTimeout(() => setIsModalOpen(true), 10);
-  };
-
-  const closeModal = () => {
-    setIsClosing(true);
-    setIsModalOpen(false);
-    setTimeout(() => {
-      setModalMounted(false);
-      setIsClosing(false);
-      setSelectedLink(null);
-    }, 300);
+    openModalBase();
   };
 
   const handleLinkConfirm = () => {
@@ -75,15 +61,6 @@ const BioPage: React.FC = () => {
       closeModal();
     }
   };
-
-  // Gestion des touches clavier
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
-    };
-    if (isModalOpen) document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [isModalOpen]);
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -181,17 +158,11 @@ const BioPage: React.FC = () => {
       {modalMounted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-              isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0'
-            }`} 
+            className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
             onClick={closeModal} 
           />
           <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border transition-all duration-300 ${
-              isModalOpen && !isClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4'
-            }`}
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
             role="dialog"
             aria-modal="true"
           >

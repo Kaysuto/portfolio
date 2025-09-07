@@ -10,6 +10,7 @@ import { migrateBioLinks, cleanBioLinks } from '../../scripts/migrateBioLinks';
 import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/createLinksTable';
 import { testLinksService } from '../../scripts/testLinksService';
 import { testSupabaseConnection } from '../../scripts/testSupabaseConnection';
+import { useModal } from '../../hooks/useModal';
 
 export default function LinksManager() {
   const [links, setLinks] = useState<PortfolioLink[]>([]);
@@ -18,6 +19,7 @@ export default function LinksManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | PortfolioLink['type']>('all');
@@ -146,6 +148,7 @@ export default function LinksManager() {
               setIsEditing(false);
               setEditingLink(null);
               setShowModal(true);
+              openModal();
             }} 
             className="w-full sm:w-auto min-w-[140px]"
           >
@@ -280,7 +283,7 @@ export default function LinksManager() {
                     }
                   </p>
                   {links.length === 0 && (
-                    <Button onClick={() => setShowModal(true)}>
+                    <Button onClick={() => openModal()}>
                       <Plus className="h-4 w-4 mr-2" />
                       Créer un lien
                     </Button>

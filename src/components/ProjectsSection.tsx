@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { GithubLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
+import { ModalPortal } from "@/components/ui/ModalPortal"
+import { useModal } from "@/hooks/useModal"
 
 interface GitHubStats {
   public_repos: number
@@ -12,32 +14,7 @@ interface GitHubStats {
 export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalMounted, setModalMounted] = useState(false)
-  const [isClosing, setIsClosing] = useState(false)
-
-  const openModal = () => {
-    setIsClosing(false)
-    setModalMounted(true)
-    setTimeout(() => setIsModalOpen(true), 10)
-  }
-
-  const closeModal = () => {
-    setIsClosing(true)
-    setIsModalOpen(false)
-    setTimeout(() => {
-      setModalMounted(false)
-      setIsClosing(false)
-    }, 300)
-  }
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsModalOpen(false)
-    }
-    if (isModalOpen) document.addEventListener("keydown", onKey)
-    return () => document.removeEventListener("keydown", onKey)
-  }, [isModalOpen])
+  const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal()
 
   useEffect(() => {
     const fetchGitHubStats = async () => {
@@ -156,11 +133,11 @@ export function ProjectsSection() {
       </div>
 
       {/* Modal for GitHub projects */}
-      {modalMounted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+      <ModalPortal isOpen={modalMounted}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
           <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
             role="dialog"
             aria-modal="true"
           >
@@ -174,10 +151,10 @@ export function ProjectsSection() {
             <h3 className="text-lg font-semibold mb-2">Voir mes projets GitHub</h3>
             <p className="text-sm text-muted-foreground mb-4">Vous pouvez consulter tous mes projets directement sur mon profil GitHub.</p>
             <div className="flex justify-end">
-              <a 
-                href="https://github.com/Kaysuto" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://github.com/Kaysuto"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block"
                 onClick={closeModal}
               >
@@ -186,7 +163,7 @@ export function ProjectsSection() {
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
     </section>
   );
 }

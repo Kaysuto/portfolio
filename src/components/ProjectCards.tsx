@@ -3,6 +3,7 @@ import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ModalPortal } from "@/components/ui/ModalPortal"
 import { getProjects } from "@/lib/supabase"
 
 interface Project {
@@ -238,11 +239,11 @@ export function ProjectCards() {
       )}
 
       {/* Modal for Demo project */}
-      {modalMounted && modalProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+      <ModalPortal isOpen={modalMounted && !!modalProject}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
           <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
             role="dialog"
             aria-modal="true"
           >
@@ -255,20 +256,20 @@ export function ProjectCards() {
             </button>
             <h3 className="text-lg font-semibold mb-2">Voir la démo</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Vous allez être redirigé vers la démo du projet <strong>{modalProject.title}</strong>.
+              Vous allez être redirigé vers la démo du projet <strong>{modalProject?.title}</strong>.
             </p>
             <div className="flex justify-end space-x-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={closeModal}
                 className="px-4 py-2"
               >
                 Annuler
               </Button>
-              <a 
-                href={modalProject.demo_url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={modalProject?.demo_url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block"
                 onClick={closeModal}
               >
@@ -280,7 +281,7 @@ export function ProjectCards() {
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
     </div>
   )
 }

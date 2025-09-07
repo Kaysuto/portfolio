@@ -1,6 +1,8 @@
 import { ArrowRight, Download, X } from "@phosphor-icons/react"
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { ModalPortal } from "@/components/ui/ModalPortal"
+import { useModal } from "@/hooks/useModal"
+import { useRef, useEffect, useState } from "react"
 
 export function HeroSection() {
   const scrollToProjects = () => {
@@ -10,34 +12,60 @@ export function HeroSection() {
     }
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalMounted, setModalMounted] = useState(false)
-  const [isClosing, setIsClosing] = useState(false)
-
-  const openModal = () => {
-    setIsClosing(false)
-    setModalMounted(true)
-    // allow mount then trigger visible state to run transition
-    setTimeout(() => setIsModalOpen(true), 10)
-  }
-
-  const closeModal = () => {
-    setIsClosing(true)
-    setIsModalOpen(false)
-    // wait for animation to finish then unmount
-    setTimeout(() => {
-      setModalMounted(false)
-      setIsClosing(false)
-    }, 220)
-  }
-
+  const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal()
+  
+  // Ref for modal focus management
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  
+  // Auto-focus on modal open
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsModalOpen(false)
+    if (isModalOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus()
     }
-    if (isModalOpen) document.addEventListener("keydown", onKey)
-    return () => document.removeEventListener("keydown", onKey)
   }, [isModalOpen])
+
+  // Animated text state with typing effect
+  const [currentTextIndex, setCurrentTextIndex] = useState(0)
+  const [displayText, setDisplayText] = useState("")
+  const [isTyping, setIsTyping] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
+  
+  const animatedTexts = [
+    "code & créativité",
+    "réseaux & sécurité",
+    "pixels & innovation"
+  ]
+
+  // Typing animation effect
+  useEffect(() => {
+    const currentText = animatedTexts[currentTextIndex]
+    const typingSpeed = isDeleting ? 50 : 100 // Faster when deleting
+    const pauseTime = 2000 // Pause before starting to delete
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting && displayText === currentText) {
+        // Finished typing, pause then start deleting
+        setTimeout(() => setIsDeleting(true), pauseTime)
+      } else if (isDeleting && displayText === "") {
+        // Finished deleting, move to next text
+        setIsDeleting(false)
+        setCurrentTextIndex((prevIndex) => 
+          (prevIndex + 1) % animatedTexts.length
+        )
+      } else {
+        // Continue typing or deleting
+        setDisplayText(prev => {
+          if (isDeleting) {
+            return prev.slice(0, -1)
+          } else {
+            return currentText.slice(0, prev.length + 1)
+          }
+        })
+      }
+    }, typingSpeed)
+
+    return () => clearTimeout(timeout)
+  }, [displayText, currentTextIndex, isDeleting, animatedTexts])
 
   return (
     <section id="accueil" className="min-h-screen flex items-center justify-center px-6 pt-32 relative" role="banner" aria-labelledby="hero-title">
@@ -63,9 +91,11 @@ export function HeroSection() {
         {/* Subtitle */}
         <div className="animate-fadeInUp animate-delay-200">
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-            Full-Stack Maker polyvalent, expert en{" "}
-            <br className="hidden sm:block" />
-            <span className="text-accent font-medium hover:text-primary transition-colors duration-300">réseau, développement, pixel art et plus encore</span>
+            Passionné par le{" "}
+            <span className="text-accent font-medium hover:text-primary transition-all duration-500 ease-in-out">
+              {displayText}
+              <span className="animate-pulse text-accent">|</span>
+            </span>
           </p>
         </div>
 
@@ -100,11 +130,39 @@ export function HeroSection() {
         </div>
       </div>
       {/* Modal for CV download */}
-      {modalMounted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className={`absolute inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+      <ModalPortal isOpen={modalMounted}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
           <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-50 shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              ref={closeButtonRef}
+              aria-label="Fermer"
+              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
+              onClick={closeModal}
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-lg font-semibold mb-2">Télécharger mon CV</h3>
+            <p className="text-sm text-muted-foreground mb-4">Vous pouvez accéder à mon CV en cliquant sur le bouton ci-dessous.</p>
+            <div className="flex justify-end">
+              <a href="https://www.youtube.com/watch?v=CY5Ii_YAPcw&list=RDCY5Ii_YAPcw&start_radio=1&pp=oAcB" target="_blank" rel="noopener noreferrer" className="inline-block">
+                <Button className="bg-accent text-accent-foreground px-4 py-2">Accéder au CV</Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </ModalPortal>
+
+      {/* Curseur animé - Version Desktop */}
+      <ModalPortal isOpen={modalMounted}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+          <div
+            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
             role="dialog"
             aria-modal="true"
           >
@@ -116,15 +174,15 @@ export function HeroSection() {
               <X size={18} />
             </button>
             <h3 className="text-lg font-semibold mb-2">Télécharger mon CV</h3>
-            <p className="text-sm text-muted-foreground mb-4">Vous pouvez télécharger mon CV en cliquant sur le bouton ci-dessous.</p>
+            <p className="text-sm text-muted-foreground mb-4">Vous pouvez accéder à mon CV en cliquant sur le bouton ci-dessous.</p>
             <div className="flex justify-end">
-              <a href="/assets/Kimiya_CV.pdf" target="_blank" rel="noopener noreferrer" className="inline-block">
-                <Button className="bg-accent text-accent-foreground px-4 py-2">Télécharger</Button>
+              <a href="https://www.youtube.com/watch?v=CY5Ii_YAPcw&list=RDCY5Ii_YAPcw&start_radio=1&pp=oAcB" target="_blank" rel="noopener noreferrer" className="inline-block">
+                <Button className="bg-accent text-accent-foreground px-4 py-2">Accéder au CV</Button>
               </a>
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
 
       {/* Curseur animé - Version Desktop */}
       <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">

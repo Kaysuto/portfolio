@@ -1,9 +1,9 @@
-
 import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
+import { Link } from "react-router-dom"
 
 
 export function Navbar() {
@@ -84,7 +84,7 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft">
+          <Link to="/" className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft" onClick={() => scrollToSection('accueil')}>
             <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
               <Code size={20} className="text-accent group-hover:animate-pulse" />
             </div>
@@ -92,7 +92,7 @@ export function Navbar() {
               <span className="font-medium text-foreground group-hover:text-accent">Kaysuto</span>
               <span className="text-muted-foreground ml-1 group-hover:text-foreground">Kimiya</span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation Links - Centré */}
           <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200 flex-1 justify-center">

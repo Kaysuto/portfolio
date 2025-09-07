@@ -11,6 +11,7 @@ import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/
 import { testLinksService } from '../../scripts/testLinksService';
 import { testSupabaseConnection } from '../../scripts/testSupabaseConnection';
 import { notifications } from '../../components/NotificationProvider';
+import { useModal } from '../../hooks/useModal';
 
 export default function LinksManager() {
   const [links, setLinks] = useState<PortfolioLink[]>([]);
@@ -19,6 +20,7 @@ export default function LinksManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | PortfolioLink['type']>('all');
@@ -68,11 +70,13 @@ export default function LinksManager() {
     setIsEditing(false);
     setEditingLink(null);
     setShowModal(false);
+    closeModal();
   };
 
   const handleOpenNewLinkModal = () => {
     resetForm();
     setShowModal(true);
+    openModal();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,6 +117,7 @@ export default function LinksManager() {
     setIsEditing(true);
     setEditingLink(link);
     setShowModal(true);
+    openModal();
   };
 
   const handleDelete = async (id: string) => {
@@ -1006,13 +1011,14 @@ export default function LinksManager() {
       </Card>
 
       {/* Modal */}
-      {showModal && (
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setShowModal(false)}
-        >
-          <div 
-            className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      {modalMounted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-black/40 modal-overlay opacity-100"
+            onClick={() => closeModal()}
+          />
+          <div
+            className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto modal-panel opacity-100 scale-100 modal-enter"
             onClick={(e) => e.stopPropagation()}
           >
             <Card className="border-0 shadow-none">
@@ -1022,7 +1028,7 @@ export default function LinksManager() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => closeModal()}
                     className="h-8 w-8 p-0"
                   >
                     <X className="h-4 w-4" />
