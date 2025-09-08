@@ -176,11 +176,15 @@ const BioPage: React.FC = () => {
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div 
-              className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+              className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
               onClick={closeModal} 
             />
             <div
-              className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-opacity duration-300 ${isModalOpen ? 'opacity-100' : isClosing ? 'opacity-0' : 'opacity-0 pointer-events-none'}`}
+              className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
+                isModalOpen && !isClosing 
+                  ? 'opacity-100 scale-100 translate-y-0' 
+                  : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
+              }`}
               role="dialog"
               aria-modal="true"
             >

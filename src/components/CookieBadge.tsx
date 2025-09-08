@@ -38,17 +38,6 @@ export function CookieBadge() {
       <>
         {/* Version mobile */}
         <div className={`fixed bottom-4 left-4 right-4 max-w-[320px] z-50 md:hidden ${isClosing ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
-          {/* Badge collapse button */}
-          <div className="flex justify-end mb-2">
-            <button
-              onClick={handleClose}
-              className="w-8 h-8 rounded-full bg-background/80 border border-border/50 backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center animate-fadeIn"
-              title="Réduire"
-            >
-              <X size={16} className="text-muted-foreground" />
-            </button>
-          </div>
-          
           <Card className="p-4 bg-background/95 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-slideInFromBottom">
             <div className="flex items-start gap-3">
               <Cookie size={24} className="text-accent flex-shrink-0 mt-1" />
@@ -67,7 +56,7 @@ export function CookieBadge() {
                     disabled={consent === 'accepted'}
                     className={consent === 'accepted' 
                       ? "bg-green-500 text-white cursor-default opacity-90" 
-                      : "bg-accent hover:bg-accent/90 text-accent-foreground font-medium transition-all duration-200 hover:scale-105"
+                      : "bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] font-medium transition-all duration-200 hover:scale-105"
                     }
                   >
                     {consent === 'accepted' ? '✓ Accepté' : 'Accepter'}
@@ -86,6 +75,13 @@ export function CookieBadge() {
                   </Button>
                 </div>
               </div>
+              <button
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 p-1 rounded-md hover:bg-muted/50"
+                title="Fermer"
+              >
+                <X size={20} />
+              </button>
             </div>
           </Card>
         </div>
@@ -110,7 +106,7 @@ export function CookieBadge() {
                     disabled={consent === 'accepted'}
                     className={consent === 'accepted' 
                       ? "bg-green-500 text-white cursor-default opacity-90" 
-                      : "bg-accent hover:bg-accent/90 text-accent-foreground font-medium transition-all duration-200 hover:scale-105"
+                      : "bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] font-medium transition-all duration-200 hover:scale-105"
                     }
                   >
                     {consent === 'accepted' ? '✓ Accepté' : 'Accepter'}
@@ -129,6 +125,13 @@ export function CookieBadge() {
                   </Button>
                 </div>
               </div>
+              <button
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 p-1 rounded-md hover:bg-muted/50"
+                title="Fermer"
+              >
+                <X size={20} />
+              </button>
             </div>
           </Card>
         </div>
@@ -146,7 +149,7 @@ export function CookieBadge() {
           className="w-12 h-12 rounded-full bg-accent/90 hover:bg-accent border border-accent/50 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center"
           title="Configurer les cookies"
         >
-          <Cookie size={20} className="text-accent-foreground" />
+          <Cookie size={20} className="text-[#231813] dark:text-[#231813]" />
         </button>
       </div>
 
@@ -171,7 +174,7 @@ export function CookieBadge() {
                     disabled={consent === 'accepted'}
                     className={consent === 'accepted' 
                       ? "bg-green-500 text-white cursor-default opacity-90" 
-                      : "bg-accent hover:bg-accent/90 text-accent-foreground font-medium transition-all duration-200 hover:scale-105"
+                      : "bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] font-medium transition-all duration-200 hover:scale-105"
                     }
                   >
                     {consent === 'accepted' ? '✓ Accepté' : 'Accepter'}
@@ -190,6 +193,13 @@ export function CookieBadge() {
                   </Button>
                 </div>
               </div>
+              <button
+                onClick={handleClose}
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 p-1 rounded-md hover:bg-muted/50"
+                title="Fermer"
+              >
+                <X size={20} />
+              </button>
             </div>
           </Card>
         </div>
@@ -200,7 +210,7 @@ export function CookieBadge() {
             className="w-12 h-12 rounded-full bg-accent/90 hover:bg-accent border border-accent/50 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center"
             title="Configurer les cookies"
           >
-            <Cookie size={20} className="text-accent-foreground" />
+            <Cookie size={20} className="text-[#231813] dark:text-[#231813]" />
           </button>
         </div>
       )}

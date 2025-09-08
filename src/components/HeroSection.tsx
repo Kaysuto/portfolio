@@ -26,20 +26,6 @@ export function HeroSection() {
       setShowModalPanel(false)
     }
   }, [isModalOpen, isClosing])
-  
-  // Ref for modal focus management
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  // Close modal with Escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal()
-    }
-    if (isModalOpen) {
-      document.addEventListener("keydown", handleEscape)
-      return () => document.removeEventListener("keydown", handleEscape)
-    }
-  }, [isModalOpen, closeModal])
 
   // Animated text state with typing effect
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
@@ -66,10 +52,12 @@ export function HeroSection() {
       } else if (isDeleting && displayText === "") {
         // Finished deleting, move to next text
         setIsDeleting(false)
-        setCurrentTextIndex((prev) => (prev + 1) % animatedTexts.length)
+        setCurrentTextIndex((prevIndex) => 
+          (prevIndex + 1) % animatedTexts.length
+        )
       } else {
         // Continue typing or deleting
-        setDisplayText((prev) => {
+        setDisplayText(prev => {
           if (isDeleting) {
             return prev.slice(0, -1)
           } else {
@@ -80,7 +68,7 @@ export function HeroSection() {
     }, typingSpeed)
 
     return () => clearTimeout(timeout)
-  }, [displayText, isDeleting, currentTextIndex, animatedTexts])
+  }, [displayText, currentTextIndex, isDeleting, animatedTexts])
 
   return (
     <section id="accueil" className="min-h-screen flex items-center justify-center px-6 pt-32 relative" role="banner" aria-labelledby="hero-title">
@@ -96,15 +84,14 @@ export function HeroSection() {
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Main Title */}
         <div className="animate-fadeInUp">
-          <h1 id="hero-title" className="text-5xl md:text-7xl font-bold text-foreground mb-6">
-            Kimiya <span className="text-accent">Suhrabi</span>
+          <h1 id="hero-title" className="text-5xl md:text-7xl font-bold mb-6">
+            <span className="text-foreground">Salut, je suis</span>
+            <br />
+            <span className="text-accent">Kimiya</span>
           </h1>
-          <p className="text-2xl md:text-3xl text-muted-foreground mb-8 font-light">
-            Développeur <span className="text-primary font-medium">Full-Stack</span> & Étudiant en Cybersécurité
-          </p>
         </div>
 
-        {/* Animated Description */}
+        {/* Subtitle */}
         <div className="animate-fadeInUp animate-delay-200">
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
             Passionné par le{" "}
@@ -115,88 +102,98 @@ export function HeroSection() {
           </p>
         </div>
 
-        {/* Modal for CV download */}
-        {modalMounted && showModalPanel && (
-          <ModalPortal isOpen={modalMounted && showModalPanel}>
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-              <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
-              <div
-                ref={modalRef}
-                className={`bg-background border border-border rounded-lg p-6 w-full max-w-md relative z-10 transition-opacity duration-300 ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0'}`}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modal-title"
-                tabIndex={-1}
-              >
-                {/* Modal Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center">
-                      <Download className="w-4 h-4 text-accent" />
-                    </div>
-                    <h2 id="modal-title" className="text-lg font-semibold text-foreground">
-                      Télécharger mon CV
-                    </h2>
-                  </div>
-                  <button
-                    onClick={closeModal}
-                    className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-sm hover:bg-muted"
-                    aria-label="Fermer la modal"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Modal Content */}
-                <div className="mb-6">
-                  <p className="text-muted-foreground mb-4">
-                    Téléchargez mon CV complet pour découvrir mon parcours, mes compétences et mes expériences.
-                  </p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Document PDF • Dernière mise à jour: Décembre 2024</span>
-                  </div>
-                </div>
-
-                {/* Modal Actions */}
-                <div className="flex gap-3 justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={closeModal}
-                    className="border-border text-muted-foreground hover:text-foreground hover:bg-muted px-4 py-2"
-                  >
-                    Annuler
-                  </Button>
-                  <a href="/CV_Kimiya_Suhrabi.pdf" download className="inline-block">
-                    <Button className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512] px-4 py-2">
-                      Ouvrir le lien
-                    </Button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </ModalPortal>
-        )}
-
-        {/* Action Buttons */}
-        <div className="animate-fadeInUp animate-delay-400 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            onClick={openModal}
-            className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512] text-lg px-8 py-3 h-auto font-medium transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-xl group"
-          >
-            <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
-            Télécharger mon CV
-          </Button>
-          <Button
-            variant="outline"
-            onClick={scrollToProjects}
-            className="border-accent text-accent hover:bg-accent hover:text-[#070201] dark:hover:text-[#221512] text-lg px-8 py-3 h-auto font-medium transition-all duration-300 ease-in-out transform hover:scale-105 group"
-          >
-            Voir mes projets
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+        {/* CTA Buttons */}
+        <div className="animate-fadeInUp animate-delay-400">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <Button 
+              onClick={scrollToProjects}
+              className="bg-accent hover:bg-accent/90 text-[#070201] dark:text-[#221512] hover:text-[#070201] dark:hover:text-[#221512] px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              aria-describedby="projects-description"
+            >
+              Voir mes projets
+              <ArrowRight 
+                size={20} 
+                className="ml-2 group-hover:translate-x-1 transition-transform duration-200" 
+                aria-hidden="true"
+              />
+            </Button>
+            <span id="projects-description" className="sr-only">Naviguer vers la section des projets</span>
+            
+            <Button
+              variant="outline"
+              className="border-accent text-accent hover:bg-accent/10 px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              onClick={openModal}
+              aria-describedby="cv-description"
+            >
+              <Download size={20} className="mr-2 group-hover:animate-bounce" aria-hidden="true" />
+              Télécharger CV
+            </Button>
+            <span id="cv-description" className="sr-only">Ouvrir la modal pour télécharger le CV</span>
+          </div>
         </div>
       </div>
+
+      {/* Modal for CV download */}
+      {modalMounted && showModalPanel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+            onClick={closeModal} 
+          />
+          <div
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
+              isModalOpen && !isClosing 
+                ? 'opacity-100 scale-100 translate-y-0' 
+                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
+            }`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              aria-label="Fermer"
+              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
+              onClick={closeModal}
+            >
+              <X size={20} className="text-muted-foreground" />
+            </button>
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="bg-accent/10 p-3 rounded-xl">
+                <Download size={24} className="text-accent" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-foreground">Télécharger mon CV</h3>
+                <p className="text-muted-foreground">Document PDF complet</p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+            </p>
+            <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
+              <code className="text-sm text-foreground break-all font-mono">
+                https://www.youtube.com/watch?v=CY5Ii_YAPcw&list=RDCY5Ii_YAPcw&start_radio=1&pp=oAcB
+              </code>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={closeModal}
+                className="hover:bg-accent/10"
+              >
+                Annuler
+              </Button>
+              <Button 
+                onClick={() => {
+                  window.open("https://www.youtube.com/watch?v=CY5Ii_YAPcw&list=RDCY5Ii_YAPcw&start_radio=1&pp=oAcB", "_blank", "noopener,noreferrer")
+                  closeModal()
+                }}
+                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+              >
+                Ouvrir le lien
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Curseur animé - Version Desktop */}
       <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
@@ -214,9 +211,15 @@ export function HeroSection() {
       {/* Curseur animé - Version Mobile */}
       <div className="flex md:hidden absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">
         <span className="flex flex-col items-center">
-          <svg className="w-8 h-12 text-accent" viewBox="0 0 32 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="28" height="44" rx="14" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-            {/* Doigt avec animation */}
+          {/* Flèche mobile avec doigt stylisé */}
+          <svg className="w-8 h-12 text-accent animate-pulse-slow" viewBox="0 0 32 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Corps du doigt */}
+            <ellipse cx="16" cy="35" rx="8" ry="10" fill="currentColor" opacity="0.8"/>
+            {/* Phalange supérieure */}
+            <ellipse cx="16" cy="25" rx="6" ry="8" fill="currentColor"/>
+            {/* Phalange moyenne */}
+            <ellipse cx="16" cy="15" rx="5" ry="6" fill="currentColor"/>
+            {/* Phalange supérieure */}
             <ellipse cx="16" cy="8" rx="4" ry="5" fill="currentColor"/>
             {/* Ongle */}
             <ellipse cx="16" cy="3" rx="3" ry="3" fill="currentColor" opacity="0.9"/>
@@ -229,5 +232,5 @@ export function HeroSection() {
         </span>
       </div>
     </section>
-  );
+  )
 }
