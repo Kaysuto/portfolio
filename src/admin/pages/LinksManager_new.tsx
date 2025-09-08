@@ -8,8 +8,6 @@ import { Plus, Pencil, Trash, CheckCircle, X, Eye, EyeSlash, MagnifyingGlass, Fu
 import { LinksService, PortfolioLink, CreateLinkData, UpdateLinkData } from '../services/linksService';
 import { migrateBioLinks, cleanBioLinks } from '../../scripts/migrateBioLinks';
 import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/createLinksTable';
-import { testLinksService } from '../../scripts/testLinksService';
-import { testSupabaseConnection } from '../../scripts/testSupabaseConnection';
 import { useModal } from '../../hooks/useModal';
 
 export default function LinksManager() {
@@ -43,10 +41,7 @@ export default function LinksManager() {
     setError(null);
 
     try {
-      console.log('🔍 Début du chargement des liens...');
       const linksData = await LinksService.getAllLinks();
-      console.log('📊 Liens récupérés:', linksData);
-      console.log('📈 Nombre de liens:', linksData.length);
       setLinks(linksData);
     } catch (err) {
       console.error('❌ Erreur chargement liens:', err);
@@ -369,9 +364,9 @@ export default function LinksManager() {
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => console.log('Toggle status')}
-                                  className="h-8 px-2"
-                                  title={link.is_active ? "Désactiver" : "Activer"}
+                                  disabled
+                                  className="h-8 px-2 opacity-50"
+                                  title="Fonctionnalité à venir"
                                 >
                                   {link.is_active ? <EyeSlash className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                                 </Button>
@@ -379,9 +374,9 @@ export default function LinksManager() {
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => console.log('Edit')}
-                                  className="h-8 px-2"
-                                  title="Modifier"
+                                  disabled
+                                  className="h-8 px-2 opacity-50"
+                                  title="Fonctionnalité à venir"
                                 >
                                   <Pencil className="h-3 w-3" />
                                 </Button>
@@ -389,9 +384,9 @@ export default function LinksManager() {
                                 <Button
                                   size="sm"
                                   variant="destructive"
-                                  onClick={() => console.log('Delete')}
-                                  className="h-8 px-2"
-                                  title="Supprimer"
+                                  disabled
+                                  className="h-8 px-2 opacity-50"
+                                  title="Fonctionnalité à venir"
                                 >
                                   <Trash className="h-3 w-3" />
                                 </Button>

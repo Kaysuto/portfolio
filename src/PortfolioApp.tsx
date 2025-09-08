@@ -1,14 +1,19 @@
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
+import { CookieBadge } from "@/components/CookieBadge"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 import { getMaintenanceStatus } from "@/admin/services/maintenanceService"
 import { useQuery } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
+  // Document title with typing animation and dynamic sections
+  useDocumentTitle(undefined, { dynamicSections: true });
+
   const { data: maintenanceStatus, isLoading } = useQuery({
     queryKey: ['maintenanceStatus'],
     queryFn: getMaintenanceStatus,
@@ -90,6 +95,8 @@ export function PortfolioApp() {
         </main>
         <Footer />
       </div>
+      
+      <CookieBadge />
       <Toaster />
       
       {/* JSON-LD structured data for SEO */}

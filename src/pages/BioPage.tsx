@@ -5,8 +5,12 @@ import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palet
 import { Button } from '@/components/ui/button';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const BioPage: React.FC = () => {
+  // Document title with typing animation - auto-detected for bio page
+  useDocumentTitle();
+
   // États pour les liens depuis la base de données
   const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);

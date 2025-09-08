@@ -5,8 +5,12 @@ import { useTheme } from '@/hooks/use-theme';
 import { CaretLeft, Sun, Moon, Lock, User } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '../../lib/supabase';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export const Login: React.FC = () => {
+  // Document title with typing animation - auto-detected for admin login
+  useDocumentTitle();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,14 +24,10 @@ export const Login: React.FC = () => {
 
   // Redirection automatique une fois que le profil admin est chargé
   useEffect(() => {
-    console.log('🔍 DEBUG Login useEffect: user=', !!user, 'profile=', !!profile, 'isAdmin=', isAdmin, 'isLoggingIn=', isLoggingIn);
-    
     if (user && profile && isLoggingIn) {
       if (isAdmin) {
-        console.log('✅ DEBUG: Redirection vers dashboard');
         navigate('/admin/dashboard', { replace: true });
       } else {
-        console.log('❌ DEBUG: Utilisateur non admin');
         setError('Accès non autorisé. Vous devez être administrateur.');
         setIsLoggingIn(false);
       }
@@ -80,10 +80,8 @@ export const Login: React.FC = () => {
     setSuccess('');
 
     try {
-      console.log('🔍 DEBUG Login: Début de la connexion');
       setIsLoggingIn(true);
       await signIn(email, password);
-      console.log('🔍 DEBUG Login: signIn terminé, attente du profil...');
       // La redirection se fera dans useEffect une fois le profil chargé
     } catch (error: any) {
       console.error('Erreur de connexion:', error);

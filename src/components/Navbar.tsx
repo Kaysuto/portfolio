@@ -100,7 +100,7 @@ export function Navbar() {
         : 'bg-transparent backdrop-blur-0 border-none shadow-none'
     }`}>
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center h-16">
+        <div className="flex items-center h-16 justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft" onClick={() => scrollToSection('accueil')}>
             <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
@@ -113,7 +113,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links - Centré */}
-          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200 flex-1 justify-center">
+          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200 absolute left-1/2 transform -translate-x-1/2">
             {[
               { id: "accueil", label: "Accueil" },
               { id: "apropos", label: "À propos" },
@@ -161,8 +161,8 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Right side buttons */}
-          <div className="flex items-center space-x-2 animate-slideInFromRight animate-delay-100">
+          {/* Right side buttons - Mobile and Desktop */}
+          <div className="flex items-center space-x-2 animate-slideInFromRight animate-delay-100 ml-auto md:ml-0">
             {/* Theme Toggle */}
             <Button
               variant="ghost"

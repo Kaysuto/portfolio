@@ -4,8 +4,12 @@ import { useTheme } from '@/hooks/use-theme';
 import { CaretLeft } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const MaintenancePage: React.FC = () => {
+  // Document title with typing animation - auto-detected for maintenance page
+  useDocumentTitle();
+
   const { theme } = useTheme();
 
   // Fetch maintenance config

@@ -21,9 +21,24 @@ export function applyTheme(theme: Theme) {
 
 export function setTheme(theme: Theme) {
   try {
+    // Toujours sauvegarder dans localStorage pour la synchronisation immédiate
     localStorage.setItem(COOKIE_NAME, theme);
-    setCookie(COOKIE_NAME, theme);
-  } catch (e) { /* best-effort */ }
+
+    // Vérifier le consentement des cookies avant de les définir
+    const consent = localStorage.getItem('cookie-consent');
+    if (consent === 'accepted') {
+      setCookie(COOKIE_NAME, theme);
+    } else {
+      // Si pas de consentement, définir quand même un cookie de session (sans expiration)
+      // pour que le thème persiste pendant la session de navigation
+      document.cookie = `${COOKIE_NAME}=${theme}; Path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+    }
+
+    // Déclencher un événement personnalisé pour synchroniser toutes les instances
+    window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme } }));
+  } catch (e) { 
+    console.warn('Could not save theme preference:', e);
+  }
   applyTheme(theme);
 }
 

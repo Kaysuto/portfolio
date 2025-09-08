@@ -8,8 +8,6 @@ import { Plus, Pencil, Trash, CheckCircle, X, Eye, EyeSlash, MagnifyingGlass, Fu
 import { LinksService, PortfolioLink, CreateLinkData, UpdateLinkData } from '../services/linksService';
 import { migrateBioLinks, cleanBioLinks } from '../../scripts/migrateBioLinks';
 import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/createLinksTable';
-import { testLinksService } from '../../scripts/testLinksService';
-import { testSupabaseConnection } from '../../scripts/testSupabaseConnection';
 import { notifications } from '../../components/NotificationProvider';
 import { useModal } from '../../hooks/useModal';
 
@@ -234,34 +232,6 @@ export default function LinksManager() {
       const cleanResult = await cleanBioLinks();
       setDebugResult(cleanResult);
       await loadLinks();
-    } catch (error) {
-      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
-    } finally {
-      setDebugLoading(false);
-    }
-  };
-
-  const handleTestService = async () => {
-    setDebugLoading(true);
-    setDebugResult(null);
-    
-    try {
-      const testResult = await testLinksService();
-      setDebugResult(testResult);
-    } catch (error) {
-      setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
-    } finally {
-      setDebugLoading(false);
-    }
-  };
-
-  const handleTestSupabase = async () => {
-    setDebugLoading(true);
-    setDebugResult(null);
-    
-    try {
-      const testResult = await testSupabaseConnection();
-      setDebugResult(testResult);
     } catch (error) {
       setDebugResult({ success: false, error: error instanceof Error ? error.message : String(error) });
     } finally {
@@ -669,32 +639,10 @@ export default function LinksManager() {
                     Tests de connexion
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Vérification des services
+                    Informations système
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button 
-                    onClick={handleTestSupabase} 
-                    disabled={debugLoading}
-                    variant="outline"
-                    className="w-full justify-start"
-                    size="sm"
-                  >
-                    {debugLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <LinkSimple className="h-4 w-4 mr-2" />}
-                    Tester Supabase
-                  </Button>
-                  
-                  <Button 
-                    onClick={handleTestService} 
-                    disabled={debugLoading || !tableInfo?.exists}
-                    variant="outline"
-                    className="w-full justify-start"
-                    size="sm"
-                  >
-                    {debugLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <TestTube className="h-4 w-4 mr-2" />}
-                    Tester le service liens
-                  </Button>
-                  
                   <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-300">
                     <p className="text-xs text-center">
                     <div className="flex items-center gap-2 justify-center">

@@ -9,8 +9,12 @@ import { Security } from './pages/Security';
 import { Settings } from './pages/Settings';
 import { AdminLayout } from './components/AdminLayout';
 import { AuthGuard } from './components/AuthGuard';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export const AdminApp: React.FC = () => {
+  // Document title with typing animation - auto-detected for admin pages
+  useDocumentTitle();
+
   return (
     <Routes>
       {/* Route de connexion publique */}

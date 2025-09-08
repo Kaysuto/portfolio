@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
+import { CookieBadge } from "@/components/CookieBadge"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
@@ -81,6 +82,20 @@ function App() {
         </main>
         <Footer />
       </div>
+      {/* TEST COMPONENT INLINE */}
+      <div style={{
+        background: 'blue',
+        color: 'white',
+        padding: '20px',
+        margin: '20px',
+        borderRadius: '8px',
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }}>
+        🔵 TEST COMPONENT INLINE - SI VOUS VOYEZ CECI, LES COMPOSANTS FONCTIONNENT
+      </div>
+
+      <CookieBadge />
       <Toaster />
       
       {/* JSON-LD structured data for SEO */}
