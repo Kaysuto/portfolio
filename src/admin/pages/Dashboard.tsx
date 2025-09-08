@@ -1,24 +1,103 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardService, DashboardStats, RecentActivity } from '../services/dashboardService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Link, Activity, BarChart3, Users, Shield, Settings, Eye, TrendingUp, Clock, AlertCircle, Loader2 } from 'lucide-react';
+import {
+  Link,
+  Activity,
+  Eye,
+  Users,
+  Shield,
+  Settings,
+  AlertCircle,
+  Clock,
+  Loader2
+} from 'lucide-react';
+import {
+  ChartBar,
+  GoogleLogo,
+  Tag,
+  Code,
+  CheckCircle,
+  XCircle,
+  Globe,
+  Copy
+} from '@phosphor-icons/react';
+
+// Import des nouveaux composants admin
+import {
+  GlassCard,
+  MetricGlassCard,
+  ActionGlassCard,
+  adminDesignTokens
+} from '../components';
+
+interface GoogleAnalyticsConfig {
+  ga4_measurement_id: string;
+  gtm_container_id: string;
+  is_ga_enabled: boolean;
+  is_gtm_enabled: boolean;
+}
+
+// Service pour Google Analytics
+const GoogleAnalyticsService = {
+  getConfig: async (): Promise<GoogleAnalyticsConfig> => {
+    // Simulation - remplacer par votre API
+    return {
+      ga4_measurement_id: localStorage.getItem('ga4_measurement_id') || '',
+      gtm_container_id: localStorage.getItem('gtm_container_id') || '',
+      is_ga_enabled: localStorage.getItem('is_ga_enabled') === 'true',
+      is_gtm_enabled: localStorage.getItem('is_gtm_enabled') === 'true'
+    };
+  },
+  
+  updateConfig: async (config: GoogleAnalyticsConfig): Promise<void> => {
+    // Sauvegarde temporaire en localStorage
+    localStorage.setItem('ga4_measurement_id', config.ga4_measurement_id);
+    localStorage.setItem('gtm_container_id', config.gtm_container_id);
+    localStorage.setItem('is_ga_enabled', config.is_ga_enabled.toString());
+    localStorage.setItem('is_gtm_enabled', config.is_gtm_enabled.toString());
+  },
+  
+  testConnection: async (measurementId: string): Promise<boolean> => {
+    // Simulation du test de connexion
+    return measurementId.startsWith('G-') && measurementId.length > 10;
+  }
+};
 
 export default function Dashboard() {
+  // États pour le dashboard
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
+
+  // États pour les analytics
+  const [analyticsConfig, setAnalyticsConfig] = useState<GoogleAnalyticsConfig>({
+    ga4_measurement_id: '',
+    gtm_container_id: '',
+    is_ga_enabled: false,
+    is_gtm_enabled: false
+  });
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     loadDashboardData();
+    loadAnalyticsConfig();
   }, []);
 
   const loadDashboardData = async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setDashboardLoading(true);
+      setDashboardError(null);
       const [statsData, activityData] = await Promise.all([
         DashboardService.getStats(),
         DashboardService.getRecentActivity()
@@ -26,10 +105,56 @@ export default function Dashboard() {
       setStats(statsData);
       setRecentActivity(activityData);
     } catch (err) {
-      setError('Erreur lors du chargement des données du tableau de bord');
+      setDashboardError('Erreur lors du chargement des données du tableau de bord');
       console.error('Erreur de chargement:', err);
     } finally {
-      setLoading(false);
+      setDashboardLoading(false);
+    }
+  };
+
+  const loadAnalyticsConfig = async () => {
+    try {
+      setAnalyticsLoading(true);
+      setAnalyticsError(null);
+      const config = await GoogleAnalyticsService.getConfig();
+      setAnalyticsConfig(config);
+    } catch (err) {
+      setAnalyticsError('Erreur lors du chargement de la configuration Analytics');
+      console.error('Erreur Analytics:', err);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
+  const handleAnalyticsConfigChange = (field: keyof GoogleAnalyticsConfig, value: string | boolean) => {
+    setAnalyticsConfig(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const saveAnalyticsConfig = async () => {
+    try {
+      await GoogleAnalyticsService.updateConfig(analyticsConfig);
+      setConnectionStatus('success');
+      setTimeout(() => setConnectionStatus('idle'), 3000);
+    } catch (err) {
+      setAnalyticsError('Erreur lors de la sauvegarde');
+      setConnectionStatus('error');
+    }
+  };
+
+  const testGAConnection = async () => {
+    if (!analyticsConfig.ga4_measurement_id) return;
+    
+    setIsTestingConnection(true);
+    try {
+      const isValid = await GoogleAnalyticsService.testConnection(analyticsConfig.ga4_measurement_id);
+      setConnectionStatus(isValid ? 'success' : 'error');
+    } catch (err) {
+      setConnectionStatus('error');
+    } finally {
+      setIsTestingConnection(false);
     }
   };
 
@@ -46,442 +171,228 @@ export default function Dashboard() {
   const getActivityIcon = (type: RecentActivity['type']) => {
     switch (type) {
       case 'link_created':
-        return <Link className="h-4 w-4 text-green-600" />;
+        return <Link className="h-4 w-4 text-accent-foreground" />;
       case 'link_updated':
-        return <TrendingUp className="h-4 w-4 text-blue-600" />;
+        return <Settings className="h-4 w-4 text-accent-foreground" />;
       case 'link_deleted':
-        return <AlertCircle className="h-4 w-4 text-red-600" />;
+        return <AlertCircle className="h-4 w-4 text-neutral-11" />;
       case 'maintenance_enabled':
-        return <Clock className="h-4 w-4 text-orange-600" />;
+        return <Shield className="h-4 w-4 text-accent-foreground" />;
       case 'maintenance_disabled':
-        return <Activity className="h-4 w-4 text-green-600" />;
+        return <Shield className="h-4 w-4 text-accent-foreground" />;
       default:
-        return <Activity className="h-4 w-4 text-neutral-11" />;
+        return <Activity className="h-4 w-4 text-neutral-9" />;
     }
   };
 
   const getActivityColor = (type: RecentActivity['type']) => {
     switch (type) {
       case 'link_created':
-        return 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950';
+        return 'bg-accent-3 text-accent-11 border-accent-6';
       case 'link_updated':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950';
+        return 'bg-accent-secondary-3 text-accent-secondary-11 border-accent-secondary-6';
       case 'link_deleted':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950';
+        return 'bg-neutral-3 text-neutral-11 border-neutral-6';
       case 'maintenance_enabled':
-        return 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950';
+        return 'bg-accent-3 text-accent-11 border-accent-6';
       case 'maintenance_disabled':
-        return 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950';
+        return 'bg-accent-secondary-3 text-accent-secondary-11 border-accent-secondary-6';
       default:
-        return 'border-neutral-3 bg-neutral-2 dark:border-neutral-8 dark:bg-neutral-1';
+        return 'bg-neutral-3 text-neutral-11 border-neutral-6';
     }
   };
 
-  if (loading) {
+  if (dashboardLoading || analyticsLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-accent mx-auto" />
-          <p className="text-muted-foreground text-lg">Chargement du tableau de bord...</p>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-accent-foreground" />
+          <p className="text-sm text-muted-foreground">Chargement du tableau de bord...</p>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-6">
-        <Alert className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
       </div>
     );
   }
 
   return (
-    <div className="relative">
-      <div className="relative z-10 px-6 py-8">
-        <div className="max-w-6xl mx-auto h-full">
-          {/* Hero Section - style minimaliste comme la page d'accueil */}
-          <div className="text-center space-y-6 py-12 animate-fadeIn">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-              Tableau de Bord
-            </h1>
-            <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Vue d'ensemble complète de votre portfolio et de ses performances en temps réel
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mt-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Système en ligne</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full">
-                <Clock className="h-4 w-4 text-accent" />
-                <span className="text-sm text-muted-foreground">
-                  Dernière mise à jour : {new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-            </div>
-          </div>
+    <div className="px-6 py-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="space-y-8">
+          {/* Errors */}
+      {(dashboardError || analyticsError) && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {dashboardError || analyticsError}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Métriques */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <MetricGlassCard
+            title="Liens actifs"
+            value={stats.totalLinks.toString()}
+            icon={Link}
+            delay={100}
+          />
+          <MetricGlassCard
+            title="Vues totales"
+            value={stats.pageViews.toString()}
+            icon={Eye}
+            delay={200}
+          />
+          <MetricGlassCard
+            title="Utilisateurs"
+            value={stats.visitorsToday.toString()}
+            icon={Users}
+            delay={300}
+          />
+          <MetricGlassCard
+            title="Sécurité"
+            value={stats.securityStatus === 'safe' ? 'Sûr' :
+                   stats.securityStatus === 'warning' ? 'Attention' : 'Danger'}
+            icon={Shield}
+            delay={400}
+          />
         </div>
+      )}
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slideInFromBottom animate-delay-200">
-          <Card className="theme-fade hover:shadow-lg transition-all duration-300 group border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Liens Totaux</CardTitle>
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Link className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-3">
-                <div className="text-3xl font-bold text-foreground">{stats?.totalLinks || 0}</div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    {stats?.activeLinks || 0} actifs
-                  </p>
-                  <div className="w-full bg-muted/30 rounded-full h-2">
-                    <div 
-                      className="bg-accent h-2 rounded-full transition-all duration-500" 
-                      style={{ 
-                        width: stats?.totalLinks ? `${(stats.activeLinks / stats.totalLinks) * 100}%` : '0%' 
-                      }}
-                    ></div>
+      {/* Contenu principal */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        {/* Activité récente */}
+        <GlassCard title="Activité récente" icon={Activity} delay={500}>
+          <div className="space-y-3">
+            {recentActivity.length > 0 ? (
+              recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg bg-neutral-2/50 hover:bg-neutral-3/50 transition-all duration-200 border border-neutral-6/20">
+                  <div className="flex-shrink-0 mt-1">
+                    {getActivityIcon(activity.type)}
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="theme-fade hover:shadow-lg transition-all duration-300 group border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Liens Actifs</CardTitle>
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Activity className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-3">
-                <div className="text-3xl font-bold text-foreground">{stats?.activeLinks || 0}</div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    {stats?.totalLinks ? ((stats.activeLinks / stats.totalLinks) * 100).toFixed(1) : 0}% du total
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs text-muted-foreground">Fonctionnels</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="theme-fade hover:shadow-lg transition-all duration-300 group border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Pages Vues</CardTitle>
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Eye className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-3">
-                <div className="text-3xl font-bold text-foreground">{stats?.pageViews || 0}</div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    Vues totales depuis le lancement
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-3 w-3 text-green-500" />
-                    <span className="text-xs text-green-600 font-medium">+12% ce mois</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="theme-fade hover:shadow-lg transition-all duration-300 group border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Visiteurs Aujourd'hui</CardTitle>
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Users className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-3">
-                <div className="text-3xl font-bold text-foreground">{stats?.visitorsToday || 0}</div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    Visiteurs uniques aujourd'hui
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-muted-foreground">En temps réel</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slideInFromBottom animate-delay-400">
-          <Card className="theme-fade border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <CardTitle className="text-foreground flex items-center gap-3">
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Shield className="h-5 w-5 text-accent" />
-                </div>
-                <span>Statut de Sécurité</span>
-              </CardTitle>
-              <CardDescription className="text-muted-foreground ml-11">
-                État de protection du système
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Badge 
-                    variant={stats?.securityStatus === 'safe' ? 'default' : stats?.securityStatus === 'warning' ? 'secondary' : 'destructive'}
-                    className="capitalize px-3 py-1.5"
-                  >
-                    {stats?.securityStatus === 'safe' ? 'Sécurisé' : 
-                     stats?.securityStatus === 'warning' ? 'Attention' : 'Danger'}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    Système protégé
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Dernière vérification</span>
-                    <span className="text-foreground font-medium">Il y a 2 min</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Niveau de menace</span>
-                    <span className="text-green-600 font-medium">Faible</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="theme-fade border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-            <CardHeader className="pb-4 px-6 pt-6">
-              <CardTitle className="text-foreground flex items-center gap-3">
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <Settings className="h-5 w-5 text-accent" />
-                </div>
-                <span>Mode Maintenance</span>
-              </CardTitle>
-              <CardDescription className="text-muted-foreground ml-11">
-                Gestion de la disponibilité du site
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0 pb-6 px-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Badge 
-                    variant={stats?.maintenanceMode ? 'destructive' : 'default'}
-                    className="px-3 py-1.5"
-                  >
-                    {stats?.maintenanceMode ? 'Activé' : 'Désactivé'}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    {stats?.maintenanceMode ? 'Site en maintenance' : 'Site en ligne'}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Temps de fonctionnement</span>
-                    <span className="text-green-600 font-medium">99.9%</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Dernière interruption</span>
-                    <span className="text-foreground font-medium">Jamais</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <Card className="theme-fade animate-slideInFromBottom animate-delay-600 border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="pb-4 px-6 pt-6">
-            <CardTitle className="text-foreground flex items-center gap-3">
-              <div className="p-2.5 rounded-lg bg-accent/10">
-                <Activity className="h-5 w-5 text-accent" />
-              </div>
-              <span>Activité Récente</span>
-            </CardTitle>
-            <CardDescription className="text-muted-foreground ml-11">
-              Dernières actions effectuées sur votre portfolio - Mise à jour en temps réel
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0 pb-6 px-6">
-            {recentActivity.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <div className="p-4 rounded-full bg-muted/20 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Activity className="h-8 w-8 opacity-50" />
-                </div>
-                <p className="text-lg font-medium mb-2">Aucune activité récente</p>
-                <p className="text-sm leading-relaxed max-w-md mx-auto">
-                  Les activités apparaîtront ici dès que vous commencerez à utiliser le système. 
-                  Créez votre premier lien pour voir l'historique s'afficher.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div
-                    key={activity.id}
-                    className={`p-4 rounded-lg border ${getActivityColor(activity.type)} theme-fade hover:shadow-sm transition-all duration-200`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="p-2 rounded-lg bg-background/50 flex-shrink-0">
-                        {getActivityIcon(activity.type)}
-                      </div>
-                      <div className="flex-1 min-w-0 space-y-2">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="text-sm font-medium text-foreground leading-relaxed">
-                            {activity.message}
-                          </p>
-                          <Badge variant="outline" className="flex-shrink-0 text-xs">
-                            #{String(index + 1).padStart(3, '0')}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          <span>{formatDate(activity.timestamp)}</span>
-                          <span className="text-muted-foreground/60">•</span>
-                          <span className="capitalize">{activity.type.replace('_', ' ')}</span>
-                        </div>
-                      </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground mb-2">
+                      {activity.message}
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="outline" className={`text-xs px-2 py-1 ${getActivityColor(activity.type)}`}>
+                        {activity.type.replace('_', ' ')}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground flex items-center">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {formatDate(activity.timestamp)}
+                      </span>
                     </div>
                   </div>
-                ))}
-                {recentActivity.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-border/50">
-                    <p className="text-xs text-muted-foreground text-center">
-                      Affichage des {recentActivity.length} dernières activités • 
-                      <button className="ml-1 text-accent hover:underline">Voir tout l'historique</button>
-                    </p>
-                  </div>
-                )}
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <Activity className="h-12 w-12 text-neutral-9 mx-auto mb-4" />
+                <p className="text-sm text-muted-foreground">Aucune activité récente</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </GlassCard>
 
-        {/* Quick Actions */}
-        <Card className="theme-fade animate-slideInFromBottom animate-delay-800 border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="pb-4 px-6 pt-6">
-            <CardTitle className="text-foreground text-lg">Actions Rapides</CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Raccourcis vers les fonctionnalités principales pour une gestion efficace
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0 pb-6 px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <button
-                onClick={() => window.location.href = '/admin/links'}
-                className="p-6 border border-border rounded-xl hover:bg-accent/5 hover:border-accent/30 hover:shadow-md transition-all duration-300 group text-left bg-background/50"
-              >
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-accent/10 w-fit group-hover:scale-105 transition-transform">
-                    <Link className="h-6 w-6 text-accent" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground text-base">Gérer les Liens</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Ajouter, modifier ou supprimer des liens de votre portfolio en quelques clics
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                    <span>{stats?.totalLinks || 0} liens configurés</span>
-                  </div>
+        {/* Configuration Analytics */}
+        <GlassCard title="Configuration Analytics" icon={ChartBar} delay={600}>
+          <div className="space-y-6">
+            {/* Google Analytics 4 */}
+            <div className="space-y-4 p-4 border rounded-lg bg-background">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <GoogleLogo className="h-5 w-5 text-accent-foreground" />
+                  <Label className="text-sm font-medium">Google Analytics 4</Label>
                 </div>
-              </button>
-
-              <button
-                onClick={() => window.location.href = '/admin/analytics'}
-                className="p-6 border border-border rounded-xl hover:bg-accent/5 hover:border-accent/30 hover:shadow-md transition-all duration-300 group text-left bg-background/50"
-              >
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-accent/10 w-fit group-hover:scale-105 transition-transform">
-                    <BarChart3 className="h-6 w-6 text-accent" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground text-base">Analytics</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Consulter les statistiques détaillées et les métriques de performance
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <TrendingUp className="w-3 h-3 text-green-500" />
-                    <span>{stats?.pageViews || 0} vues ce mois</span>
-                  </div>
-                </div>
-              </button>
-
-              <button
-                onClick={() => window.open('/', '_blank')}
-                className="p-6 border border-border rounded-xl hover:bg-accent/5 hover:border-accent/30 hover:shadow-md transition-all duration-300 group text-left bg-background/50"
-              >
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-accent/10 w-fit group-hover:scale-105 transition-transform">
-                    <Eye className="h-6 w-6 text-accent" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground text-base">Voir le Site</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Prévisualiser votre portfolio en temps réel dans un nouvel onglet
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span>Site en ligne</span>
-                  </div>
-                </div>
-              </button>
-            </div>
-            
-            {/* Additional Quick Stats */}
-            <div className="mt-6 pt-6 border-t border-border/50">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-3 rounded-lg bg-muted/20">
-                  <div className="text-lg font-bold text-foreground">{stats?.visitorsToday || 0}</div>
-                  <div className="text-xs text-muted-foreground">Visiteurs aujourd'hui</div>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-muted/20">
-                  <div className="text-lg font-bold text-foreground">99.9%</div>
-                  <div className="text-xs text-muted-foreground">Temps de fonctionnement</div>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-muted/20">
-                  <div className="text-lg font-bold text-foreground">2ms</div>
-                  <div className="text-xs text-muted-foreground">Temps de réponse</div>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-muted/20">
-                  <div className="text-lg font-bold text-accent">A+</div>
-                  <div className="text-xs text-muted-foreground">Score de sécurité</div>
-                </div>
+                <Switch
+                  checked={analyticsConfig.is_ga_enabled}
+                  onCheckedChange={(checked) => handleAnalyticsConfigChange('is_ga_enabled', checked)}
+                />
               </div>
+
+              {analyticsConfig.is_ga_enabled && (
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="ga4-id" className="text-xs font-medium text-muted-foreground">
+                      Measurement ID
+                    </Label>
+                    <div className="flex space-x-2">
+                      <Input
+                        id="ga4-id"
+                        placeholder="G-XXXXXXXXXX"
+                        value={analyticsConfig.ga4_measurement_id}
+                        onChange={(e) => handleAnalyticsConfigChange('ga4_measurement_id', e.target.value)}
+                        className="text-sm"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={testGAConnection}
+                        disabled={isTestingConnection || !analyticsConfig.ga4_measurement_id}
+                        className="px-3"
+                      >
+                        {isTestingConnection ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          'Test'
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {connectionStatus === 'success' && (
+                    <div className="flex items-center space-x-2 text-xs text-accent-secondary-11">
+                      <CheckCircle className="h-3 w-3" />
+                      <span>Connexion réussie</span>
+                    </div>
+                  )}
+
+                  {connectionStatus === 'error' && (
+                    <div className="flex items-center space-x-2 text-xs text-neutral-11">
+                      <XCircle className="h-3 w-3" />
+                      <span>Erreur de connexion</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Google Tag Manager */}
+            <div className="space-y-4 p-4 border rounded-lg bg-background">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Tag className="h-5 w-5 text-accent-foreground" />
+                  <Label className="text-sm font-medium">Google Tag Manager</Label>
+                </div>
+                <Switch
+                  checked={analyticsConfig.is_gtm_enabled}
+                  onCheckedChange={(checked) => handleAnalyticsConfigChange('is_gtm_enabled', checked)}
+                />
+              </div>
+
+              {analyticsConfig.is_gtm_enabled && (
+                <div className="space-y-2">
+                  <Label htmlFor="gtm-id" className="text-xs font-medium text-muted-foreground">
+                    Container ID
+                  </Label>
+                  <Input
+                    id="gtm-id"
+                    placeholder="GTM-XXXXXXX"
+                    value={analyticsConfig.gtm_container_id}
+                    onChange={(e) => handleAnalyticsConfigChange('gtm_container_id', e.target.value)}
+                    className="text-sm"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Save Button */}
+            <Button onClick={saveAnalyticsConfig} className="w-full">
+              Sauvegarder la configuration
+            </Button>
+          </div>
+        </GlassCard>
+      </div>
         </div>
       </div>
     </div>

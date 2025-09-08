@@ -41,7 +41,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const adminNavItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard' },
-    { id: 'analytics', label: 'Analytics', path: '/admin/analytics' },
     { id: 'links', label: 'Liens', path: '/admin/links' },
     { id: 'maintenance', label: 'Maintenance', path: '/admin/maintenance' },
     { id: 'security', label: 'Sécurité', path: '/admin/security' },
@@ -75,13 +74,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-lg"
           : "bg-transparent"
       )}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
           <div className="flex items-center justify-between">
             {/* Logo/Brand */}
             <Link to="/admin/dashboard" className="flex items-center gap-2 sm:gap-3 animate-slideInFromLeft min-w-0 group">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/30 transition-all duration-300 group-hover:scale-110">
-                <Code size={16} className="sm:hidden text-accent group-hover:scale-110 transition-transform duration-200" />
-                <Code size={20} className="hidden sm:block text-accent group-hover:scale-110 transition-transform duration-200" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/80 flex items-center justify-center flex-shrink-0 group-hover:bg-accent transition-all duration-300 group-hover:scale-110">
+                <Code size={16} className="sm:hidden text-accent-foreground group-hover:scale-110 transition-transform duration-200" />
+                <Code size={20} className="hidden sm:block text-accent-foreground group-hover:scale-110 transition-transform duration-200" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-base sm:text-lg font-bold text-foreground truncate group-hover:text-accent transition-colors duration-200">
@@ -118,9 +117,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 {/* Avatar Gravatar */}
                 <div className="relative">
                   <img
-                    src={getGravatarUrl(user?.email || '', 32)}
+                    src={getGravatarUrl(user?.email || '', 28)}
                     alt="Avatar"
-                    className="w-8 h-8 rounded-full border-2 border-accent/30"
+                    className="w-7 h-7 rounded-full border-2 border-accent/30"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       // Fallback vers une icône SVG si Gravatar ne fonctionne pas
@@ -131,10 +130,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   />
                   {/* Fallback icon (masqué par défaut) */}
                   <div 
-                    className="w-8 h-8 rounded-full border-2 border-accent/30 bg-gradient-to-br from-accent/20 to-accent/30 flex items-center justify-center absolute top-0 left-0"
+                    className="w-7 h-7 rounded-full border-2 border-accent/50 bg-accent/80 flex items-center justify-center absolute top-0 left-0"
                     style={{ display: 'none' }}
                   >
-                    <User size={16} className="text-accent" />
+                    <User size={14} className="text-accent-foreground" />
                   </div>
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background"></div>
                 </div>
@@ -159,14 +158,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               >
                 <div className="relative">
                   {theme === 'dark' ? (
-                    <Sun size={16} className="sm:hidden text-accent group-hover:rotate-180 transition-transform duration-500" />
+                    <Sun size={16} className="sm:hidden text-accent-foreground group-hover:rotate-180 transition-transform duration-500" />
                   ) : (
-                    <Moon size={16} className="sm:hidden text-accent group-hover:-rotate-12 transition-transform duration-300" />
+                    <Moon size={16} className="sm:hidden text-accent-foreground group-hover:-rotate-12 transition-transform duration-300" />
                   )}
                   {theme === 'dark' ? (
-                    <Sun size={18} className="hidden sm:block text-accent group-hover:rotate-180 transition-transform duration-500" />
+                    <Sun size={18} className="hidden sm:block text-accent-foreground group-hover:rotate-180 transition-transform duration-500" />
                   ) : (
-                    <Moon size={18} className="hidden sm:block text-accent group-hover:-rotate-12 transition-transform duration-300" />
+                    <Moon size={18} className="hidden sm:block text-accent-foreground group-hover:-rotate-12 transition-transform duration-300" />
                   )}
                 </div>
               </Button>
@@ -229,14 +228,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ? "opacity-100 translate-y-0 scale-100" 
               : "opacity-0 -translate-y-4 scale-95"
           )}>
-            <div className="p-4 space-y-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className="p-3 space-y-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
               {adminNavItems.map((item, index) => (
                 <Link
                   key={item.id}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300",
+                    "flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                     "hover:scale-[1.02] hover:shadow-sm",
                     location.pathname === item.path
                       ? "text-accent bg-accent/10 shadow-sm border border-accent/20"
@@ -254,14 +253,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ))}
               
               {/* User Info for Mobile */}
-              <div className="px-4 py-3 bg-accent/5 rounded-xl border border-accent/20">
+              <div className="px-3 py-2 bg-accent/5 rounded-xl border border-accent/20">
                 <div className="flex items-center space-x-3">
                   {/* Avatar Gravatar Mobile */}
                   <div className="relative">
                     <img
-                      src={getGravatarUrl(user?.email || '', 40)}
+                      src={getGravatarUrl(user?.email || '', 32)}
                       alt="Avatar"
-                      className="w-10 h-10 rounded-full border-2 border-accent/30"
+                      className="w-8 h-8 rounded-full border-2 border-accent/30"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         // Fallback vers une icône SVG si Gravatar ne fonctionne pas
@@ -272,10 +271,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     />
                     {/* Fallback icon (masqué par défaut) */}
                     <div 
-                      className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent/10 border-2 border-accent/30 flex items-center justify-center absolute top-0 left-0"
+                      className="w-8 h-8 rounded-full bg-accent/80 border-2 border-accent/50 flex items-center justify-center absolute top-0 left-0"
                       style={{ display: 'none' }}
                     >
-                      <User className="w-5 h-5 text-accent" weight="duotone" />
+                      <User className="w-4 h-4 text-accent-foreground" weight="duotone" />
                     </div>
                     <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background"></div>
                   </div>
@@ -300,7 +299,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   setIsMobileMenuOpen(false);
                   handleLogout();
                 }}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-all duration-300 hover:scale-[1.02]"
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-all duration-300 hover:scale-[1.02]"
               >
                 <span>Déconnexion</span>
                 <SignOut size={16} className="text-destructive" />

@@ -7,6 +7,7 @@ import { Cookie, X } from '@phosphor-icons/react'
 export function CookieBadge() {
   const { consent, acceptCookies, rejectCookies, isLoaded } = useCookieConsent()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   // Ne pas afficher si pas encore chargé
   if (!isLoaded) {
@@ -15,12 +16,20 @@ export function CookieBadge() {
 
   const handleAccept = () => {
     acceptCookies()
-    setIsExpanded(false)
+    handleClose()
   }
 
   const handleReject = () => {
     rejectCookies()
-    setIsExpanded(false)
+    handleClose()
+  }
+
+  const handleClose = () => {
+    setIsClosing(true)
+    setTimeout(() => {
+      setIsExpanded(false)
+      setIsClosing(false)
+    }, 300) // Délai pour l'animation de fermeture
   }
 
   // Si expanded, afficher le banner complet
@@ -28,11 +37,11 @@ export function CookieBadge() {
     return (
       <>
         {/* Version mobile */}
-        <div className="fixed bottom-4 left-4 right-4 max-w-[320px] z-50 md:hidden animate-fadeIn">
+        <div className={`fixed bottom-4 left-4 right-4 max-w-[320px] z-50 md:hidden ${isClosing ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
           {/* Badge collapse button */}
           <div className="flex justify-end mb-2">
             <button
-              onClick={() => setIsExpanded(false)}
+              onClick={handleClose}
               className="w-8 h-8 rounded-full bg-background/80 border border-border/50 backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center animate-fadeIn"
               title="Réduire"
             >
@@ -82,7 +91,7 @@ export function CookieBadge() {
         </div>
 
         {/* Version desktop - Banner complet */}
-        <div className="fixed bottom-4 left-4 right-4 max-w-md z-50 hidden md:block animate-fadeIn">
+        <div className={`fixed bottom-4 left-4 right-4 max-w-md z-50 hidden md:block ${isClosing ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
           <Card className="p-6 bg-background/95 backdrop-blur-md border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-slideInFromBottom">
             <div className="flex items-start gap-3">
               <Cookie size={24} className="text-accent flex-shrink-0 mt-1" />
@@ -131,7 +140,7 @@ export function CookieBadge() {
   return (
     <>
       {/* Version mobile - Badge uniquement */}
-      <div className="fixed bottom-4 left-4 z-50 md:hidden">
+      <div className="fixed bottom-4 left-4 z-50 md:hidden animate-fadeIn">
         <button
           onClick={() => setIsExpanded(true)}
           className="w-12 h-12 rounded-full bg-accent/90 hover:bg-accent border border-accent/50 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center"
@@ -185,7 +194,7 @@ export function CookieBadge() {
           </Card>
         </div>
       ) : (
-        <div className="fixed bottom-4 left-4 z-50 hidden md:block">
+        <div className="fixed bottom-4 left-4 z-50 hidden md:block animate-fadeIn">
           <button
             onClick={() => setIsExpanded(true)}
             className="w-12 h-12 rounded-full bg-accent/90 hover:bg-accent border border-accent/50 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 flex items-center justify-center"

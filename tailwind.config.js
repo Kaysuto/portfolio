@@ -65,6 +65,7 @@ const defaultTheme = {
         11: "var(--color-accent-11)",
         12: "var(--color-accent-12)",
         contrast: "var(--color-accent-contrast)",
+        foreground: "var(--color-accent-foreground)",
       },
       "accent-secondary": {
         1: "var(--color-accent-secondary-1)",

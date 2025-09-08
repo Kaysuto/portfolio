@@ -217,6 +217,7 @@
     --color-accent-11: var(--blue-11);
     --color-accent-12: var(--blue-12);
     --color-accent-contrast: var(--blue-contrast);
+    --color-accent-foreground: #070201; /* Couleur du texte accent par défaut (thème clair) */
 
     /* Secondary accent colors */
     --color-accent-secondary-1: var(--violet-1);
@@ -254,10 +255,51 @@
     --font-family: var(--font-sans-serif);
   }
 
-  #spark-app.dark-theme {
-    --color-bg: var(--color-neutral-1);
-    --color-bg-inset: #000000;
-    --color-bg-overlay: var(--color-neutral-3);
+  :root.dark,
+  html.dark {
+    --color-bg: #2A1F1A; /* Fond principal chocolat très foncé */
+    --color-bg-inset: #3B2F29; /* Fond des éléments chocolat foncé */
+    --color-bg-overlay: #4A3C35; /* Fond des overlays chocolat moyen */
+    --color-accent-foreground: #221512 !important; /* Couleur du texte accent pour le thème sombre */
+  }
+
+  :root.light,
+  html.light {
+    --color-accent-foreground: #070201 !important; /* Couleur du texte accent pour le thème clair */
+  }
+
+  /* Classes Tailwind forcées pour s'assurer de la prise en compte */
+  .text-accent-foreground {
+    color: var(--color-accent-foreground) !important;
+  }
+
+  /* Débogage - forcer la couleur directement sur les boutons actifs */
+  html.dark .bg-accent.text-accent-foreground {
+    color: #221512 !important;
+  }
+  
+  html.light .bg-accent.text-accent-foreground {
+    color: #070201 !important;
+  }
+
+  /* Règles spécifiques pour les boutons de navigation */
+  html.dark button.bg-accent span,
+  html.dark .bg-accent span {
+    color: #221512 !important;
+  }
+
+  html.light button.bg-accent span,
+  html.light .bg-accent span {
+    color: #070201 !important;
+  }
+
+  /* Forcer sur tous les enfants des éléments avec bg-accent */
+  html.dark .bg-accent * {
+    color: #221512 !important;
+  }
+
+  html.light .bg-accent * {
+    color: #070201 !important;
   }
 }
 

@@ -148,9 +148,9 @@ export const Login: React.FC = () => {
           className="p-3 bg-background/20 backdrop-blur-md border border-border/30 hover:bg-background/30 transition-all duration-300 hover:scale-110 group"
         >
           {theme === 'dark' ? (
-            <Sun size={20} className="text-accent group-hover:rotate-180 transition-transform duration-500" />
+            <Sun size={20} className="text-accent-foreground group-hover:rotate-180 transition-transform duration-500" />
           ) : (
-            <Moon size={20} className="text-accent group-hover:-rotate-12 transition-transform duration-300" />
+            <Moon size={20} className="text-accent-foreground group-hover:-rotate-12 transition-transform duration-300" />
           )}
         </Button>
       </div>
@@ -159,30 +159,30 @@ export const Login: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen px-6 py-12">
         <div className="w-full max-w-md animate-fadeInUp">
           {/* Hero Text */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">
               <span className="text-foreground">Admin</span>
               <br />
               <span className="text-accent">Portal</span>
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               Accédez au panneau d'administration
             </p>
           </div>
 
           {/* Login Form */}
-          <div className={`backdrop-blur-md border rounded-xl p-8 hover:border-accent/30 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/10 group ${
+          <div className={`backdrop-blur-md border rounded-xl p-6 hover:border-accent/30 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-accent/10 group ${
             theme === 'dark' 
               ? 'bg-[#231813]/90 border-[#231813]/50 hover:bg-[#231813]/95' 
               : 'bg-[#FFFBF4]/90 border-[#FFFBF4]/50 hover:bg-[#FFFBF4]/95'
           }`}>
-            <div className="flex items-center justify-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
-                <Lock size={32} className="text-accent" />
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                <Lock size={24} className="text-accent" />
               </div>
             </div>
 
-            <form onSubmit={showResetForm ? handlePasswordReset : handleLogin} className="space-y-6">
+            <form onSubmit={showResetForm ? handlePasswordReset : handleLogin} className="space-y-4">
               {error && (
                 <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm animate-shake">
                   {error}
@@ -218,7 +218,7 @@ export const Login: React.FC = () => {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="admin@kimiya.dev"
-                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                        className={`w-full pl-10 pr-4 py-2 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
                           theme === 'dark' 
                             ? 'bg-[#231813]/60' 
                             : 'bg-[#FFFBF4]/60'
@@ -244,7 +244,7 @@ export const Login: React.FC = () => {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
                     >
                       {loading ? (
                         <span className="loading loading-spinner loading-sm"></span>
@@ -268,7 +268,7 @@ export const Login: React.FC = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="admin@kimiya.dev"
-                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                        className={`w-full pl-10 pr-4 py-2 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
                           theme === 'dark' 
                             ? 'bg-[#231813]/60' 
                             : 'bg-[#FFFBF4]/60'
@@ -289,7 +289,7 @@ export const Login: React.FC = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className={`w-full pl-10 pr-4 py-3 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
+                        className={`w-full pl-10 pr-4 py-2 rounded-lg border border-border/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all duration-300 ${
                           theme === 'dark' 
                             ? 'bg-[#231813]/60' 
                             : 'bg-[#FFFBF4]/60'
@@ -312,7 +312,7 @@ export const Login: React.FC = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
                   >
                     {loading ? (
                       <span className="loading loading-spinner loading-sm"></span>

@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Shield, 
-  Key, 
-  Lock, 
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Badge } from '../../components/ui/badge';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import {
+  Shield,
+  Key,
+  Lock,
   Warning,
   CheckCircle,
   Eye,
@@ -23,7 +22,14 @@ import {
 import { SecurityService } from '../services/securityService';
 import { IPWhitelistEntry } from '../services/securityService';
 
-export const Security: React.FC = () => {
+// Import des nouveaux composants admin
+import {
+  GlassCard,
+  MetricGlassCard,
+  adminDesignTokens
+} from '../components';
+
+export default function Security() {
   const [ipWhitelist, setIpWhitelist] = useState<IPWhitelistEntry[]>([]);
   const [newIP, setNewIP] = useState('');
   const [newDescription, setNewDescription] = useState('');
@@ -206,201 +212,165 @@ export const Security: React.FC = () => {
 
   return (
     <div className="px-6 py-8">
-      <div className="max-w-6xl mx-auto h-full">
-        {/* Hero Section */}
-        <div className="text-center mb-8 animate-fadeInUp">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-foreground">Sécurité &</span>
-            <br />
-            <span className="text-accent">Protection</span>
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Surveillance et protection du portfolio
-          </p>
-        </div>
+      <div className="max-w-6xl mx-auto">
+        <div className="space-y-8">
+          {/* Security Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        {securityMetrics.map((metric, index) => {
+          const IconComponent = metric.icon;
+          return (
+            <MetricGlassCard
+              key={metric.title}
+              title={metric.title}
+              value={metric.value}
+              icon={IconComponent}
+              delay={100 + index * 100}
+            />
+          );
+        })}
+      </div>
 
-        {/* Security Metrics */}
-        <div className="mb-12 animate-fadeInUp animate-delay-200">
-          <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-            <Detective size={28} className="text-accent" />
-            Métriques de sécurité
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {securityMetrics.map((metric, index) => {
-              const IconComponent = metric.icon;
-              return (
-                <div
-                  key={metric.title}
-                  className="bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6 hover:bg-background/60 transition-all duration-300 hover:scale-105 group"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent size={24} className="text-accent" />
-                    </div>
-                    <span className={`text-sm font-medium ${getStatusColor(metric.status)}`}>
-                      {metric.change}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground mb-1">
-                    {metric.value}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {metric.title}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {metric.timeframe}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* IP Whitelist Management */}
-        <div className="mb-12 animate-fadeInUp animate-delay-300">
-          <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-            <Shield size={28} className="text-accent" />
-            Gestion de la Whitelist IP
-          </h2>
-
+      {/* IP Whitelist Management */}
+      <GlassCard
+        title=""
+        delay={500}
+        className="mb-8"
+      >
+        <div className="space-y-6">
           {/* Add IP Form */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus size={20} />
-                Ajouter une adresse IP
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="newIP">Adresse IP</Label>
-                  <Input
-                    id="newIP"
-                    placeholder="192.168.1.100"
-                    value={newIP}
-                    onChange={(e) => setNewIP(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="newDescription">Description</Label>
-                  <Input
-                    id="newDescription"
-                    placeholder="Bureau principal"
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-end">
-                  <Button onClick={handleAddIP} className="w-full">
-                    <Plus size={16} className="mr-2" />
-                    Ajouter
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="newIP">Adresse IP</Label>
+              <Input
+                id="newIP"
+                placeholder="192.168.1.100"
+                value={newIP}
+                onChange={(e) => setNewIP(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="newDescription">Description</Label>
+              <Input
+                id="newDescription"
+                placeholder="Bureau principal"
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+              />
+            </div>
+            <div className="flex items-end">
+              <Button
+                onClick={handleAddIP}
+                className="w-full bg-accent hover:bg-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <Plus size={16} className="mr-2" />
+                Ajouter
+              </Button>
+            </div>
+          </div>
 
           {/* Success/Error Messages */}
           {error && (
-            <Alert className="mb-6 border-red-500/50">
-              <X size={16} className="text-red-500" />
-              <AlertDescription className="text-red-500">{error}</AlertDescription>
-            </Alert>
+            <div className="bg-red-2 border border-red-6 rounded-lg p-4 dark:bg-red-3 dark:border-red-7">
+              <div className="flex items-center gap-2">
+                <X size={16} className="text-red-9" />
+                <span className="text-red-11">{error}</span>
+              </div>
+            </div>
           )}
           {success && (
-            <Alert className="mb-6 border-green-500/50">
-              <CheckCircle size={16} className="text-green-500" />
-              <AlertDescription className="text-green-500">{success}</AlertDescription>
-            </Alert>
+            <div className="bg-green-2 border border-green-6 rounded-lg p-4 dark:bg-green-3 dark:border-green-7">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={16} className="text-green-9" />
+                <span className="text-green-11">{success}</span>
+              </div>
+            </div>
           )}
 
           {/* IP Whitelist List */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Adresses IP autorisées</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
-                  <p className="text-muted-foreground mt-2">Chargement...</p>
-                </div>
-              ) : ipWhitelist.length === 0 ? (
-                <div className="text-center py-8">
-                  <Shield size={48} className="text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">Aucune adresse IP dans la whitelist</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {ipWhitelist.map((entry) => (
-                    <div key={entry.id} className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-background/20 transition-colors">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                          <Shield size={20} className="text-accent" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">{entry.ip_address}</p>
-                          <p className="text-sm text-muted-foreground">{entry.description || 'Sans description'}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Ajouté le {new Date(entry.created_at).toLocaleDateString('fr-FR')}
-                          </p>
-                        </div>
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg">Adresses IP autorisées</h4>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
+                <p className="text-muted-foreground mt-2">Chargement...</p>
+              </div>
+            ) : ipWhitelist.length === 0 ? (
+              <div className="text-center py-8">
+                <Shield size={48} className="text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">Aucune adresse IP dans la whitelist</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {ipWhitelist.map((entry) => (
+                  <div key={entry.id} className="flex items-center justify-between p-6 border border-border/50 rounded-lg hover:bg-background/20 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-accent/80 flex items-center justify-center">
+                        <Shield size={20} className="text-accent-foreground" />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={entry.is_active ? "default" : "secondary"}>
-                          {entry.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRemoveIP(entry.id)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash size={16} />
-                        </Button>
+                      <div>
+                        <p className="font-medium text-foreground">{entry.ip_address}</p>
+                        <p className="text-sm text-muted-foreground">{entry.description || 'Sans description'}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Ajouté le {new Date(entry.created_at).toLocaleDateString('fr-FR')}
+                        </p>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Security Actions */}
-        <div className="text-center animate-fadeInUp animate-delay-600">
-          <h2 className="text-2xl font-bold text-foreground mb-6">
-            Actions de sécurité
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground p-6 h-auto flex-col group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
-              <Shield size={32} className="mb-2 group-hover:scale-110 transition-transform duration-200" />
-              <span className="font-medium">Scan sécurité</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
-            >
-              <Key size={32} className="mb-2 group-hover:rotate-12 transition-transform duration-200" />
-              <span className="font-medium">Changer clés</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
-            >
-              <FireExtinguisher size={32} className="mb-2 group-hover:scale-110 transition-transform duration-200" />
-              <span className="font-medium">Blocage IP</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
-            >
-              <Eye size={32} className="mb-2 group-hover:rotate-12 transition-transform duration-200" />
-              <span className="font-medium">Audit complet</span>
-            </Button>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={entry.is_active ? "default" : "secondary"}>
+                        {entry.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRemoveIP(entry.id)}
+                        className="text-red-500 hover:text-red-700 border-red-500/20 hover:bg-red-500/10"
+                      >
+                        <Trash size={16} />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+        </div>
+      </GlassCard>
+
+      {/* Quick Security Actions */}
+      <GlassCard
+        title="Actions de sécurité"
+        icon={ShieldCheck}
+        delay={600}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground p-6 h-auto flex-col group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
+            <Shield size={32} className="mb-2 group-hover:scale-110 transition-transform duration-200" />
+            <span className="font-medium">Scan sécurité</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
+          >
+            <Key size={32} className="mb-2 group-hover:rotate-12 transition-transform duration-200" />
+            <span className="font-medium">Changer clés</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
+          >
+            <FireExtinguisher size={32} className="mb-2 group-hover:scale-110 transition-transform duration-200" />
+            <span className="font-medium">Blocage IP</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="border-accent text-accent hover:bg-accent/10 p-6 h-auto flex-col group transition-all duration-300 hover:scale-105"
+          >
+            <Eye size={32} className="mb-2 group-hover:rotate-12 transition-transform duration-200" />
+            <span className="font-medium">Audit complet</span>
+          </Button>
+        </div>
+      </GlassCard>
         </div>
       </div>
     </div>

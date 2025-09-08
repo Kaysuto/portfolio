@@ -128,7 +128,7 @@ export function Navbar() {
                 className={cn(
                   "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
                   activeSection === item.id
-                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"
                 )}
                 style={{ animationDelay: `${(index + 3) * 0.1}s` }}
@@ -148,7 +148,7 @@ export function Navbar() {
                 className={cn(
                   "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
                   activeSection === 'bio'
-                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"
                 )}
                 style={{ animationDelay: `${7 * 0.1}s` }}

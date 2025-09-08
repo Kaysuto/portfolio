@@ -398,7 +398,7 @@ export function ContactSection() {
                     className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full h-10 px-4 py-2 shadow-sm hover:shadow-lg hover:scale-105 group ${
                       isSuccess 
                         ? 'bg-green-600 text-white hover:bg-green-700' 
-                        : 'bg-accent text-accent-foreground hover:bg-accent/90'
+                        : 'bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]'
                     }`}
                   >
                     {isSubmitting ? (
@@ -460,11 +460,7 @@ export function ContactSection() {
 
                   <button
                     onClick={handleEmailClick}
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-full h-10 px-4 py-2 shadow-sm hover:shadow-lg hover:scale-105 group"
-                    style={{
-                      backgroundColor: typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? '#D3C0B1' : '#C39B81',
-                      color: typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? '#2A1F1A' : '#080000',
-                    }}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full h-10 px-4 py-2 shadow-sm hover:shadow-lg hover:scale-105 group bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                   >
                     <EnvelopeSimple size={18} className="mr-2 group-hover:translate-x-1 group-hover:-rotate-12 transition-transform duration-300" />
                     Ouvrir dans votre client email

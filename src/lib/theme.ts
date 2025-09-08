@@ -15,8 +15,13 @@ function getCookie(name: string) {
 }
 
 export function applyTheme(theme: Theme) {
-  if (theme === 'dark') document.documentElement.classList.add('dark');
-  else document.documentElement.classList.remove('dark');
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+  }
 }
 
 export function setTheme(theme: Theme) {

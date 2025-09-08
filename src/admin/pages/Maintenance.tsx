@@ -88,23 +88,12 @@ export default function Maintenance() {
   return (
     <div className="px-6 py-8">
       <div className="max-w-6xl mx-auto h-full">
-        <div className="text-center mb-8 animate-fadeInUp">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-foreground">Mode</span>
-            <br />
-            <span className="text-accent">Maintenance</span>
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Gestion du mode maintenance du site
-          </p>
-        </div>
-
         <div className="space-y-6">
           <div className="flex items-center justify-between bg-background/40 backdrop-blur-md border border-border/50 rounded-xl p-6">
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Statut maintenance</h2>
-              <p className="text-muted-foreground">
-                {maintenanceStatus?.is_enabled ? 'Site en maintenance' : 'Site opérationnel'}
+              <h2 className="text-lg font-semibold text-foreground mb-1">Statut du site</h2>
+              <p className="text-sm text-muted-foreground">
+                {maintenanceStatus?.is_enabled ? 'Mode maintenance activé' : 'Site opérationnel'}
               </p>
             </div>
             <div className="flex items-center gap-4">

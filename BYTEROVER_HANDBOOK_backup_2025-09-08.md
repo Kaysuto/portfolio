@@ -44,21 +44,18 @@
 - **AboutSection.tsx** - Présentation des compétences et expertise
 - **ProjectsSection.tsx** - Showcase des projets avec ProjectCards
 - **ContactSection.tsx** - Formulaire de contact et informations
-- **Navbar.tsx** - Navigation avec toggle thème et liens, gestion du défilement et états actifs
+- **Navbar.tsx** - Navigation avec toggle thème et liens
 - **Footer.tsx** - Pied de page avec liens sociaux
-- **CookieBadge.tsx** - Badge de consentement aux cookies avec icône
-- **CookieBanner.tsx** - Bannières de consentement aux cookies
 
 **Data Layer**:
 - **lib/supabase.ts** - Configuration et client Supabase
 - **hooks/** - Custom hooks pour data fetching et state management
-- **useCookieConsent.ts** - Hook pour gestion du consentement aux cookies
 - **ProjectCards.tsx** - Gestion dynamique des projets depuis Supabase
 
 **Integration Points**:
 - **Supabase Integration** - Base de données pour projets dynamiques
 - **PWA Integration** - Service worker dans public/sw.js
-- **Theme System** - hooks/use-mobile.ts, use-theme.ts et gestion du thème avec couleurs custom
+- **Theme System** - hooks/use-mobile.ts et gestion du thème
 
 **Utilities**:
 - **lib/utils.ts** - Fonctions utilitaires et helpers
@@ -144,10 +141,6 @@
 - Composants UI shadcn/ui intégrés
 - PWA complète avec service worker
 - Performance optimizations avec lazy loading
-- feat: Add Cookie Consent functionality with CookieBadge component
-- fix: ajuster l'espacement des boutons dans la barre de navigation pour une meilleure présentation
-- feat: améliorer la navigation dans la barre avec gestion du défilement et redirection vers la section active
-- feat: mise à jour des couleurs du thème pour cohérence (dark: #231813, light: #A06C54)
 - **ADMIN SYSTEM REDESIGN** - Refonte complète du système admin (septembre 2025)
 - **Admin Components** - AdminLayout, Dashboard, AnalyticsPage avec design cohérent
 - **Login Page Redesign** - Page de connexion admin avec thème principal
@@ -183,6 +176,7 @@
 - **Migration Runner** - Outil d'exécution des migrations---
 
 *Byterover handbook optimized for agent navigation and human developer onboarding*
-*Last updated: 8 septembre 2025 - Cookie consent, theme colors, and navigation updates*
+*Last updated: 5 septembre 2025 - Maintenance system and database updates*
 
 *Byterover handbook optimized for agent navigation and human developer onboarding*
+*Last updated: 5 septembre 2025 - Admin system cleanup and simplified architecture*

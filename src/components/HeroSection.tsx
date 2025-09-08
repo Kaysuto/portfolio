@@ -104,7 +104,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <Button 
               onClick={scrollToProjects}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              className="bg-accent hover:bg-accent/90 text-[#070201] dark:text-[#221512] hover:text-[#070201] dark:hover:text-[#221512] px-8 py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
               aria-describedby="projects-description"
             >
               Voir mes projets
