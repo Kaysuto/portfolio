@@ -159,55 +159,65 @@ const BioPage: React.FC = () => {
       </div>
 
       {/* Modal de confirmation pour les liens */}
-      {modalMounted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
-            onClick={closeModal} 
-          />
-          <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
-              onClick={closeModal}
+      {/* Animation fade-out modal liens */}
+      {(() => {
+        const [showModalPanel, setShowModalPanel] = React.useState(false);
+        React.useEffect(() => {
+          if (isModalOpen) {
+            setShowModalPanel(true);
+          } else if (isClosing) {
+            const timeout = setTimeout(() => setShowModalPanel(false), 300);
+            return () => clearTimeout(timeout);
+          } else {
+            setShowModalPanel(false);
+          }
+        }, [isModalOpen, isClosing]);
+        if (!modalMounted || !showModalPanel) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div 
+              className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+              onClick={closeModal} 
+            />
+            <div
+              className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-opacity duration-300 ${isModalOpen ? 'opacity-100' : isClosing ? 'opacity-0' : 'opacity-0 pointer-events-none'}`}
+              role="dialog"
+              aria-modal="true"
             >
-              <X size={20} className="text-muted-foreground" />
-            </button>
-            
-            {selectedLink && (
-              <>
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="bg-accent/10 p-3 rounded-xl">
-                    {(() => {
-                      const link = bioLinks.find(l => l.title === selectedLink.name);
-                      if (link) {
-                        const IconComponent = getIcon(link.icon || 'LinkSimple');
-                        return <IconComponent size={24} className="text-accent" />;
-                      }
-                      return <LinkSimple size={24} className="text-accent" />;
-                    })()}
+              <button
+                aria-label="Fermer"
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
+                onClick={closeModal}
+              >
+                <X size={20} className="text-muted-foreground" />
+              </button>
+              {selectedLink && (
+                <>
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="bg-accent/10 p-3 rounded-xl">
+                      {(() => {
+                        const link = bioLinks.find(l => l.title === selectedLink.name);
+                        if (link) {
+                          const IconComponent = getIcon(link.icon || 'LinkSimple');
+                          return <IconComponent size={24} className="text-accent" />;
+                        }
+                        return <LinkSimple size={24} className="text-accent" />;
+                      })()}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-foreground">{selectedLink.name}</h3>
+                      <p className="text-muted-foreground">{selectedLink.description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">{selectedLink.name}</h3>
-                    <p className="text-muted-foreground">{selectedLink.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+                  </p>
+                  <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
+                    <code className="text-sm text-foreground break-all font-mono">
+                      {selectedLink.url}
+                    </code>
                   </div>
-                </div>
-                
-                <p className="text-sm text-muted-foreground mb-4">
-                  Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-                </p>
-                
-                <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-                  <code className="text-sm text-foreground break-all font-mono">
-                    {selectedLink.url}
-                  </code>
-                </div>
-                
-                <div className="flex justify-end space-x-3">
+                  <div className="flex justify-end space-x-3">
                   <Button 
                     variant="outline" 
                     onClick={closeModal}
@@ -217,7 +227,7 @@ const BioPage: React.FC = () => {
                   </Button>
                   <Button 
                     onClick={handleLinkConfirm} 
-                    className="bg-accent text-accent-foreground hover:bg-accent/90"
+                    className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                   >
                     Ouvrir le lien
                   </Button>
@@ -226,7 +236,8 @@ const BioPage: React.FC = () => {
             )}
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

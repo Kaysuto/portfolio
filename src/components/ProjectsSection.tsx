@@ -15,6 +15,18 @@ export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
   const [loading, setLoading] = useState(true)
   const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal()
+  const [showModalPanel, setShowModalPanel] = useState(false)
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setShowModalPanel(true)
+    } else if (isClosing) {
+      const timeout = setTimeout(() => setShowModalPanel(false), 300)
+      return () => clearTimeout(timeout)
+    } else {
+      setShowModalPanel(false)
+    }
+  }, [isModalOpen, isClosing])
 
   useEffect(() => {
     const fetchGitHubStats = async () => {
@@ -133,37 +145,39 @@ export function ProjectsSection() {
       </div>
 
       {/* Modal for GitHub projects */}
-      <ModalPortal isOpen={modalMounted}>
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
-          <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
-              onClick={closeModal}
+      {modalMounted && showModalPanel && (
+        <ModalPortal isOpen={modalMounted && showModalPanel}>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+            <div
+              className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel transition-opacity duration-300 ${isModalOpen ? 'opacity-100' : isClosing ? 'opacity-0' : 'opacity-0 pointer-events-none'}`}
+              role="dialog"
+              aria-modal="true"
             >
-              <X size={18} />
-            </button>
-            <h3 className="text-lg font-semibold mb-2">Voir mes projets GitHub</h3>
-            <p className="text-sm text-muted-foreground mb-4">Vous pouvez consulter tous mes projets directement sur mon profil GitHub.</p>
-            <div className="flex justify-end">
-              <a
-                href="https://github.com/Kaysuto"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block"
+              <button
+                aria-label="Fermer"
+                className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
                 onClick={closeModal}
               >
-                <Button className="bg-accent text-accent-foreground px-4 py-2">Voir sur GitHub</Button>
-              </a>
+                <X size={18} />
+              </button>
+              <h3 className="text-lg font-semibold mb-2">Voir mes projets GitHub</h3>
+              <p className="text-sm text-muted-foreground mb-4">Vous pouvez consulter tous mes projets directement sur mon profil GitHub.</p>
+              <div className="flex justify-end">
+                <a
+                  href="https://github.com/Kaysuto"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                  onClick={closeModal}
+                >
+                  <Button className="bg-accent text-[#070201] dark:text-[#221512] px-4 py-2">Voir sur GitHub</Button>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </ModalPortal>
+        </ModalPortal>
+      )}
     </section>
   );
 }

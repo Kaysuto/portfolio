@@ -36,6 +36,19 @@ export function ProjectCards() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMounted, setModalMounted] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [showModalPanel, setShowModalPanel] = useState(false)
+  
+  // Pour fade-out modal Demo
+  useEffect(() => {
+    if (isModalOpen) {
+      setShowModalPanel(true)
+    } else if (isClosing) {
+      const timeout = setTimeout(() => setShowModalPanel(false), 300)
+      return () => clearTimeout(timeout)
+    } else {
+      setShowModalPanel(false)
+    }
+  }, [isModalOpen, isClosing])
 
   const openModal = (project: Project) => {
     setModalProject(project)
@@ -213,7 +226,7 @@ export function ProjectCards() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-accent-foreground hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
+                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-[#070201] dark:hover:text-[#221512] hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
                       onClick={() => openModal(project)}
                     >
                       <ArrowSquareOut size={14} className="group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5 transition-transform duration-200" />
@@ -239,49 +252,63 @@ export function ProjectCards() {
       )}
 
       {/* Modal for Demo project */}
-      <ModalPortal isOpen={modalMounted && !!modalProject}>
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
-          <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel ${isModalOpen && !isClosing ? 'opacity-100 scale-100 modal-enter' : 'opacity-0 scale-95 modal-exit'}`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
-              onClick={closeModal}
+      {modalMounted && showModalPanel && !!modalProject && (
+        <ModalPortal isOpen={modalMounted && showModalPanel && !!modalProject}>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div className={`fixed inset-0 bg-black/40 modal-overlay ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeModal} />
+            <div
+              className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-lg border border-border modal-panel transition-opacity duration-300 ${isModalOpen ? 'opacity-100' : isClosing ? 'opacity-0' : 'opacity-0 pointer-events-none'}`}
+              role="dialog"
+              aria-modal="true"
             >
-              <X size={18} />
-            </button>
-            <h3 className="text-lg font-semibold mb-2">Voir la démo</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Vous allez être redirigé vers la démo du projet <strong>{modalProject?.title}</strong>.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <Button
-                variant="outline"
-                onClick={closeModal}
-                className="px-4 py-2"
-              >
-                Annuler
-              </Button>
-              <a
-                href={modalProject?.demo_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block"
+              <button
+                aria-label="Fermer"
+                className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
                 onClick={closeModal}
               >
-                <Button className="bg-accent text-accent-foreground px-4 py-2">
-                  <ArrowSquareOut size={16} className="mr-2" />
-                  Voir la démo
+                <X size={18} />
+              </button>
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="bg-accent/10 p-3 rounded-xl">
+                  <ArrowSquareOut size={24} className="text-accent" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground">Voir la démo</h3>
+                  <p className="text-muted-foreground">Accédez à la démo du projet <strong>{modalProject?.title}</strong>.</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+              </p>
+              <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
+                <code className="text-sm text-foreground break-all font-mono">
+                  {modalProject?.demo_url}
+                </code>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <Button 
+                  variant="outline" 
+                  onClick={closeModal}
+                  className="hover:bg-accent/10"
+                >
+                  Annuler
                 </Button>
-              </a>
+                <a
+                  href={modalProject?.demo_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                  onClick={closeModal}
+                >
+                  <Button className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512] px-4 py-2">
+                    Ouvrir le lien
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </ModalPortal>
+        </ModalPortal>
+      )}
     </div>
   )
 }

@@ -28,7 +28,7 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={onClose}
       />
       <div
-        className={`relative bg-card rounded-lg w-[90%] ${maxWidth} p-6 z-50 shadow-lg border border-border modal-panel opacity-100 scale-100 modal-enter`}
+        className={`relative bg-card rounded-lg w-[90%] ${maxWidth} p-6 z-50 shadow-lg border border-border modal-panel transition-opacity duration-300 opacity-100`}
         role="dialog"
         aria-modal="true"
       >

@@ -1,4 +1,4 @@
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
