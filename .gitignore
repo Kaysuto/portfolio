@@ -40,3 +40,16 @@ pids
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+
+# Fichiers vides générés automatiquement
+create-ip-whitelist.sql
+debug-auth-detailed.sql
+update-maintenance-defaults.js
+database/create_portfolio_links_table.sql
+src/admin/components/VirtualizedList.tsx
+src/admin/pages/SecurityPage.tsx
+src/admin/pages/Maintenance.tsx
+src/admin/pages/Settings.tsx
+src/components/HeroSection_clean.tsx
+src/hooks/useAuth.ts
+src/scripts/testSupabaseConnection.ts
