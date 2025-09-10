@@ -32,7 +32,7 @@ export function ActionGlassCard({
         {Icon && (
           <div className={`${adminDesignTokens.cards.iconContainer} rounded-lg bg-accent/80
                           flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
-            <Icon className={`${adminDesignTokens.cards.icon} text-accent-foreground`} />
+            <Icon className={`${adminDesignTokens.cards.icon} text-[#231813] dark:text-[#231813]`} />
           </div>
         )}
 

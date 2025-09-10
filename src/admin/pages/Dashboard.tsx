@@ -7,13 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { MaintenanceControl } from '../components/MaintenanceControl';
 import {
   Link,
   Activity,
   Eye,
   Users,
   Shield,
-  Settings,
+  Wrench,
   AlertCircle,
   Clock,
   Loader2
@@ -173,7 +174,7 @@ export default function Dashboard() {
       case 'link_created':
         return <Link className="h-4 w-4 text-accent-foreground" />;
       case 'link_updated':
-        return <Settings className="h-4 w-4 text-accent-foreground" />;
+        return <Wrench className="h-4 w-4 text-accent-foreground" />;
       case 'link_deleted':
         return <AlertCircle className="h-4 w-4 text-neutral-11" />;
       case 'maintenance_enabled':
@@ -257,6 +258,9 @@ export default function Dashboard() {
           />
         </div>
       )}
+
+      {/* Contrôle de maintenance */}
+      <MaintenanceControl />
 
       {/* Contenu principal */}
       <div className="grid gap-4 lg:grid-cols-2">

@@ -244,7 +244,7 @@ export const Login: React.FC = () => {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                      className="flex-1 bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
                     >
                       {loading ? (
                         <span className="loading loading-spinner loading-sm"></span>
@@ -312,7 +312,7 @@ export const Login: React.FC = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+                    className="w-full bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] py-2 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
                   >
                     {loading ? (
                       <span className="loading loading-spinner loading-sm"></span>

@@ -409,7 +409,7 @@ export default function LinksManager() {
                     ? 'Aucun lien ne correspond à vos critères de recherche.'
                     : 'Vous n\'avez pas encore créé de liens.'}
                 </p>
-                <Button onClick={openModal} className="bg-accent hover:bg-accent/90">
+                <Button onClick={openModal} className="bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]">
                   <Plus className="h-4 w-4 mr-2" />
                   Créer votre premier lien
                 </Button>

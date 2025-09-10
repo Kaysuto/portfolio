@@ -306,7 +306,7 @@ export default function Security() {
                   <div key={entry.id} className="flex items-center justify-between p-6 border border-border/50 rounded-lg hover:bg-background/20 transition-colors">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-accent/80 flex items-center justify-center">
-                        <Shield size={20} className="text-accent-foreground" />
+                        <Shield size={20} className="text-[#231813] dark:text-[#231813]" />
                       </div>
                       <div>
                         <p className="font-medium text-foreground">{entry.ip_address}</p>
@@ -344,7 +344,7 @@ export default function Security() {
         delay={600}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground p-6 h-auto flex-col group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
+          <Button className="bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] p-6 h-auto flex-col group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25">
             <Shield size={32} className="mb-2 group-hover:scale-110 transition-transform duration-200" />
             <span className="font-medium">Scan sécurité</span>
           </Button>
