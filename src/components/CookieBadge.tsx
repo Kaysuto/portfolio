@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Cookie, X } from '@phosphor-icons/react'
 
 export function CookieBadge() {
-  const { consent, acceptCookies, rejectCookies, isLoaded } = useCookieConsent()
+  const { consent, acceptCookies, rejectCookies, dismissCookies, isLoaded } = useCookieConsent()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
 
@@ -27,6 +27,7 @@ export function CookieBadge() {
   const handleClose = () => {
     setIsClosing(true)
     setTimeout(() => {
+      dismissCookies() // Utiliser dismissCookies au lieu de simplement fermer
       setIsExpanded(false)
       setIsClosing(false)
     }, 300) // Délai pour l'animation de fermeture

@@ -8,8 +8,8 @@ import { useModal } from '@/hooks/useModal';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const BioPage: React.FC = () => {
-  // Document title with typing animation - auto-detected for bio page
-  useDocumentTitle();
+  // Titre fixe sans animation
+  useDocumentTitle("Bio", { enableTypingAnimation: false });
 
   // États pour les liens depuis la base de données
   const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
@@ -159,69 +159,57 @@ const BioPage: React.FC = () => {
       </div>
 
       {/* Modal de confirmation pour les liens */}
-      {/* Animation fade-out modal liens */}
-      {(() => {
-        const [showModalPanel, setShowModalPanel] = React.useState(false);
-        React.useEffect(() => {
-          if (isModalOpen) {
-            setShowModalPanel(true);
-          } else if (isClosing) {
-            const timeout = setTimeout(() => setShowModalPanel(false), 300);
-            return () => clearTimeout(timeout);
-          } else {
-            setShowModalPanel(false);
-          }
-        }, [isModalOpen, isClosing]);
-        if (!modalMounted || !showModalPanel) return null;
-        return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div 
-              className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
-              onClick={closeModal} 
-            />
-            <div
-              className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
-                isModalOpen && !isClosing 
-                  ? 'opacity-100 scale-100 translate-y-0' 
-                  : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
-              }`}
-              role="dialog"
-              aria-modal="true"
+      {modalMounted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+              isModalOpen && !isClosing ? 'animate-fadeIn' : 'animate-fadeOut'
+            }`} 
+            onClick={closeModal} 
+          />
+          <div
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
+              isModalOpen && !isClosing 
+                ? 'animate-modalSlideIn' 
+                : 'animate-modalSlideOut'
+            }`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              aria-label="Fermer"
+              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
+              onClick={closeModal}
             >
-              <button
-                aria-label="Fermer"
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
-                onClick={closeModal}
-              >
-                <X size={20} className="text-muted-foreground" />
-              </button>
-              {selectedLink && (
-                <>
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="bg-accent/10 p-3 rounded-xl">
-                      {(() => {
-                        const link = bioLinks.find(l => l.title === selectedLink.name);
-                        if (link) {
-                          const IconComponent = getIcon(link.icon || 'LinkSimple');
-                          return <IconComponent size={24} className="text-accent" />;
-                        }
-                        return <LinkSimple size={24} className="text-accent" />;
-                      })()}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-foreground">{selectedLink.name}</h3>
-                      <p className="text-muted-foreground">{selectedLink.description}</p>
-                    </div>
+              <X size={20} className="text-muted-foreground" />
+            </button>
+            {selectedLink && (
+              <>
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="bg-accent/10 p-3 rounded-xl">
+                    {(() => {
+                      const link = bioLinks.find(l => l.title === selectedLink.name);
+                      if (link) {
+                        const IconComponent = getIcon(link.icon || 'LinkSimple');
+                        return <IconComponent size={24} className="text-accent" />;
+                      }
+                      return <LinkSimple size={24} className="text-accent" />;
+                    })()}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-                  </p>
-                  <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-                    <code className="text-sm text-foreground break-all font-mono">
-                      {selectedLink.url}
-                    </code>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground">{selectedLink.name}</h3>
+                    <p className="text-muted-foreground">{selectedLink.description}</p>
                   </div>
-                  <div className="flex justify-end space-x-3">
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+                </p>
+                <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
+                  <code className="text-sm text-foreground break-all font-mono">
+                    {selectedLink.url}
+                  </code>
+                </div>
+                <div className="flex justify-end space-x-3">
                   <Button 
                     variant="outline" 
                     onClick={closeModal}
@@ -240,8 +228,7 @@ const BioPage: React.FC = () => {
             )}
           </div>
         </div>
-        );
-      })()}
+      )}
     </div>
   );
 };

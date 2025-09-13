@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.links (
   title VARCHAR(255) NOT NULL,
   url TEXT NOT NULL,
   description TEXT,
+  icon VARCHAR(100), -- Nom de l'icône Phosphor
   
   -- Type de lien avec contrainte
   type VARCHAR(50) NOT NULL CHECK (type IN ('github', 'live', 'social', 'bio_link', 'other')),
@@ -99,6 +100,7 @@ export const createLinksTable = async () => {
     console.log('   - title (VARCHAR, requis)');
     console.log('   - url (TEXT, requis)');
     console.log('   - description (TEXT, optionnel)');
+    console.log('   - icon (VARCHAR, optionnel)');
     console.log('   - type (ENUM: github|live|social|bio_link|other)');
     console.log('   - is_active (BOOLEAN, défaut: true)');
     console.log('   - click_count (INTEGER, défaut: 0)');
@@ -157,5 +159,58 @@ export const getTableInfo = async () => {
     };
   } catch (error) {
     return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Ajouter la colonne icon si elle n'existe pas déjà
+ */
+export const addIconColumn = async (): Promise<any> => {
+  try {
+    console.log('🔧 Tentative d\'ajout de la colonne icon...');
+    
+    // Méthode alternative : utiliser directement SQL via une requête
+    // Créer une ligne temporaire pour forcer l'exécution du SQL
+    const { error: createError } = await supabase
+      .from('_sql_execute')
+      .insert({ 
+        query: `ALTER TABLE public.links ADD COLUMN IF NOT EXISTS icon VARCHAR(100);` 
+      });
+
+    if (createError) {
+      // Si la table _sql_execute n'existe pas, essayons une autre approche
+      console.log('⚠️ Méthode SQL directe non disponible, tentative alternative...');
+      
+      // Vérifier d'abord si la colonne existe en essayant de la lire
+      const { data: testData, error: testError } = await supabase
+        .from('links')
+        .select('icon')
+        .limit(1);
+
+      if (testError && testError.message.includes('column "icon" does not exist')) {
+        console.log('❌ La colonne icon n\'existe pas et ne peut pas être ajoutée automatiquement');
+        console.log('🛠️ Vous devez ajouter manuellement la colonne via le dashboard Supabase :');
+        console.log('   ALTER TABLE public.links ADD COLUMN icon VARCHAR(100);');
+        
+        return { 
+          success: false, 
+          message: 'Colonne icon inexistante - ajout manuel requis',
+          manualSQL: 'ALTER TABLE public.links ADD COLUMN icon VARCHAR(100);'
+        };
+      } else if (!testError) {
+        console.log('✅ La colonne icon existe déjà');
+        return { success: true, message: 'Colonne icon déjà présente' };
+      }
+    }
+
+    console.log('✅ Colonne icon ajoutée avec succès');
+    return { success: true, message: 'Colonne icon ajoutée' };
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de la colonne icon:', error);
+    return { 
+      success: false, 
+      error: error.message,
+      instruction: 'Ajoutez manuellement : ALTER TABLE public.links ADD COLUMN icon VARCHAR(100);'
+    };
   }
 };

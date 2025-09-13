@@ -6,6 +6,7 @@ export interface PortfolioLink {
   url: string;
   type: 'github' | 'live' | 'social' | 'bio_link' | 'other';
   description?: string;
+  icon?: string;
   is_active: boolean;
   click_count: number;
   created_at: string;
@@ -17,6 +18,7 @@ export interface CreateLinkData {
   url: string;
   type: PortfolioLink['type'];
   description?: string;
+  icon?: string;
   is_active?: boolean;
 }
 
@@ -46,17 +48,46 @@ export class LinksService {
 
   static async createLink(linkData: CreateLinkData): Promise<PortfolioLink> {
     try {
+      // Préparer les données en excluant l'icon si elle est vide ou si la colonne n'existe pas
+      const { icon, ...otherData } = linkData;
+      let dataToInsert: any = {
+        ...otherData,
+        is_active: linkData.is_active ?? true,
+        click_count: 0
+      };
+
+      // Inclure l'icon seulement si elle est définie et non vide
+      if (icon && icon.trim()) {
+        dataToInsert.icon = icon;
+      }
+
       const { data, error } = await supabase
         .from('links')
-        .insert([{
-          ...linkData,
-          is_active: linkData.is_active ?? true,
-          click_count: 0
-        }])
+        .insert([dataToInsert])
         .select()
         .single();
 
       if (error) {
+        // Si l'erreur est liée à la colonne icon, réessayer sans
+        if (error.message.includes('icon') && icon) {
+          console.warn('Colonne icon non disponible, création sans icône...');
+          const dataWithoutIcon = {
+            ...otherData,
+            is_active: linkData.is_active ?? true,
+            click_count: 0
+          };
+          const { data: retryData, error: retryError } = await supabase
+            .from('links')
+            .insert([dataWithoutIcon])
+            .select()
+            .single();
+          
+          if (retryError) {
+            console.error('Erreur création lien (retry):', retryError);
+            throw retryError;
+          }
+          return retryData;
+        }
         console.error('Erreur création lien:', error);
         throw error;
       }
@@ -70,18 +101,47 @@ export class LinksService {
 
   static async updateLink(updateData: UpdateLinkData): Promise<PortfolioLink> {
     try {
-      const { id, ...data } = updateData;
+      const { id, icon, ...data } = updateData;
+      
+      // Préparer les données de mise à jour
+      let updatePayload: any = {
+        ...data,
+        updated_at: new Date().toISOString()
+      };
+
+      // Inclure l'icon seulement si elle est définie
+      if (icon !== undefined) {
+        updatePayload.icon = icon;
+      }
+
       const { data: updatedLink, error } = await supabase
         .from('links')
-        .update({
-          ...data,
-          updated_at: new Date().toISOString()
-        })
+        .update(updatePayload)
         .eq('id', id)
         .select()
         .single();
 
       if (error) {
+        // Si l'erreur est liée à la colonne icon, réessayer sans
+        if (error.message.includes('icon')) {
+          console.warn('Colonne icon non disponible, mise à jour sans icône...');
+          const updateWithoutIcon = {
+            ...data,
+            updated_at: new Date().toISOString()
+          };
+          const { data: retryData, error: retryError } = await supabase
+            .from('links')
+            .update(updateWithoutIcon)
+            .eq('id', id)
+            .select()
+            .single();
+          
+          if (retryError) {
+            console.error('Erreur mise à jour lien (retry):', retryError);
+            throw retryError;
+          }
+          return retryData;
+        }
         console.error('Erreur mise à jour lien:', error);
         throw error;
       }
@@ -144,6 +204,20 @@ export class LinksService {
     } catch (error) {
       console.error('Erreur lors du changement de statut:', error);
       throw error;
+    }
+  }
+
+  static async checkIconColumnExists(): Promise<boolean> {
+    try {
+      const { data, error } = await supabase
+        .from('links')
+        .select('icon')
+        .limit(1);
+
+      // Si pas d'erreur, la colonne existe
+      return !error;
+    } catch (error) {
+      return false;
     }
   }
 }

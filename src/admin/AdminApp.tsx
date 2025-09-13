@@ -8,8 +8,8 @@ import { AuthGuard } from './components/AuthGuard';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export const AdminApp: React.FC = () => {
-  // Document title with typing animation - auto-detected for admin pages
-  useDocumentTitle();
+  // Titre fixe sans animation  
+  useDocumentTitle("Administration", { enableTypingAnimation: false });
 
   return (
     <Routes>

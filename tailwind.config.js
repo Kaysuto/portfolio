@@ -23,6 +23,74 @@ const defaultTheme = {
       fine: { raw: "(pointer: fine)" },
       pwa: { raw: "(display-mode: standalone)" },
     },
+    animation: {
+      'fadeIn': 'fadeIn 0.3s ease-out forwards',
+      'fadeOut': 'fadeOut 0.3s ease-out forwards',
+      'modalSlideIn': 'modalSlideIn 0.3s ease-out forwards',
+      'modalSlideOut': 'modalSlideOut 0.3s ease-out forwards',
+      'float-slow': 'float-slow 8s ease-in-out infinite',
+      'float-medium': 'float-medium 6s ease-in-out infinite',
+      'bounce-slow': 'bounce-slow 4s ease-in-out infinite',
+      'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+    },
+    animationDelay: {
+      '100': '100ms',
+      '200': '200ms',
+      '300': '300ms',
+      '400': '400ms',
+      '500': '500ms',
+      '600': '600ms',
+      '700': '700ms',
+      '800': '800ms',
+      '900': '900ms',
+      '1000': '1000ms',
+    },
+    keyframes: {
+      fadeIn: {
+        '0%': { opacity: '0' },
+        '100%': { opacity: '1' },
+      },
+      fadeOut: {
+        '0%': { opacity: '1' },
+        '100%': { opacity: '0' },
+      },
+      modalSlideIn: {
+        '0%': { 
+          opacity: '0', 
+          transform: 'scale(0.95) translateY(8px)' 
+        },
+        '100%': { 
+          opacity: '1', 
+          transform: 'scale(1) translateY(0)' 
+        },
+      },
+      modalSlideOut: {
+        '0%': { 
+          opacity: '1', 
+          transform: 'scale(1) translateY(0)' 
+        },
+        '100%': { 
+          opacity: '0', 
+          transform: 'scale(0.95) translateY(8px)' 
+        },
+      },
+      'float-slow': {
+        '0%, 100%': { transform: 'translateY(0px)' },
+        '50%': { transform: 'translateY(-20px)' },
+      },
+      'float-medium': {
+        '0%, 100%': { transform: 'translateY(0px)' },
+        '50%': { transform: 'translateY(-15px)' },
+      },
+      'bounce-slow': {
+        '0%, 100%': { transform: 'translateY(0px)' },
+        '50%': { transform: 'translateY(-10px)' },
+      },
+      'pulse-slow': {
+        '0%, 100%': { opacity: '0.8' },
+        '50%': { opacity: '0.4' },
+      },
+    },
     colors: {
       neutral: {
         1: "var(--color-neutral-1)",

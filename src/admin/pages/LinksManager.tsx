@@ -6,9 +6,10 @@ import { Label } from '../../components/ui/label';
 import { Plus, Pencil, Trash, CheckCircle, X, Eye, EyeSlash, MagnifyingGlass, Funnel, ChartBar, Link as LinkIcon, Database, Wrench, Bug, CaretUp as ChevronUp, CaretDown as ChevronDown, CircleNotch as Loader2, Globe, Target, ArrowsClockwise, TestTube, LinkSimple, Rocket } from '@phosphor-icons/react';
 import { LinksService, PortfolioLink, CreateLinkData, UpdateLinkData } from '../services/linksService';
 import { migrateBioLinks, cleanBioLinks } from '../../scripts/migrateBioLinks';
-import { createLinksTable, checkTableExists, getTableInfo } from '../../scripts/createLinksTable';
+import { createLinksTable, checkTableExists, getTableInfo, addIconColumn } from '../../scripts/createLinksTable';
 import { notifications } from '../../components/NotificationProvider';
 import { useModal } from '../../hooks/useModal';
+import { IconSelector } from '../components/IconSelector';
 
 // Import des nouveaux composants admin
 import {
@@ -25,21 +26,33 @@ export default function LinksManager() {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal();
+  const { 
+    isModalOpen: isDeleteModalOpen, 
+    modalMounted: deleteModalMounted, 
+    isClosing: isDeleteClosing, 
+    openModal: openDeleteModal, 
+    closeModal: closeDeleteModal 
+  } = useModal();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | PortfolioLink['type']>('all');
+
+  // États pour le modal de confirmation de suppression
+  const [linkToDelete, setLinkToDelete] = useState<PortfolioLink | null>(null);
 
   // États pour les fonctionnalités debug intégrées
   const [showDebugTools, setShowDebugTools] = useState(false);
   const [tableInfo, setTableInfo] = useState<any>(null);
   const [debugResult, setDebugResult] = useState<any>(null);
   const [debugLoading, setDebugLoading] = useState(false);
+  const [iconColumnExists, setIconColumnExists] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
     url: '',
     type: 'other' as PortfolioLink['type'],
     description: '',
+    icon: '',
     is_active: true
   });
 
@@ -49,6 +62,10 @@ export default function LinksManager() {
     try {
       const fetchedLinks = await LinksService.getAllLinks();
       setLinks(fetchedLinks);
+      
+      // Vérifier si la colonne icon existe
+      const iconExists = await LinksService.checkIconColumnExists();
+      setIconColumnExists(iconExists);
     } catch (err) {
       setError('Erreur lors du chargement des liens');
       console.error('Error loading links:', err);
@@ -89,6 +106,7 @@ export default function LinksManager() {
       url: link.url,
       type: link.type,
       description: link.description || '',
+      icon: link.icon || '',
       is_active: link.is_active
     });
     setIsEditing(true);
@@ -97,25 +115,131 @@ export default function LinksManager() {
 
   const handleToggleActive = async (link: PortfolioLink) => {
     try {
+      // Mise à jour optimiste de l'interface
+      const updatedLinks = links.map(l => 
+        l.id === link.id 
+          ? { ...l, is_active: !l.is_active }
+          : l
+      );
+      setLinks(updatedLinks);
+
+      // Appel API en arrière-plan
       await LinksService.updateLink({ id: link.id, is_active: !link.is_active });
-      await loadLinks();
       notifications.success(`Lien ${!link.is_active ? 'activé' : 'désactivé'} avec succès`);
     } catch (err) {
+      // En cas d'erreur, restaurer l'état précédent
+      setLinks(links);
       notifications.error('Erreur lors de la mise à jour du lien');
       console.error('Error toggling link active status:', err);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     try {
-      await LinksService.deleteLink(id);
-      await loadLinks();
+      if (isEditing && editingLink) {
+        // Mise à jour optimiste de l'interface
+        const updatedLink = { ...editingLink, ...formData };
+        const updatedLinks = links.map(link => 
+          link.id === editingLink.id ? updatedLink : link
+        );
+        setLinks(updatedLinks);
+
+        // Appel API en arrière-plan
+        await LinksService.updateLink({
+          id: editingLink.id,
+          title: formData.title,
+          url: formData.url,
+          type: formData.type,
+          description: formData.description,
+          icon: formData.icon,
+          is_active: formData.is_active
+        });
+        notifications.success('Lien mis à jour avec succès');
+      } else {
+        // Pour création, on fait l'appel API d'abord pour obtenir l'ID
+        const newLink = await LinksService.createLink({
+          title: formData.title,
+          url: formData.url,
+          type: formData.type,
+          description: formData.description,
+          icon: formData.icon,
+          is_active: formData.is_active
+        });
+        
+        // Ajout optimiste avec les données complètes
+        setLinks(prevLinks => [...prevLinks, newLink]);
+        notifications.success('Lien créé avec succès');
+      }
+      
+      // Réinitialiser le formulaire et fermer le modal
+      resetForm();
+      closeModal();
+    } catch (err) {
+      // En cas d'erreur, restaurer l'état précédent
+      if (isEditing) {
+        await loadLinks(); // Restaurer depuis le serveur
+      }
+      notifications.error('Erreur lors de la sauvegarde du lien');
+      console.error('Error saving link:', err);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      url: '',
+      type: 'other',
+      description: '',
+      icon: '',
+      is_active: true
+    });
+    setIsEditing(false);
+    setEditingLink(null);
+  };
+
+  const handleAddNew = () => {
+    resetForm();
+    openModal();
+  };
+
+  const handleDelete = async (id: string) => {
+    const linkToDelete = links.find(link => link.id === id);
+    if (!linkToDelete) return;
+    
+    setLinkToDelete(linkToDelete);
+    openDeleteModal();
+  };
+
+  const confirmDelete = async () => {
+    if (!linkToDelete) return;
+    
+    // Sauvegarder l'état actuel pour restauration en cas d'erreur
+    const originalLinks = [...links];
+    
+    try {
+      // Suppression optimiste de l'interface
+      const updatedLinks = links.filter(link => link.id !== linkToDelete.id);
+      setLinks(updatedLinks);
+
+      // Appel API en arrière-plan
+      await LinksService.deleteLink(linkToDelete.id);
       notifications.success('Lien supprimé avec succès');
     } catch (err) {
+      // En cas d'erreur, restaurer l'état précédent
+      setLinks(originalLinks);
       notifications.error('Erreur lors de la suppression du lien');
       console.error('Error deleting link:', err);
+    } finally {
+      closeDeleteModal();
+      setLinkToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    closeDeleteModal();
+    setLinkToDelete(null);
   };
 
   // Fonctions de debug
@@ -176,6 +300,22 @@ export default function LinksManager() {
       await loadLinks();
     } catch (err) {
       setDebugResult({ migration: 'failed', error: err.message });
+    } finally {
+      setDebugLoading(false);
+    }
+  };
+
+  const handleAddIconColumn = async () => {
+    setDebugLoading(true);
+    try {
+      const result = await addIconColumn();
+      setDebugResult(result);
+      
+      // Recharger pour vérifier si la colonne existe maintenant
+      const iconExists = await LinksService.checkIconColumnExists();
+      setIconColumnExists(iconExists);
+    } catch (err) {
+      setDebugResult({ iconColumn: 'failed', error: err.message });
     } finally {
       setDebugLoading(false);
     }
@@ -263,6 +403,15 @@ export default function LinksManager() {
                   {debugLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
                   Créer la table
                 </Button>
+                <Button
+                  onClick={handleAddIconColumn}
+                  disabled={debugLoading}
+                  variant="outline"
+                  className="w-full justify-start border-blue-500/20 hover:bg-blue-500/10"
+                >
+                  {debugLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
+                  Ajouter colonne icon
+                </Button>
               </div>
             </div>
 
@@ -318,6 +467,27 @@ export default function LinksManager() {
               </pre>
             </div>
           )}
+
+          {/* Instructions pour ajouter la colonne icon manuellement */}
+          {!iconColumnExists && (
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <h4 className="font-semibold mb-2 flex items-center gap-2 text-blue-800 dark:text-blue-200">
+                <Wrench className="h-4 w-4" />
+                Ajout manuel de la colonne icon
+              </h4>
+              <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                Si le bouton automatique ne fonctionne pas, vous pouvez exécuter cette commande SQL dans le dashboard Supabase :
+              </p>
+              <div className="bg-gray-900 p-3 rounded border">
+                <code className="text-green-400 text-sm">
+                  ALTER TABLE public.links ADD COLUMN icon VARCHAR(100);
+                </code>
+              </div>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
+                📍 Allez sur supabase.com → Votre projet → SQL Editor → Exécutez cette commande
+              </p>
+            </div>
+          )}
         </div>
       </GlassCard>
 
@@ -329,8 +499,8 @@ export default function LinksManager() {
         >
           <div className="space-y-4">
             <Button
-              onClick={openModal}
-              className="w-full bg-accent hover:bg-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={handleAddNew}
+              className="w-full bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813] shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Plus className="h-4 w-4 mr-2" />
               Nouveau lien
@@ -409,7 +579,7 @@ export default function LinksManager() {
                     ? 'Aucun lien ne correspond à vos critères de recherche.'
                     : 'Vous n\'avez pas encore créé de liens.'}
                 </p>
-                <Button onClick={openModal} className="bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]">
+                <Button onClick={handleAddNew} className="bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]">
                   <Plus className="h-4 w-4 mr-2" />
                   Créer votre premier lien
                 </Button>
@@ -487,6 +657,191 @@ export default function LinksManager() {
       </GlassCard>
         </div>
       </div>
+
+      {/* Modal d'édition/ajout */}
+      {modalMounted && (
+        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${isClosing ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeModal}
+          />
+          <div className={`relative bg-background border border-border rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto ${isClosing ? 'animate-modalSlideOut' : 'animate-modalSlideIn'}`}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold">
+                  {isEditing ? 'Modifier le lien' : 'Nouveau lien'}
+                </h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={closeModal}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Titre *</Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="Ex: Mon Portfolio"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="url">URL *</Label>
+                  <Input
+                    id="url"
+                    type="url"
+                    value={formData.url}
+                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                    placeholder="https://..."
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="type">Type</Label>
+                  <select
+                    id="type"
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value as PortfolioLink['type'] })}
+                    className="w-full px-3 py-2 border border-input rounded-md bg-background"
+                  >
+                    <option value="github">GitHub</option>
+                    <option value="live">Site en ligne</option>
+                    <option value="social">Réseau social</option>
+                    <option value="bio_link">Lien bio</option>
+                    <option value="other">Autre</option>
+                  </select>
+                </div>
+
+                {/* Sélecteur d'icônes - seulement si la colonne existe */}
+                {iconColumnExists ? (
+                  <IconSelector
+                    value={formData.icon}
+                    onChange={(icon) => setFormData({ ...formData, icon })}
+                  />
+                ) : (
+                  <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      💡 <strong>Icônes non disponibles</strong> - Pour utiliser le sélecteur d'icônes, ajoutez d'abord la colonne icon via les outils de debug.
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Input
+                    id="description"
+                    type="text"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Description optionnelle..."
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    id="is_active"
+                    type="checkbox"
+                    checked={formData.is_active}
+                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                    className="h-4 w-4 rounded border-input"
+                  />
+                  <Label htmlFor="is_active">Lien actif</Label>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={closeModal}
+                    className="flex-1"
+                  >
+                    Annuler
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]"
+                  >
+                    {isEditing ? 'Mettre à jour' : 'Créer'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmation de suppression */}
+      {deleteModalMounted && (
+        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${isDeleteClosing ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeDeleteModal}
+          />
+          <div className={`relative bg-background border border-border rounded-lg shadow-xl max-w-md w-full ${isDeleteClosing ? 'animate-modalSlideOut' : 'animate-modalSlideIn'}`}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-destructive/20 flex items-center justify-center">
+                    <Trash className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium">Supprimer le lien</h3>
+                    <p className="text-sm text-muted-foreground">Cette action est irréversible</p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={closeDeleteModal}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              {linkToDelete && (
+                <div className="bg-muted/50 rounded-md p-3 mb-4">
+                  <p className="text-sm font-medium">{linkToDelete.title}</p>
+                  <p className="text-xs text-muted-foreground">{linkToDelete.url}</p>
+                </div>
+              )}
+
+              <p className="text-sm mb-6">
+                Êtes-vous sûr de vouloir supprimer ce lien ? Cette action ne peut pas être annulée.
+              </p>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={cancelDelete}
+                  className="flex-1"
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={confirmDelete}
+                  className="flex-1"
+                >
+                  Supprimer
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

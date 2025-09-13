@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const MaintenancePage: React.FC = () => {
-  // Document title with typing animation - auto-detected for maintenance page
-  useDocumentTitle();
+  // Titre fixe sans animation
+  useDocumentTitle("Maintenance", { enableTypingAnimation: false });
 
   const { theme } = useTheme();
 

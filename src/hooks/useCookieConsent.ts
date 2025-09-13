@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export type CookieConsent = 'accepted' | 'rejected' | null
+export type CookieConsent = 'accepted' | 'rejected' | 'dismissed' | null
 
 const CONSENT_KEY = 'cookie-consent'
 
@@ -12,7 +12,7 @@ export function useCookieConsent() {
     // Vérifier le consentement au montage
     const stored = localStorage.getItem(CONSENT_KEY) as CookieConsent
     
-    if (stored === 'accepted' || stored === 'rejected') {
+    if (stored === 'accepted' || stored === 'rejected' || stored === 'dismissed') {
       setConsent(stored)
     } else {
       setConsent(null)
@@ -30,6 +30,11 @@ export function useCookieConsent() {
     localStorage.setItem(CONSENT_KEY, 'rejected')
   }
 
+  const dismissCookies = () => {
+    setConsent('dismissed')
+    localStorage.setItem(CONSENT_KEY, 'dismissed')
+  }
+
   const hasConsent = consent === 'accepted'
 
   return {
@@ -37,6 +42,7 @@ export function useCookieConsent() {
     hasConsent,
     acceptCookies,
     rejectCookies,
+    dismissCookies,
     isLoaded
   }
 }

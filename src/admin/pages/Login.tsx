@@ -8,8 +8,8 @@ import { supabase } from '../../lib/supabase';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export const Login: React.FC = () => {
-  // Document title with typing animation - auto-detected for admin login
-  useDocumentTitle();
+  // Titre fixe sans animation
+  useDocumentTitle("Connexion Admin", { enableTypingAnimation: false });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

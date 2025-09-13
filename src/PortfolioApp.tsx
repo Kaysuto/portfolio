@@ -11,8 +11,11 @@ import { Navigate } from 'react-router-dom';
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
-  // Document title with typing animation and dynamic sections
-  useDocumentTitle(undefined, { dynamicSections: true });
+  // Titre fixe sans animation
+  useDocumentTitle("Full-Stack Maker", { 
+    enableTypingAnimation: false, 
+    dynamicSections: false 
+  });
 
   const { data: maintenanceStatus, isLoading } = useQuery({
     queryKey: ['maintenanceStatus'],
