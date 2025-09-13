@@ -13,19 +13,6 @@ export function HeroSection() {
   }
 
   const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal()
-  const [showModalPanel, setShowModalPanel] = useState(false)
-
-  // Gère le fade-out : garde le panel monté pendant la fermeture
-  useEffect(() => {
-    if (isModalOpen) {
-      setShowModalPanel(true)
-    } else if (isClosing) {
-      const timeout = setTimeout(() => setShowModalPanel(false), 300)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowModalPanel(false)
-    }
-  }, [isModalOpen, isClosing])
 
   // Animated text state with typing effect
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
@@ -134,17 +121,19 @@ export function HeroSection() {
       </div>
 
       {/* Modal for CV download */}
-      {modalMounted && showModalPanel && (
+      <ModalPortal isOpen={modalMounted}>
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isModalOpen && !isClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+            className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+              isModalOpen && !isClosing ? 'animate-fadeIn' : 'animate-fadeOut'
+            }`} 
             onClick={closeModal} 
           />
           <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
               isModalOpen && !isClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
+                ? 'animate-modalSlideIn' 
+                : 'animate-modalSlideOut'
             }`}
             role="dialog"
             aria-modal="true"
@@ -193,7 +182,7 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
 
       {/* Curseur animé - Version Desktop */}
       <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bottom-8 flex-col items-center z-20 animate-fadeInUp animate-delay-700 select-none cursor-pointer group" onClick={scrollToProjects} tabIndex={0} aria-label="Voir la suite">

@@ -7,6 +7,9 @@ interface ModalPortalProps {
   onClose?: () => void;
 }
 
+// Compteur global pour gérer plusieurs modals ouverts simultanément
+let openModalCount = 0;
+
 export function ModalPortal({ children, isOpen, onClose }: ModalPortalProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -17,13 +20,22 @@ export function ModalPortal({ children, isOpen, onClose }: ModalPortalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      openModalCount++;
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      openModalCount = Math.max(0, openModalCount - 1);
+      if (openModalCount === 0) {
+        document.body.style.overflow = 'unset';
+      }
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      if (isOpen) {
+        openModalCount = Math.max(0, openModalCount - 1);
+        if (openModalCount === 0) {
+          document.body.style.overflow = 'unset';
+        }
+      }
     };
   }, [isOpen]);
 

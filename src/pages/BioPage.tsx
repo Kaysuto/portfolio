@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { ModalPortal } from '@/components/ui/ModalPortal';
 import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, X, LinkSimple } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
@@ -160,6 +161,7 @@ const BioPage: React.FC = () => {
 
       {/* Modal de confirmation pour les liens */}
       {modalMounted && (
+      <ModalPortal isOpen={modalMounted}>
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
             className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
@@ -228,6 +230,7 @@ const BioPage: React.FC = () => {
             )}
           </div>
         </div>
+      </ModalPortal>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 import { Code, GithubLogo, LinkedinLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
+import { ModalPortal } from "@/components/ui/ModalPortal"
 import { useModal } from "@/hooks/useModal"
-import { useState, useEffect } from "react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -9,33 +9,6 @@ export function Footer() {
   // Modal states
   const { isModalOpen: isGithubModalOpen, modalMounted: githubModalMounted, isClosing: isGithubClosing, openModal: openGithubModal, closeModal: closeGithubModal } = useModal()
   const { isModalOpen: isLinkedinModalOpen, modalMounted: linkedinModalMounted, isClosing: isLinkedinClosing, openModal: openLinkedinModal, closeModal: closeLinkedinModal } = useModal()
-  
-  const [showGithubModalPanel, setShowGithubModalPanel] = useState(false)
-  const [showLinkedinModalPanel, setShowLinkedinModalPanel] = useState(false)
-
-  // Gère le fade-out pour GitHub modal
-  useEffect(() => {
-    if (isGithubModalOpen) {
-      setShowGithubModalPanel(true)
-    } else if (isGithubClosing) {
-      const timeout = setTimeout(() => setShowGithubModalPanel(false), 300)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowGithubModalPanel(false)
-    }
-  }, [isGithubModalOpen, isGithubClosing])
-
-  // Gère le fade-out pour LinkedIn modal
-  useEffect(() => {
-    if (isLinkedinModalOpen) {
-      setShowLinkedinModalPanel(true)
-    } else if (isLinkedinClosing) {
-      const timeout = setTimeout(() => setShowLinkedinModalPanel(false), 300)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowLinkedinModalPanel(false)
-    }
-  }, [isLinkedinModalOpen, isLinkedinClosing])
 
   return (
     <footer className="bg-card border-t border-border py-12 px-6 animate-fadeInUp">
@@ -143,17 +116,19 @@ export function Footer() {
       </div>
 
       {/* GitHub Modal */}
-      {githubModalMounted && showGithubModalPanel && (
+      <ModalPortal isOpen={githubModalMounted}>
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isGithubModalOpen && !isGithubClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+            className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+              isGithubModalOpen && !isGithubClosing ? 'animate-fadeIn' : 'animate-fadeOut'
+            }`} 
             onClick={closeGithubModal} 
           />
           <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
               isGithubModalOpen && !isGithubClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
+                ? 'animate-modalSlideIn' 
+                : 'animate-modalSlideOut'
             }`}
             role="dialog"
             aria-modal="true"
@@ -202,20 +177,22 @@ export function Footer() {
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
 
       {/* LinkedIn Modal */}
-      {linkedinModalMounted && showLinkedinModalPanel && (
+      <ModalPortal isOpen={linkedinModalMounted}>
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isLinkedinModalOpen && !isLinkedinClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+            className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+              isLinkedinModalOpen && !isLinkedinClosing ? 'animate-fadeIn' : 'animate-fadeOut'
+            }`} 
             onClick={closeLinkedinModal} 
           />
           <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
               isLinkedinModalOpen && !isLinkedinClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
+                ? 'animate-modalSlideIn' 
+                : 'animate-modalSlideOut'
             }`}
             role="dialog"
             aria-modal="true"
@@ -264,7 +241,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
     </footer>
   );
 }

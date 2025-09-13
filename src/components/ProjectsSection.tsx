@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { GithubLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
+import { ModalPortal } from "@/components/ui/ModalPortal"
 import { useModal } from "@/hooks/useModal"
 
 interface GitHubStats {
@@ -132,8 +133,8 @@ export function ProjectsSection() {
       </div>
 
       {/* Modal for GitHub projects */}
-      {modalMounted && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <ModalPortal isOpen={modalMounted}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
             className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
               isModalOpen && !isClosing ? 'animate-fadeIn' : 'animate-fadeOut'
@@ -141,7 +142,7 @@ export function ProjectsSection() {
             onClick={closeModal} 
           />
           <div
-            className={`relative bg-card rounded-lg w-[90%] max-w-lg p-6 z-[10000] shadow-xl border border-border transition-all duration-300 ${
+            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
               isModalOpen && !isClosing 
                 ? 'animate-modalSlideIn' 
                 : 'animate-modalSlideOut'
@@ -151,27 +152,49 @@ export function ProjectsSection() {
           >
             <button
               aria-label="Fermer"
-              className="absolute top-3 right-3 p-1 rounded-md hover:bg-accent/10"
+              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
               onClick={closeModal}
             >
-              <X size={18} />
+              <X size={20} className="text-muted-foreground" />
             </button>
-            <h3 className="text-lg font-semibold mb-2">Voir mes projets GitHub</h3>
-            <p className="text-sm text-muted-foreground mb-4">Vous pouvez consulter tous mes projets directement sur mon profil GitHub.</p>
-            <div className="flex justify-end">
-              <a
-                href="https://github.com/Kaysuto"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block"
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="bg-accent/10 p-3 rounded-xl">
+                <GithubLogo size={24} className="text-accent" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-foreground">Voir mes projets GitHub</h3>
+                <p className="text-muted-foreground">Accédez à tous mes repositories</p>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+            </p>
+            <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
+              <code className="text-sm text-foreground break-all font-mono">
+                https://github.com/Kaysuto
+              </code>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <Button 
+                variant="outline" 
                 onClick={closeModal}
+                className="hover:bg-accent/10"
               >
-                <Button className="bg-accent text-[#070201] dark:text-[#221512] px-4 py-2">Voir sur GitHub</Button>
-              </a>
+                Annuler
+              </Button>
+              <Button 
+                onClick={() => {
+                  window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer")
+                  closeModal()
+                }}
+                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+              >
+                Voir sur GitHub
+              </Button>
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
     </section>
   );
 }

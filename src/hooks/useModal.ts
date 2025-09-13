@@ -27,7 +27,7 @@ export const useModal = (): UseModalReturn => {
     setTimeout(() => {
       setModalMounted(false);
       setIsClosing(false);
-    }, 220);
+    }, 270);
   };
 
   useEffect(() => {
