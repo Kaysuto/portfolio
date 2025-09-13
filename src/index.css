@@ -437,7 +437,7 @@ html {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.25s ease-out;
 }
 
 .animate-slideInFromLeft {
@@ -458,6 +458,14 @@ html {
 
 .animate-fadeOut {
   animation: fadeOut 0.3s ease-out;
+}
+
+.animate-modalSlideIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-modalSlideOut {
+  animation: fadeOut 0.25s ease-out forwards;
 }
 
 .animate-scaleIn {
