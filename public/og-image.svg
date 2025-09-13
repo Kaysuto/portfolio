@@ -1,58 +1,159 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1200 630" height="630" width="1200">
   <defs>
-    <!-- Gradient de fond cohérent avec le thème sombre -->
+    <!-- Gradient de fond amélioré -->
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3B2F28"/>
-      <stop offset="50%" style="stop-color:#2D221C"/>
-      <stop offset="100%" style="stop-color:#3B2F28"/>
+      <stop offset="0%" style="stop-color:#2A1F1A"/>
+      <stop offset="25%" style="stop-color:#3B2F28"/>
+      <stop offset="75%" style="stop-color:#2D221C"/>
+      <stop offset="100%" style="stop-color:#1F1611"/>
     </linearGradient>
     
     <!-- Gradient pour les particules -->
     <radialGradient id="particleGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#D4BE9F" stop-opacity="0.6"/>
-      <stop offset="100%" style="stop-color:#B5A089" stop-opacity="0.3"/>
+      <stop offset="0%" style="stop-color:#F0EBE3" stop-opacity="0.8"/>
+      <stop offset="50%" style="stop-color:#D4BE9F" stop-opacity="0.6"/>
+      <stop offset="100%" style="stop-color:#B5A089" stop-opacity="0.2"/>
     </radialGradient>
+    
+    <!-- Gradient pour le texte principal -->
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#F0EBE3"/>
+      <stop offset="50%" style="stop-color:#FFFFFF"/>
+      <stop offset="100%" style="stop-color:#F0EBE3"/>
+    </linearGradient>
+    
+    <!-- Gradient pour le sous-titre -->
+    <linearGradient id="subtitleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#D4BE9F"/>
+      <stop offset="50%" style="stop-color:#E6D3B7"/>
+      <stop offset="100%" style="stop-color:#D4BE9F"/>
+    </linearGradient>
+    
+    <!-- Filtre pour l'ombre -->
+    <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    
+    <!-- Filtre pour la lueur -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
-  <!-- Fond principal avec gradient -->
+  <!-- Fond principal -->
   <rect width="1200" height="630" fill="url(#bgGradient)"/>
   
-  <!-- Particules flottantes style cohérent -->
-  <circle cx="120" cy="120" r="3" fill="url(#particleGradient)"/>
-  <circle cx="1080" cy="480" r="4" fill="url(#particleGradient)"/>
-  <circle cx="200" cy="350" r="2" fill="url(#particleGradient)"/>
-  <circle cx="980" cy="180" r="3.5" fill="url(#particleGradient)"/>
-  <circle cx="300" cy="500" r="2.5" fill="url(#particleGradient)"/>
-  <circle cx="900" cy="380" r="2" fill="url(#particleGradient)"/>
-  <circle cx="150" cy="480" r="1.5" fill="url(#particleGradient)"/>
-  <circle cx="1050" cy="280" r="2.8" fill="url(#particleGradient)"/>
+  <!-- Motif géométrique de fond -->
+  <g opacity="0.1">
+    <path d="M0,315 Q300,250 600,315 T1200,315" stroke="#D4BE9F" stroke-width="1" fill="none"/>
+    <path d="M0,350 Q300,285 600,350 T1200,350" stroke="#B5A089" stroke-width="1" fill="none"/>
+  </g>
   
-  <!-- Éléments décoratifs subtils -->
-  <rect x="200" y="580" width="120" height="1" fill="#B5A089" opacity="0.4"/>
-  <rect x="880" y="580" width="120" height="1" fill="#B5A089" opacity="0.4"/>
+  <!-- Particules améliorées avec différentes tailles -->
+  <g filter="url(#glow)">
+    <!-- Grandes particules -->
+    <circle cx="150" cy="120" r="6" fill="url(#particleGradient)"/>
+    <circle cx="1050" cy="150" r="8" fill="url(#particleGradient)"/>
+    <circle cx="200" cy="480" r="5" fill="url(#particleGradient)"/>
+    <circle cx="1000" cy="500" r="7" fill="url(#particleGradient)"/>
+    
+    <!-- Particules moyennes -->
+    <circle cx="300" cy="180" r="4" fill="url(#particleGradient)"/>
+    <circle cx="900" cy="200" r="4" fill="url(#particleGradient)"/>
+    <circle cx="250" cy="400" r="3" fill="url(#particleGradient)"/>
+    <circle cx="950" cy="420" r="3" fill="url(#particleGradient)"/>
+    
+    <!-- Petites particules -->
+    <circle cx="100" cy="300" r="2" fill="url(#particleGradient)"/>
+    <circle cx="1100" cy="320" r="2" fill="url(#particleGradient)"/>
+    <circle cx="180" cy="250" r="1.5" fill="url(#particleGradient)"/>
+    <circle cx="1020" cy="380" r="1.5" fill="url(#particleGradient)"/>
+    <circle cx="80" cy="450" r="1" fill="url(#particleGradient)"/>
+    <circle cx="1120" cy="280" r="1" fill="url(#particleGradient)"/>
+  </g>
   
-  <!-- Nom principal avec couleur foreground -->
-  <text x="600" y="240" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="700" fill="#F0EBE3">
+  <!-- Lignes décoratives supérieures -->
+  <g opacity="0.6">
+    <rect x="300" y="180" width="150" height="2" fill="#D4BE9F" rx="1"/>
+    <rect x="750" y="180" width="150" height="2" fill="#D4BE9F" rx="1"/>
+  </g>
+  
+  <!-- Nom principal avec effet -->
+  <text x="600" y="280" text-anchor="middle" 
+        font-family="Inter, system-ui, sans-serif" 
+        font-size="84" 
+        font-weight="800" 
+        fill="url(#titleGradient)"
+        filter="url(#textShadow)">
     Kaysuto Kimiya
   </text>
   
-  <!-- Sous-titre avec couleur accent -->
-  <text x="600" y="310" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500" fill="#D4BE9F">
+  <!-- Sous-titre avec style amélioré -->
+  <text x="600" y="340" text-anchor="middle" 
+        font-family="Inter, system-ui, sans-serif" 
+        font-size="32" 
+        font-weight="600" 
+        fill="url(#subtitleGradient)"
+        letter-spacing="2px">
     Full-Stack Maker
   </text>
   
-  <!-- Description polyvalence avec couleur muted -->
-  <text x="600" y="380" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="400" fill="#B5A089">
-    Expert en réseau • Développement • Pixel Art • Mini-jeux Minecraft
+  <!-- Description avec meilleure lisibilité -->
+  <text x="600" y="400" text-anchor="middle" 
+        font-family="Inter, system-ui, sans-serif" 
+        font-size="20" 
+        font-weight="400" 
+        fill="#C4B5A0"
+        letter-spacing="0.5px">
+    Expert en réseau • Développement • Pixel Art
   </text>
   
-  <!-- Séparateurs décoratifs -->
-  <rect x="380" y="420" width="80" height="1" fill="#B5A089" opacity="0.6"/>
-  <rect x="740" y="420" width="80" height="1" fill="#B5A089" opacity="0.6"/>
+  <!-- Lignes décoratives centrales -->
+  <g opacity="0.7">
+    <rect x="350" y="440" width="100" height="2" fill="#D4BE9F" rx="1"/>
+    <rect x="750" y="440" width="100" height="2" fill="#D4BE9F" rx="1"/>
+    <!-- Élément central décoratif -->
+    <circle cx="600" cy="441" r="4" fill="#D4BE9F"/>
+  </g>
   
-  <!-- Badge URL du portfolio -->
-  <rect x="450" y="470" width="300" height="30" rx="15" fill="#B5A089" opacity="0.2"/>
-  <text x="600" y="490" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="500" fill="#F0EBE3">
-    https://kaysuto.fr
-  </text>
+  <!-- Zone URL avec design moderne -->
+  <g>
+    <!-- Fond de la zone URL -->
+    <rect x="420" y="480" width="360" height="50" rx="25" 
+          fill="rgba(180, 160, 137, 0.15)" 
+          stroke="rgba(212, 190, 159, 0.3)" 
+          stroke-width="1"/>
+    
+    <!-- Texte URL -->
+    <text x="600" y="510" text-anchor="middle" 
+          font-family="Inter, system-ui, sans-serif" 
+          font-size="18" 
+          font-weight="500" 
+          fill="#F0EBE3"
+          letter-spacing="0.5px">
+      https://kaysuto.fr
+    </text>
+  </g>
+  
+  <!-- Lignes décoratives inférieures -->
+  <g opacity="0.4">
+    <rect x="150" y="570" width="200" height="1" fill="#B5A089"/>
+    <rect x="850" y="570" width="200" height="1" fill="#B5A089"/>
+  </g>
+  
+  <!-- Éléments décoratifs dans les coins -->
+  <g opacity="0.3">
+    <!-- Coin supérieur gauche -->
+    <path d="M50,50 L100,50 M50,50 L50,100" stroke="#D4BE9F" stroke-width="2" stroke-linecap="round"/>
+    <!-- Coin supérieur droit -->
+    <path d="M1150,50 L1100,50 M1150,50 L1150,100" stroke="#D4BE9F" stroke-width="2" stroke-linecap="round"/>
+    <!-- Coin inférieur gauche -->
+    <path d="M50,580 L100,580 M50,580 L50,530" stroke="#D4BE9F" stroke-width="2" stroke-linecap="round"/>
+    <!-- Coin inférieur droit -->
+    <path d="M1150,580 L1100,580 M1150,580 L1150,530" stroke="#D4BE9F" stroke-width="2" stroke-linecap="round"/>
+  </g>
 </svg>

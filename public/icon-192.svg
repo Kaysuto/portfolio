@@ -1,37 +1,89 @@
-<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 192 192" height="192" width="192">
   <defs>
-    <linearGradient id="bg192" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3B2F28"/>
-      <stop offset="50%" style="stop-color:#2D221C"/>
-      <stop offset="100%" style="stop-color:#3B2F28"/>
+    <!-- Gradient de fond amélioré -->
+    <linearGradient id="icon192Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2A1F1A"/>
+      <stop offset="30%" style="stop-color:#3B2F28"/>
+      <stop offset="70%" style="stop-color:#2D221C"/>
+      <stop offset="100%" style="stop-color:#1F1611"/>
     </linearGradient>
-    <linearGradient id="letter192" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#F0EBE3"/>
+    
+    <!-- Gradient pour la lettre K -->
+    <linearGradient id="icon192LetterK" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF"/>
+      <stop offset="30%" style="stop-color:#F0EBE3"/>
+      <stop offset="70%" style="stop-color:#E6D3B7"/>
       <stop offset="100%" style="stop-color:#D4BE9F"/>
     </linearGradient>
-    <radialGradient id="accent192" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#D4BE9F" stop-opacity="0.8"/>
-      <stop offset="100%" style="stop-color:#B5A089" stop-opacity="0.4"/>
+    
+    <!-- Gradient pour les accents -->
+    <radialGradient id="icon192AccentGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#F0EBE3" stop-opacity="0.9"/>
+      <stop offset="70%" style="stop-color:#D4BE9F" stop-opacity="0.6"/>
+      <stop offset="100%" style="stop-color:#B5A089" stop-opacity="0.3"/>
     </radialGradient>
+    
+    <!-- Filtre pour la lueur -->
+    <filter id="icon192Glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Filtre pour l'ombre de la lettre -->
+    <filter id="icon192LetterShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
   </defs>
   
-  <!-- Fond principal -->
-  <rect width="192" height="192" rx="36" fill="url(#bg192)"/>
+  <!-- Fond principal avec coins arrondis -->
+  <rect width="192" height="192" rx="42" fill="url(#icon192Bg)"/>
+  
+  <!-- Motif subtil de fond -->
+  <g opacity="0.1">
+    <path d="M24,96 Q96,76 168,96" stroke="#D4BE9F" stroke-width="2.5" fill="none"/>
+    <path d="M24,116 Q96,96 168,116" stroke="#B5A089" stroke-width="2.5" fill="none"/>
+  </g>
   
   <!-- Particules décoratives -->
-  <circle cx="40" cy="40" r="3" fill="url(#accent192)"/>
-  <circle cx="152" cy="152" r="4" fill="url(#accent192)"/>
-  <circle cx="152" cy="40" r="2" fill="url(#accent192)"/>
-  <circle cx="40" cy="152" r="2.5" fill="url(#accent192)"/>
-  
-  <!-- Accent en bas -->
-  <rect x="32" y="168" width="128" height="2" fill="#B5A089" opacity="0.5"/>
+  <g filter="url(#icon192Glow)">
+    <!-- Particules principales -->
+    <circle cx="148" cy="44" r="7" fill="url(#icon192AccentGradient)"/>
+    <circle cx="44" cy="148" r="5" fill="url(#icon192AccentGradient)"/>
+    <circle cx="144" cy="144" r="4" fill="url(#icon192AccentGradient)"/>
+    
+    <!-- Particules secondaires -->
+    <circle cx="32" cy="48" r="3" fill="url(#icon192AccentGradient)"/>
+    <circle cx="48" cy="32" r="2.5" fill="url(#icon192AccentGradient)"/>
+    <circle cx="160" cy="52" r="2" fill="url(#icon192AccentGradient)"/>
+    
+    <!-- Micro-particules -->
+    <circle cx="28" cy="64" r="1.5" fill="url(#icon192AccentGradient)"/>
+    <circle cx="164" cy="128" r="1.5" fill="url(#icon192AccentGradient)"/>
+    <circle cx="52" cy="164" r="1" fill="url(#icon192AccentGradient)"/>
+  </g>
   
   <!-- Lettre K principale -->
-  <text x="96" y="130" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="96" font-weight="700" fill="url(#letter192)">
+  <text x="96" y="122" text-anchor="middle" 
+        font-family="Inter, system-ui, sans-serif" 
+        font-size="96" 
+        font-weight="800" 
+        fill="url(#icon192LetterK)"
+        filter="url(#icon192LetterShadow)">
     K
   </text>
   
-  <!-- Points décoratifs subtils -->
-  <circle cx="96" cy="40" r="3" fill="#D4BE9F" opacity="0.6"/>
+  <!-- Accents dans les coins -->
+  <g opacity="0.4">
+    <!-- Coin supérieur gauche -->
+    <path d="M24,24 L39,24 M24,24 L24,39" stroke="#D4BE9F" stroke-width="3.5" stroke-linecap="round"/>
+    
+    <!-- Coin inférieur droit -->
+    <path d="M168,154 L153,154 M168,154 L168,139" stroke="#D4BE9F" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Point lumineux central subtil -->
+  <circle cx="96" cy="96" r="2.5" fill="#F0EBE3" opacity="0.3"/>
 </svg>
