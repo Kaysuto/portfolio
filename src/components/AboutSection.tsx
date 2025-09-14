@@ -1,6 +1,10 @@
 import { Brain, Code, Heart } from "@phosphor-icons/react"
+import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 
 export function AboutSection() {
+  const ageCounter = useCounterAnimation({ end: 23, duration: 1800 })
+  const experienceCounter = useCounterAnimation({ end: 15, duration: 2200 })
+
   return (
     <section id="apropos" className="py-20 px-6 bg-secondary/30 relative overflow-hidden">
       {/* Animated background elements */}
@@ -38,11 +42,21 @@ export function AboutSection() {
             {/* Age & Experience */}
             <div className="flex items-center space-x-8 pt-4">
               <div className="group cursor-default">
-                <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">23</span>
+                <span 
+                  ref={ageCounter.elementRef}
+                  className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block"
+                >
+                  {ageCounter.count}
+                </span>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans</p>
               </div>
               <div className="group cursor-default">
-                <span className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block">15+</span>
+                <span 
+                  ref={experienceCounter.elementRef}
+                  className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block"
+                >
+                  {experienceCounter.count}+
+                </span>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans expérience</p>
               </div>
             </div>

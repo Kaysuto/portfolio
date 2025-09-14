@@ -1,13 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 180 180" height="180" width="180">
   <defs>
-    <!-- Gradient de fond amélioré -->
-    <linearGradient id="appleBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2A1F1A"/>
-      <stop offset="30%" style="stop-color:#3B2F28"/>
-      <stop offset="70%" style="stop-color:#2D221C"/>
-      <stop offset="100%" style="stop-color:#1F1611"/>
-    </linearGradient>
-    
     <!-- Gradient pour la lettre K -->
     <linearGradient id="appleLetterK" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FFFFFF"/>
@@ -38,10 +30,7 @@
     </filter>
   </defs>
   
-  <!-- Fond principal avec coins arrondis Apple -->
-  <rect width="180" height="180" rx="40" fill="url(#appleBg)"/>
-  
-  <!-- Motif subtil de fond -->
+  <!-- Motif subtil de fond (transparent) -->
   <g opacity="0.1">
     <path d="M20,90 Q90,70 160,90" stroke="#D4BE9F" stroke-width="2" fill="none"/>
     <path d="M20,110 Q90,90 160,110" stroke="#B5A089" stroke-width="2" fill="none"/>

@@ -1,13 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 192 192" height="192" width="192">
   <defs>
-    <!-- Gradient de fond amélioré -->
-    <linearGradient id="icon192Bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2A1F1A"/>
-      <stop offset="30%" style="stop-color:#3B2F28"/>
-      <stop offset="70%" style="stop-color:#2D221C"/>
-      <stop offset="100%" style="stop-color:#1F1611"/>
-    </linearGradient>
-    
     <!-- Gradient pour la lettre K -->
     <linearGradient id="icon192LetterK" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FFFFFF"/>
@@ -38,10 +30,7 @@
     </filter>
   </defs>
   
-  <!-- Fond principal avec coins arrondis -->
-  <rect width="192" height="192" rx="42" fill="url(#icon192Bg)"/>
-  
-  <!-- Motif subtil de fond -->
+  <!-- Motif subtil de fond (transparent) -->
   <g opacity="0.1">
     <path d="M24,96 Q96,76 168,96" stroke="#D4BE9F" stroke-width="2.5" fill="none"/>
     <path d="M24,116 Q96,96 168,116" stroke="#B5A089" stroke-width="2.5" fill="none"/>

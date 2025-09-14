@@ -3,6 +3,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, X, LinkSimple } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -159,76 +160,60 @@ const BioPage: React.FC = () => {
       </div>
 
       {/* Modal de confirmation pour les liens */}
-      {modalMounted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
-              isModalOpen && !isClosing ? 'animate-fadeIn' : 'animate-fadeOut'
-            }`} 
-            onClick={closeModal} 
-          />
-          <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-xl border border-border transition-all duration-300 ${
-              isModalOpen && !isClosing 
-                ? 'animate-modalSlideIn' 
-                : 'animate-modalSlideOut'
-            }`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
-              onClick={closeModal}
-            >
-              <X size={20} className="text-muted-foreground" />
-            </button>
-            {selectedLink && (
-              <>
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="bg-accent/10 p-3 rounded-xl">
-                    {(() => {
-                      const link = bioLinks.find(l => l.title === selectedLink.name);
-                      if (link) {
-                        const IconComponent = getIcon(link.icon || 'LinkSimple');
-                        return <IconComponent size={24} className="text-accent" />;
-                      }
-                      return <LinkSimple size={24} className="text-accent" />;
-                    })()}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">{selectedLink.name}</h3>
-                    <p className="text-muted-foreground">{selectedLink.description}</p>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-                </p>
-                <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-                  <code className="text-sm text-foreground break-all font-mono">
-                    {selectedLink.url}
-                  </code>
-                </div>
-                <div className="flex justify-end space-x-3">
-                  <Button 
-                    variant="outline" 
-                    onClick={closeModal}
-                    className="hover:bg-accent/10"
-                  >
-                    Annuler
-                  </Button>
-                  <Button 
-                    onClick={handleLinkConfirm} 
-                    className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-                  >
-                    Ouvrir le lien
-                  </Button>
-                </div>
-              </>
-            )}
+      <Modal
+        isOpen={modalMounted}
+        onClose={closeModal}
+        title={selectedLink?.name || "Lien"}
+        size="md"
+      >
+        {selectedLink && (
+          <div className="space-y-6">
+            <div className="flex items-center space-x-4">
+              <div className="bg-accent/10 p-3 rounded-xl">
+                {(() => {
+                  const link = bioLinks.find(l => l.title === selectedLink.name);
+                  if (link) {
+                    const IconComponent = getIcon(link.icon || 'LinkSimple');
+                    return <IconComponent size={24} className="text-accent" />;
+                  }
+                  return <LinkSimple size={24} className="text-accent" />;
+                })()}
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">{selectedLink.description}</h3>
+                <p className="text-muted-foreground text-sm">Ouvrir dans un nouvel onglet</p>
+              </div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground">
+              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+            </p>
+            
+            <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
+              <code className="text-sm text-foreground break-all font-mono">
+                {selectedLink.url}
+              </code>
+            </div>
+            
+            <div className="flex justify-end space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={closeModal}
+                className="hover:bg-accent/10"
+              >
+                Annuler
+              </Button>
+              <Button 
+                onClick={handleLinkConfirm} 
+                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+              >
+                <ArrowUpRight className="w-4 h-4 mr-2" />
+                Ouvrir le lien
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
     </div>
   );
 };

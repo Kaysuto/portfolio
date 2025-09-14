@@ -146,7 +146,7 @@ export function Navbar() {
                 variant={activeSection === 'bio' ? "default" : "ghost"}
                 size="sm"
                 className={cn(
-                  "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
+                  "relative px-4 py-2 font-semibold group flex items-center transition-none",
                   activeSection === 'bio'
                     ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"
@@ -220,7 +220,7 @@ export function Navbar() {
                 className={cn(
                   "w-full text-left px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
                   activeSection === item.id
-                    ? "bg-accent text-accent-foreground shadow-md scale-105 hover:bg-accent/90 hover:text-accent-foreground"
+                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"
                 )}
                 style={{ animationDelay: isMobileMenuOpen ? `${(index + 1) * 0.1}s` : undefined }}
@@ -233,17 +233,23 @@ export function Navbar() {
             ))}
             
             {/* Lien Bio Mobile */}
-            <Link
-              to="/bio"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "w-full text-left px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
-                "hover:bg-accent/10 hover:text-accent"
-              )}
-              style={{ animationDelay: isMobileMenuOpen ? `${5 * 0.1}s` : undefined }}
-            >
-              <span className="z-10">Bio</span>
+            <Link to="/bio" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button
+                variant={activeSection === 'bio' ? "default" : "ghost"}
+                size="sm"
+                className={cn(
+                  "w-full text-left px-4 py-2 font-semibold group flex items-center transition-none",
+                  activeSection === 'bio'
+                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+                    : "hover:bg-accent/10 hover:text-accent"
+                )}
+                style={{ animationDelay: isMobileMenuOpen ? `${5 * 0.1}s` : undefined }}
+              >
+                <span className="z-10">Bio</span>
+                {activeSection === 'bio' && (
+                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
+                )}
+              </Button>
             </Link>
           </div>
         </div>

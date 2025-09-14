@@ -1,41 +1,15 @@
 import { Code, GithubLogo, LinkedinLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { useModal } from "@/hooks/useModal"
+import { Modal } from "@/components/ui/Modal"
 import { useState, useEffect } from "react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
   
   // Modal states
-  const { isModalOpen: isGithubModalOpen, modalMounted: githubModalMounted, isClosing: isGithubClosing, openModal: openGithubModal, closeModal: closeGithubModal } = useModal()
-  const { isModalOpen: isLinkedinModalOpen, modalMounted: linkedinModalMounted, isClosing: isLinkedinClosing, openModal: openLinkedinModal, closeModal: closeLinkedinModal } = useModal()
-  
-  const [showGithubModalPanel, setShowGithubModalPanel] = useState(false)
-  const [showLinkedinModalPanel, setShowLinkedinModalPanel] = useState(false)
-
-  // Gère le fade-out pour GitHub modal
-  useEffect(() => {
-    if (isGithubModalOpen) {
-      setShowGithubModalPanel(true)
-    } else if (isGithubClosing) {
-      const timeout = setTimeout(() => setShowGithubModalPanel(false), 300)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowGithubModalPanel(false)
-    }
-  }, [isGithubModalOpen, isGithubClosing])
-
-  // Gère le fade-out pour LinkedIn modal
-  useEffect(() => {
-    if (isLinkedinModalOpen) {
-      setShowLinkedinModalPanel(true)
-    } else if (isLinkedinClosing) {
-      const timeout = setTimeout(() => setShowLinkedinModalPanel(false), 300)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowLinkedinModalPanel(false)
-    }
-  }, [isLinkedinModalOpen, isLinkedinClosing])
+  const { isModalOpen: isGithubModalOpen, modalMounted: githubModalMounted, openModal: openGithubModal, closeModal: closeGithubModal } = useModal()
+  const { isModalOpen: isLinkedinModalOpen, modalMounted: linkedinModalMounted, openModal: openLinkedinModal, closeModal: closeLinkedinModal } = useModal()
 
   return (
     <footer className="bg-card border-t border-border py-12 px-6 animate-fadeInUp">
@@ -109,20 +83,23 @@ export function Footer() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-2 hover:bg-accent/10 group"
+                className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
                 onClick={openGithubModal}
               >
-                <GithubLogo size={18} className="text-muted-foreground hover:text-accent transition-all duration-200 transform-gpu group-hover:rotate-[18deg] group-hover:scale-110" />
+                <GithubLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-2 hover:bg-accent/10 group"
+                className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
                 onClick={openLinkedinModal}
               >
-                <LinkedinLogo size={18} className="text-muted-foreground hover:text-accent transition-colors duration-200" />
+                <LinkedinLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:scale-110" />
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Retrouvez mes projets sur GitHub et connectons-nous sur LinkedIn pour échanger sur nos expériences professionnelles.
+            </p>
           </div>
         </div>
 
@@ -143,128 +120,104 @@ export function Footer() {
       </div>
 
       {/* GitHub Modal */}
-      {githubModalMounted && showGithubModalPanel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isGithubModalOpen && !isGithubClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
-            onClick={closeGithubModal} 
-          />
-          <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
-              isGithubModalOpen && !isGithubClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
-            }`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
-              onClick={closeGithubModal}
-            >
-              <X size={20} className="text-muted-foreground" />
-            </button>
-            <div className="flex items-center space-x-4 mb-6">
-              <div className="bg-accent/10 p-3 rounded-xl">
-                <GithubLogo size={24} className="text-accent" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground">GitHub</h3>
-                <p className="text-muted-foreground">Mes projets et contributions</p>
-              </div>
+      <Modal
+        isOpen={githubModalMounted}
+        onClose={closeGithubModal}
+        title="GitHub"
+        size="md"
+      >
+        <div className="space-y-6">
+          <div className="flex items-center space-x-4">
+            <div className="bg-accent/10 p-3 rounded-xl">
+              <GithubLogo size={24} className="text-accent" />
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-            </p>
-            <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-              <code className="text-sm text-foreground break-all font-mono">
-                https://github.com/Kaysuto
-              </code>
-            </div>
-            <div className="flex justify-end space-x-3">
-              <Button 
-                variant="outline" 
-                onClick={closeGithubModal}
-                className="hover:bg-accent/10"
-              >
-                Annuler
-              </Button>
-              <Button 
-                onClick={() => {
-                  window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer")
-                  closeGithubModal()
-                }}
-                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-              >
-                Ouvrir le lien
-              </Button>
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Mes projets et contributions</h3>
+              <p className="text-muted-foreground text-sm">Découvrez mon profil GitHub</p>
             </div>
           </div>
+          
+          <p className="text-sm text-muted-foreground">
+            Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+          </p>
+          
+          <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
+            <code className="text-sm text-foreground break-all font-mono">
+              https://github.com/Kaysuto
+            </code>
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <Button 
+              variant="outline" 
+              onClick={closeGithubModal}
+              className="hover:bg-accent/10"
+            >
+              Annuler
+            </Button>
+            <Button 
+              onClick={() => {
+                window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer")
+                closeGithubModal()
+              }}
+              className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+            >
+              <GithubLogo className="w-4 h-4 mr-2" />
+              Ouvrir GitHub
+            </Button>
+          </div>
         </div>
-      )}
+      </Modal>
 
       {/* LinkedIn Modal */}
-      {linkedinModalMounted && showLinkedinModalPanel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className={`fixed inset-0 bg-black/40 modal-overlay transition-opacity duration-300 ease-in-out ${isLinkedinModalOpen && !isLinkedinClosing ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
-            onClick={closeLinkedinModal} 
-          />
-          <div
-            className={`relative bg-card rounded-2xl w-full max-w-md p-6 shadow-2xl border border-border modal-panel transition-all duration-300 ease-in-out ${
-              isLinkedinModalOpen && !isLinkedinClosing 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
-            }`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <button
-              aria-label="Fermer"
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/10 transition-colors"
-              onClick={closeLinkedinModal}
-            >
-              <X size={20} className="text-muted-foreground" />
-            </button>
-            <div className="flex items-center space-x-4 mb-6">
-              <div className="bg-accent/10 p-3 rounded-xl">
-                <LinkedinLogo size={24} className="text-accent" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground">LinkedIn</h3>
-                <p className="text-muted-foreground">Profil professionnel</p>
-              </div>
+      <Modal
+        isOpen={linkedinModalMounted}
+        onClose={closeLinkedinModal}
+        title="LinkedIn"
+        size="md"
+      >
+        <div className="space-y-6">
+          <div className="flex items-center space-x-4">
+            <div className="bg-accent/10 p-3 rounded-xl">
+              <LinkedinLogo size={24} className="text-accent" />
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-            </p>
-            <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-              <code className="text-sm text-foreground break-all font-mono">
-                https://www.linkedin.com/in/enzo-lauret/
-              </code>
-            </div>
-            <div className="flex justify-end space-x-3">
-              <Button 
-                variant="outline" 
-                onClick={closeLinkedinModal}
-                className="hover:bg-accent/10"
-              >
-                Annuler
-              </Button>
-              <Button 
-                onClick={() => {
-                  window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank", "noopener,noreferrer")
-                  closeLinkedinModal()
-                }}
-                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-              >
-                Ouvrir le lien
-              </Button>
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Profil professionnel</h3>
+              <p className="text-muted-foreground text-sm">Connectons-nous sur LinkedIn</p>
             </div>
           </div>
+          
+          <p className="text-sm text-muted-foreground">
+            Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+          </p>
+          
+          <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
+            <code className="text-sm text-foreground break-all font-mono">
+              https://www.linkedin.com/in/enzo-lauret/
+            </code>
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <Button 
+              variant="outline" 
+              onClick={closeLinkedinModal}
+              className="hover:bg-accent/10"
+            >
+              Annuler
+            </Button>
+            <Button 
+              onClick={() => {
+                window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank", "noopener,noreferrer")
+                closeLinkedinModal()
+              }}
+              className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+            >
+              <LinkedinLogo className="w-4 h-4 mr-2" />
+              Ouvrir LinkedIn
+            </Button>
+          </div>
         </div>
-      )}
+      </Modal>
     </footer>
   );
 }

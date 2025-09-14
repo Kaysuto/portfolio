@@ -3,6 +3,19 @@
 body.radix-select-content-opened {
   overflow-y: auto !important;
 }
+
+/* Modal scroll lock - Force le blocage du scroll */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
+html.modal-open {
+  overflow: hidden !important;
+}
+
 /* stylelint-disable at-rule-no-unknown */
 @import 'tailwindcss';
 @import "tw-animate-css";
@@ -461,11 +474,11 @@ html {
 }
 
 .animate-modalSlideIn {
-  animation: fadeIn 0.25s ease-out forwards;
+  animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .animate-modalSlideOut {
-  animation: fadeOut 0.25s ease-out forwards;
+  animation: modalSlideOut 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
 }
 
 .animate-scaleIn {
