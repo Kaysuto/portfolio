@@ -3,7 +3,7 @@ import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { DemoModal } from "@/components/ui/DemoModal"
+import { DemoModal } from "@/components/ui/ProjectModal"
 import { getProjects } from "@/lib/supabase"
 
 interface Project {

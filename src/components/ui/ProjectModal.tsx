@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowSquareOut } from '@phosphor-icons/react';
 import { Button } from './button';
-import { SimpleAdminModal } from './SimpleAdminModal';
+import { Modal } from './Modal';
+import { useModal } from '@/hooks/useModal';
 
 interface DemoModalProps {
   isOpen: boolean;
@@ -16,16 +17,36 @@ export function DemoModal({
   projectTitle,
   projectUrl
 }: DemoModalProps) {
-  const handleOpenDemo = () => {
-    window.open(projectUrl, "_blank", "noopener,noreferrer");
-    onClose();
+  const { modalMounted, isClosing, openModal, closeModal } = useModal();
+
+  // Synchroniser avec l'état externe
+  useEffect(() => {
+    if (isOpen && !modalMounted) {
+      openModal();
+    } else if (!isOpen && modalMounted) {
+      closeModal();
+    }
+  }, [isOpen, modalMounted, openModal, closeModal]);
+
+  const handleClose = () => {
+    closeModal();
+    // Appeler onClose après l'animation
+    setTimeout(() => onClose(), 220);
   };
 
+  const handleOpenDemo = () => {
+    window.open(projectUrl, "_blank", "noopener,noreferrer");
+    handleClose();
+  };
+
+  if (!modalMounted) return null;
+
   return (
-    <SimpleAdminModal
-      isOpen={isOpen}
-      onClose={onClose}
+    <Modal
+      isOpen={modalMounted}
+      onClose={handleClose}
       maxWidth="max-w-lg"
+      isClosing={isClosing}
     >
       <div className="space-y-6">
         <div className="flex items-center space-x-4">
@@ -55,7 +76,7 @@ export function DemoModal({
           <Button
             type="button"
             variant="outline"
-            onClick={onClose}
+            onClick={handleClose}
             className="flex-1"
           >
             Annuler
@@ -70,6 +91,6 @@ export function DemoModal({
           </Button>
         </div>
       </div>
-    </SimpleAdminModal>
+    </Modal>
   );
 }

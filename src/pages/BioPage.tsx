@@ -163,51 +163,56 @@ const BioPage: React.FC = () => {
       <Modal
         isOpen={modalMounted}
         onClose={closeModal}
-        title={selectedLink?.name || "Lien"}
-        size="md"
+        maxWidth="max-w-lg"
+        isClosing={isClosing}
       >
         {selectedLink && (
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
-              <div className="bg-accent/10 p-3 rounded-xl">
+              <div className="h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center">
                 {(() => {
                   const link = bioLinks.find(l => l.title === selectedLink.name);
                   if (link) {
                     const IconComponent = getIcon(link.icon || 'LinkSimple');
-                    return <IconComponent size={24} className="text-accent" />;
+                    return <IconComponent className="h-6 w-6 text-accent" />;
                   }
-                  return <LinkSimple size={24} className="text-accent" />;
+                  return <LinkSimple className="h-6 w-6 text-accent" />;
                 })()}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">{selectedLink.description}</h3>
-                <p className="text-muted-foreground text-sm">Ouvrir dans un nouvel onglet</p>
+                <h3 className="text-lg font-medium">{selectedLink.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {selectedLink.description}
+                </p>
               </div>
             </div>
             
-            <p className="text-sm text-muted-foreground">
-              Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-            </p>
-            
-            <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
-              <code className="text-sm text-foreground break-all font-mono">
-                {selectedLink.url}
-              </code>
+            <div className="bg-muted/50 rounded-md p-4">
+              <p className="text-sm text-muted-foreground mb-2">
+                Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+              </p>
+              <div className="bg-background border border-border rounded-md p-3">
+                <code className="text-sm text-foreground break-all font-mono">
+                  {selectedLink.url}
+                </code>
+              </div>
             </div>
             
-            <div className="flex justify-end space-x-3">
+            <div className="flex gap-3 pt-4">
               <Button 
+                type="button"
                 variant="outline" 
                 onClick={closeModal}
-                className="hover:bg-accent/10"
+                className="flex-1"
               >
                 Annuler
               </Button>
               <Button 
+                type="button"
                 onClick={handleLinkConfirm} 
-                className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+                className="flex-1 bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]"
               >
-                <ArrowUpRight className="w-4 h-4 mr-2" />
+                <ArrowUpRight className="h-4 w-4 mr-2" />
                 Ouvrir le lien
               </Button>
             </div>
