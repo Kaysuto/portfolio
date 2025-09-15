@@ -1,15 +1,14 @@
 import { Code, GithubLogo, LinkedinLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { useModal } from "@/hooks/useModal"
-import { Modal } from "@/components/ui/Modal"
+import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
 import { useState, useEffect } from "react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
   
   // Modal states
-  const { isModalOpen: isGithubModalOpen, modalMounted: githubModalMounted, openModal: openGithubModal, closeModal: closeGithubModal } = useModal()
-  const { isModalOpen: isLinkedinModalOpen, modalMounted: linkedinModalMounted, openModal: openLinkedinModal, closeModal: closeLinkedinModal } = useModal()
+  const [isGithubModalOpen, setIsGithubModalOpen] = useState(false)
+  const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false)
 
   return (
     <footer className="bg-card border-t border-border py-12 px-6 animate-fadeInUp">
@@ -84,7 +83,7 @@ export function Footer() {
                 variant="ghost"
                 size="sm"
                 className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
-                onClick={openGithubModal}
+                onClick={() => setIsGithubModalOpen(true)}
               >
                 <GithubLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
               </Button>
@@ -92,7 +91,7 @@ export function Footer() {
                 variant="ghost"
                 size="sm"
                 className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
-                onClick={openLinkedinModal}
+                onClick={() => setIsLinkedinModalOpen(true)}
               >
                 <LinkedinLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:scale-110" />
               </Button>
@@ -119,105 +118,15 @@ export function Footer() {
         </div>
       </div>
 
-      {/* GitHub Modal */}
-      <Modal
-        isOpen={githubModalMounted}
-        onClose={closeGithubModal}
-        title="GitHub"
-        size="md"
-      >
-        <div className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <div className="bg-accent/10 p-3 rounded-xl">
-              <GithubLogo size={24} className="text-accent" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Mes projets et contributions</h3>
-              <p className="text-muted-foreground text-sm">Découvrez mon profil GitHub</p>
-            </div>
-          </div>
-          
-          <p className="text-sm text-muted-foreground">
-            Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-          </p>
-          
-          <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
-            <code className="text-sm text-foreground break-all font-mono">
-              https://github.com/Kaysuto
-            </code>
-          </div>
-          
-          <div className="flex justify-end space-x-3">
-            <Button 
-              variant="outline" 
-              onClick={closeGithubModal}
-              className="hover:bg-accent/10"
-            >
-              Annuler
-            </Button>
-            <Button 
-              onClick={() => {
-                window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer")
-                closeGithubModal()
-              }}
-              className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-            >
-              <GithubLogo className="w-4 h-4 mr-2" />
-              Ouvrir GitHub
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* LinkedIn Modal */}
-      <Modal
-        isOpen={linkedinModalMounted}
-        onClose={closeLinkedinModal}
-        title="LinkedIn"
-        size="md"
-      >
-        <div className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <div className="bg-accent/10 p-3 rounded-xl">
-              <LinkedinLogo size={24} className="text-accent" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Profil professionnel</h3>
-              <p className="text-muted-foreground text-sm">Connectons-nous sur LinkedIn</p>
-            </div>
-          </div>
-          
-          <p className="text-sm text-muted-foreground">
-            Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-          </p>
-          
-          <div className="bg-muted/20 p-4 rounded-lg border border-border/50">
-            <code className="text-sm text-foreground break-all font-mono">
-              https://www.linkedin.com/in/enzo-lauret/
-            </code>
-          </div>
-          
-          <div className="flex justify-end space-x-3">
-            <Button 
-              variant="outline" 
-              onClick={closeLinkedinModal}
-              className="hover:bg-accent/10"
-            >
-              Annuler
-            </Button>
-            <Button 
-              onClick={() => {
-                window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank", "noopener,noreferrer")
-                closeLinkedinModal()
-              }}
-              className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-            >
-              <LinkedinLogo className="w-4 h-4 mr-2" />
-              Ouvrir LinkedIn
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* Modaux pour les réseaux sociaux */}
+      <GitHubFooterModal 
+        isOpen={isGithubModalOpen} 
+        onClose={() => setIsGithubModalOpen(false)} 
+      />
+      <LinkedInFooterModal 
+        isOpen={isLinkedinModalOpen} 
+        onClose={() => setIsLinkedinModalOpen(false)} 
+      />
     </footer>
   );
 }

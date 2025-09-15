@@ -3,8 +3,7 @@ import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Modal } from "@/components/ui/Modal"
-import { SimpleModal } from "@/components/ui/SimpleModal"
+import { DemoModal } from "@/components/ui/DemoModal"
 import { getProjects } from "@/lib/supabase"
 
 interface Project {
@@ -32,17 +31,17 @@ export function ProjectCards() {
   // Prevent multiple calls
   const hasFetched = useRef(false)
   
-  // Modal state
+  // Modal state simplifié
   const [modalProject, setModalProject] = useState<Project | null>(null)
-  const [showModalPanel, setShowModalPanel] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
-  const openModal = (project: Project) => {
+  const openProjectModal = (project: Project) => {
     setModalProject(project)
-    setShowModalPanel(true)
+    setShowModal(true)
   }
 
-  const closeModal = () => {
-    setShowModalPanel(false)
+  const closeProjectModal = () => {
+    setShowModal(false)
     setModalProject(null)
   }
 
@@ -186,7 +185,7 @@ export function ProjectCards() {
                     <span className="text-muted-foreground text-xs">Aucune technologie</span>
                   )}
                 </div>
-                {/* Footer : statut, bouton Demo & date */}
+                {/* Footer : statut, bouton Voir le projet & date */}
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-border gap-2">
                   <span className="text-xs font-semibold px-2 py-1 rounded bg-accent/10 text-accent">
                     {project.status}
@@ -195,11 +194,11 @@ export function ProjectCards() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[90px] max-w-[120px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-[#070201] dark:hover:text-[#221512] hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
-                      onClick={() => openModal(project)}
+                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[110px] max-w-[140px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-[#070201] dark:hover:text-[#221512] hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
+                      onClick={() => openProjectModal(project)}
                     >
                       <ArrowSquareOut size={14} className="group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5 transition-transform duration-200" />
-                      <span>Demo</span>
+                      <span>Voir le projet</span>
                     </Button>
                   )}
                   <span className="text-xs text-muted-foreground">
@@ -220,51 +219,15 @@ export function ProjectCards() {
         <pre className="text-xs text-muted-foreground bg-background p-3 rounded">{JSON.stringify(debug, null, 2)}</pre>
       )}
 
-      {/* Modal for Demo project */}
-      <Modal
-        isOpen={showModalPanel && !!modalProject}
-        onClose={closeModal}
-        title="Voir la démo"
-      >
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="bg-accent/10 p-3 rounded-xl">
-            <ArrowSquareOut size={24} className="text-accent" />
-          </div>
-          <div>
-            <p className="text-muted-foreground">
-              Accédez à la démo du projet <strong>{modalProject?.title}</strong>.
-            </p>
-          </div>
-        </div>
-        <p className="text-sm text-muted-foreground mb-4">
-          Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
-        </p>
-        <div className="bg-muted/20 p-4 rounded-lg mb-6 border border-border/50">
-          <code className="text-sm text-foreground break-all font-mono">
-            {modalProject?.demo_url}
-          </code>
-        </div>
-        <div className="flex justify-end space-x-3">
-          <Button 
-            variant="outline" 
-            onClick={closeModal}
-            className="hover:bg-accent/10"
-          >
-            Annuler
-          </Button>
-          <a
-            href={modalProject?.demo_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-            onClick={closeModal}
-          >
-            <Button className="bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512] px-4 py-2">
-              Ouvrir le lien
-            </Button>
-          </a>
-        </div>
-      </Modal>
+      {/* Modal pour voir le projet - Version simplifiée */}
+      {modalProject && (
+        <DemoModal
+          isOpen={showModal}
+          onClose={closeProjectModal}
+          projectTitle={modalProject.title}
+          projectUrl={modalProject.demo_url || ''}
+        />
+      )}
     </div>
   )
 }

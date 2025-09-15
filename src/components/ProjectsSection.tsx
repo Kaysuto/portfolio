@@ -2,9 +2,8 @@ import { useState, useEffect } from "react"
 import { GithubLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
-import { useModal } from "@/hooks/useModal"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
-import { Modal } from "@/components/ui/Modal"
+import { GitHubModal } from "@/components/ui/GitHubModal"
 
 interface GitHubStats {
   public_repos: number
@@ -15,7 +14,10 @@ interface GitHubStats {
 export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const { isModalOpen, modalMounted, isClosing, openModal, closeModal } = useModal()
+  const [showModal, setShowModal] = useState(false)
+
+  const openModal = () => setShowModal(true)
+  const closeModal = () => setShowModal(false)
 
   // Compteurs animés pour les statistiques GitHub
   const reposCounter = useCounterAnimation({ 
@@ -156,33 +158,11 @@ export function ProjectsSection() {
         </div>
       </div>
 
-      {/* Modal for GitHub projects */}
-      <Modal
-        isOpen={modalMounted}
+      {/* Modal for GitHub projects - Version simplifiée */}
+      <GitHubModal
+        isOpen={showModal}
         onClose={closeModal}
-        title="Voir mes projets GitHub"
-        size="md"
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Vous pouvez consulter tous mes projets directement sur mon profil GitHub.
-          </p>
-          <div className="flex justify-end">
-            <a
-              href="https://github.com/Kaysuto"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-              onClick={closeModal}
-            >
-              <Button className="bg-accent text-[#070201] dark:text-[#221512] px-4 py-2 hover:bg-accent/90 transition-all duration-300">
-                <GithubLogo className="w-4 h-4 mr-2" />
-                Voir sur GitHub
-              </Button>
-            </a>
-          </div>
-        </div>
-      </Modal>
+      />
     </section>
   );
 }

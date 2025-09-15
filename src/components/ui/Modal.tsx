@@ -27,6 +27,8 @@ export function Modal({
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null)
   const previousActiveElement = useRef<HTMLElement | null>(null)
+  const savedScrollY = useRef<number>(0)
+  const isModalMounted = useRef<boolean>(false)
 
   const sizeClasses = {
     sm: 'max-w-sm',
@@ -36,52 +38,65 @@ export function Modal({
   }
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isModalMounted.current) {
+      // Modal s'ouvre - sauvegarder la position et bloquer le scroll
+      isModalMounted.current = true
       previousActiveElement.current = document.activeElement as HTMLElement
+      savedScrollY.current = window.scrollY
       
-      // Bloquer le scroll de manière simple - sans event listeners
       const body = document.body
-      const html = document.documentElement
-      const scrollY = window.scrollY
       
       body.style.overflow = 'hidden'
       body.style.position = 'fixed'
-      body.style.top = `-${scrollY}px`
+      body.style.top = `-${savedScrollY.current}px`
       body.style.width = '100%'
       body.classList.add('modal-open')
       
-      // Focus management simple
       setTimeout(() => {
         if (modalRef.current) {
           modalRef.current.focus()
         }
       }, 100)
       
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          onClose()
-        }
-      }
-
-      document.addEventListener('keydown', handleKeyDown)
+    } else if (!isOpen && isModalMounted.current) {
+      // Modal se ferme - restaurer la position
+      isModalMounted.current = false
       
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown)
-        
-        // Restore scroll
-        body.style.overflow = ''
-        body.style.position = ''
-        body.style.top = ''
-        body.style.width = ''
-        body.classList.remove('modal-open')
-        
-        window.scrollTo(0, scrollY)
-        
-        setTimeout(() => {
-          previousActiveElement.current?.focus()
-        }, 100)
+      const body = document.body
+      
+      body.style.overflow = ''
+      body.style.position = ''
+      body.style.top = ''
+      body.style.width = ''
+      body.classList.remove('modal-open')
+      
+      // Restaurer la position de scroll
+      window.scrollTo(0, savedScrollY.current)
+      
+      setTimeout(() => {
+        if (previousActiveElement.current) {
+          try {
+            previousActiveElement.current.focus()
+          } catch (e) {
+            // Ignorer les erreurs de focus
+          }
+        }
+      }, 100)
+    }
+  }, [isOpen])
+
+  // Gestion des événements clavier
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
       }
     }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
   if (!isOpen) {
