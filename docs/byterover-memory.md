@@ -9,6 +9,7 @@ Contexte initial (15-09-2025)
 - Problèmes repérés: README avec doublons et caractères d’encodage "�"; besoin d’une mémoire unique consolidée.
 
 Journal (anti-chronologique)
+- 2025-09-15T00:35:00Z — Sauvegarde consolidée Byterover effectuée (commit 46411b7), plan clôturé.
 - 2025-09-15T00:20:00Z — Contrôle de sécurité Git: aucune suppression de fichiers utiles; seuls README.md, ARCHITECTURE.md et .gitignore modifiés; dossier docs/ ajouté.
 - 2025-09-15T00:10:00Z — Réécriture de README.md et ARCHITECTURE.md (nettoyage doublons, structure unifiée, alignement scripts/package.json).
 - 2025-09-15T00:00:00Z — Création de la mémoire unique locale (ce fichier) pour tracer toutes les étapes du plan "Cleanup+Docs Refresh v1".
