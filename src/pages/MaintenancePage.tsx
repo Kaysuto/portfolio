@@ -1,16 +1,19 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTheme } from '@/hooks/use-theme';
-import { CaretLeft } from '@phosphor-icons/react';
+import { useAuth } from '@/hooks/useAuth';
+import { CaretLeft, Sun, Moon } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { CookieBadge } from '@/components/CookieBadge';
 
 const MaintenancePage: React.FC = () => {
   // Titre fixe sans animation
   useDocumentTitle("Maintenance", { enableTypingAnimation: false });
 
-  const { theme } = useTheme();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { user, isAdmin } = useAuth();
 
   // Fetch maintenance config
   const { data: maintenanceConfig, isLoading } = useQuery({
@@ -39,6 +42,22 @@ const MaintenancePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
+      {/* Theme Controller */}
+      <div className="fixed top-6 right-6 z-50 animate-slideInFromRight">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleTheme}
+          className="p-3 bg-background/20 backdrop-blur-md border border-border/30 hover:bg-background/30 transition-all duration-300 hover:scale-110 group"
+        >
+          {theme === 'dark' ? (
+            <Sun size={20} className="text-accent-foreground group-hover:rotate-180 transition-transform duration-500" />
+          ) : (
+            <Moon size={20} className="text-accent-foreground group-hover:-rotate-12 transition-transform duration-300" />
+          )}
+        </Button>
+      </div>
+
       {/* Animated background shapes */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-20 left-10 w-24 h-24 bg-accent/10 rounded-full animate-float-slow animate-delay-700"></div>
@@ -67,18 +86,22 @@ const MaintenancePage: React.FC = () => {
             )}
           </div>
 
-          {/* Back to Admin Button */}
-          <Link to="/admin">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
-            >
-              Retour au Panneau Admin
-            </Button>
-          </Link>
+          {/* Back to Admin Button - Only for authenticated admins */}
+          {user && isAdmin && (
+            <Link to="/admin">
+              <Button
+                variant="ghost"
+                size="lg"
+                className="w-full bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512] py-3 text-lg font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/25"
+              >
+                Retour au Panneau Admin
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
+
+      <CookieBadge />
     </div>
   );
 };
