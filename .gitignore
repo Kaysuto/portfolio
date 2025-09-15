@@ -25,6 +25,8 @@ dist-ssr
 *.sw?
 
 .env
+# Variantes d'environnement
+.env.*
 **/agent-eval-report*
 packages
 pids
@@ -40,6 +42,21 @@ pids
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+
+# Fichiers d'audit temporaires (non commit)
+repo-tree.txt
+git-status-ignored.txt
+git-clean-preview.txt
+depcheck.txt
+
+# Dossiers d'outils locaux à ignorer complètement
+.kilocode/
+.roo/
+.windsurf/
+.cursor/
+.qoder/
+.augment/
+.kiro/
 
 # Fichiers vides générés automatiquement
 create-ip-whitelist.sql

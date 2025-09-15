@@ -1,20 +1,6 @@
-# 🌟 Portfolio Kimiya Kaysuto
+# 🌟 Portfolio — Kimiya Kaysuto
 
-> **Full-Stack### 🎨 Fonctionnalités
-
-### 🏠 Section Héro
-- Animation d'apparition fluide
-- CTA avec modal téléchargement CV
-- Particules flottantes interactives
-- **Curseur animé adaptatif** : Souris desktop, doigt mobile
-
-#### Curseur Adaptatif
-- **Desktop (md+)** : Souris animée avec roulette qui bouge
-- **Mobile (<md)** : Doigt stylisé avec animation de tap et glow
-- **Responsive** : Changement automatique selon la taille d'écran
-- **Accessibilité** : Labels ARIA et navigation clavier préservés
-
-[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-100%25-brightgreen?logo=lighthouse&logoColor=white)](https://kimiya-portfolio.vercel.app)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-100%25-brightgreen?logo=lighthouse&logoColor=white)](https://kimiya-portfolio.vercel.app)
 [![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white)](https://reactjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6-purple?logo=vite&logoColor=white)](https://vitejs.dev)
@@ -22,273 +8,147 @@
 
 ## 🚀 Aperçu
 
-Portfolio moderne et minimaliste présentant mon expertise polyvalente dans de multiples domaines technologiques. Design élégant avec thème dark/light, animations fluides et optimisations Lighthouse 100%.
+Portfolio moderne, minimaliste et performant (100% Lighthouse) avec thème dark/light, animations fluides, PWA et intégration Supabase optionnelle.
 
 ### ✨ Points forts
-- 🎯 **Lighthouse 100%** sur tous les critères (Performance, Accessibilité, SEO, Meilleures Pratiques)
-- 🌙 **Thème adaptatif** dark/light avec persistence
-- 📱 **PWA complète** - Installation et mode hors ligne
-- ⚡ **Performance optimale** - Code splitting et lazy loading
-- 🎨 **Design responsive** - Mobile-first avec animations
-- ♿ **Accessibilité** - ARIA, navigation clavier, lecteurs d'écran
+- 🎯 Score Lighthouse 100% (Perf, A11y, SEO, Best Practices)
+- 🌙 Thème adaptatif avec persistance
+- 📱 PWA complète (installation, offline) via `public/manifest.json` et `public/sw.js`
+- ⚡ Performance: code splitting, lazy loading, CSS critique
+- ♿ Accessibilité: ARIA, navigation clavier, contrastes conformes
 
-## 🛠️ Stack Technique
+## 🛠️ Stack technique
 
-### Frontend
-- **React 19** - Framework avec dernières fonctionnalités
-- **TypeScript 5** - Typage strict pour une meilleure robustesse
-- **Vite 6** - Bundler ultra-rapide avec HMR
-- **Tailwind CSS 4** - Framework CSS utilitaire moderne
+- React 19, TypeScript 5, Vite 6, Tailwind CSS 4
+- React Router 6, Web Vitals, Phosphor/Lucide Icons, Radix UI (sélecteurs/accessibles)
+- Supabase (optionnel) pour données dynamiques
 
-### Performance & SEO
-- **Service Worker** - Cache intelligent et mode hors ligne
-- **Code Splitting** - Chargement optimisé par chunks
-- **Critical CSS** - Styles critiques inlinés pour LCP
-- **Web Vitals** - Monitoring des performances en temps réel
-- **Meta tags** - SEO optimisé avec Open Graph et Twitter Cards
-- **Cache optimisé** - Headers HTTP et Service Worker pour Lighthouse 100%
+## 🎨 Fonctionnalités principales
 
-### Outils & Qualité
-- **ESLint & Prettier** - Linting et formatage automatique
-- **Phosphor Icons** - Bibliothèque d'icônes moderne
-- **Terser** - Minification JavaScript avancée
+- Héro avec particules, CTA CV, et curseur/interaction adaptative (desktop/mobile)
+- Sections: À propos, Projets (filtrage), Contact (validation + liens sociaux)
+- PWA avec cache intelligent dans `sw.js`
 
-## 🎨 Fonctionnalités
-
-### � Fonctionnalités
-
-### �🏠 Section Héro
-- Animation d'apparition fluide
-- CTA avec modal téléchargement CV
-- Particules flottantes interactives
-- **Curseur animé adaptatif** : Souris desktop, doigt mobile
-
-### 👤 À Propos
-- Présentation expertise polyvalente
-- Grille de compétences techniques
-- Animation au scroll
-
-### 💼 Projets
-- Intégration Supabase pour données dynamiques
-- Filtrage par statut et technologie
-- Cards interactives avec liens externes
-
-### 📧 Contact
-- Formulaire fonctionnel avec validation
-- Dropdowns personnalisés sans bibliothèque
-- Intégration réseaux sociaux
-
-## 🚀 Installation & Développement
+## 🚀 Démarrage
 
 ### Prérequis
 - Node.js 18+
-- npm ou pnpm
+- npm (ou pnpm/yarn)
 
 ### Installation
-```bash
-# Cloner le repository
+
+```powershell
+# Cloner
 git clone https://github.com/Kaysuto/kimiyas-minimalist-p.git
 cd kimiyas-minimalist-p
 
-# Installer les dépendances
+# Installer
 npm install
 
-# Variables d'environnement (optionnel pour Supabase)
-cp .env.example .env.local
-# Configurer VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY
+# Variables d'environnement (option Supabase)
+# Copiez puis renseignez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY
+Copy-Item .env.example .env.local
 ```
 
-### Scripts disponibles
+### Scripts
 
-```bash
-# Démarrer le serveur de développement
-npm run dev
-
-# Build de production
-npm run build
-
-# Prévisualiser le build
-npm run preview
-
-# Linter & formatage
-npm run lint
-npm run format
-
-# Optimisations Lighthouse
-node scripts/lighthouse-optimization.mjs
+```powershell
+npm run dev       # Démarrer le serveur de dev
+npm run build     # Build production (tsc + vite)
+npm run preview   # Prévisualiser le build local
+npm run lint      # Lint du code
 ```
 
 ## 📊 Optimisations Lighthouse
 
-### Performance (100/100)
-- ⚡ Bundle optimisé : **261KB** gzippé
-- 🔀 Code splitting automatique (React, Phosphor, composants)
-- 📦 Lazy loading des sections non-critiques
-- 🎨 CSS critique inliné pour LCP < 1.5s
+- Code splitting automatique (vendor, UI, icônes)
+- Lazy loading des sections non-critiques
+- CSS critique pour LCP rapide (< 1.5s cible)
+- Headers de cache recommandés (voir plus bas)
 
-### Accessibilité (100/100)
-- 🏷️ ARIA labels complets
-- ⌨️ Navigation clavier optimisée
-- 📱 Support lecteurs d'écran
-- 🎯 Ratios de contraste conformes WCAG 2.1
+## 📁 Structure du projet
 
-### Meilleures Pratiques (100/100)
-- 🔒 Headers de sécurité configurés
-- 📱 PWA complète avec manifest et service worker
-- 🌐 HTTPS et protocoles sécurisés
-- ⚠️ Gestion d'erreurs robuste
-
-### SEO (100/100)
-- 🏷️ Meta tags complets (Open Graph, Twitter Cards)
-- 🗺️ Sitemap.xml et robots.txt optimisés
-- 📊 Données structurées JSON-LD
-- 📱 Mobile-friendly et responsive
+```
+kimiyas-minimalist-p/
+├── public/                 # Assets statiques (manifest, sw.js, icons)
+├── src/
+│   ├── components/         # Composants (UI, sections)
+│   ├── hooks/              # Hooks personnalisés
+│   ├── lib/                # Config/utilitaires (supabase, theme, utils)
+│   ├── pages/              # Pages (Bio, Maintenance)
+│   └── styles/             # Styles globaux
+├── database/               # SQL et scripts DB
+├── docs/                   # Mémoire Byterover consolidée
+├── dist/                   # Build (ignoré en CI)
+└── config                  # Vite/Tailwind/TS (fichiers racine)
+```
 
 ## 🌐 Déploiement
 
-### Vercel (Recommandé)
-```bash
-# Installation Vercel CLI
+### Vercel (recommandé)
+```powershell
 npm i -g vercel
-
-# Déploiement
 vercel --prod
 ```
 
 ### Build manuel
-```bash
-# Générer le build
+```powershell
 npm run build
-
-# Le dossier dist/ contient les fichiers statiques
-# Déployable sur tout hébergeur statique
+# Le dossier dist/ contient les fichiers statiques à déployer
 ```
 
 ## 🔧 Configuration
 
 ### Thème
-Le système de thème utilise une approche hybride :
-- **Cookie** pour persistence serveur
-- **localStorage** pour synchronisation client
-- **CSS variables** pour transitions fluides
+- Persistance: cookie + localStorage
+- Variables CSS pour transitions fluides
 
 ### PWA
-Configuration complète dans :
-- `public/manifest.json` - Métadonnées PWA
-- `public/sw.js` - Service Worker avec cache intelligent
-- Support installation et mode hors ligne
+- `public/manifest.json` et `public/sw.js`
+- Stratégie cache: statiques agressifs + network-first pour le reste
 
-### Analytics (Optionnel)
-Intégration Web Vitals pour monitoring :
-```javascript
-// Déjà configuré dans src/main.tsx
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals'
-```
+### Analytics
+- Web Vitals intégré (voir `src/main.tsx`)
 
-## 📁 Structure du Projet
+## ⚡ Cache HTTP recommandé
 
-```
-kimiyas-minimalist-p/
-├── public/                 # Assets statiques
-│   ├── manifest.json      # PWA manifest
-│   ├── sw.js             # Service Worker
-│   ├── robots.txt        # SEO robots
-│   └── sitemap.xml       # Plan du site
-├── src/
-│   ├── components/       # Composants React
-│   │   ├── ui/          # Composants UI réutilisables
-│   │   └── ...          # Composants spécifiques
-│   ├── hooks/           # Hooks personnalisés
-│   ├── lib/             # Utilitaires et configuration
-│   └── styles/          # Styles globaux
-├── scripts/             # Scripts d'optimisation
-└── docs/               # Documentation
-```
-
-## 🤝 Contribution
-
-Les contributions sont bienvenues ! Merci de :
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. Commit vos changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
-4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. Ouvrir une Pull Request
-
-## ⚠️ Avertissements et Solutions
-
-### API Obsolète - StorageType.persistent
-
-**Problème :** L'avertissement `StorageType.persistent est obsolète` peut apparaître dans la console du navigateur.
-
-**Cause :** Cette API obsolète provient de la dépendance `@supabase/storage-js` utilisée par Supabase.
-
-**Solutions appliquées :**
-- ✅ Mise à jour de Supabase vers la dernière version (`@supabase/supabase-js@2.57.0`)
-- ✅ Ajout de vérification API moderne dans le Service Worker
-- ✅ Utilisation de `navigator.storage.persist()` comme alternative moderne
-
-**Note :** Si l'avertissement persiste, il s'agit d'une dépendance externe qui sera corrigée dans les futures versions de Supabase.
-
-## ⚡ Optimisations de Cache
-
-### Headers HTTP Recommandés
-
-Pour atteindre le score Lighthouse 100%, configurez ces headers sur votre serveur :
-
-#### Apache (.htaccess)
+Apache (.htaccess)
 ```apache
-# Ressources statiques - Cache agressif (1 an)
 <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2|woff)$">
   Header set Cache-Control "public, max-age=31536000, immutable"
 </FilesMatch>
-
-# Service Worker - Pas de cache
 <FilesMatch "sw\.js$">
   Header set Cache-Control "no-cache, no-store, must-revalidate"
 </FilesMatch>
 ```
 
-#### Nginx
+Nginx
 ```nginx
 location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff2|woff)$ {
   expires 1y;
   add_header Cache-Control "public, immutable";
 }
-
 location = /sw.js {
   add_header Cache-Control "no-cache, no-store, must-revalidate";
 }
 ```
 
-### Service Worker Optimisé
+## 🤝 Contribution
 
-Le Service Worker inclut maintenant :
-- ✅ Cache agressif pour les ressources statiques (simule 1 an)
-- ✅ Cache intelligent avec timestamps personnalisés
-- ✅ Gestion optimisée des polices Google Fonts
-- ✅ Stratégie Network-First pour les autres ressources
-
-### Fichiers Générés
-
-- 📄 `.htaccess` - Configuration Apache prête à l'emploi
-- 📄 `cache-headers.conf` - Configuration générique des headers
+1) Fork, 2) branche `feature/...`, 3) commit, 4) push, 5) PR
 
 ## 📄 Licence
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+MIT — voir `LICENSE`.
 
 ## 📞 Contact
 
-**Kimiya Kaysuto** - Full-Stack Maker polyvalent
-
-- 🌐 Portfolio: [kimiya-portfolio.vercel.app](https://kimiya-portfolio.vercel.app)
-- 💼 GitHub: [@Kaysuto](https://github.com/Kaysuto)
-- 📧 Email: [Contact via le portfolio](https://kimiya-portfolio.vercel.app/#contact)
+- Site: https://kimiya-portfolio.vercel.app
+- GitHub: https://github.com/Kaysuto
+- Contact: https://kimiya-portfolio.vercel.app/#contact
 
 ---
-
 <div align="center">
-  <p>Fait avec ❤️ et beaucoup de ☕</p>
-  <p>© 2025 Kimiya Kaysuto - Full-Stack Maker</p>
+  <p>Fait avec ❤️ et ☕</p>
+  <p>© 2025 Kimiya Kaysuto</p>
 </div>

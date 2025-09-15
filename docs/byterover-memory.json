@@ -1,0 +1,30 @@
+{
+  "project": "kimiyas-minimalist-p",
+  "purpose": "single-memory",
+  "createdAt": "2025-09-15T00:00:00Z",
+  "entries": [
+    {
+      "ts": "2025-09-15T00:20:00Z",
+      "action": "git_safety_check",
+      "details": "Aucune suppression utile: .gitignore, README.md, ARCHITECTURE.md modifiés; docs/ ajouté."
+    },
+    {
+      "ts": "2025-09-15T00:10:00Z",
+      "action": "docs_rewrite",
+      "details": "README et ARCHITECTURE réécrits sans doublons, structure unifiée."
+    },
+    {
+      "ts": "2025-09-15T00:00:00Z",
+      "action": "create_memory",
+      "details": "Initialisation de la mémoire unique locale pour consolider les actions du plan Cleanup+Docs Refresh v1."
+    }
+  ],
+  "decisions": [
+    {
+      "ts": "2025-09-15T00:00:00Z",
+      "title": "Mémoire unique locale",
+      "rationale": "Limiter l’usage des mémoires Byterover (178/200) et assurer traçabilité dans le repo."
+    }
+  ],
+  "versions": []
+}

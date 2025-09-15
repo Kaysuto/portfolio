@@ -45,172 +45,77 @@ kimiya-portfolio/
 - **React 19** - Framework UI
 - **TypeScript** - Type safety
 - **Vite** - Build tool et dev server
-- **Tailwind CSS** - Framework CSS utilitaire
-- **React Router** - Routing côté client
+# Architecture — kimiyas-minimalist-p
 
-### UI/UX
-- **Phosphor Icons** - Bibliothèque d'icônes
-- **Radix UI** - Composants accessibles
-- **Framer Motion** - Animations fluides
-- **Theme système** - Support dark/light mode automatique
+Mise à jour du 15 septembre 2025 — Vue d’ensemble de l’architecture, conventions et flux principaux du portfolio.
 
-### État et données
-- **Local Storage** - Persistance locale (auth admin, préférences)
-- **Supabase** - Base de données et auth (configuration présente)
+## 1) Vue d’ensemble
+- SPA React 19 + TypeScript 5, outillée par Vite 6 et Tailwind CSS 4
+- PWA: `public/manifest.json` + `public/sw.js`
+- Optionnel: Supabase pour données dynamiques (`src/lib/supabase.ts`)
+- Objectif: performance (Lighthouse 100), accessibilité, simplicité de maintenance
 
-## Architecture des composants
+## 2) Structure du projet
 
-### Composants UI (`src/components/ui/`)
-Composants de base réutilisables avec design system unifié :
-- `Button` - Boutons avec variants (default, outline, ghost, etc.)
-- `Card` - Conteneurs de contenu (CardHeader, CardContent, CardTitle)
-- `Input`, `Label` - Formulaires typés
-- `Switch` - Toggle moderne avec transitions
-- `Badge` - Étiquettes avec variants sémantiques
-- `Alert` - Messages de notification
-
-### Admin Panel (`src/admin/`)
-
-#### Pages principales
-- **Dashboard** - Vue d'ensemble avec métriques temps réel
-- **Analytics** - Configuration Google Analytics 4 + GTM
-- **LinksManager** - Gestion CRUD des liens du portfolio
-- **Maintenance** - Mode maintenance avec preview
-- **Security** - Gestion sécurité et IP whitelist
-- **Settings** - Paramètres généraux de l'app
-- **Login** - Authentification admin avec session
-
-#### Architecture admin
 ```
-AdminApp (Router principal + lazy loading)
-├── AdminLayout (Layout commun avec navigation)
-│   ├── Navigation responsive
-│   ├── Theme toggle (dark/light)
-│   ├── Logout avec nettoyage session
-│   └── Animations d'arrière-plan
-└── Pages (Routes protégées par authentification)
+src/
+├─ components/           # Sections UI (Hero, About, Projects, Footer…) + ui/
+├─ admin/                # Application admin (lazy), composants, pages, services
+├─ hooks/                # Hooks maison (use-theme, use-mobile, useAuth, …)
+├─ lib/                  # Utils/config (queryClient, supabase, theme, utils)
+├─ pages/                # Pages publiques (BioPage, MaintenancePage)
+└─ styles/               # Styles globaux (theme.css)
+
+public/                  # Manifest, SW, icons, og-image, robots, sitemap
+database/                # SQL et scripts DB (maintenance, liens, profils)
+docs/                    # Mémoire consolidée Byterover
+config (racine)          # tailwind.config.js, vite.config.ts, tsconfig.json
 ```
 
-### Services (`src/admin/services/`)
-Couche d'abstraction pour les APIs avec interfaces TypeScript :
-- `adminServices.ts` - Auth et gestion de session
-- `analyticsService.ts` - Config Google Analytics/GTM
-- `dashboardService.ts` - Métriques et statistiques
-- `linksService.ts` - CRUD liens du portfolio
-- `maintenanceService.ts` - Gestion mode maintenance
-- `securityService.ts` - Sécurité et IP whitelist
+Routage: React Router 6, code-splitting par routes/sections (lazy + suspense).
 
-## Routing et navigation
+## 3) Conventions & UI System
+- Aliases (cf. `components.json`): `@/components`, `@/lib`, `@/hooks`, `@/components/ui`
+- Design system léger basé Tailwind + composants UI (Radix/Headless pattern)
+- Conventions TS: types explicites publics, props immutables, `React.memo` ciblé
+- Accessibilité: rôles ARIA, focus visible, navigation clavier, contrastes WCAG
 
-### Routes publiques
-- `/` - Portfolio principal (PortfolioApp)
-- `/bio` - Page biographie détaillée
+## 4) État & données
+- Local: hooks + state local, Context pour thème et auth
+- Réseau: `@tanstack/react-query` (`src/lib/queryClient.ts`) si données distantes
+- Supabase (option): clé et URL via `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 
-### Routes admin (protégées)
-Toutes sous `/admin/*` avec authentification requise :
-- `/admin/login` - Connexion admin
-- `/admin/dashboard` - Tableau de bord principal
-- `/admin/analytics` - Configuration analytics
-- `/admin/links` - Gestion liens
-- `/admin/maintenance` - Mode maintenance
-- `/admin/security` - Sécurité
-- `/admin/settings` - Paramètres
+## 5) Performance
+- Splitting: routes, vendor, icônes; lazy/suspense sur sections non critiques
+- CSS critique: styles init minimaux, `content-visibility`, `prefetch/modulepreload`
+- SW: cache agressif pour statiques; `network-first` pour le reste
+- Web Vitals: intégration dans `src/main.tsx`
 
-## Thème et styling
+## 6) SEO
+- `index.html`: meta OG/Twitter, favicon, preconnect; `public/sitemap.xml`, `robots.txt`
+- JSON-LD (option) dans `index.html` ou composant dédié si besoin
 
-### Système de thème
-- **Variables CSS** custom properties pour dark/light mode
-- **Tokens sémantiques** : accent, muted, foreground, background, etc.
-- **Persistance** via localStorage + cookie fallback
-- **Transitions** fluides entre thèmes
+## 7) Sécurité
+- Pas de secrets en front; variables via `.env.local` non commité
+- En-têtes recommandés côté hébergeur (voir README “Cache HTTP”)
 
-### Classes Tailwind principales
-```css
-/* Couleurs sémantiques */
-bg-background, text-foreground    /* Base adaptative */
-bg-accent, text-accent           /* Accent principal */
-bg-muted, text-muted-foreground  /* Éléments secondaires */
-border-border                    /* Bordures cohérentes */
+## 8) Développement
+Scripts `package.json`:
+- `dev`: Vite dev server
+- `build`: `tsc -b --noCheck` puis `vite build`
+- `preview`: `vite preview`
+- `lint`: `eslint .`
 
-/* Animations custom */
-animate-fadeIn, animate-slideIn  /* Entrées */
-animate-float, animate-pulse     /* Effets continus */
-animate-delay-[x]               /* Délais échelonnés */
-```
+## 9) Admin (aperçu)
+- `src/admin/AdminApp.tsx` routeur admin, pages sous `src/admin/pages/`
+- `AuthGuard` pour routes protégées; session côté client minimaliste
+- Pages: `Dashboard`, `Maintenance`, etc. (lazy + split)
 
-## Build et déploiement
+## 10) Ajouts typiques
+- Nouvelle page publique: créer composant + route, lazy si non critique
+- Nouveau composant UI: dans `components/ui`, suivre pattern props typées + a11y
+- Nouveau service: dans `lib/` (public) ou `admin/services/` (admin)
 
-### Configuration Vite
-- **Alias** : `@/` pointe vers `src/`
-- **Code splitting** : Chunks automatiques (vendor, icons, ui, admin)
-- **Lazy loading** : Pages admin chargées à la demande
-- **Optimisations** : Minification Terser, tree-shaking
-- **Assets** : Hash automatique pour cache busting
-
-### Scripts disponibles
-```bash
-npm run dev      # Dev server avec HMR
-npm run build    # Build production (tsc + vite)
-npm run preview  # Preview du build local
-npm run lint     # ESLint
-```
-
-## Patterns et bonnes pratiques
-
-### Composants React
-- **Props typées** avec TypeScript strict
-- **Forwarded refs** pour composants UI
-- **Composition** plutôt qu'héritage
-- **Lazy loading** avec React.lazy() pour optimisation
-
-### Gestion d'état
-- **useState** pour état local des composants
-- **useEffect** pour effets de bord et cycles de vie
-- **Context API** pour thème global et auth
-- **Local Storage** pour persistance côté client
-
-### Performance
-- **Code splitting** par route et fonctionnalité
-- **Import dynamique** pour les pages admin
-- **Optimisation assets** (images, fonts)
-- **Service Worker** pour cache stratégique
-
-## Sécurité
-
-### Authentification admin
-- **Session locale** via localStorage
-- **Routes protégées** avec redirection automatique
-- **Validation inputs** côté client
-- **Nettoyage session** à la déconnexion
-
-### Données et API
-- **Validation** des inputs utilisateur
-- **Sanitisation** des données affichées
-- **Headers sécurisés** (CSP, CORS dans config)
-- **IP whitelist** configurable
-
-## Maintenance et évolution
-
-### Ajout d'une nouvelle page admin
-1. Créer `src/admin/pages/NomPage.tsx` avec export nommé
-2. Ajouter route dans `AdminApp.tsx` (lazy si besoin)
-3. Ajouter navigation dans `AdminLayout.tsx`
-4. Créer service correspondant si API nécessaire
-5. Ajouter types dans `admin/types/`
-
-### Ajout d'un composant UI
-1. Créer `src/components/ui/nom-composant.tsx`
-2. Utiliser le pattern Radix UI (forwardRef, variants)
-3. Documenter les props TypeScript
-4. Tester responsivité et accessibilité
-
-### Débogage et monitoring
-- **React DevTools** pour debug composants
-- **TypeScript strict** pour erreurs compilation
-- **Console réseau** pour debug API
-- **Vite HMR** pour dev rapide
-
----
-
-*Architecture mise à jour : 5 septembre 2025*
-*Version nettoyée - fichiers inutiles supprimés*
+Notes
+- Les artefacts de build (`dist/`) et fichiers d’audit sont ignorés via `.gitignore`.
+- La mémoire consolidée est tenue dans `docs/byterover-memory.*`.
