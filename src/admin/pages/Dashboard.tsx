@@ -269,7 +269,7 @@ export default function Dashboard() {
           <div className="space-y-3">
             {recentActivity.length > 0 ? (
               recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg bg-neutral-2/50 hover:bg-neutral-3/50 transition-all duration-200 border border-neutral-6/20">
+                <div key={index} className={`flex items-start space-x-3 p-3 rounded-lg bg-neutral-2/50 border border-neutral-6/20 transition-all duration-200 ${adminDesignTokens.effects.scale}`}>
                   <div className="flex-shrink-0 mt-1">
                     {getActivityIcon(activity.type)}
                   </div>
@@ -302,7 +302,7 @@ export default function Dashboard() {
         <GlassCard title="Configuration Analytics" icon={ChartBar} delay={600}>
           <div className="space-y-6">
             {/* Google Analytics 4 */}
-            <div className="space-y-4 p-4 border rounded-lg bg-background">
+            <div className={`space-y-4 p-4 border rounded-lg bg-background transition-all duration-200 ${adminDesignTokens.effects.scale}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <GoogleLogo className="h-5 w-5 text-accent-foreground" />
@@ -362,7 +362,7 @@ export default function Dashboard() {
             </div>
 
             {/* Google Tag Manager */}
-            <div className="space-y-4 p-4 border rounded-lg bg-background">
+            <div className={`space-y-4 p-4 border rounded-lg bg-background transition-all duration-200 ${adminDesignTokens.effects.scale}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Tag className="h-5 w-5 text-accent-foreground" />
