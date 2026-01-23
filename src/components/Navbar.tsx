@@ -1,210 +1,170 @@
-import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import { cn } from "@/lib/utils"
-import { useTheme } from "@/hooks/use-theme"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Menu, X, Github, Linkedin, Coffee } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { KofiModal } from "@/components/ui/KofiModal"
+import { cn } from "@/lib/utils"
 
 export function Navbar() {
-  const { theme, toggle: toggleTheme } = useTheme()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState<string>("accueil")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isKofiModalOpen, setIsKofiModalOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("accueil")
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
       
-      const sectionToScroll = sessionStorage.getItem('scrollToSection')
-      if (sectionToScroll && location.pathname === '/') {
-        setTimeout(() => {
-          const element = document.getElementById(sectionToScroll)
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth" })
-            setActiveSection(sectionToScroll)
-            sessionStorage.removeItem('scrollToSection')
-          }
-        }, 100)
-      }
-      
-      if (location.pathname === '/bio') {
-        setActiveSection('bio')
-        return
-      }
-      
-      const sections = ["accueil", "apropos", "projets", "contact"]
-      let found = "accueil"
-      for (const id of sections) {
-        const el = document.getElementById(id)
+      // Détection section active
+      const sections = ["accueil", "a-propos", "projets", "contact"]
+      for (const section of sections) {
+        const el = document.getElementById(section)
         if (el) {
           const rect = el.getBoundingClientRect()
-          if (rect.top <= 100 && rect.bottom > 100) {
-            found = id
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            setActiveSection(section)
             break
           }
         }
       }
-      setActiveSection(found)
     }
-    
-    window.addEventListener('scroll', handleScroll)
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [location.pathname])
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
-  const scrollToSection = (sectionId: string) => {
-    if (location.pathname === '/bio') {
-      sessionStorage.setItem('scrollToSection', sectionId)
-      navigate('/')
-      return
-    }
-    
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
-    setIsMobileMenuOpen(false)
-    setActiveSection(sectionId)
-  }
-
-  const navItems = [
-    { id: "accueil", label: "Accueil" },
-    { id: "apropos", label: "À propos" },
-    { id: "projets", label: "Projets" },
-    { id: "contact", label: "Contact" }
+  const navLinks = [
+    { name: "ACCUEIL", href: "#accueil", id: "accueil" },
+    { name: "À PROPOS", href: "#a-propos", id: "a-propos" },
+    { name: "PROJETS", href: "#projets", id: "projets" },
+    { name: "CONTACT", href: "#contact", id: "contact" },
   ]
 
   return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+    <nav 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border py-2"
-          : "bg-transparent py-4"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 py-4",
+        isScrolled ? "bg-background/90 backdrop-blur-xl border-b-2 border-foreground/5 py-3" : "bg-transparent"
       )}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 group" onClick={() => scrollToSection('accueil')}>
-          <motion.div 
-            whileHover={{ rotate: 180 }}
-            className="p-2 bg-accent/10 rounded-lg text-accent"
-          >
-            <Code size={20} />
-          </motion.div>
-          <span className="font-bold text-lg tracking-tight">
-            Kaysuto<span className="text-accent">Kimiya</span>
-          </span>
-        </Link>
+        <motion.a 
+          href="#accueil"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3 group"
+        >
+          <img 
+            src="https://i.imgur.com/tDPPBl1.png" 
+            alt="Logo" 
+            className="w-10 h-10 object-contain"
+          />
+          <div className="flex flex-col leading-none">
+            <span className="font-black text-lg tracking-tighter uppercase italic">KAYSUTO</span>
+            <span className="font-black text-[8px] tracking-[0.3em] text-primary">KIMIYA</span>
+          </div>
+        </motion.a>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center bg-muted/50 rounded-full px-2 py-1 border border-border/50">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
+        {/* Desktop Nav - Centered Links */}
+        <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 gap-1 bg-secondary/50 p-1 rounded-xl border-2 border-foreground/5">
+          {navLinks.map((link) => (
+            <a 
+              key={link.name}
+              href={link.href}
               className={cn(
-                "relative px-4 py-1.5 text-sm font-medium transition-colors rounded-full",
-                activeSection === item.id ? "text-accent-foreground" : "text-muted-foreground hover:text-foreground"
+                "px-4 py-1.5 text-[9px] font-black rounded-lg transition-all duration-300 tracking-widest",
+                activeSection === link.id 
+                  ? "text-primary-foreground bg-primary shadow-md" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
               )}
             >
-              {activeSection === item.id && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute inset-0 bg-accent rounded-full -z-10"
-                  transition={{ type: "spring", duration: 0.6 }}
-                />
-              )}
-              {item.label}
-            </button>
+              {link.name}
+            </a>
           ))}
-          <Link
-            to="/bio"
-            className={cn(
-              "relative px-4 py-1.5 text-sm font-medium transition-colors rounded-full",
-              activeSection === 'bio' ? "text-accent-foreground" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            {activeSection === 'bio' && (
-              <motion.div
-                layoutId="activeNav"
-                className="absolute inset-0 bg-accent rounded-full -z-10"
-                transition={{ type: "spring", duration: 0.6 }}
-              />
-            )}
-            Bio
-          </Link>
         </div>
-
+        
         {/* Actions */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="rounded-full"
+        <div className="hidden md:flex items-center gap-3">
+          <a 
+            href="https://github.com/Kaysuto" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="p-2 rounded-lg bg-card border-2 border-foreground/5 text-muted-foreground hover:text-primary hover:border-primary transition-all"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={theme}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </motion.div>
-            </AnimatePresence>
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            <Github size={18} />
+          </a>
+          <Button 
+            onClick={() => setIsKofiModalOpen(true)}
+            size="sm"
+            className="bg-foreground hover:bg-primary text-background hover:text-primary-foreground font-black rounded-lg px-4 h-10 shadow-lg transition-all uppercase text-[9px] tracking-widest"
           >
-            {isMobileMenuOpen ? <X size={20} /> : <List size={20} />}
+            <Coffee size={16} className="mr-2" />
+            SUPPORT
           </Button>
         </div>
+
+        {/* Mobile Toggle */}
+        <button 
+          className="md:hidden p-3 rounded-xl bg-secondary border-2 border-foreground/5 text-foreground"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-b border-border overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden absolute top-full left-6 right-6 mt-4 bg-card rounded-[2rem] border-2 border-foreground/10 shadow-2xl overflow-hidden z-50"
           >
-            <div className="px-6 py-4 flex flex-col gap-2">
-              {navItems.map((item) => (
-                <Button
-                  key={item.id}
-                  variant={activeSection === item.id ? "default" : "ghost"}
-                  className="justify-start"
-                  onClick={() => scrollToSection(item.id)}
+            <div className="flex flex-col gap-3 p-8">
+              {navLinks.map((link) => (
+                <a 
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "px-6 py-4 rounded-2xl text-sm font-black transition-all tracking-widest uppercase italic",
+                    activeSection === link.id 
+                      ? "text-primary bg-primary/10" 
+                      : "hover:bg-foreground/5"
+                  )}
                 >
-                  {item.label}
-                </Button>
+                  {link.name}
+                </a>
               ))}
-              <Link to="/bio" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button
-                  variant={activeSection === 'bio' ? "default" : "ghost"}
-                  className="w-full justify-start"
+              <div className="pt-6 mt-4 border-t-2 border-foreground/5 flex flex-col gap-4">
+                <div className="flex gap-4 justify-center">
+                  <a href="https://github.com/Kaysuto" target="_blank" rel="noreferrer" className="p-4 rounded-2xl bg-secondary text-muted-foreground hover:text-primary transition-all">
+                    <Github size={24} />
+                  </a>
+                  <a href="#" className="p-4 rounded-2xl bg-secondary text-muted-foreground hover:text-primary transition-all">
+                    <Linkedin size={24} />
+                  </a>
+                </div>
+                <Button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsKofiModalOpen(true);
+                  }}
+                  className="bg-primary text-primary-foreground font-black rounded-2xl h-14 uppercase tracking-widest"
                 >
-                  Bio
+                  M'OFFRIR UN CAFÉ
                 </Button>
-              </Link>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+
+      <KofiModal 
+        isOpen={isKofiModalOpen} 
+        onClose={() => setIsKofiModalOpen(false)} 
+      />
+    </nav>
   )
 }

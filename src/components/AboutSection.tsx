@@ -1,7 +1,7 @@
-import { Brain, Code, Heart } from "@phosphor-icons/react"
+import { Code, ShieldCheck, Database, Palette } from "lucide-react"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 export function AboutSection() {
   const ageCounter = useCounterAnimation({ end: 23, duration: 1800 })
@@ -9,135 +9,165 @@ export function AboutSection() {
 
   const skills = [
     {
-      icon: <Code size={24} />,
-      title: "Expertise Infrastructure",
-      desc: "3 ans d'expérience en datacenter m'ont appris l'importance de la fiabilité, de la sécurité et de la performance au niveau matériel."
-    },
-    {
-      icon: <Brain size={24} />,
-      title: "Passionné par les LLM",
-      desc: "Je m'intéresse particulièrement aux modèles de langage et à leur intégration dans des applications pratiques."
+      icon: <Database size={24} />,
+      title: "Infrastructure & Cloud",
+      desc: "Expertise en datacenter, virtualisation et gestion de serveurs haute disponibilité.",
+      color: "primary"
     },
     {
       icon: <Code size={24} />,
-      title: "Code élégant",
-      desc: "J'accorde une grande importance à la qualité du code, à l'architecture propre et aux standards d'excellence."
+      title: "Développement Full-Stack",
+      desc: "Création d'applications web modernes avec React, Node.js et architectures scalables.",
+      color: "accent"
     },
     {
-      icon: <Heart size={24} />,
-      title: "Centré utilisateur",
-      desc: "Chaque projet commence par comprendre les besoins utilisateurs pour créer des interfaces intuitives."
+      icon: <ShieldCheck size={24} />,
+      title: "Sécurité & Réseaux",
+      desc: "Conception de réseaux sécurisés et mise en place de protocoles de protection des données.",
+      color: "primary"
+    },
+    {
+      icon: <Palette size={24} />,
+      title: "Design & Expérience",
+      desc: "Focus sur l'UI/UX pour offrir des interfaces intuitives et esthétiquement plaisantes.",
+      color: "accent"
     }
   ]
 
   const techStack = [
-    "React", "TypeScript", "Vue.js", "Node.js", "PHP", "MySQL", 
-    "Tailwind CSS", "Git", "Docker", "Linux", "VMware", "Windows Server"
+    { name: "React", category: "frontend" },
+    { name: "TypeScript", category: "frontend" },
+    { name: "Node.js", category: "backend" },
+    { name: "Tailwind CSS", category: "frontend" },
+    { name: "Docker", category: "devops" },
+    { name: "Linux", category: "devops" },
+    { name: "VMware", category: "devops" },
+    { name: "Supabase", category: "backend" },
+    { name: "PostgreSQL", category: "backend" },
+    { name: "Git", category: "devops" }
   ]
 
-  return (
-    <section id="apropos" className="py-24 px-6 bg-secondary/30 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            À propos de <span className="text-accent">moi</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Full-Stack Maker polyvalent et Technicien Datacenter de 23 ans, j'ai acquis une expertise dans de nombreux domaines : réseau, développement, design et innovation.
-          </p>
-        </motion.div>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  }
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  }
+
+  return (
+    <section id="a-propos" className="py-32 px-6 relative overflow-hidden noise-bg">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(166,139,124,0.03),transparent_70%)]" />
+      
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20 items-start">
+          {/* Left Column - Text Content */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="lg:sticky lg:top-32"
           >
-            <h3 className="text-2xl font-semibold">Mon parcours</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              En tant que Full-Stack Maker polyvalent et Technicien Datacenter, ma force réside dans ma diversité d'expertise : de l'infrastructure réseau au développement web, du design pixel art à la création de mini-jeux.
+            <motion.span 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-6 border-2 border-foreground/10"
+            >
+              À propos de moi
+            </motion.span>
+            
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight uppercase italic tracking-tighter">
+              Une vision <br />
+              <span className="text-primary">globale</span> du numérique.
+            </h2>
+            
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed font-medium italic border-l-4 border-primary pl-6">
+              Mon parcours atypique, mêlant expertise en infrastructure datacenter et passion 
+              pour le développement créatif.
             </p>
-            <p className="text-muted-foreground leading-relaxed">
-              Mon expérience en datacenter m'apporte une compréhension approfondie des systèmes, de la sécurité et de la fiabilité.
-            </p>
-
-            <div className="flex items-center space-x-12 pt-4">
-              <div>
-                <motion.span 
-                  ref={ageCounter.elementRef}
-                  className="text-4xl font-bold text-accent block"
+            
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl">
+                <span 
+                  ref={ageCounter.elementRef} 
+                  className="text-4xl font-black text-primary block mb-1 italic tracking-tighter"
                 >
                   {ageCounter.count}
-                </motion.span>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">ans</p>
+                </span>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black">
+                  Ans d'existence
+                </p>
               </div>
-              <div>
-                <motion.span 
-                  ref={experienceCounter.elementRef}
-                  className="text-4xl font-bold text-accent block"
+              <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl">
+                <span 
+                  ref={experienceCounter.elementRef} 
+                  className="text-4xl font-black text-primary block mb-1 italic tracking-tighter"
                 >
                   {experienceCounter.count}+
-                </motion.span>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">ans d'expérience</p>
+                </span>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black">
+                  Projets réalisés
+                </p>
+              </div>
+            </div>
+
+            {/* Tech Stack */}
+            <div>
+              <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-6">
+                Technologies Maîtrisées
+              </h4>
+              <div className="flex flex-wrap gap-3">
+                {techStack.map((tech) => (
+                  <span 
+                    key={tech.name} 
+                    className="px-5 py-2 rounded-xl bg-secondary text-xs font-black uppercase tracking-tighter border-2 border-foreground/5 hover:border-primary transition-all cursor-default"
+                  >
+                    {tech.name}
+                  </span>
+                ))}
               </div>
             </div>
           </motion.div>
 
-          <div className="grid gap-4">
-            {skills.map((skill, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Card className="p-4 bg-card/50 border-border/50 hover:border-accent/50 transition-colors group">
-                  <div className="flex gap-4">
-                    <div className="p-2 bg-accent/10 rounded-lg text-accent group-hover:scale-110 transition-transform">
-                      {skill.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">{skill.title}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{skill.desc}</p>
-                    </div>
+          {/* Right Column - Skills Grid */}
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid sm:grid-cols-2 gap-6"
+          >
+            {skills.map((skill, i) => {
+              return (
+                <motion.div
+                  key={i}
+                  variants={itemVariants}
+                  className="bg-card rounded-[2.5rem] p-8 border-2 border-foreground/10 shadow-xl transition-all duration-300 group hover:border-primary hover:-translate-y-2"
+                >
+                  <div className={cn(
+                    "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 border-2 border-foreground/5",
+                    skill.color === "primary" ? "bg-primary text-primary-foreground" : "bg-secondary text-primary"
+                  )}>
+                    {skill.icon}
                   </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  <h4 className="text-xl font-black mb-3 uppercase italic tracking-tighter">{skill.title}</h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed font-medium italic">
+                    "{skill.desc}"
+                  </p>
+                </motion.div>
+              )
+            })}
+          </motion.div>
         </div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
-          <h3 className="text-2xl font-semibold mb-8 text-center">Technologies favorites</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {techStack.map((tech, i) => (
-              <motion.span
-                key={tech}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.1, backgroundColor: "var(--accent)", color: "var(--accent-foreground)" }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="px-4 py-2 bg-accent/10 border border-accent/20 rounded-full text-sm font-medium text-accent cursor-default transition-colors"
-              >
-                {tech}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
-  );
+  )
 }

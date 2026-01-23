@@ -5,46 +5,60 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.7 0.15 45); /* Un doré/accent plus chaud */
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.75rem;
+  /* === CHARTE NEO-RETRO STUDIO (LIGHT) === */
+  --background: #F2EBE4;
+  --foreground: #2D2421;
+  --card: #FFFFFF;
+  --card-foreground: #2D2421;
+  --popover: #FFFFFF;
+  --popover-foreground: #2D2421;
+  --primary: #A68B7C;
+  --primary-foreground: #F2EBE4;
+  --secondary: #E6E1DF;
+  --secondary-foreground: #2D2421;
+  --muted: #E6E1DF;
+  --muted-foreground: #A68B7C;
+  --accent: #D4A373;
+  --accent-foreground: #FFFFFF;
+  --destructive: #E57373;
+  --destructive-foreground: #FAFAFA;
+  --border: #D1C7C2;
+  --input: #D1C7C2;
+  --ring: #A68B7C;
+  --radius: 1rem;
+  
+  --glow-accent: rgba(212, 163, 115, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(45, 36, 33, 0.1);
+  --shadow-color: rgba(45, 36, 33, 0.05);
 }
 
 .dark {
-  --background: oklch(0.1 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.15 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.7 0.15 45);
-  --accent-foreground: oklch(0.1 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  /* === CHARTE NEO-RETRO STUDIO (DARK) === */
+  --background: #14110F;
+  --foreground: #E6E1DF;
+  --card: #1C1816;
+  --card-foreground: #E6E1DF;
+  --popover: #1C1816;
+  --popover-foreground: #E6E1DF;
+  --primary: #A68B7C;
+  --primary-foreground: #14110F;
+  --secondary: #241F1D;
+  --secondary-foreground: #E6E1DF;
+  --muted: #241F1D;
+  --muted-foreground: #8C7E78;
+  --accent: #D4A373;
+  --accent-foreground: #14110F;
+  --destructive: #EF5350;
+  --destructive-foreground: #F8FAFC;
+  --border: rgba(230, 225, 223, 0.08);
+  --input: #241F1D;
+  --ring: #D4A373;
+  
+  --glow-accent: rgba(212, 163, 115, 0.2);
+  --glass-bg: rgba(28, 24, 22, 0.9);
+  --glass-border: rgba(230, 225, 223, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
@@ -53,5 +67,189 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Montserrat', sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  
+  /* Forçage global pour les boutons Shadcn */
+  button.bg-primary, .bg-primary {
+    background-color: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+  }
+  button.bg-accent, .bg-accent {
+    background-color: var(--accent) !important;
+    color: var(--accent-foreground) !important;
+  }
+  button.bg-secondary, .bg-secondary {
+    background-color: var(--secondary) !important;
+    color: var(--secondary-foreground) !important;
+  }
+  
+  /* Forçage spécifique pour les icônes et textes enfants */
+  .bg-primary *, .bg-accent *, .bg-secondary * {
+    color: inherit !important;
+    fill: currentColor !important;
+  }
+
+  /* Correction spécifique pour les badges de technologies au hover */
+  .dark .bg-accent\/10:hover {
+    background-color: var(--accent) !important;
+    color: var(--accent-foreground) !important;
+  }
+}
+
+/* === UTILITAIRES GLASSMORPHISM === */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  border-radius: var(--radius);
+}
+
+/* === EFFETS GLOW === */
+.glow-accent {
+  box-shadow: 0 0 20px var(--glow-accent);
+}
+
+.icon-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-glow:hover {
+  color: var(--accent);
+  filter: drop-shadow(0 0 8px var(--glow-accent));
+  transform: translateY(-2px);
+}
+
+/* === INPUTS MODERNISÉS === */
+.input-modern {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.input-modern:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.15);
+  outline: none;
+}
+
+.input-modern::placeholder {
+  color: var(--muted-foreground);
+}
+
+/* === GRADIENTS === */
+.gradient-accent {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+}
+
+.gradient-dark {
+  background: linear-gradient(180deg, var(--background) 0%, var(--card) 100%);
+}
+
+.text-gradient-accent {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === RETRO PIXEL UTILS === */
+.pixel-border {
+  border: 2px solid var(--foreground);
+  border-radius: var(--radius);
+}
+
+.pixel-shadow {
+  box-shadow: 4px 4px 0 0 var(--secondary);
+}
+
+.pixel-shadow-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--primary);
+}
+
+.noise-bg {
+  position: relative;
+}
+
+.noise-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* === ANIMATION UTILITAIRES === */
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--glow-accent);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--glow-accent), 0 0 30px var(--glow-accent);
+  }
+}
+
+/* === UTILITAIRES SCROLLBAR === */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Utilitaires de debug pour forcer la visibilité */
+.force-text-dark {
+  color: #0F1419 !important;
+}
+.force-text-light {
+  color: #F8FAFC !important;
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--glow-accent);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--glow-accent), 0 0 30px var(--glow-accent);
+  }
+}
+
+/* === UTILITAIRES SCROLLBAR === */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Utilitaires de debug pour forcer la visibilité */
+.force-text-dark {
+  color: #0F1419 !important;
+}
+.force-text-light {
+  color: #F8FAFC !important;
 }

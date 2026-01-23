@@ -60,7 +60,7 @@ const FloatingParticles = memo(function FloatingParticles() {
       {particles.map(particle => (
         <div
           key={particle.id}
-          className="absolute rounded-full bg-accent/20 dark:bg-primary/15 animate-pulse"
+          className="absolute rounded-full bg-primary/10 dark:bg-primary/5 animate-pulse"
           style={{
             left: particle.x,
             top: particle.y,
