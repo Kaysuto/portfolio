@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useMemo, memo } from "react"
-import { ArrowSquareOut, Calendar, X } from "@phosphor-icons/react"
+import { useState, useEffect, useRef, useMemo } from "react"
+import { ArrowSquareOut, Calendar } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DemoModal } from "@/components/ui/ProjectModal"
 import { getProjects } from "@/lib/supabase"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface Project {
   id: string;
@@ -25,13 +26,8 @@ interface Project {
 export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(false)
-  const [debug, setDebug] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
-  
-  // Prevent multiple calls
   const hasFetched = useRef(false)
-  
-  // Modal state simplifié
   const [modalProject, setModalProject] = useState<Project | null>(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -46,22 +42,13 @@ export function ProjectCards() {
   }
 
   const fetchProjects = async () => {
-    if (loading || hasFetched.current) return; // Prevent duplicate calls
-    
+    if (loading || hasFetched.current) return;
     hasFetched.current = true;
     setLoading(true)
     setError(null)
-    setDebug(null)
     try {
       const data = await getProjects()
-      
-      // Only log in development
-      if (import.meta.env.DEV) {
-        console.log('Supabase projects:', data)
-      }
-      
       if (Array.isArray(data)) {
-        // Mapping des champs pour correspondre à l'interface Project attendue
         const mapStatus = (status: string): Project["status"] => {
           switch (status) {
             case 'published': return 'En production';
@@ -87,13 +74,9 @@ export function ProjectCards() {
           image_alt: p.image_alt || p.title,
         }))
         setProjects(mapped)
-      } else {
-        setProjects([])
       }
     } catch (e: any) {
-      setProjects([])
       setError(e?.message || String(e))
-      setDebug((e && (e.cause || e)) || e)
     } finally {
       setLoading(false)
     }
@@ -101,21 +84,6 @@ export function ProjectCards() {
 
   useEffect(() => {
     fetchProjects()
-  }, [])
-
-  const getStatusColor = useMemo(() => (status: string) => {
-    switch (status) {
-      case 'En production':
-        return 'bg-green-500'
-      case 'En développement':
-        return 'bg-yellow-500'
-      case 'Alpha':
-        return 'bg-blue-500'
-      case 'Beta':
-        return 'bg-purple-500'
-      default:
-        return 'bg-gray-500'
-    }
   }, [])
 
   const formatDate = useMemo(() => (dateString: string) => {
@@ -126,100 +94,101 @@ export function ProjectCards() {
     })
   }, [])
 
-  const projectsToRender = useMemo(() => 
-    Array.isArray(projects) ? projects : [], 
-    [projects]
-  )
-
   return (
     <div className="w-full max-w-7xl mx-auto">
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded flex items-center justify-between">
-          <div>Erreur Supabase : {error}</div>
-          <div className="ml-4">
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-4 p-4 bg-destructive/10 text-destructive rounded flex items-center justify-between"
+          >
+            <div>Erreur : {error}</div>
             <Button size="sm" variant="ghost" onClick={fetchProjects}>Réessayer</Button>
-          </div>
-        </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div 
+        layout
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+      >
         {loading ? (
-          <div className="col-span-3 text-center text-muted-foreground py-12">Chargement…</div>
-        ) : projectsToRender.length > 0 ? (
-          projectsToRender.map((project, index) => (
-            <Card
+          <div className="col-span-full flex justify-center py-20">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full"
+            />
+          </div>
+        ) : projects.length > 0 ? (
+          projects.map((project, index) => (
+            <motion.div
               key={project.id}
-              className="group h-full flex flex-col overflow-hidden bg-card border-2 border-border hover:border-accent/50 hover:shadow-xl hover:shadow-accent/20 transition-all duration-500 relative"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
             >
-              {/* Image projet */}
-              {project.image_url && (
-                <div className="relative h-48 w-full overflow-hidden">
-                  <img
-                    src={project.image_url}
-                    alt={project.image_alt || project.title}
-                    loading="lazy"
-                    decoding="async"
-                    width="400"
-                    height="300"
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent pointer-events-none"></div>
-                </div>
-              )}
-              <div className="flex-1 flex flex-col p-6">
-                {/* Titre & description */}
-                <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                  {project.description}
-                </p>
-                {/* Technologies */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {Array.isArray(project.tech_stack) && project.tech_stack.length > 0 ? (
-                    project.tech_stack.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="px-2 py-1 text-xs font-medium">
+              <Card className="group h-full flex flex-col overflow-hidden bg-card border-2 border-border hover:border-accent/50 transition-all duration-300">
+                {project.image_url && (
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <motion.img
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
+                      src={project.image_url}
+                      alt={project.image_alt || project.title}
+                      className="object-cover w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                  </div>
+                )}
+                <div className="flex-1 flex flex-col p-6">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tech_stack.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="text-xs">
                         {tech}
                       </Badge>
-                    ))
-                  ) : (
-                    <span className="text-muted-foreground text-xs">Aucune technologie</span>
-                  )}
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+                    <Badge variant="outline" className="text-accent border-accent/30">
+                      {project.status}
+                    </Badge>
+                    {project.demo_url && (
+                      <Button
+                        size="sm"
+                        className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
+                        onClick={() => openProjectModal(project)}
+                      >
+                        <ArrowSquareOut size={14} />
+                        <span>Voir</span>
+                      </Button>
+                    )}
+                    <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                      <Calendar size={12} />
+                      {formatDate(project.created_at)}
+                    </span>
+                  </div>
                 </div>
-                {/* Footer : statut, bouton Voir le projet & date */}
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-border gap-2">
-                  <span className="text-xs font-semibold px-2 py-1 rounded bg-accent/10 text-accent">
-                    {project.status}
-                  </span>
-                  {project.demo_url && (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="flex items-center gap-2 px-3 py-1 font-medium min-w-[110px] max-w-[140px] transition-all duration-200 shadow-sm hover:shadow-lg hover:bg-accent hover:text-[#070201] dark:hover:text-[#221512] hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group/button"
-                      onClick={() => openProjectModal(project)}
-                    >
-                      <ArrowSquareOut size={14} className="group-hover/button:translate-x-0.5 group-hover/button:-translate-y-0.5 transition-transform duration-200" />
-                      <span>Voir le projet</span>
-                    </Button>
-                  )}
-                  <span className="text-xs text-muted-foreground">
-                    <Calendar size={12} className="inline mr-1" />
-                    {formatDate(project.created_at)}
-                  </span>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))
         ) : (
-          <div className="col-span-3 text-center text-muted-foreground py-12">
-            Aucun projet à afficher.
+          <div className="col-span-full text-center text-muted-foreground py-12">
+            Aucun projet trouvé.
           </div>
         )}
-      </div>
-      {debug && (
-        <pre className="text-xs text-muted-foreground bg-background p-3 rounded">{JSON.stringify(debug, null, 2)}</pre>
-      )}
+      </motion.div>
 
-      {/* Modal pour voir le projet - Version simplifiée */}
       {modalProject && (
         <DemoModal
           isOpen={showModal}

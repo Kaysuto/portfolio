@@ -1,0 +1,27 @@
+{
+	"servers": {
+		"shadcn": {
+			"command": "npx",
+			"args": [
+				"shadcn@latest",
+				"mcp"
+			],
+			"type": "stdio"
+		},
+		"my-mcp-server-fa26dde5": {
+			"type": "stdio",
+			"command": "Show",
+			"args": [
+				"me",
+				"all",
+				"available",
+				"components",
+				"in",
+				"the",
+				"shadcn",
+				"registry"
+			]
+		}
+	},
+	"inputs": []
+}
