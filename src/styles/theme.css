@@ -257,15 +257,15 @@
 
   :root.dark,
   html.dark {
-    --color-bg: #0F1419; /* Fond principal bleu-noir profond */
-    --color-bg-inset: #1A2332; /* Fond des éléments bleu-gris */
-    --color-bg-overlay: #243447; /* Fond des overlays bleu-gris clair */
-    --color-accent-foreground: #0F1419 !important; /* Couleur du texte accent pour le thème sombre */
+    --color-bg: #2A1F1A; /* Fond principal chocolat très foncé */
+    --color-bg-inset: #3B2F29; /* Fond des éléments chocolat foncé */
+    --color-bg-overlay: #4A3C35; /* Fond des overlays chocolat moyen */
+    --color-accent-foreground: #221512 !important; /* Couleur du texte accent pour le thème sombre */
   }
 
   :root.light,
   html.light {
-    --color-accent-foreground: #0F172A !important; /* Couleur du texte accent pour le thème clair */
+    --color-accent-foreground: #070201 !important; /* Couleur du texte accent pour le thème clair */
   }
 
   /* Classes Tailwind forcées pour s'assurer de la prise en compte */

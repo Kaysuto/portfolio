@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
-import { Github, Sparkles } from "lucide-react"
+import { GithubLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 import { GitHubModal } from "@/components/ui/GitHubModal"
-import { motion } from "framer-motion"
 
 interface GitHubStats {
   public_repos: number
@@ -17,6 +16,10 @@ export function ProjectsSection() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
 
+  const openModal = () => setShowModal(true)
+  const closeModal = () => setShowModal(false)
+
+  // Compteurs animés pour les statistiques GitHub
   const reposCounter = useCounterAnimation({ 
     end: githubStats?.public_repos || 0, 
     duration: 2000 
@@ -24,6 +27,10 @@ export function ProjectsSection() {
   const followersCounter = useCounterAnimation({ 
     end: githubStats?.followers || 0, 
     duration: 2300 
+  })
+  const followingCounter = useCounterAnimation({ 
+    end: githubStats?.following || 0, 
+    duration: 1800 
   })
 
   useEffect(() => {
@@ -39,96 +46,123 @@ export function ProjectsSection() {
           })
         }
       } catch (error) {
-        console.error("Erreur GitHub stats:", error)
+        console.error("Erreur lors de la récupération des stats GitHub:", error)
       } finally {
         setLoading(false)
       }
     }
+
     fetchGitHubStats()
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 relative overflow-hidden noise-bg">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(166,139,124,0.03),transparent_70%)]" />
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-20">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl"
-          >
-            <motion.span 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-6 border-2 border-foreground/10"
-            >
-              <Sparkles size={12} />
-              Portfolio / Travaux
-            </motion.span>
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black mb-6 tracking-tighter uppercase italic">
-              Projets <span className="text-primary">Sélectionnés</span>
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-medium max-w-xl border-l-4 border-primary pl-6">
-              Une immersion dans mes réalisations techniques et artistiques.
-            </p>
-          </motion.div>
-          
-          {/* GitHub Stats - Studio Style */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="bg-card p-5 rounded-3xl border-2 border-foreground/10 shadow-xl"
-          >
-            <div className="flex items-center gap-6">
-              <div className="bg-secondary text-primary p-3 rounded-xl border-2 border-foreground/5">
-                <Github size={28} />
-              </div>
-              <div className="flex gap-8">
-                <div className="text-left">
-                  <p ref={reposCounter.elementRef} className="text-3xl font-black text-foreground leading-none mb-1">
-                    {reposCounter.count}
-                  </p>
-                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Repositories</p>
-                </div>
-                <div className="text-left">
-                  <p ref={followersCounter.elementRef} className="text-3xl font-black text-foreground leading-none mb-1">
-                    {followersCounter.count}
-                  </p>
-                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">Followers</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Projects Grid Component */}
-        <ProjectCards />
-
-        {/* CTA GitHub - Studio Style */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-32 text-center"
-        >
-          <Button
-            onClick={() => setShowModal(true)}
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-12 h-20 text-xl font-black rounded-3xl transition-all shadow-xl shadow-primary/20 group uppercase italic tracking-tighter"
-          >
-            <Github size={32} className="mr-4 group-hover:rotate-12 transition-transform" />
-            Accéder au GitHub
-          </Button>
-        </motion.div>
+    <section id="projets" className="py-32 px-6 lg:px-12 section-lazy relative">
+      {/* Animated background shapes - positionnés pour éviter les composants */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-16 right-10 w-16 h-16 bg-accent/8 rounded-full animate-float-slow animate-delay-300"></div>
+        <div className="absolute top-1/3 left-12 w-12 h-12 bg-primary/10 rounded-full animate-float-medium animate-delay-500"></div>
+        <div className="absolute bottom-20 right-1/4 w-8 h-8 bg-secondary/15 rounded-full animate-bounce-slow animate-delay-700"></div>
+        <div className="absolute top-2/3 right-8 w-20 h-20 bg-muted/20 rounded-full animate-pulse-slow animate-delay-400"></div>
       </div>
 
-      <GitHubModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Une sélection de projets qui illustrent ma passion pour la création 
+            d'expériences numériques innovantes et performantes.
+          </p>
+        </div>
+
+
+        {/* Project Cards - affichage direct */}
+        <div className="mb-20">
+          <ProjectCards />
+        </div>
+
+        {/* GitHub Stats */}
+        <div className="flex justify-center">
+          <div className="bg-card border-2 border-border rounded-3xl p-10 w-full max-w-2xl hover:shadow-xl hover:shadow-accent/15 transition-all duration-500 group hover:border-accent/50">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">Statistiques GitHub</h3>
+              <a
+                href="https://github.com/Kaysuto"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-accent font-medium"
+              >
+                <GithubLogo size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
+                @Kaysuto
+              </a>
+            </div>
+            
+            {loading ? (
+              <div className="grid grid-cols-3 gap-8">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="text-center">
+                    <div className="w-20 h-10 bg-muted rounded-lg animate-pulse mb-3 mx-auto"></div>
+                    <div className="w-24 h-5 bg-muted rounded animate-pulse mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            ) : githubStats ? (
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                <div className="text-center group/stat">
+                  <div 
+                    ref={reposCounter.elementRef}
+                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                  >
+                    {reposCounter.count}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Repositories</p>
+                </div>
+                <div className="text-center group/stat">
+                  <div 
+                    ref={followersCounter.elementRef}
+                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                  >
+                    {followersCounter.count}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Followers</p>
+                </div>
+                <div className="text-center group/stat">
+                  <div 
+                    ref={followingCounter.elementRef}
+                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                  >
+                    {followingCounter.count}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Following</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                Impossible de charger les statistiques GitHub
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* View More */}
+        <div className="text-center mt-20">
+          <Button
+            onClick={openModal}
+            variant="outline"
+            size="lg"
+            className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-medium hover:scale-105 transition-all duration-300"
+          >
+            {/* Icône ExternalLink supprimée car non disponible dans Phosphor */}
+            Voir tous mes projets sur GitHub
+          </Button>
+        </div>
+      </div>
+
+      {/* Modal for GitHub projects - Version simplifiée */}
+      <GitHubModal
+        isOpen={showModal}
+        onClose={closeModal}
+      />
     </section>
-  )
+  );
 }

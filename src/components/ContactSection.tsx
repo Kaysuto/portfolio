@@ -1,24 +1,7 @@
-import { useState } from "react"
-import { 
-  Mail, 
-  User, 
-  Building2, 
-  MessageSquare, 
-  Send, 
-  CheckCircle2, 
-  ChevronDown, 
-  Copy, 
-  Check,
-  Clock,
-  MapPin,
-  Sparkles
-} from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { EnvelopeSimple, LinkedinLogo, GithubLogo, User, Buildings, ChatCircle, PaperPlaneTilt, CheckCircle, Warning, Copy, Check } from "@phosphor-icons/react"
 import { toast } from "sonner"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
+// ...existing code...
 
 interface FormData {
   name: string
@@ -26,7 +9,14 @@ interface FormData {
   company: string
   subject: string
   projectType: string
+  budget: string
   message: string
+}
+
+interface FormErrors {
+  name?: string
+  email?: string
+  message?: string
 }
 
 export function ContactSection() {
@@ -36,329 +26,481 @@ export function ContactSection() {
     company: "",
     subject: "",
     projectType: "",
+    budget: "",
     message: ""
   })
   
-  const [errors, setErrors] = useState<Partial<FormData>>({})
+  const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const [emailCopied, setEmailCopied] = useState(false)
-  const [focusedField, setFocusedField] = useState<string | null>(null)
+  
+  // Store submitted messages for later review
+  const [messages, setMessages] = useState<any[]>([])
+
+  // Dropdown states
+  const [isProjectTypeOpen, setIsProjectTypeOpen] = useState(false)
+  const [isBudgetOpen, setIsBudgetOpen] = useState(false)
+  
+  // Refs for dropdowns
+  const projectTypeRef = useRef<HTMLDivElement>(null)
+  const budgetRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (projectTypeRef.current && !projectTypeRef.current.contains(event.target as Node)) {
+        setIsProjectTypeOpen(false)
+      }
+      if (budgetRef.current && !budgetRef.current.contains(event.target as Node)) {
+        setIsBudgetOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {}
-    if (!formData.name.trim()) newErrors.name = "Requis"
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Email invalide"
-    if (!formData.message.trim()) newErrors.message = "Requis"
+    const newErrors: FormErrors = {}
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Le nom est requis"
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Le nom doit contenir au moins 2 caractères"
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "L'email est requis"
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Veuillez entrer un email valide"
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Le message est requis"
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = "Le message doit contenir au moins 10 caractères"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateForm()) return
+    
+    if (!validateForm()) {
+      toast.error("Veuillez corriger les erreurs dans le formulaire")
+      return
+    }
+
     setIsSubmitting(true)
+
     try {
+      // Simulate form submission delay
       await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Store the message
+      const newMessage = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        id: Date.now()
+      }
+      
+      setMessages((current) => [...current, newMessage])
+      
       setIsSuccess(true)
-      toast.success("Message envoyé avec succès !")
-      setFormData({ 
-        name: "", 
-        email: "", 
-        company: "", 
-        subject: "", 
-        projectType: "", 
-        message: "" 
+      toast.success("Message envoyé avec succès ! Je vous répondrai rapidement.")
+      
+      // Reset form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        subject: "",
+        projectType: "",
+        budget: "",
+        message: ""
       })
+      
+      // Reset success state after 5 seconds
       setTimeout(() => setIsSuccess(false), 5000)
-    } catch {
-      toast.error("Erreur lors de l'envoi")
+      
+    } catch (error) {
+      toast.error("Erreur lors de l'envoi. Veuillez réessayer ou m'envoyer un email directement.")
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleCopyEmail = async () => {
-    await navigator.clipboard.writeText("contact@kimiya.pro")
-    setEmailCopied(true)
-    toast.success("Email copié !")
-    setTimeout(() => setEmailCopied(false), 2000)
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }))
     }
   }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+  const handleEmailClick = () => {
+    window.location.href = "mailto:contact@kimiya.pro"
+  }
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("contact@kimiya.pro")
+      toast.success("Email copié dans le presse-papiers !")
+    } catch (err) {
+      toast.error("Erreur lors de la copie de l'email")
+    }
   }
 
   return (
-    <section id="contact" className="py-32 px-6 relative overflow-hidden noise-bg">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(166,139,124,0.03),transparent_70%)]" />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <motion.div 
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary text-primary mb-6 border-2 border-foreground/10"
-          >
-            <Sparkles size={16} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Disponible pour de nouveaux projets</span>
-          </motion.div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 uppercase italic tracking-tighter">
-            Parlons de votre <span className="text-primary">projet</span>
+    <section id="contact" className="py-32 px-6 bg-secondary/30 relative">
+      {/* Animated background shapes - positionnés pour éviter les composants */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-20 left-16 w-14 h-14 bg-accent/8 rounded-full animate-float-slow animate-delay-200"></div>
+        <div className="absolute top-1/4 right-10 w-10 h-10 bg-primary/10 rounded-full animate-float-medium animate-delay-600"></div>
+        <div className="absolute bottom-24 left-1/3 w-18 h-18 bg-secondary/15 rounded-full animate-pulse-slow animate-delay-800"></div>
+        <div className="absolute top-2/3 left-8 w-6 h-6 bg-muted/20 rounded-full animate-bounce-slow animate-delay-400"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Parlons de votre projet
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium italic">
-            "Une idée ? Un besoin spécifique ? Je suis à votre écoute."
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Vous avez une idée ? Un projet en tête ? Remplissez ce formulaire et 
+            je vous répondrai dans les plus brefs délais pour en discuter ensemble.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid lg:grid-cols-5 gap-6"
-        >
-          {/* Colonne de gauche - Informations de contact */}
-          <motion.div variants={itemVariants} className="lg:col-span-2 space-y-4">
-            {/* Carte Email */}
-            <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl hover:border-primary transition-all duration-300">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-secondary text-primary border-2 border-foreground/5">
-                  <Mail size={20} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-black text-base mb-1 uppercase italic tracking-tighter">Email direct</h3>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 px-3 py-2 bg-secondary rounded-lg text-[10px] font-black uppercase tracking-tighter border-2 border-foreground/5">
-                      contact@kimiya.pro
-                    </code>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={handleCopyEmail}
-                      className="h-10 w-10 rounded-lg bg-card border-2 border-foreground/10 hover:bg-primary hover:text-primary-foreground transition-all"
-                    >
-                      {emailCopied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-                    </Button>
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Contact Form */}
+          <div>
+            <div className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 rounded-lg">
+              <div className="p-8">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <ChatCircle size={20} className="text-accent" />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Carte Disponibilité */}
-            <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl hover:border-primary transition-all duration-300 group">
-              <div className="flex items-start gap-4">
-                <div className="relative">
-                  <div className="p-3 rounded-xl bg-secondary text-primary border-2 border-foreground/5">
-                    <Clock size={20} />
-                  </div>
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-pulse border-2 border-card" />
-                </div>
-                <div>
-                  <h3 className="font-black text-base mb-1 uppercase italic tracking-tighter">Disponibilité</h3>
-                  <p className="text-xs text-muted-foreground font-medium italic">
-                    Ouvert aux collaborations.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Carte Localisation */}
-            <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl hover:border-primary transition-all duration-300">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-secondary text-primary border-2 border-foreground/5">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h3 className="font-black text-base mb-1 uppercase italic tracking-tighter">Localisation</h3>
-                  <p className="text-xs text-muted-foreground font-medium italic">
-                    France • Remote
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Colonne de droite - Formulaire */}
-          <motion.div variants={itemVariants} className="lg:col-span-3">
-            <div className="bg-card rounded-[2rem] p-8 border-2 border-foreground/10 shadow-2xl">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 rounded-xl bg-primary text-primary-foreground">
-                  <MessageSquare size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-black uppercase italic tracking-tighter">Envoyez un message</h3>
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Nom */}
-                  <div className="space-y-2">
-                    <Label 
-                      htmlFor="name" 
-                      className="text-[9px] font-black uppercase tracking-widest text-muted-foreground"
-                    >
-                      Nom complet *
-                    </Label>
-                    <div className="relative group">
-                      <User 
-                        className={cn(
-                          "absolute left-4 top-1/2 -translate-y-1/2 transition-colors",
-                          focusedField === 'name' ? "text-primary" : "text-muted-foreground"
-                        )} 
-                        size={16} 
-                      />
-                      <Input 
-                        id="name" 
-                        placeholder="JEAN DUPONT"
-                        value={formData.name} 
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                        onFocus={() => setFocusedField('name')}
-                        onBlur={() => setFocusedField(null)}
-                        className={cn(
-                          "pl-10 h-12 rounded-xl bg-secondary/50 border-2 border-foreground/5 focus:border-primary transition-all font-black uppercase text-[10px] tracking-tighter",
-                          errors.name && "border-destructive"
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="space-y-2">
-                    <Label 
-                      htmlFor="email"
-                      className="text-[9px] font-black uppercase tracking-widest text-muted-foreground"
-                    >
-                      Email *
-                    </Label>
-                    <div className="relative group">
-                      <Mail 
-                        className={cn(
-                          "absolute left-4 top-1/2 -translate-y-1/2 transition-colors",
-                          focusedField === 'email' ? "text-primary" : "text-muted-foreground"
-                        )} 
-                        size={16} 
-                      />
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="JEAN@EXEMPLE.COM"
-                        value={formData.email} 
-                        onChange={e => setFormData({...formData, email: e.target.value})}
-                        onFocus={() => setFocusedField('email')}
-                        onBlur={() => setFocusedField(null)}
-                        className={cn(
-                          "pl-10 h-12 rounded-xl bg-secondary/50 border-2 border-foreground/5 focus:border-primary transition-all font-black uppercase text-[10px] tracking-tighter",
-                          errors.email && "border-destructive"
-                        )}
-                      />
-                    </div>
-                  </div>
+                  <h3 className="text-2xl font-semibold text-foreground">
+                    Formulaire de contact
+                  </h3>
                 </div>
 
-                {/* Type de projet */}
-                <div className="space-y-2">
-                  <Label 
-                    htmlFor="projectType"
-                    className="text-[9px] font-black uppercase tracking-widest text-muted-foreground"
-                  >
-                    Type de projet
-                  </Label>
-                  <div className="relative">
-                    <select
-                      id="projectType"
-                      value={formData.projectType}
-                      onChange={e => setFormData({...formData, projectType: e.target.value})}
-                      onFocus={() => setFocusedField('projectType')}
-                      onBlur={() => setFocusedField(null)}
-                      className={cn(
-                        "w-full h-12 pl-4 pr-10 rounded-xl text-[10px] font-black uppercase tracking-tighter appearance-none transition-all",
-                        "bg-secondary/50 border-2 border-foreground/5 focus:border-primary focus:outline-none"
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name and Email Row */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Nom complet *
+                      </label>
+                      <div className="relative">
+                        <User size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          id="name"
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange("name", e.target.value)}
+                          className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 ${
+                            errors.name 
+                              ? 'border-destructive focus-visible:ring-destructive' 
+                              : 'border-input bg-background focus-visible:ring-accent'
+                          }`}
+                          placeholder="Votre nom complet"
+                        />
+                      </div>
+                      {errors.name && (
+                        <div className="flex items-center space-x-1 text-destructive text-xs">
+                          <Warning size={12} />
+                          <span>{errors.name}</span>
+                        </div>
                       )}
-                    >
-                      <option value="" disabled>SÉLECTIONNEZ UN TYPE</option>
-                      <option value="web">🌐 SITE WEB / APP</option>
-                      <option value="mobile">📱 APP MOBILE</option>
-                      <option value="design">🎨 DESIGN UI/UX</option>
-                      <option value="other">✨ AUTRE</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" size={16} />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Email *
+                      </label>
+                      <div className="relative">
+                        <EnvelopeSimple size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange("email", e.target.value)}
+                          className={`flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 ${
+                            errors.email 
+                              ? 'border-destructive focus-visible:ring-destructive' 
+                              : 'border-input bg-background focus-visible:ring-accent'
+                          }`}
+                          placeholder="votre@email.com"
+                        />
+                      </div>
+                      {errors.email && (
+                        <div className="flex items-center space-x-1 text-destructive text-xs">
+                          <Warning size={12} />
+                          <span>{errors.email}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                {/* Message */}
-                <div className="space-y-2">
-                  <Label 
-                    htmlFor="message"
-                    className="text-[9px] font-black uppercase tracking-widest text-muted-foreground"
-                  >
-                    Message *
-                  </Label>
-                  <textarea
-                    id="message"
-                    placeholder="DÉCRIVEZ VOTRE PROJET..."
-                    className={cn(
-                      "flex min-h-[120px] w-full rounded-2xl px-4 py-3 text-[10px] font-medium italic transition-all resize-none",
-                      "bg-secondary/50 border-2 border-foreground/5 focus:border-primary focus:outline-none",
-                      errors.message && "border-destructive"
-                    )}
-                    value={formData.message}
-                    onChange={e => setFormData({...formData, message: e.target.value})}
-                    onFocus={() => setFocusedField('message')}
-                    onBlur={() => setFocusedField(null)}
-                  />
-                </div>
+                  {/* Company and Subject Row */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="company" className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Entreprise <span className="text-muted-foreground text-xs">(facultatif)</span>
+                      </label>
+                      <div className="relative">
+                        <Buildings size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          id="company"
+                          type="text"
+                          value={formData.company}
+                          onChange={(e) => handleInputChange("company", e.target.value)}
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
+                          placeholder="Nom de votre entreprise"
+                          autoComplete="new-password"
+                        />
+                      </div>
+                    </div>
 
-                {/* Bouton Submit */}
-                <Button 
-                  type="submit" 
-                  className={cn(
-                    "w-full h-14 text-base font-black rounded-xl transition-all duration-300 uppercase italic tracking-tighter shadow-xl",
-                    "bg-primary hover:bg-primary/90 text-primary-foreground shadow-primary/20",
-                    isSuccess && "bg-green-500 hover:bg-green-600"
-                  )}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-5 h-5 border-4 border-white/30 border-t-white rounded-full"
+                    <div className="space-y-2">
+                      <label htmlFor="subject" className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Objet
+                      </label>
+                      <input
+                        id="subject"
+                        type="text"
+                        value={formData.subject}
+                        onChange={(e) => handleInputChange("subject", e.target.value)}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Sujet de votre message"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Project Type and Budget Row */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Type de projet
+                      </label>
+                      <div className="relative" ref={projectTypeRef}>
+                        <div
+                          onClick={() => setIsProjectTypeOpen(!isProjectTypeOpen)}
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        >
+                          <span className={formData.projectType ? 'text-foreground' : 'text-muted-foreground'}>
+                            {formData.projectType ? (
+                              {
+                                'web-app': 'Application Web',
+                                'mobile-app': 'Application Mobile',
+                                'website': 'Site Web',
+                                'ecommerce': 'E-commerce',
+                                'api': 'API/Backend',
+                                'consultation': 'Consultation',
+                                'other': 'Autre'
+                              }[formData.projectType]
+                            ) : 'Sélectionnez un type'}
+                          </span>
+                          <svg className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isProjectTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        {isProjectTypeOpen && (
+                          <ul className="absolute top-full left-0 w-full mt-1 bg-card rounded-md z-50 p-2 shadow-lg border border-border">
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "web-app"); setIsProjectTypeOpen(false); }}>Application Web</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "mobile-app"); setIsProjectTypeOpen(false); }}>Application Mobile</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "website"); setIsProjectTypeOpen(false); }}>Site Web</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "ecommerce"); setIsProjectTypeOpen(false); }}>E-commerce</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "api"); setIsProjectTypeOpen(false); }}>API/Backend</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "consultation"); setIsProjectTypeOpen(false); }}>Consultation</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("projectType", "other"); setIsProjectTypeOpen(false); }}>Autre</a></li>
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Budget estimé
+                      </label>
+                      <div className="relative" ref={budgetRef}>
+                        <div
+                          onClick={() => setIsBudgetOpen(!isBudgetOpen)}
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        >
+                          <span className={formData.budget ? 'text-foreground' : 'text-muted-foreground'}>
+                            {formData.budget ? (
+                              {
+                                '1k-5k': '1k - 5k €',
+                                '5k-10k': '5k - 10k €',
+                                '10k-25k': '10k - 25k €',
+                                '25k+': '25k+ €',
+                                'discuss': 'À discuter'
+                              }[formData.budget]
+                            ) : 'Fourchette de budget'}
+                          </span>
+                          <svg className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isBudgetOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        {isBudgetOpen && (
+                          <ul className="absolute top-full left-0 w-full mt-1 bg-card rounded-md z-50 p-2 shadow-lg border border-border">
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("budget", "1k-5k"); setIsBudgetOpen(false); }}>1k - 5k €</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("budget", "5k-10k"); setIsBudgetOpen(false); }}>5k - 10k €</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("budget", "10k-25k"); setIsBudgetOpen(false); }}>10k - 25k €</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("budget", "25k+"); setIsBudgetOpen(false); }}>25k+ €</a></li>
+                            <li><a className="flex px-2 py-2 text-sm hover:bg-accent/10 hover:text-accent-foreground rounded-md cursor-pointer" onClick={() => { handleInputChange("budget", "discuss"); setIsBudgetOpen(false); }}>À discuter</a></li>
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => handleInputChange("message", e.target.value)}
+                      className={`flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+                        errors.message 
+                          ? 'border-destructive focus-visible:ring-destructive' 
+                          : 'border-input bg-background focus-visible:ring-accent'
+                      }`}
+                      placeholder="Décrivez votre projet, vos besoins, vos objectifs... Plus vous serez précis, mieux je pourrai vous aider !"
                     />
-                  ) : isSuccess ? (
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 size={24} />
-                      <span>Transmis</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      <Send size={20} />
-                      <span>Envoyer</span>
-                    </div>
-                  )}
-                </Button>
-              </form>
+                    {errors.message && (
+                      <div className="flex items-center space-x-1 text-destructive text-xs">
+                        <Warning size={12} />
+                        <span>{errors.message}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isSuccess}
+                    className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full h-10 px-4 py-2 shadow-sm hover:shadow-lg hover:scale-105 group ${
+                      isSuccess 
+                        ? 'bg-green-600 text-white hover:bg-green-700' 
+                        : 'bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Envoi en cours...
+                      </>
+                    ) : isSuccess ? (
+                      <>
+                        <CheckCircle size={20} className="mr-2" />
+                        Message envoyé !
+                      </>
+                    ) : (
+                      <>
+                        <PaperPlaneTilt size={20} className="mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                        Envoyer le message
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+
+          {/* Contact Info & Alternative Methods */}
+          <div className="space-y-6">
+            {/* Direct Contact */}
+            <div className="bg-card border border-border hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 rounded-lg">
+              <div className="p-8">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <EnvelopeSimple size={20} className="text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-foreground">
+                    Contact direct
+                  </h3>
+                </div>
+                
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  Vous préférez m'écrire directement ? Pas de problème !
+                </p>
+
+                <div className="space-y-4">
+                  <div className="p-4 bg-secondary/50 rounded-xl">
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium text-foreground">
+                        contact@kimiya.pro
+                      </span>
+                      <button
+                        onClick={handleCopyEmail}
+                        className="p-2 hover:bg-accent/10 rounded-lg transition-colors duration-200 group"
+                        title="Copier l'email"
+                        aria-label="Copier l'email dans le presse-papiers"
+                      >
+                        <Copy size={18} className="text-muted-foreground group-hover:text-accent transition-colors duration-200" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleEmailClick}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full h-10 px-4 py-2 shadow-sm hover:shadow-lg hover:scale-105 group bg-accent text-[#070201] dark:text-[#221512] hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
+                  >
+                    <EnvelopeSimple size={18} className="mr-2 group-hover:translate-x-1 group-hover:-rotate-12 transition-transform duration-300" />
+                    Ouvrir dans votre client email
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
+            {/* Availability Status */}
+            <div className="bg-green-600/60 dark:bg-green-800/60 border border-green-700 shadow-xl rounded-lg">
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold text-white dark:text-green-200">
+                    Disponible pour de nouveaux projets
+                  </span>
+                </div>
+                <p className="text-white dark:text-green-300 text-sm">
+                  Je suis actuellement ouvert à de nouvelles opportunités et collaborations passionnantes.
+                </p>
+              </div>
+            </div>
+
+            {/* Response Time */}
+            <div className="bg-blue-600/60 dark:bg-blue-800/60 border border-blue-700 shadow-xl rounded-lg">
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="font-semibold text-white dark:text-blue-200">
+                    Réponse sous 24h
+                  </span>
+                </div>
+                <p className="text-white dark:text-blue-300 text-sm">
+                  Je m'engage à répondre à tous les messages dans les 24 heures ouvrables.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

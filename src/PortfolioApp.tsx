@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
 import { Footer } from "@/components/Footer"
-import { ConsentBadge } from "@/components/ConsentBadge"
+import { CookieBadge } from "@/components/CookieBadge"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
@@ -99,7 +99,7 @@ export function PortfolioApp() {
         <Footer />
       </div>
       
-      <ConsentBadge />
+      <CookieBadge />
       <Toaster />
       
       {/* JSON-LD structured data for SEO */}

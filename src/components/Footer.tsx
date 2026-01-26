@@ -1,120 +1,124 @@
-import { Code, Github, Linkedin, Heart, ArrowUp } from "lucide-react"
+import { Code, GithubLogo, LinkedinLogo, X } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  
+  // Modal states
   const [isGithubModalOpen, setIsGithubModalOpen] = useState(false)
   const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false)
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const navLinks = [
-    { name: "ACCUEIL", href: "#accueil" },
-    { name: "À PROPOS", href: "#a-propos" },
-    { name: "PROJETS", href: "#projets" },
-    { name: "CONTACT", href: "#contact" },
-  ]
-
   return (
-    <footer className="py-20 px-6 relative overflow-hidden noise-bg border-t-2 border-foreground/5">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,163,115,0.03),transparent_70%)]" />
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand Column */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="flex items-center gap-4">
-              <img 
-                src="https://i.imgur.com/tDPPBl1.png" 
-                alt="Logo" 
-                className="w-14 h-14 object-contain"
-              />
-              <div className="flex flex-col leading-none">
-                <span className="font-black text-2xl tracking-tighter uppercase italic">KAYSUTO</span>
-                <span className="font-black text-sm tracking-[0.3em] text-primary">KIMIYA</span>
+    <footer className="bg-card border-t border-border py-12 px-6 animate-fadeInUp">
+      <div className="max-w-6xl mx-auto">
+        {/* Main Footer Content */}
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
+          {/* Brand */}
+          <div className="space-y-4 animate-slideInFromLeft animate-delay-100">
+            <div className="flex items-center space-x-2">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <Code size={20} className="text-accent" />
+              </div>
+              <div>
+                <span className="font-medium text-foreground">Kaysuto</span>
+                <span className="text-muted-foreground ml-1">Kimiya</span>
               </div>
             </div>
-            <p className="text-muted-foreground max-w-md font-medium italic leading-relaxed">
-              "Concevoir des expériences numériques uniques, mêlant esthétique rétro et technologies modernes."
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Full-Stack Maker polyvalent spécialisé en réseau, développement, 
+              design pixel art et création de mini-jeux. Toujours en quête d'innovation et de nouveaux défis.
             </p>
-            <div className="flex gap-4">
-              <Button 
-                variant="outline" 
-                size="icon"
-                className="w-12 h-12 rounded-xl bg-card border-2 border-foreground/5 hover:border-primary hover:text-primary transition-all"
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4 animate-fadeInUp animate-delay-200">
+            <h4 className="font-semibold text-foreground">Navigation</h4>
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  const element = document.getElementById("accueil")
+                  element?.scrollIntoView({ behavior: "smooth" })
+                }}
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
+              >
+                Accueil
+              </button>
+              <button
+                onClick={() => {
+                  const element = document.getElementById("apropos")
+                  element?.scrollIntoView({ behavior: "smooth" })
+                }}
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
+              >
+                À propos
+              </button>
+              <button
+                onClick={() => {
+                  const element = document.getElementById("projets")
+                  element?.scrollIntoView({ behavior: "smooth" })
+                }}
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
+              >
+                Projets
+              </button>
+              <button
+                onClick={() => {
+                  const element = document.getElementById("contact")
+                  element?.scrollIntoView({ behavior: "smooth" })
+                }}
+                className="block text-muted-foreground hover:text-accent transition-all duration-200 text-sm"
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+
+          {/* Social Networks */}
+          <div className="space-y-4 animate-slideInFromRight animate-delay-300">
+            <h4 className="font-semibold text-foreground">Réseaux</h4>
+            <div className="flex space-x-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
                 onClick={() => setIsGithubModalOpen(true)}
               >
-                <Github size={22} />
+                <GithubLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
               </Button>
-              <Button 
-                variant="outline" 
-                size="icon"
-                className="w-12 h-12 rounded-xl bg-card border-2 border-foreground/5 hover:border-primary hover:text-primary transition-all"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-3 hover:bg-accent/10 group transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-accent/20"
                 onClick={() => setIsLinkedinModalOpen(true)}
               >
-                <Linkedin size={22} />
+                <LinkedinLogo size={20} className="text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:scale-110" />
               </Button>
             </div>
-          </div>
-
-          {/* Links Columns */}
-          <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8">Navigation</h4>
-            <ul className="space-y-4">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <a 
-                    href={link.href}
-                    className="text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors italic"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8">Contact</h4>
-            <div className="space-y-4">
-              <a 
-                href="mailto:contact@kimiya.pro"
-                className="block text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors italic"
-              >
-                contact@kimiya.pro
-              </a>
-              <p className="text-xs font-medium text-muted-foreground italic">
-                France • Télétravail
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Retrouvez mes projets sur GitHub et connectons-nous sur LinkedIn pour échanger sur nos expériences professionnelles.
+            </p>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t-2 border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            © {currentYear} KAYSUTO KIMIYA • TOUS DROITS RÉSERVÉS
-          </p>
-          
-          <button 
-            onClick={scrollToTop}
-            className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary hover:text-foreground transition-colors"
-          >
-            RETOUR EN HAUT
-            <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all border-2 border-foreground/5">
-              <ArrowUp size={18} />
+        <div className="pt-8 border-t border-border animate-fadeInUp animate-delay-400">
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <span>© {currentYear} Kimiya</span>
             </div>
-          </button>
+            
+            <div className="flex items-center space-x-3 text-xs text-muted-foreground">
+              <span>Full-Stack</span>
+              <span>•</span>
+              <span>Passionné LLM</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Modaux pour les réseaux sociaux */}
       <GitHubFooterModal 
         isOpen={isGithubModalOpen} 
         onClose={() => setIsGithubModalOpen(false)} 
@@ -124,5 +128,5 @@ export function Footer() {
         onClose={() => setIsLinkedinModalOpen(false)} 
       />
     </footer>
-  )
+  );
 }

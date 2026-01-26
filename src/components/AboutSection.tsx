@@ -1,173 +1,165 @@
-import { Code, ShieldCheck, Database, Palette } from "lucide-react"
+import { Brain, Code, Heart } from "@phosphor-icons/react"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
-import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
 
 export function AboutSection() {
   const ageCounter = useCounterAnimation({ end: 23, duration: 1800 })
   const experienceCounter = useCounterAnimation({ end: 15, duration: 2200 })
 
-  const skills = [
-    {
-      icon: <Database size={24} />,
-      title: "Infrastructure & Cloud",
-      desc: "Expertise en datacenter, virtualisation et gestion de serveurs haute disponibilité.",
-      color: "primary"
-    },
-    {
-      icon: <Code size={24} />,
-      title: "Développement Full-Stack",
-      desc: "Création d'applications web modernes avec React, Node.js et architectures scalables.",
-      color: "accent"
-    },
-    {
-      icon: <ShieldCheck size={24} />,
-      title: "Sécurité & Réseaux",
-      desc: "Conception de réseaux sécurisés et mise en place de protocoles de protection des données.",
-      color: "primary"
-    },
-    {
-      icon: <Palette size={24} />,
-      title: "Design & Expérience",
-      desc: "Focus sur l'UI/UX pour offrir des interfaces intuitives et esthétiquement plaisantes.",
-      color: "accent"
-    }
-  ]
-
-  const techStack = [
-    { name: "React", category: "frontend" },
-    { name: "TypeScript", category: "frontend" },
-    { name: "Node.js", category: "backend" },
-    { name: "Tailwind CSS", category: "frontend" },
-    { name: "Docker", category: "devops" },
-    { name: "Linux", category: "devops" },
-    { name: "VMware", category: "devops" },
-    { name: "Supabase", category: "backend" },
-    { name: "PostgreSQL", category: "backend" },
-    { name: "Git", category: "devops" }
-  ]
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  }
-
   return (
-    <section id="a-propos" className="py-32 px-6 relative overflow-hidden noise-bg">
-      {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(166,139,124,0.03),transparent_70%)]" />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-start">
-          {/* Left Column - Text Content */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:sticky lg:top-32"
-          >
-            <motion.span 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-secondary text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-6 border-2 border-foreground/10"
-            >
-              À propos de moi
-            </motion.span>
-            
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight uppercase italic tracking-tighter">
-              Une vision <br />
-              <span className="text-primary">globale</span> du numérique.
-            </h2>
-            
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed font-medium italic border-l-4 border-primary pl-6">
-              Mon parcours atypique, mêlant expertise en infrastructure datacenter et passion 
-              pour le développement créatif.
-            </p>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl">
+    <section id="apropos" className="py-20 px-6 bg-secondary/30 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 right-10 w-32 h-32 bg-accent/5 rounded-full animate-float-slow animate-delay-700"></div>
+        <div className="absolute bottom-20 left-8 w-24 h-24 bg-primary/10 rounded-full animate-float-medium animate-delay-800"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-secondary/20 rounded-full animate-bounce-slow animate-delay-900"></div>
+        <div className="absolute top-20 left-1/3 w-12 h-12 bg-accent/15 rounded-full animate-pulse-slow animate-delay-1000"></div>
+      </div>
+      <div className="max-w-4xl mx-auto relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16 animate-fadeInUp animate-delay-200">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 hover:text-accent transition-colors duration-300">
+            À propos de moi
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Full-Stack Maker polyvalent et Technicien Datacenter de 23 ans, j'ai acquis une expertise dans de nombreux domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft et bien plus encore.</p>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Left - Personal Info */}
+          <div className="space-y-6 animate-slideInFromLeft animate-delay-300">
+            <div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4 hover:text-accent transition-colors duration-300">
+                Mon parcours
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-6 hover:text-foreground/80 transition-colors duration-300">En tant que Full-Stack Maker polyvalent et Technicien Datacenter, ma force réside dans ma diversité d'expertise : de l'infrastructure réseau au développement web, du design pixel art à la création de mini-jeux Minecraft. Cette polyvalence unique me permet d'aborder chaque projet avec une vision globale et créative.</p>
+              <p className="text-muted-foreground leading-relaxed hover:text-foreground/80 transition-colors duration-300">
+                Mon expérience en datacenter m'apporte une compréhension approfondie 
+                des systèmes, de la sécurité et de la fiabilité, que j'applique 
+                dans mes créations pour garantir innovation et qualité.
+              </p>
+            </div>
+
+            {/* Age & Experience */}
+            <div className="flex items-center space-x-8 pt-4">
+              <div className="group cursor-default">
                 <span 
-                  ref={ageCounter.elementRef} 
-                  className="text-4xl font-black text-primary block mb-1 italic tracking-tighter"
+                  ref={ageCounter.elementRef}
+                  className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block"
                 >
                   {ageCounter.count}
                 </span>
-                <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black">
-                  Ans d'existence
-                </p>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans</p>
               </div>
-              <div className="bg-card rounded-3xl p-6 border-2 border-foreground/10 shadow-xl">
+              <div className="group cursor-default">
                 <span 
-                  ref={experienceCounter.elementRef} 
-                  className="text-4xl font-black text-primary block mb-1 italic tracking-tighter"
+                  ref={experienceCounter.elementRef}
+                  className="text-3xl font-bold text-accent group-hover:scale-110 transition-transform duration-300 inline-block"
                 >
                   {experienceCounter.count}+
                 </span>
-                <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black">
-                  Projets réalisés
-                </p>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">ans expérience</p>
               </div>
             </div>
+          </div>
 
-            {/* Tech Stack */}
-            <div>
-              <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-6">
-                Technologies Maîtrisées
-              </h4>
-              <div className="flex flex-wrap gap-3">
-                {techStack.map((tech) => (
-                  <span 
-                    key={tech.name} 
-                    className="px-5 py-2 rounded-xl bg-secondary text-xs font-black uppercase tracking-tighter border-2 border-foreground/5 hover:border-primary transition-all cursor-default"
-                  >
-                    {tech.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Column - Skills Grid */}
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid sm:grid-cols-2 gap-6"
-          >
-            {skills.map((skill, i) => {
-              return (
-                <motion.div
-                  key={i}
-                  variants={itemVariants}
-                  className="bg-card rounded-[2.5rem] p-8 border-2 border-foreground/10 shadow-xl transition-all duration-300 group hover:border-primary hover:-translate-y-2"
-                >
-                  <div className={cn(
-                    "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 border-2 border-foreground/5",
-                    skill.color === "primary" ? "bg-primary text-primary-foreground" : "bg-secondary text-primary"
-                  )}>
-                    {skill.icon}
-                  </div>
-                  <h4 className="text-xl font-black mb-3 uppercase italic tracking-tighter">{skill.title}</h4>
-                  <p className="text-muted-foreground text-sm leading-relaxed font-medium italic">
-                    "{skill.desc}"
+          {/* Right - Skills & Interests */}
+          <div className="space-y-6 animate-slideInFromRight animate-delay-400">
+            {/* Infrastructure Expertise */}
+            <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-1 group">
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  {/* Remplacer Server par Code ou une autre icône existante */}
+                  <Code size={24} className="text-accent group-hover:animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                    Expertise Infrastructure
+                  </h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
+                    3 ans d'expérience en datacenter m'ont appris l'importance de 
+                    la fiabilité, de la sécurité et de la performance au niveau matériel.
                   </p>
-                </motion.div>
-              )
-            })}
-          </motion.div>
+                </div>
+              </div>
+            </div>
+
+            {/* LLM Interest */}
+            <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-1 group">
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  <Brain size={24} className="text-accent group-hover:animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                    Passionné par les LLM
+                  </h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
+                    Je m'intéresse particulièrement aux modèles de langage et à leur 
+                    intégration dans des applications pratiques pour améliorer l'expérience utilisateur.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Clean Code */}
+            <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-1 group">
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  <Code size={24} className="text-accent group-hover:animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                    Code élégant et performant
+                  </h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
+                    J'accorde une grande importance à la qualité du code, à l'architecture 
+                    propre et aux standards d'excellence dans chaque domaine.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* User Experience */}
+            <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl hover:shadow-accent/10 transition-all duration-500 hover:-translate-y-1 group">
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-accent/10 rounded-lg flex-shrink-0 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  <Heart size={24} className="text-accent group-hover:animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                    Centré sur l'utilisateur
+                  </h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
+                    Chaque projet commence par comprendre les besoins utilisateurs 
+                    pour créer des interfaces intuitives et engageantes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tech Stack */}
+        <div className="mt-16 animate-fadeInUp animate-delay-600">
+          <h3 className="text-2xl font-semibold text-foreground mb-8 text-center hover:text-accent transition-colors duration-300">
+            Technologies favorites
+          </h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              "React", "TypeScript", "Vue.js", "Node.js", "PHP", "MySQL", 
+              "Tailwind CSS", "Git", "Docker", "Linux", "VMware", "Windows Server"
+            ].map((tech, index) => (
+              <span
+                key={tech}
+                className="px-4 py-2 bg-accent/10 border border-accent/20 rounded-full text-sm font-medium text-accent hover:bg-accent/20 hover:scale-105 hover:shadow-lg hover:shadow-accent/25 transition-all duration-300 cursor-default animate-stagger"
+                style={{ animationDelay: `${(index + 10) * 0.1}s` }}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
