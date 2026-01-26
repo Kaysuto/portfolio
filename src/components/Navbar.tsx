@@ -103,8 +103,8 @@ export function Navbar() {
         <div className="flex items-center h-16 justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft" onClick={() => scrollToSection('accueil')}>
-            <div className="p-2 bg-accent/10 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-              <Code size={20} className="text-accent group-hover:animate-pulse" />
+            <div className="p-1 bg-accent/5 rounded-lg group-hover:bg-accent/10 group-hover:scale-110 transition-all duration-300">
+              <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
             </div>
             <div className="transition-all duration-300 group-hover:scale-105">
               <span className="font-medium text-foreground group-hover:text-accent">Kaysuto</span>
@@ -140,13 +140,13 @@ export function Navbar() {
               </Button>
             ))}
             
-            {/* Bouton Bio */}
+            {/* Bouton Bio - Navigation vers page séparée */}
             <Link to="/bio">
               <Button
                 variant={activeSection === 'bio' ? "default" : "ghost"}
                 size="sm"
                 className={cn(
-                  "relative px-4 py-2 font-semibold group flex items-center transition-none",
+                  "relative px-4 py-2 font-semibold group flex items-center transition-all duration-300",
                   activeSection === 'bio'
                     ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"
@@ -238,7 +238,7 @@ export function Navbar() {
                 variant={activeSection === 'bio' ? "default" : "ghost"}
                 size="sm"
                 className={cn(
-                  "w-full text-left px-4 py-2 font-semibold group flex items-center transition-none",
+                  "w-full text-left px-4 py-2 font-semibold group flex items-center transition-all duration-300",
                   activeSection === 'bio'
                     ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
                     : "hover:bg-accent/10 hover:text-accent"

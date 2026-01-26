@@ -18,8 +18,8 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4 animate-slideInFromLeft animate-delay-100">
             <div className="flex items-center space-x-2">
-              <div className="p-2 bg-accent/10 rounded-lg">
-                <Code size={20} className="text-accent" />
+              <div className="p-1 bg-accent/5 rounded-lg">
+                <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
               </div>
               <div>
                 <span className="font-medium text-foreground">Kaysuto</span>

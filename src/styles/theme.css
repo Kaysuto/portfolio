@@ -88,6 +88,7 @@
 
 @layer base {
   #spark-app {
+    background-color: #2A1F1A !important;
     --tomato-contrast: #fff;
     --red-contrast: #fff;
     --ruby-contrast: #fff;
@@ -177,9 +178,9 @@
     --radius-full: 9999px;
 
     /* Neutral colors */
-    --color-neutral-1: var(--slate-1);
-    --color-neutral-2: var(--slate-2);
-    --color-neutral-3: var(--slate-3);
+    --color-neutral-1: #2A1F1A !important;
+    --color-neutral-2: #1C1816;
+    --color-neutral-3: #2D2421;
     --color-neutral-4: var(--slate-4);
     --color-neutral-5: var(--slate-5);
     --color-neutral-6: var(--slate-6);
@@ -239,15 +240,15 @@
     --color-fg-secondary: var(--color-neutral-a11);
 
     /* Background colors */
-    --color-bg: #ffffff;
-    --color-bg-inset: var(--color-neutral-2);
-    --color-bg-overlay: #ffffff;
+    --color-bg: #2A1F1A !important;
+    --color-bg-inset: #1C1816;
+    --color-bg-overlay: #2D2421;
 
     /* Focus ring */
     --color-focus-ring: var(--color-accent-9);
 
     /* Fonts */
-    --font-sans-serif: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --font-sans-serif: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
@@ -257,10 +258,15 @@
 
   :root.dark,
   html.dark {
-    --color-bg: #2A1F1A; /* Fond principal chocolat très foncé */
-    --color-bg-inset: #3B2F29; /* Fond des éléments chocolat foncé */
-    --color-bg-overlay: #4A3C35; /* Fond des overlays chocolat moyen */
-    --color-accent-foreground: #221512 !important; /* Couleur du texte accent pour le thème sombre */
+    --color-bg: #2A1F1A !important;
+    --color-bg-inset: #1C1816 !important;
+    --color-bg-overlay: #2D2421 !important;
+    --color-accent-foreground: #2A1F1A !important;
+  }
+
+  body.dark,
+  .dark body {
+    background-color: #2A1F1A !important;
   }
 
   :root.light,

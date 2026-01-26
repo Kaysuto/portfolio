@@ -4,23 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useQuery } from '@tanstack/react-query';
 
-const BioPage: React.FC = () => {
-  // Titre fixe sans animation
-  useDocumentTitle("Bio", { enableTypingAnimation: false });
-
+export function BioSection() {
+  // États pour les liens depuis la base de données
+  const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   // États pour le modal de confirmation
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
   const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
-
-  // Charger les liens bio avec React Query pour le cache
-  const { data: bioLinks = [], isLoading, error } = useQuery({
-    queryKey: ['bioLinks'],
-    queryFn: BioLinksService.getBioLinks,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
 
   // Mapping des icônes Phosphor
   const getIcon = (iconName: string) => {
@@ -38,6 +31,24 @@ const BioPage: React.FC = () => {
     return iconMap[iconName] || LinkSimple;
   };
 
+  // Charger les liens bio depuis la base de données
+  useEffect(() => {
+    const loadBioLinks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const links = await BioLinksService.getBioLinks();
+        setBioLinks(links);
+      } catch (err) {
+        setError('Erreur lors du chargement des liens');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBioLinks();
+  }, []);
+
   const openModal = (link: {name: string, url: string, description: string}) => {
     setSelectedLink(link);
     openModalBase();
@@ -51,7 +62,7 @@ const BioPage: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <section id="bio" className="py-20 px-6 bg-background relative overflow-hidden">
       {/* Animated background shapes */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-40 right-8 w-16 h-16 bg-accent/8 rounded-full animate-float-slow"></div>
@@ -61,78 +72,75 @@ const BioPage: React.FC = () => {
         <div className="absolute bottom-20 left-8 w-14 h-14 bg-muted/20 rounded-full animate-pulse-slow"></div>
       </div>
 
-      {/* Section Bio */}
-      <section className="min-h-[calc(100vh-64px)] flex items-center justify-center px-6 py-20">
-        <div className="container mx-auto max-w-4xl">
-          {/* En-tête de la page bio */}
-          <div className="text-center mb-12 animate-fadeInUp">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent mb-4">
-              Mes Liens
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Retrouvez-moi sur mes différentes plateformes et projets
-            </p>
-          </div>
+      <div className="container mx-auto max-w-4xl relative z-10">
+        {/* En-tête de la section bio */}
+        <div className="text-center mb-12 animate-fadeInUp">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent mb-4">
+            Mes Liens
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Retrouvez-moi sur mes différentes plateformes et projets
+          </p>
+        </div>
 
-          {/* Grille de liens sociaux */}
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Chargement des liens...</p>
-            </div>
-          ) : error ? (
-            <div className="text-center py-12">
-              <p className="text-destructive mb-4">❌ Erreur lors du chargement des liens</p>
-              <Button onClick={() => window.location.reload()} variant="outline">
-                Réessayer
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-              {bioLinks.map((link, index) => {
-                const IconComponent = getIcon(link.icon || 'LinkSimple');
-                return (
-                  <button
-                    key={link.id}
-                    onClick={() => openModal({
-                      name: link.title,
-                      url: link.url,
-                      description: link.description || ''
-                    })}
-                    className="group relative p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 animate-fadeInUp text-left w-full"
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                      animationFillMode: 'backwards'
-                    }}
-                  >
-                    {/* Effet de brillance sur hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
-                    
-                    <div className="relative flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="bg-accent/10 p-3 rounded-xl group-hover:bg-accent/20 transition-colors duration-300">
-                          <IconComponent size={24} className="text-accent group-hover:text-accent-foreground transition-colors duration-300" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
-                            {link.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                            {link.description}
-                          </p>
-                        </div>
+        {/* Grille de liens sociaux */}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Chargement des liens...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-destructive mb-4">❌ {error}</p>
+            <Button onClick={() => window.location.reload()} variant="outline">
+              Réessayer
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {bioLinks.map((link, index) => {
+              const IconComponent = getIcon(link.icon || 'LinkSimple');
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => openModal({
+                    name: link.title,
+                    url: link.url,
+                    description: link.description || ''
+                  })}
+                  className="group relative p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 animate-fadeInUp text-left w-full"
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                    animationFillMode: 'backwards'
+                  }}
+                >
+                  {/* Effet de brillance sur hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                  
+                  <div className="relative flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-accent/10 p-3 rounded-xl group-hover:bg-accent/20 transition-colors duration-300">
+                        <IconComponent size={24} className="text-accent group-hover:text-accent-foreground transition-colors duration-300" />
                       </div>
-                      <div className="bg-accent/10 p-2 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                        <ArrowUpRight className="w-5 h-5 text-accent group-hover:text-accent-foreground transition-colors duration-300" />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
+                          {link.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                          {link.description}
+                        </p>
                       </div>
                     </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </section>
+                    <div className="bg-accent/10 p-2 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                      <ArrowUpRight className="w-5 h-5 text-accent group-hover:text-accent-foreground transition-colors duration-300" />
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Modal de confirmation pour les liens */}
       <Modal
@@ -194,8 +202,6 @@ const BioPage: React.FC = () => {
           </div>
         )}
       </Modal>
-    </div>
+    </section>
   );
-};
-
-export default BioPage;
+}

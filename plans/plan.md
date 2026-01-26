@@ -1,153 +1,46 @@
-# Plan de Refonte Graphique - Portfolio Kimiya
+# Plan de Refonte Visuelle - Identité "Kaysuto"
 
-## 📊 Analyse Existante
+Ce plan vise à restaurer et moderniser l'identité visuelle originale du site kaysuto.fr, caractérisée par des tons chauds, terreux et une typographie Montserrat affirmée.
 
-| Élément | Actuel | Observation |
-|---------|--------|-------------|
-| **Accent** | `#B8956A` (doré/beige) | Conservé - identité forte |
-| **Dark BG** | `#1a0f08` (chocolat) | Trop sombre, manque contraste |
-| **Système** | Tailwind v4 + Shadcn + Radix | Infrastructure solide |
-| **Contact** | Grid 3 cols, formulaire dense | Refonte complète nécessaire |
+## 1. Charte Graphique
 
----
+### Palette de Couleurs (Mode Sombre)
+- **Fond (Background) :** `#14110F` (Brun-noir profond).
+- **Surface (Cards/Modals) :** `#1C1816` avec bordure `#2D2421`.
+- **Accent :** `#A68B7C` (Beige terreux) ou `#D4A373`.
+- **Texte :**
+  - Primaire : `#E6E1DF`
+  - Secondaire : `#A68B7C`
 
-## 🎨 Nouvelle Palette Proposée
+### Palette de Couleurs (Mode Clair)
+- **Fond (Background) :** `#F2EBE4`.
+- **Texte :** `#2D2421`.
 
-```css
-/* Accent Principal - conservé */
---accent: #B8956A;
---accent-light: #D4B896;
---accent-dark: #9A7B54;
+### Typographie
+- **Police :** `Montserrat` (Google Fonts).
+- **Style :** Poids `900` (Black) pour les titres, `italic` fréquent pour le style "Studio".
 
-/* Nouveaux fonds - plus lumineux */
---bg-dark: #0F1419;        /* Bleu-noir profond */
---bg-card: #1A2332;        /* Bleu-gris élégant */
---bg-elevated: #243447;    /* Pour cartes/modals */
+## 2. Composants d'Interface (UI)
 
-/* Neutres raffinés */
---text-primary: #F8FAFC;
---text-secondary: #94A3B8;
---text-muted: #64748B;
+### Cartes (Cards)
+- Rayon de bordure : `2rem` (très arrondi).
+- Bordures : `2px` solides.
+- Style : "Glassmorphism" léger avec des tons bruns.
 
-/* Accents secondaires */
---success: #10B981;
---info: #3B82F6;
---border: rgba(255,255,255,0.08);
-```
+### Boutons
+- Style : Très arrondis (`full` ou `2rem`).
+- Typographie : `font-black`, `uppercase`, `italic`.
 
----
+### Navigation
+- Navbar avec liens centrés dans un conteneur arrondi.
+- Utilisation de `framer-motion` pour des transitions fluides.
 
-## 🔄 Étapes d'Implémentation
+## 3. Étapes d'Implémentation (Mode Code requis)
 
-### 1. Variables CSS Globales
-**Fichier** : `src/main.css`
-- [ ] Mettre à jour `:root` et `.dark` avec nouvelle palette
-- [ ] Ajouter variables gradient et glow
-- [ ] Harmoniser les tokens Shadcn
-
-### 2. Refonte ContactSection
-**Fichier** : `src/components/ContactSection.tsx`
-
-**Structure proposée :**
-
-```
-┌─────────────────────────────────────────────────────┐
-│  HEADER SECTION                                      │
-│  Titre + Sous-titre centré                          │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  ┌──────────────────┐  ┌────────────────────────┐   │
-│  │  INFOS CONTACT   │  │  FORMULAIRE            │   │
-│  │                  │  │                        │   │
-│  │  📧 Email        │  │  [Nom]      [Email]    │   │
-│  │  copier/mailto   │  │                        │   │
-│  │                  │  │  [Entreprise] [Sujet]  │   │
-│  │  🟢 Disponible   │  │                        │   │
-│  │                  │  │  [Type projet ▼]       │   │
-│  │  ⚡ Réponse <24h │  │                        │   │
-│  │                  │  │  [Message textarea]    │   │
-│  │  📍 Localisation │  │                        │   │
-│  └──────────────────┘  │  [====ENVOYER====]     │   │
-│                        └────────────────────────┘   │
-│                                                      │
-└─────────────────────────────────────────────────────┘
-```
-
-**Améliorations UX :**
-- [ ] Layout inversé : infos à gauche (1/3), formulaire à droite (2/3)
-- [ ] Supprimer champ "Budget" (barrière psychologique)
-- [ ] Icônes Phosphor avec hover glow
-- [ ] Labels flottants sur les inputs
-- [ ] Validation temps réel avec feedback visuel
-- [ ] Bouton envoi avec animation loading/success
-- [ ] Card glassmorphism avec backdrop-blur
-
-### 3. Propagation Charte Graphique
-**Fichiers impactés :**
-- [ ] `src/components/Navbar.tsx` - couleurs + effets hover
-- [ ] `src/components/HeroSection.tsx` - gradients + accents
-- [ ] `src/components/AboutSection.tsx` - cards + badges
-- [ ] `src/components/ProjectsSection.tsx` - cartes projets
-- [ ] `src/components/Footer.tsx` - cohérence globale
+1. **Restauration des Design Tokens :** Réinitialiser [`src/styles/theme.css`](src/styles/theme.css) avec les couleurs terreuses.
+2. **Typographie :** Réinstaller `Montserrat` dans [`index.html`](index.html).
+3. **Composants :** Redonner aux boutons et cartes leur aspect "Studio/Bold".
+4. **Sections :** Réappliquer les styles spécifiques (Hero avec texte géant, badges arrondis).
 
 ---
-
-## 🎯 Spécifications Visuelles Contact
-
-### Carte Glassmorphism
-```css
-.glass-card {
-  background: rgba(26, 35, 50, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
-```
-
-### Icônes Interactives
-```css
-.icon-hover {
-  transition: all 0.3s ease;
-}
-.icon-hover:hover {
-  color: var(--accent);
-  filter: drop-shadow(0 0 8px var(--accent));
-  transform: translateY(-2px);
-}
-```
-
-### Inputs Modernisés
-```css
-.input-modern {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-.input-modern:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(184,149,106,0.15);
-}
-```
-
----
-
-## 📋 Checklist Finale
-
-- [ ] Palette cohérente sur toutes les sections
-- [ ] Contraste WCAG AA minimum (4.5:1)
-- [ ] Animations fluides (60fps)
-- [ ] Responsive mobile-first
-- [ ] États hover/focus/active définis
-- [ ] Dark/Light mode fonctionnel
-
----
-
-## ⏭️ Prochaine Action
-
-**Validation requise** : Ce plan correspond-il à votre vision ?
-- Palette de couleurs ?
-- Layout section contact ?
-- Autre préférence ?
-
-Une fois validé → Switch en mode **Code** pour implémentation.
+*Note : Ce plan abandonne le style minimaliste Apple pour revenir à l'ADN visuel de Kaysuto.*

@@ -1,13 +1,8 @@
-import { Navbar } from "@/components/Navbar"
 import { HeroSection } from "@/components/HeroSection"
-import { Footer } from "@/components/Footer"
-import { CookieBadge } from "@/components/CookieBadge"
-import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 import { getMaintenanceStatus } from "@/admin/services/maintenanceService"
 import { useQuery } from '@tanstack/react-query';
-import { Navigate } from 'react-router-dom';
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
@@ -17,7 +12,7 @@ export function PortfolioApp() {
     dynamicSections: false 
   });
 
-  const { data: maintenanceStatus, isLoading } = useQuery({
+  const { data: maintenanceStatus } = useQuery({
     queryKey: ['maintenanceStatus'],
     queryFn: getMaintenanceStatus,
   });
@@ -54,11 +49,10 @@ export function PortfolioApp() {
             registration.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
         } catch (error) {
-          // Silently fail, as the main app can still function
+          // Silently fail
         }
       };
       
-      // Register on idle if possible
       if ('requestIdleCallback' in window) {
         requestIdleCallback(registerSW);
       } else {
@@ -67,40 +61,18 @@ export function PortfolioApp() {
     }
   }, []);
 
-  // Gestion des états de chargement et de maintenance
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
-  }
-
-  if (maintenanceStatus && maintenanceStatus.is_enabled) {
-    return <Navigate to="/maintenance" replace />;
-  }
-
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
-      <div className="relative z-10">
-        <Navbar />
-        <main className="theme-fade" role="main">
-          <HeroSection />
-          <Suspense fallback={<SectionSkeleton />}>
-            <AboutSection />
-          </Suspense>
-          <Suspense fallback={<SectionSkeleton />}>
-            <ProjectsSection />
-          </Suspense>
-          <Suspense fallback={<SectionSkeleton />}>
-            <ContactSection />
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
-      
-      <CookieBadge />
-      <Toaster />
+    <>
+      <HeroSection />
+      <Suspense fallback={<SectionSkeleton />}>
+        <AboutSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <ProjectsSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <ContactSection />
+      </Suspense>
       
       {/* JSON-LD structured data for SEO */}
       <script
@@ -112,7 +84,7 @@ export function PortfolioApp() {
             "name": "Kimiya Kaysuto",
             "jobTitle": "Full-Stack Maker",
             "description": "Full-Stack Maker polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
-            "url": "https://kimiya-portfolio.vercel.app",
+            "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",
               "https://linkedin.com/in/kimiya-kaysuto"
@@ -125,6 +97,6 @@ export function PortfolioApp() {
           })
         }}
       />
-    </div>
+    </>
   )
 }

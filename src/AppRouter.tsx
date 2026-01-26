@@ -4,6 +4,7 @@ import { AdminApp } from './admin/AdminApp';
 import { Login } from './admin/pages/Login';
 import MaintenancePage from './pages/MaintenancePage';
 import BioPage from './pages/BioPage';
+import { Layout } from '@/components/Layout';
 
 const AppRouter: React.FC = () => {
   return (
@@ -14,9 +15,9 @@ const AppRouter: React.FC = () => {
       }}
     >
       <Routes>
-        {/* Routes publiques - Portfolio */}
-        <Route path="/" element={<PortfolioApp />} />
-        <Route path="/bio" element={<BioPage />} />
+        {/* Routes publiques - Portfolio avec Layout commun pour éviter la latence */}
+        <Route path="/" element={<Layout><PortfolioApp /></Layout>} />
+        <Route path="/bio" element={<Layout><BioPage /></Layout>} />
         <Route path="/maintenance" element={<MaintenancePage />} />
 
         {/* Routes admin - Sans sécurité pour le développement */}

@@ -6,7 +6,7 @@ import { CaretLeft, Sun, Moon } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { CookieBadge } from '@/components/CookieBadge';
+import { PrivacyBadge } from '@/components/PrivacyBadge';
 
 const MaintenancePage: React.FC = () => {
   // Titre fixe sans animation
@@ -101,7 +101,7 @@ const MaintenancePage: React.FC = () => {
         </div>
       </div>
 
-      <CookieBadge />
+      <PrivacyBadge />
     </div>
   );
 };

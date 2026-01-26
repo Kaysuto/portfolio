@@ -144,18 +144,36 @@ export function AboutSection() {
           <h3 className="text-2xl font-semibold text-foreground mb-8 text-center hover:text-accent transition-colors duration-300">
             Technologies favorites
           </h3>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-6">
             {[
-              "React", "TypeScript", "Vue.js", "Node.js", "PHP", "MySQL", 
-              "Tailwind CSS", "Git", "Docker", "Linux", "VMware", "Windows Server"
+              { name: "React", slug: "react" },
+              { name: "TypeScript", slug: "typescript" },
+              { name: "Vue.js", slug: "vuedotjs" },
+              { name: "Node.js", slug: "nodedotjs" },
+              { name: "PHP", slug: "php" },
+              { name: "MySQL", slug: "mysql" },
+              { name: "Tailwind CSS", slug: "tailwindcss" },
+              { name: "Git", slug: "git" },
+              { name: "Docker", slug: "docker" },
+              { name: "Linux", slug: "linux" },
+              { name: "VMware", slug: "vmware" },
+              { name: "Windows Server", slug: "windows" }
             ].map((tech, index) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-accent/10 border border-accent/20 rounded-full text-sm font-medium text-accent hover:bg-accent/20 hover:scale-105 hover:shadow-lg hover:shadow-accent/25 transition-all duration-300 cursor-default animate-stagger"
+              <div
+                key={tech.name}
+                className="group relative flex flex-col items-center justify-center p-4 bg-accent/5 border border-accent/10 rounded-2xl hover:bg-accent/10 hover:scale-110 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 cursor-default animate-stagger"
                 style={{ animationDelay: `${(index + 10) * 0.1}s` }}
+                title={tech.name}
               >
-                {tech}
-              </span>
+                <img 
+                  src={`https://cdn.simpleicons.org/${tech.slug}`} 
+                  alt={tech.name}
+                  className="w-10 h-10 transition-all duration-300 group-hover:scale-110"
+                />
+                <span className="absolute -bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs font-medium text-accent whitespace-nowrap">
+                  {tech.name}
+                </span>
+              </div>
             ))}
           </div>
         </div>
