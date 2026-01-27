@@ -45,7 +45,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-card/30 backdrop-blur-md border-t border-border/50 py-24 px-6 relative overflow-hidden">
+    <footer className="bg-card/30 backdrop-blur-md border-t border-border/50 py-16 px-6 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-30" />
       
@@ -56,16 +56,16 @@ export function Footer() {
         viewport={{ once: true }}
         variants={containerVariants}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
           {/* Brand Column */}
           <motion.div className="space-y-8" variants={itemVariants}>
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => scrollToSection('accueil')}>
-              <div className="p-2.5 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-all duration-300 group-hover:rotate-6 shadow-inner">
-                <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-10 h-10 object-contain" />
+              <div className="p-2 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-all duration-300 group-hover:rotate-6 shadow-inner">
+                <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-foreground tracking-tighter leading-none">Kaysuto</span>
-                <span className="text-sm font-bold text-accent tracking-[0.2em] uppercase mt-1">Kimiya</span>
+                <span className="text-xl font-bold text-foreground tracking-tighter leading-none">Kaysuto</span>
+                <span className="text-xs font-bold text-accent tracking-[0.2em] uppercase mt-0.5">Kimiya</span>
               </div>
             </div>
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium">
@@ -124,7 +124,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <motion.div 
-          className="pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-8"
+          className="pt-6 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-6"
           variants={itemVariants}
         >
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-4 text-sm text-muted-foreground font-bold">

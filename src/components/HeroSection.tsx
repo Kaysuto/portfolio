@@ -96,7 +96,7 @@ export function HeroSection() {
       >
         {/* Main Title */}
         <motion.div variants={itemVariants}>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
             <span className="text-foreground">Salut, je suis</span>
             <br />
             <span className="text-accent relative inline-block">
@@ -113,7 +113,7 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <motion.div variants={itemVariants}>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 font-medium tracking-tight">
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 font-medium tracking-tight">
             Passionné par le{" "}
             <span 
               className="font-bold relative inline-block min-w-[280px] text-left cursor-default group/text"
@@ -135,10 +135,10 @@ export function HeroSection() {
           <Button 
             onClick={scrollToProjects}
             size="lg"
-            className="h-16 px-10 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all hover:scale-105 group"
+            className="h-14 px-8 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all hover:scale-105 group"
             style={{ 
               backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84', 
-              color: 'black' 
+              color: theme === 'dark' ? '#5D4A42' : 'black' 
             }}
           >
             Voir mes projets
@@ -153,7 +153,7 @@ export function HeroSection() {
               variant="outline"
               size="lg"
               onClick={() => setShowModal(true)}
-              className="h-16 px-10 rounded-2xl border-2 text-lg font-bold flex items-center gap-3 transition-all shadow-lg group"
+              className="h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center gap-3 transition-all shadow-lg group"
               style={{ 
                 borderColor: theme === 'dark' ? '#D3C0B1' : '#C49D84', 
                 color: theme === 'dark' ? '#D3C0B1' : '#C49D84' 

@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react'
-import { initTheme, setTheme as persistTheme, type Theme } from '@/lib/theme'
+import { initTheme, setTheme as persistTheme, applyTheme, type Theme } from '@/lib/theme'
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => initTheme('dark'))
+  const [theme, setThemeState] = useState<Theme>(() => initTheme('system'))
 
   useEffect(() => {
     // Écouter les changements de localStorage
@@ -33,14 +33,22 @@ export function useTheme() {
     // Vérifier les changements de cookies toutes les 500ms (pour détecter les changements cross-tab)
     const cookieInterval = setInterval(checkCookieChanges, 500);
     
+    // Écouter les changements de préférence système
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const onSystemChange = () => {
+      if (theme === 'system') applyTheme('system')
+    }
+    
     window.addEventListener('storage', onStorage)
     window.addEventListener('themeChange', onThemeChange as EventListener)
-    window.addEventListener('focus', checkCookieChanges) // Vérifier au focus de la fenêtre
+    window.addEventListener('focus', checkCookieChanges)
+    mediaQuery.addEventListener('change', onSystemChange)
     
     return () => {
       window.removeEventListener('storage', onStorage)
       window.removeEventListener('themeChange', onThemeChange as EventListener)
       window.removeEventListener('focus', checkCookieChanges)
+      mediaQuery.removeEventListener('change', onSystemChange)
       clearInterval(cookieInterval)
     }
   }, [theme])

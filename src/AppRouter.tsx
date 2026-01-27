@@ -5,6 +5,7 @@ import { Login } from './admin/pages/Login';
 import MaintenancePage from './pages/MaintenancePage';
 import BioPage from './pages/BioPage';
 import { Layout } from '@/components/Layout';
+import { ScrollToTop } from '@/components/ScrollToTop';
 
 const AppRouter: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const AppRouter: React.FC = () => {
         v7_relativeSplatPath: true,
       }}
     >
+      <ScrollToTop />
       <Routes>
         {/* Routes publiques - Portfolio avec Layout commun pour éviter la latence */}
         <Route path="/" element={<Layout><PortfolioApp /></Layout>} />

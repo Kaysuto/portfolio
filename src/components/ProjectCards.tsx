@@ -174,7 +174,7 @@ export function ProjectCards() {
         >
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="min-w-[300px] md:min-w-[400px] h-[500px] bg-card/40 animate-pulse snap-center rounded-[2.5rem] border border-border/50" />
+              <div key={i} className="min-w-[280px] md:min-w-[350px] h-[450px] bg-card/40 animate-pulse snap-center rounded-[2rem] border border-border/50" />
             ))
           ) : projects.length > 0 ? (
             projects.map((project, index) => (
@@ -185,11 +185,11 @@ export function ProjectCards() {
                 whileInView="visible"
                 whileHover="hover"
                 viewport={{ once: true }}
-                className="min-w-[300px] md:min-w-[400px] snap-center"
+                className="min-w-[280px] md:min-w-[350px] snap-center"
               >
-                <Card className="relative h-full flex flex-col overflow-hidden bg-card/40 backdrop-blur-md border border-border/50 hover:border-accent/40 transition-all duration-500 rounded-[2.5rem] shadow-lg hover:shadow-2xl hover:shadow-accent/10 group">
+                <Card className="relative h-full flex flex-col overflow-hidden bg-card/40 backdrop-blur-md border border-border/50 hover:border-accent/40 transition-all duration-500 rounded-[2rem] shadow-lg hover:shadow-2xl hover:shadow-accent/10 group">
                   {/* Image Section */}
-                  <div className="relative h-56 w-full overflow-hidden">
+                  <div className="relative h-48 w-full overflow-hidden">
                     {project.image_url ? (
                       <img
                         src={project.image_url}
@@ -230,7 +230,7 @@ export function ProjectCards() {
                   </div>
 
                   {/* Content Section */}
-                  <div className="flex-1 flex flex-col p-8">
+                  <div className="flex-1 flex flex-col p-6">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-xs text-muted-foreground flex items-center gap-2 font-bold">
                         <Calendar size={14} className="text-accent" />
@@ -245,11 +245,11 @@ export function ProjectCards() {
                       </div>
                     </div>
 
-                    <h3 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors line-clamp-1 tracking-tight">
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors line-clamp-1 tracking-tight">
                       {project.title}
                     </h3>
                     
-                    <p className="text-muted-foreground text-sm mb-8 line-clamp-3 leading-relaxed flex-1 font-medium">
+                    <p className="text-muted-foreground text-xs mb-6 line-clamp-3 leading-relaxed flex-1 font-medium">
                       {project.description}
                     </p>
 
@@ -257,14 +257,14 @@ export function ProjectCards() {
                     <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                       {project.demo_url && (
                         <Button
-                          className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-12 shadow-lg shadow-accent/20 transition-all active:scale-95"
+                          className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-10 shadow-lg shadow-accent/20 transition-all active:scale-95 text-sm"
                           onClick={() => {
                             setModalProject(project)
                             setShowModal(true)
                           }}
                         >
-                          <ExternalLink size={18} />
-                          <span>Démo Live</span>
+                          <ExternalLink size={16} />
+                          <span>Visiter le site</span>
                         </Button>
                       )}
                       {project.github_url && (
@@ -272,7 +272,7 @@ export function ProjectCards() {
                           variant="outline"
                           size="icon"
                           asChild
-                          className="w-12 h-12 rounded-xl border-border/50 hover:border-accent hover:text-accent transition-all active:scale-90"
+                          className="w-10 h-10 rounded-xl border-border/50 hover:border-accent hover:text-accent transition-all active:scale-90"
                         >
                           <a href={project.github_url} target="_blank" rel="noreferrer">
                             <Github size={20} />

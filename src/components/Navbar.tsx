@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence, Variants } from "framer-motion"
 import { 
-  Sun, 
-  Moon, 
   Menu, 
   X, 
   ArrowRight,
   Sparkles
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ThemeController } from "./ThemeController"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -104,7 +103,7 @@ export function Navbar() {
       variants={navVariants}
       className={cn(
         "fixed top-0 w-full z-[100] transition-all duration-500 px-4 md:px-6",
-        isScrolled ? "py-4" : "py-8"
+        isScrolled ? "py-2" : "py-4"
       )}
     >
       <div className={cn(
@@ -120,13 +119,13 @@ export function Navbar() {
         >
           <motion.div 
             whileHover={{ rotate: 12, scale: 1.1 }}
-            className="p-2 bg-accent/10 rounded-2xl transition-colors"
+            className="p-1.5 bg-accent/10 rounded-xl transition-colors"
           >
-            <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-9 h-9 object-contain" />
+            <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
           </motion.div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-foreground tracking-tight leading-none">Kaysuto</span>
-            <span className="text-[10px] font-semibold text-accent tracking-[0.2em] uppercase mt-1">Kimiya</span>
+            <span className="text-lg font-bold text-foreground tracking-tight leading-none">Kaysuto</span>
+            <span className="text-[9px] font-semibold text-accent tracking-[0.2em] uppercase mt-0.5">Kimiya</span>
           </div>
         </div>
 
@@ -137,7 +136,7 @@ export function Navbar() {
               key={link.id}
               onClick={() => handleNavClick(link)}
               className={cn(
-                "relative px-6 py-2.5 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl overflow-hidden",
+                "relative px-4 py-2 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl overflow-hidden",
                 activeSection === link.id
                   ? "text-accent-foreground"
                   : "text-muted-foreground hover:text-accent"
@@ -157,42 +156,13 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="w-12 h-12 rounded-2xl hover:bg-accent/10 group transition-all"
-          >
-            <AnimatePresence mode="wait">
-              {theme === 'dark' ? (
-                <motion.div
-                  key="sun"
-                  initial={{ scale: 0, rotate: -90, opacity: 0 }}
-                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                  exit={{ scale: 0, rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Sun className="w-5 h-5 text-accent" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="moon"
-                  initial={{ scale: 0, rotate: 90, opacity: 0 }}
-                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                  exit={{ scale: 0, rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Moon className="w-5 h-5 text-accent" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Button>
+          <ThemeController />
 
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden w-12 h-12 rounded-2xl bg-accent/5 hover:bg-accent/10 transition-all"
+            className="md:hidden w-10 h-10 rounded-xl bg-accent/5 hover:bg-accent/10 transition-all"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6 text-accent" /> : <Menu className="w-6 h-6 text-accent" />}
           </Button>

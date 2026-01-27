@@ -1,33 +1,60 @@
 import { useState, useEffect } from 'react'
 
-export type CookieConsent = 'accepted' | 'rejected' | 'dismissed' | null
+export interface CookieChoices {
+  essential: boolean;
+  preferences: boolean;
+  analytics: boolean;
+}
+
+export type CookieConsentStatus = 'accepted' | 'rejected' | 'dismissed' | 'granular' | null
 
 const CONSENT_KEY = 'cookie-consent'
+const CHOICES_KEY = 'cookie-choices'
+
+const DEFAULT_CHOICES: CookieChoices = {
+  essential: true,
+  preferences: true,
+  analytics: true
+}
 
 export function useCookieConsent() {
-  const [consent, setConsent] = useState<CookieConsent>(null)
+  const [consent, setConsent] = useState<CookieConsentStatus>(null)
+  const [choices, setChoices] = useState<CookieChoices>(DEFAULT_CHOICES)
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    // Vérifier le consentement au montage
-    const stored = localStorage.getItem(CONSENT_KEY) as CookieConsent
+    const storedConsent = localStorage.getItem(CONSENT_KEY) as CookieConsentStatus
+    const storedChoices = localStorage.getItem(CHOICES_KEY)
     
-    if (stored === 'accepted' || stored === 'rejected' || stored === 'dismissed') {
-      setConsent(stored)
-    } else {
-      setConsent(null)
+    if (storedConsent) {
+      setConsent(storedConsent)
+    }
+    
+    if (storedChoices) {
+      try {
+        setChoices(JSON.parse(storedChoices))
+      } catch (e) {
+        setChoices(DEFAULT_CHOICES)
+      }
     }
     setIsLoaded(true)
   }, [])
 
-  const acceptCookies = () => {
-    setConsent('accepted')
-    localStorage.setItem(CONSENT_KEY, 'accepted')
+  const saveChoices = (newChoices: CookieChoices, status: CookieConsentStatus = 'granular') => {
+    setChoices(newChoices)
+    setConsent(status)
+    localStorage.setItem(CHOICES_KEY, JSON.stringify(newChoices))
+    if (status) {
+      localStorage.setItem(CONSENT_KEY, status)
+    }
   }
 
-  const rejectCookies = () => {
-    setConsent('rejected')
-    localStorage.setItem(CONSENT_KEY, 'rejected')
+  const acceptAll = () => {
+    saveChoices(DEFAULT_CHOICES, 'accepted')
+  }
+
+  const rejectAll = () => {
+    saveChoices({ essential: true, preferences: false, analytics: false }, 'rejected')
   }
 
   const dismissCookies = () => {
@@ -35,14 +62,13 @@ export function useCookieConsent() {
     localStorage.setItem(CONSENT_KEY, 'dismissed')
   }
 
-  const hasConsent = consent === 'accepted'
-
   return {
     consent,
-    hasConsent,
-    acceptCookies,
-    rejectCookies,
-    dismissCookies,
-    isLoaded
+    choices,
+    isLoaded,
+    saveChoices,
+    acceptAll,
+    rejectAll,
+    dismissCookies
   }
 }

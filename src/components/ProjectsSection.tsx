@@ -80,7 +80,7 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 lg:px-12 relative overflow-hidden">
+    <section id="projets" className="py-20 px-6 lg:px-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <motion.div 
@@ -108,11 +108,11 @@ export function ProjectsSection() {
         variants={containerVariants}
       >
         {/* Section Header */}
-        <motion.div className="text-center mb-24" variants={itemVariants}>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+        <motion.div className="text-center mb-16" variants={itemVariants}>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             Mes <span className="text-accent">Projets</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
             d'expériences numériques innovantes et performantes.
           </p>
@@ -129,12 +129,12 @@ export function ProjectsSection() {
             <CardContent className="p-10">
               <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
                 <div className="flex items-center gap-4">
-                  <div className="p-4 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-colors">
-                    <Github className="w-8 h-8 text-accent" />
+                  <div className="p-3 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-colors">
+                    <Github className="w-7 h-7 text-accent" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground">Statistiques GitHub</h3>
-                    <p className="text-muted-foreground">Activité en temps réel</p>
+                    <h3 className="text-xl font-bold text-foreground">Statistiques GitHub</h3>
+                    <p className="text-sm text-muted-foreground">Activité en temps réel</p>
                   </div>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export function ProjectsSection() {
                   <GitBranch className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={reposCounter.elementRef}
-                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {reposCounter.count}
                   </span>
@@ -155,7 +155,7 @@ export function ProjectsSection() {
                   <Users className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followersCounter.elementRef}
-                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followersCounter.count}
                   </span>
@@ -166,7 +166,7 @@ export function ProjectsSection() {
                   <Star className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followingCounter.elementRef}
-                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followingCounter.count}
                   </span>
@@ -183,7 +183,7 @@ export function ProjectsSection() {
             onClick={openModal}
             variant="default"
             size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-6 rounded-2xl text-lg font-bold shadow-lg shadow-accent/20 hover:scale-105 transition-all"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-accent/20 hover:scale-105 transition-all"
           >
             Voir tous mes projets
           </Button>

@@ -1,4 +1,4 @@
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'system';
 
 const COOKIE_NAME = 'theme';
 const COOKIE_DAYS = 365;
@@ -15,7 +15,12 @@ function getCookie(name: string) {
 }
 
 export function applyTheme(theme: Theme) {
-  if (theme === 'dark') {
+  let effectiveTheme = theme;
+  if (theme === 'system') {
+    effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  if (effectiveTheme === 'dark') {
     document.documentElement.classList.add('dark');
     document.documentElement.classList.remove('light');
   } else {
@@ -47,7 +52,7 @@ export function setTheme(theme: Theme) {
   applyTheme(theme);
 }
 
-export function initTheme(defaultTheme: Theme = 'dark') {
+export function initTheme(defaultTheme: Theme = 'system') {
   try {
     const cookie = getCookie(COOKIE_NAME) as Theme | null;
     const ls = (localStorage.getItem(COOKIE_NAME) as Theme | null);

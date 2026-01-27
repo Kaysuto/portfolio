@@ -171,7 +171,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-32 px-6 bg-background relative overflow-hidden">
+    <section id="contact" className="py-20 px-6 bg-background relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <motion.div 
@@ -189,11 +189,11 @@ export function ContactSection() {
         variants={containerVariants}
       >
         {/* Section Header */}
-        <motion.div className="text-center mb-20" variants={itemVariants}>
-          <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
+        <motion.div className="text-center mb-16" variants={itemVariants}>
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
             Parlons de votre <span className="text-accent">projet</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Vous avez une idée ? Un projet en tête ? Remplissez ce formulaire et 
             je vous répondrai dans les plus brefs délais.
           </p>
@@ -203,12 +203,12 @@ export function ContactSection() {
           {/* Contact Form */}
           <motion.div className="lg:col-span-3" variants={itemVariants}>
             <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5">
-              <CardContent className="p-8 md:p-12">
-                <div className="flex items-center gap-4 mb-10">
-                  <div className="p-3 bg-accent/10 rounded-2xl">
-                    <MessageSquare className="w-6 h-6 text-accent" />
+              <CardContent className="p-6 md:p-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-2.5 bg-accent/10 rounded-xl">
+                    <MessageSquare className="w-5 h-5 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">Envoyer un message</h3>
+                  <h3 className="text-xl font-bold text-foreground">Envoyer un message</h3>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -343,7 +343,7 @@ export function ContactSection() {
                     type="submit"
                     disabled={isSubmitting || isSuccess}
                     className={cn(
-                      "w-full h-14 rounded-2xl text-lg font-bold transition-all shadow-lg",
+                      "w-full h-12 rounded-xl text-lg font-bold transition-all shadow-lg",
                       isSuccess 
                         ? "bg-green-500 hover:bg-green-600 text-white" 
                         : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-accent/20"
@@ -366,12 +366,12 @@ export function ContactSection() {
           <motion.div className="lg:col-span-2 space-y-8" variants={itemVariants}>
             {/* Direct Contact Card */}
             <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-xl shadow-accent/5">
-              <CardContent className="p-8 md:p-10">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="p-3 bg-accent/10 rounded-2xl">
-                    <Mail className="w-6 h-6 text-accent" />
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-2.5 bg-accent/10 rounded-xl">
+                    <Mail className="w-5 h-5 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">Contact direct</h3>
+                  <h3 className="text-xl font-bold text-foreground">Contact direct</h3>
                 </div>
                 
                 <p className="text-muted-foreground mb-8 leading-relaxed">
@@ -391,7 +391,7 @@ export function ContactSection() {
                   </div>
 
                   <Button 
-                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold gap-2 shadow-lg shadow-accent/20"
+                    className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold gap-2 shadow-lg shadow-accent/20"
                     onClick={() => window.location.href = "mailto:contact@kimiya.pro"}
                   >
                     <ExternalLink className="w-5 h-5" />

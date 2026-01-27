@@ -92,7 +92,7 @@ export function AboutSection() {
   }
 
   return (
-    <section id="apropos" className="py-24 px-6 bg-background relative overflow-hidden">
+    <section id="apropos" className="py-16 px-6 bg-background relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div 
@@ -122,11 +122,11 @@ export function AboutSection() {
         variants={containerVariants}
       >
         {/* Section Header */}
-        <motion.div className="text-center mb-20" variants={itemVariants}>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+        <motion.div className="text-center mb-16" variants={itemVariants}>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             À propos de <span className="text-accent">moi</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium">
             Créateur passionné de 23 ans, j'allie expertise technique en infrastructure et créativité dans le développement full-stack.
           </p>
         </motion.div>
@@ -134,45 +134,45 @@ export function AboutSection() {
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left - Personal Info */}
-          <motion.div className="space-y-8" variants={itemVariants}>
+          <motion.div className="space-y-6" variants={itemVariants}>
             <div className="prose prose-invert max-w-none">
-              <h3 className="text-3xl font-bold text-foreground mb-6 flex items-center gap-3">
-                <Cpu className="text-accent w-8 h-8" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-3">
+                <Cpu className="text-accent w-7 h-7" />
                 Mon parcours
               </h3>
-              <p className="text-muted-foreground text-lg leading-relaxed mb-6 font-medium">
+              <p className="text-muted-foreground text-base leading-relaxed mb-4 font-medium">
                 Mon expérience de 3 ans en datacenter m'a forgé une culture de la fiabilité et de la performance. Aujourd'hui, j'applique cette rigueur à la création d'applications web innovantes, de design pixel art et d'architectures réseau complexes.
               </p>
-              <p className="text-muted-foreground text-lg leading-relaxed font-medium">
+              <p className="text-muted-foreground text-base leading-relaxed font-medium">
                 Cette vision globale me permet de gérer aussi bien l'infrastructure matérielle que le développement logiciel et l'expérience utilisateur.
               </p>
             </div>
 
             {/* Age & Experience Stats */}
-            <div className="flex items-center gap-12 pt-6">
+            <div className="flex items-center gap-10 pt-4">
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-1">
                   <span 
                     ref={ageCounter.elementRef}
-                    className="text-5xl font-bold text-accent tabular-nums"
+                    className="text-4xl font-bold text-accent tabular-nums"
                   >
                     {ageCounter.count}
                   </span>
-                  <span className="text-xl font-bold text-muted-foreground">ans</span>
+                  <span className="text-lg font-bold text-muted-foreground">ans</span>
                 </div>
-                <p className="text-sm uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Âge</p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Âge</p>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-1">
                   <span 
                     ref={experienceCounter.elementRef}
-                    className="text-5xl font-bold text-accent tabular-nums"
+                    className="text-4xl font-bold text-accent tabular-nums"
                   >
                     {experienceCounter.count}+
                   </span>
-                  <span className="text-xl font-bold text-muted-foreground">ans</span>
+                  <span className="text-lg font-bold text-muted-foreground">ans</span>
                 </div>
-                <p className="text-sm uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Expérience</p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Expérience</p>
               </div>
             </div>
           </motion.div>
@@ -200,11 +200,11 @@ export function AboutSection() {
         </div>
 
         {/* Tech Stack Section */}
-        <motion.div className="mt-24" variants={itemVariants}>
-          <div className="flex items-center gap-4 mb-10">
+        <motion.div className="mt-20" variants={itemVariants}>
+          <div className="flex items-center gap-4 mb-8">
             <div className="h-px flex-1 bg-border/50" />
-            <h3 className="text-2xl font-bold text-foreground flex items-center gap-2 uppercase tracking-widest">
-              <Globe className="w-6 h-6 text-accent" />
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-2 uppercase tracking-widest">
+              <Globe className="w-5 h-5 text-accent" />
               Technologies favorites
             </h3>
             <div className="h-px flex-1 bg-border/50" />
