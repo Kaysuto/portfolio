@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { ArrowSquareOut } from '@phosphor-icons/react';
-import { Button } from './button';
-import { Modal } from './Modal';
-import { useModal } from '@/hooks/useModal';
+import { Modal } from "./Modal";
+import { ExternalLink, Globe } from "lucide-react";
+import { Button } from "./button";
+import { useTheme } from "@/hooks/use-theme";
 
 interface DemoModalProps {
   isOpen: boolean;
@@ -11,83 +10,58 @@ interface DemoModalProps {
   projectUrl: string;
 }
 
-export function DemoModal({
-  isOpen,
-  onClose,
-  projectTitle,
-  projectUrl
-}: DemoModalProps) {
-  const { modalMounted, isClosing, openModal, closeModal } = useModal();
-
-  // Synchroniser avec l'état externe
-  useEffect(() => {
-    if (isOpen && !modalMounted) {
-      openModal();
-    } else if (!isOpen && modalMounted) {
-      closeModal();
-    }
-  }, [isOpen, modalMounted, openModal, closeModal]);
-
-  const handleClose = () => {
-    closeModal();
-    // Appeler onClose après l'animation
-    setTimeout(() => onClose(), 220);
-  };
+export function DemoModal({ isOpen, onClose, projectTitle, projectUrl }: DemoModalProps) {
+  const { theme } = useTheme();
+  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
   const handleOpenDemo = () => {
     window.open(projectUrl, "_blank", "noopener,noreferrer");
-    handleClose();
+    onClose();
   };
 
-  if (!modalMounted) return null;
-
   return (
-    <Modal
-      isOpen={modalMounted}
-      onClose={handleClose}
-      maxWidth="max-w-lg"
-      isClosing={isClosing}
-    >
-      <div className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <div className="h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center">
-            <ArrowSquareOut className="h-6 w-6 text-accent" />
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
+      <div className="space-y-8">
+        <div className="flex items-center gap-6">
+          <div className="h-20 w-20 rounded-[1.5rem] bg-accent/10 flex items-center justify-center border border-accent/20 shadow-inner">
+            <Globe className="h-10 w-10 text-accent" />
           </div>
           <div>
-            <h3 className="text-lg font-medium">{projectTitle}</h3>
-            <p className="text-sm text-muted-foreground">
-              Accédez au projet en ligne
+            <h3 className="text-3xl font-bold text-foreground tracking-tight">{projectTitle}</h3>
+            <p className="text-muted-foreground font-medium">
+              Lancer la démonstration en direct
             </p>
           </div>
         </div>
-
-        <div className="bg-muted/50 rounded-md p-4">
-          <p className="text-sm text-muted-foreground mb-2">
-            Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+        
+        <div className="bg-accent/5 rounded-[1.5rem] p-6 border border-accent/10">
+          <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">
+            Lien externe :
           </p>
-          <div className="bg-background border border-border rounded-md p-3">
-            <code className="text-sm text-foreground break-all font-mono">
+          <div className="bg-background/50 border border-border/50 rounded-xl p-4">
+            <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
               {projectUrl}
             </code>
           </div>
         </div>
-
-        <div className="flex gap-3 pt-4">
-          <Button
+        
+        <div className="flex gap-4">
+          <Button 
             type="button"
-            variant="outline"
-            onClick={handleClose}
-            className="flex-1"
+            variant="outline" 
+            onClick={onClose}
+            className="flex-1 h-14 rounded-2xl border-border/50 hover:bg-accent/5 font-bold text-base"
           >
             Annuler
           </Button>
-          <Button
+          <Button 
             type="button"
-            onClick={handleOpenDemo}
-            className="flex-1 bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]"
+            onClick={handleOpenDemo} 
+            className="flex-1 h-14 rounded-2xl font-bold text-base shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: accentColor, color: 'black' }}
           >
-            <ArrowSquareOut className="h-4 w-4 mr-2" />
-            Voir le projet
+            <ExternalLink className="h-5 w-5 mr-2" />
+            Lancer
           </Button>
         </div>
       </div>

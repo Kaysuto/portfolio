@@ -1,87 +1,65 @@
-import React, { useEffect } from 'react';
-import { Coffee } from '@phosphor-icons/react';
-import { Button } from './button';
-import { Modal } from './Modal';
-import { useModal } from '@/hooks/useModal';
+import { Modal } from "./Modal";
+import { Coffee, ExternalLink } from "lucide-react";
+import { Button } from "./button";
+import { useTheme } from "@/hooks/use-theme";
 
 interface KofiModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function KofiModal({
-  isOpen,
-  onClose
-}: KofiModalProps) {
-  const { modalMounted, isClosing, openModal, closeModal } = useModal();
-
-  useEffect(() => {
-    if (isOpen && !modalMounted) {
-      openModal();
-    } else if (!isOpen && modalMounted) {
-      closeModal();
-    }
-  }, [isOpen, modalMounted, openModal, closeModal]);
-
-  const handleClose = () => {
-    closeModal();
-    setTimeout(() => onClose(), 220);
-  };
+export function KofiModal({ isOpen, onClose }: KofiModalProps) {
+  const { theme } = useTheme();
+  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
   const handleOpenKofi = () => {
     window.open("https://ko-fi.com/kaysuto", "_blank", "noopener,noreferrer");
-    handleClose();
+    onClose();
   };
 
-  if (!modalMounted) return null;
-
   return (
-    <Modal
-      isOpen={modalMounted}
-      onClose={handleClose}
-      maxWidth="max-w-lg"
-      isClosing={isClosing}
-    >
-      <div className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <div className="h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center">
-            <Coffee className="h-6 w-6 text-accent" weight="fill" />
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
+      <div className="space-y-8">
+        <div className="flex items-center gap-6">
+          <div className="h-20 w-20 rounded-[1.5rem] bg-accent/10 flex items-center justify-center border border-accent/20 shadow-inner">
+            <Coffee className="h-10 w-10 text-accent" />
           </div>
           <div>
-            <h3 className="text-lg font-medium text-foreground">Soutenir mon travail</h3>
-            <p className="text-sm text-muted-foreground">
-              Si vous appréciez mes projets, vous pouvez m'offrir un café !
+            <h3 className="text-3xl font-bold text-foreground tracking-tight">Soutenir mon travail</h3>
+            <p className="text-muted-foreground font-medium">
+              Offrez-moi un café sur Ko-fi
             </p>
           </div>
         </div>
-
-        <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
-          <p className="text-sm text-muted-foreground mb-2">
-            Vous allez être redirigé vers ma page Ko-fi :
+        
+        <div className="bg-accent/5 rounded-[1.5rem] p-6 border border-accent/10">
+          <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">
+            Lien externe :
           </p>
-          <div className="bg-background border border-border rounded-lg p-3">
-            <code className="text-sm text-accent break-all font-mono">
+          <div className="bg-background/50 border border-border/50 rounded-xl p-4">
+            <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
               https://ko-fi.com/kaysuto
             </code>
           </div>
         </div>
-
-        <div className="flex gap-3 pt-4">
-          <Button
+        
+        <div className="flex gap-4">
+          <Button 
             type="button"
-            variant="outline"
-            onClick={handleClose}
-            className="flex-1 rounded-xl"
+            variant="outline" 
+            onClick={onClose}
+            className="flex-1 h-14 rounded-2xl border-border/50 hover:bg-accent/5 font-bold text-base"
           >
-            Plus tard
+            Annuler
           </Button>
-          <Button
+          <Button 
             type="button"
-            onClick={handleOpenKofi}
-            className="flex-1 bg-accent hover:bg-accent-dark text-white font-bold rounded-xl shadow-lg shadow-accent/20"
+            onClick={handleOpenKofi} 
+            className="flex-1 h-14 rounded-2xl font-bold text-base shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: accentColor, color: 'black' }}
           >
-            <Coffee className="h-5 w-5 mr-2" weight="bold" />
-            M'offrir un café
+            <ExternalLink className="h-5 w-5 mr-2" />
+            Soutenir
           </Button>
         </div>
       </div>

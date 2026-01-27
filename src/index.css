@@ -27,6 +27,10 @@ html.modal-open {
   }
 }
 
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
 :root {
   /* Refined Noisette Color Palette - Couleurs renforcées */
   --background: oklch(0.98 0.015 80);       /* #F9F6F0 - Fond principal plus contrasté */
@@ -48,7 +52,7 @@ html.modal-open {
   --muted-foreground: oklch(0.25 0.03 50);  /* Texte muted plus contrasté */
 
   --accent: oklch(0.72 0.06 55);            /* #B8956A - Accent plus profond et visible */
-  --accent-foreground: oklch(0.55 0.08 45); /* #C39B81 - Chocolat moyen pour thème clair */
+  --accent-foreground: oklch(0.15 0.04 45); /* Chocolat très sombre pour contraste sur accent */
 
   --destructive: oklch(0.50 0.25 25);       /* #C41E3A - Rouge plus intense */
   --destructive-foreground: oklch(0.98 0.01 80); /* Texte blanc sur rouge */
@@ -168,7 +172,7 @@ html.modal-open {
   --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
   
   --accent: oklch(0.82 0.03 60);            /* Accent clair et doux */
-  --accent-foreground: oklch(0.82 0.03 60); /* #D3C0B1 - Beige/crème clair pour thème sombre */
+  --accent-foreground: oklch(0.15 0.04 45); /* Chocolat très sombre pour contraste sur accent */
   
   --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
   --destructive-foreground: oklch(0.92 0.02 80); /* Crème claire */
@@ -232,6 +236,10 @@ html.modal-open {
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
+}
+
+section {
+  scroll-margin-top: 100px;
 }
 
 /* Performance optimizations */

@@ -5,98 +5,99 @@ import { PrivacyBadge } from "@/components/PrivacyBadge"
 import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
-import { useQuery } from '@tanstack/react-query';
-import { getMaintenanceStatus } from './admin/services/maintenanceService';
-import { Wrench } from "@phosphor-icons/react";
+import { useQuery } from '@tanstack/react-query'
+import { getMaintenanceStatus } from './admin/services/maintenanceService'
+import { Wrench, Loader2 } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useTheme } from "@/hooks/use-theme"
 
 function MaintenancePage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground">
-      <Wrench className="w-16 h-16 mb-4 text-accent" />
-      <h1 className="text-4xl font-bold mb-2">Site en maintenance</h1>
-      <p className="text-lg text-muted-foreground">Nous serons bientôt de retour.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-center px-6">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="p-12 bg-card/40 backdrop-blur-xl border border-border/50 rounded-[3rem] shadow-2xl max-w-md w-full"
+      >
+        <div className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
+          <Wrench className="w-10 h-10 text-accent animate-pulse" />
+        </div>
+        <h1 className="text-4xl font-bold text-foreground mb-4 tracking-tighter">Maintenance</h1>
+        <p className="text-muted-foreground text-lg font-medium leading-relaxed">
+          Nous peaufinons les derniers détails. Le site sera de retour très bientôt !
+        </p>
+      </motion.div>
     </div>
-  );
+  )
 }
 
 function App() {
+  const { theme } = useTheme()
   const { data: maintenanceStatus, isLoading } = useQuery({
     queryKey: ['maintenanceStatus'],
     queryFn: getMaintenanceStatus,
-  });
+  })
 
-  // Register Service Worker for PWA with better error handling
   useEffect(() => {
     if ('serviceWorker' in navigator && 'caches' in window) {
       const registerSW = async () => {
         try {
-          const registration = await navigator.serviceWorker.register('/sw.js', {
+          await navigator.serviceWorker.register('/sw.js', {
             scope: '/',
             updateViaCache: 'none'
-          });
-          if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-          }
-          console.log('SW registered successfully');
+          })
         } catch (error) {
-          console.warn('SW registration failed:', error);
+          console.warn('SW registration failed:', error)
         }
-      };
+      }
       
-      // Register on idle if possible
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(registerSW);
+        requestIdleCallback(registerSW)
       } else {
-        registerSW();
+        registerSW()
       }
     }
-  }, []);
+  }, [])
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-10 h-10 text-accent animate-spin" />
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Initialisation</span>
+        </div>
       </div>
-    );
+    )
   }
 
   if (maintenanceStatus?.is_enabled) {
-    return <MaintenancePage />;
+    return <MaintenancePage />
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden theme-fade">
-      <div className="relative z-10">
-        <Navbar />
-        <main className="theme-fade" role="main">
-          <HeroSection />
-          <Suspense fallback={<SectionSkeleton />}>
-            <AboutSection />
-          </Suspense>
-          <Suspense fallback={<SectionSkeleton />}>
-            <ProjectsSection />
-          </Suspense>
-          <Suspense fallback={<SectionSkeleton />}>
-            <ContactSection />
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
-      {/* TEST COMPONENT INLINE */}
-      <div style={{
-        background: 'blue',
-        color: 'white',
-        padding: '20px',
-        margin: '20px',
-        borderRadius: '8px',
-        fontSize: '16px',
-        fontWeight: 'bold'
-      }}>
-        🔵 TEST COMPONENT INLINE - SI VOUS VOYEZ CECI, LES COMPOSANTS FONCTIONNENT
-      </div>
+    <div className="min-h-screen bg-background text-foreground selection:bg-accent selection:text-accent-foreground transition-colors duration-500">
+      <Navbar />
+      
+      <main className="relative" role="main">
+        <HeroSection />
+        
+        <Suspense fallback={<SectionSkeleton />}>
+          <AboutSection />
+        </Suspense>
 
+        <Suspense fallback={<SectionSkeleton />}>
+          <ProjectsSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <ContactSection />
+        </Suspense>
+      </main>
+
+      <Footer />
       <PrivacyBadge />
-      <Toaster />
+      <Toaster position="bottom-right" expand={false} richColors />
       
       {/* JSON-LD structured data for SEO */}
       <script

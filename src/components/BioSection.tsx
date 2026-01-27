@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, LinkSimple } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
+import { Badge } from '@/components/ui/badge';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut"
+    }
+  }
+};
 
 export function BioSection() {
-  // États pour les liens depuis la base de données
   const [bioLinks, setBioLinks] = useState<BioLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // États pour le modal de confirmation
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
   const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
 
-  // Mapping des icônes Phosphor
   const getIcon = (iconName: string) => {
     const iconMap: Record<string, any> = {
       'EnvelopeSimple': EnvelopeSimple,
@@ -31,7 +52,6 @@ export function BioSection() {
     return iconMap[iconName] || LinkSimple;
   };
 
-  // Charger les liens bio depuis la base de données
   useEffect(() => {
     const loadBioLinks = async () => {
       try {
@@ -62,141 +82,172 @@ export function BioSection() {
   };
 
   return (
-    <section id="bio" className="py-20 px-6 bg-background relative overflow-hidden">
-      {/* Animated background shapes */}
+    <section id="bio" className="py-24 px-6 bg-background relative overflow-hidden">
+      {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-40 right-8 w-16 h-16 bg-accent/8 rounded-full animate-float-slow"></div>
-        <div className="absolute top-1/4 left-6 w-12 h-12 bg-primary/10 rounded-full animate-float-medium"></div>
-        <div className="absolute bottom-40 right-1/4 w-10 h-10 bg-secondary/15 rounded-full animate-float-fast"></div>
-        <div className="absolute top-3/4 left-12 w-8 h-8 bg-accent/15 rounded-full animate-bounce-slow"></div>
-        <div className="absolute bottom-20 left-8 w-14 h-14 bg-muted/20 rounded-full animate-pulse-slow"></div>
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.05, 0.1, 0.05] 
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-40 right-8 w-64 h-64 bg-accent/10 rounded-full blur-3xl"
+        />
+        <motion.div 
+          animate={{ 
+            y: [0, -20, 0] 
+          }}
+          transition={{ duration: 6, repeat: Infinity }}
+          className="absolute bottom-40 left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"
+        />
       </div>
 
       <div className="container mx-auto max-w-4xl relative z-10">
-        {/* En-tête de la section bio */}
-        <div className="text-center mb-12 animate-fadeInUp">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent mb-4">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent mb-6 tracking-tight">
             Mes Liens
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Retrouvez-moi sur mes différentes plateformes et projets
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Retrouvez-moi sur mes différentes plateformes et projets.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Grille de liens sociaux */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Chargement des liens...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-destructive mb-4">❌ {error}</p>
-            <Button onClick={() => window.location.reload()} variant="outline">
-              Réessayer
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            {bioLinks.map((link, index) => {
-              const IconComponent = getIcon(link.icon || 'LinkSimple');
-              return (
-                <button
-                  key={link.id}
-                  onClick={() => openModal({
-                    name: link.title,
-                    url: link.url,
-                    description: link.description || ''
-                  })}
-                  className="group relative p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 animate-fadeInUp text-left w-full"
-                  style={{
-                    animationDelay: `${index * 0.1}s`,
-                    animationFillMode: 'backwards'
-                  }}
-                >
-                  {/* Effet de brillance sur hover */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
-                  
-                  <div className="relative flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-accent/10 p-3 rounded-xl group-hover:bg-accent/20 transition-colors duration-300">
-                        <IconComponent size={24} className="text-accent group-hover:text-accent-foreground transition-colors duration-300" />
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div 
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center py-20"
+            >
+              <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+              <p className="text-muted-foreground font-medium">Chargement de l'univers...</p>
+            </motion.div>
+          ) : error ? (
+            <motion.div 
+              key="error"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center py-20 bg-destructive/5 border border-destructive/20 rounded-3xl p-8"
+            >
+              <p className="text-destructive text-lg mb-6 font-medium">❌ {error}</p>
+              <Button onClick={() => window.location.reload()} variant="outline" className="border-destructive/30 hover:bg-destructive/10">
+                Réessayer
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="content"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto"
+            >
+              {bioLinks.map((link) => {
+                const IconComponent = getIcon(link.icon || 'LinkSimple');
+                return (
+                  <motion.button
+                    key={link.id}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02, y: -4 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => openModal({
+                      name: link.title,
+                      url: link.url,
+                      description: link.description || ''
+                    })}
+                    className="group relative p-5 bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl hover:shadow-2xl hover:shadow-accent/10 transition-all duration-300 hover:border-accent/40 text-left w-full overflow-hidden"
+                  >
+                    {/* Hover Glow Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <div className="relative flex items-center justify-between">
+                      <div className="flex items-center space-x-5">
+                        <div className="bg-accent/10 p-4 rounded-2xl group-hover:bg-accent/20 transition-all duration-300 group-hover:rotate-3">
+                          <IconComponent size={28} className="text-accent group-hover:scale-110 transition-transform duration-300" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-lg text-foreground group-hover:text-accent transition-colors duration-300">
+                            {link.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground line-clamp-1 group-hover:text-foreground/80 transition-colors duration-300">
+                            {link.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
-                          {link.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                          {link.description}
-                        </p>
+                      <div className="bg-accent/5 p-2 rounded-xl group-hover:bg-accent/20 transition-all duration-300">
+                        <ArrowUpRight className="w-5 h-5 text-accent/50 group-hover:text-accent transition-colors duration-300" />
                       </div>
                     </div>
-                    <div className="bg-accent/10 p-2 rounded-lg group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                      <ArrowUpRight className="w-5 h-5 text-accent group-hover:text-accent-foreground transition-colors duration-300" />
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Modal de confirmation pour les liens */}
       <Modal
-        isOpen={modalMounted}
+        isOpen={isModalOpen}
         onClose={closeModal}
         maxWidth="max-w-lg"
-        isClosing={isClosing}
       >
         {selectedLink && (
-          <div className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <div className="h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="space-y-8 p-2">
+            <div className="flex items-center space-x-5">
+              <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
                 {(() => {
                   const link = bioLinks.find(l => l.title === selectedLink.name);
                   if (link) {
                     const IconComponent = getIcon(link.icon || 'LinkSimple');
-                    return <IconComponent className="h-6 w-6 text-accent" />;
+                    return <IconComponent className="h-8 w-8 text-accent" />;
                   }
-                  return <LinkSimple className="h-6 w-6 text-accent" />;
+                  return <LinkSimple className="h-8 w-8 text-accent" />;
                 })()}
               </div>
               <div>
-                <h3 className="text-lg font-medium">{selectedLink.name}</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-2xl font-bold text-foreground">{selectedLink.name}</h3>
+                <p className="text-muted-foreground">
                   {selectedLink.description}
                 </p>
               </div>
             </div>
             
-            <div className="bg-muted/50 rounded-md p-4">
-              <p className="text-sm text-muted-foreground mb-2">
-                Vous êtes sur le point d'ouvrir ce lien dans un nouvel onglet :
+            <div className="bg-accent/5 rounded-2xl p-6 border border-accent/10">
+              <p className="text-sm text-muted-foreground mb-4">
+                Vous allez être redirigé vers :
               </p>
-              <div className="bg-background border border-border rounded-md p-3">
-                <code className="text-sm text-foreground break-all font-mono">
+              <div className="bg-background/50 border border-border/50 rounded-xl p-4">
+                <code className="text-sm text-accent break-all font-mono">
                   {selectedLink.url}
                 </code>
               </div>
             </div>
             
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-4">
               <Button 
                 type="button"
                 variant="outline" 
                 onClick={closeModal}
-                className="flex-1"
+                className="flex-1 h-12 rounded-xl border-border/50 hover:bg-accent/5"
               >
                 Annuler
               </Button>
               <Button 
                 type="button"
                 onClick={handleLinkConfirm} 
-                className="flex-1 bg-accent hover:bg-accent/90 text-[#231813] dark:text-[#231813]"
+                className="flex-1 h-12 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-lg shadow-accent/20"
               >
-                <ArrowUpRight className="h-4 w-4 mr-2" />
-                Ouvrir le lien
+                <ArrowUpRight className="h-5 w-5 mr-2" />
+                Ouvrir
               </Button>
             </div>
           </div>

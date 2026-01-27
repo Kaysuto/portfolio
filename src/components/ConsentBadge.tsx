@@ -43,7 +43,7 @@ export function ConsentBadge() {
             <div className="flex items-start gap-4">
               <Cookie size={28} className="text-primary flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="font-black text-foreground mb-2 text-lg uppercase italic tracking-tighter">
+                <h3 className="font-bold text-foreground mb-2 text-lg uppercase italic tracking-tighter">
                   Cookies
                 </h3>
                 <p className="text-xs text-muted-foreground mb-6 font-medium italic leading-relaxed">
@@ -56,7 +56,7 @@ export function ConsentBadge() {
                     disabled={consent === 'accepted'}
                     className={consent === 'accepted' 
                       ? "bg-green-500 text-white cursor-default opacity-90" 
-                      : "bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-widest rounded-xl h-10"
+                      : "bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-[10px] tracking-widest rounded-xl h-10"
                     }
                   >
                     {consent === 'accepted' ? '✓ ACCEPTÉ' : 'ACCEPTER'}
@@ -66,7 +66,7 @@ export function ConsentBadge() {
                     variant="outline"
                     size="sm"
                     disabled={consent === 'rejected'}
-                    className="border-2 border-foreground/10 hover:bg-secondary font-black uppercase text-[10px] tracking-widest rounded-xl h-10"
+                    className="border-2 border-foreground/10 hover:bg-secondary font-bold uppercase text-[10px] tracking-widest rounded-xl h-10"
                   >
                     {consent === 'rejected' ? '✗ REFUSÉ' : 'REFUSER'}
                   </Button>
@@ -88,7 +88,7 @@ export function ConsentBadge() {
             <div className="flex items-start gap-5">
               <Cookie size={32} className="text-primary flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="font-black text-foreground mb-2 text-xl uppercase italic tracking-tighter">
+                <h3 className="font-bold text-foreground mb-2 text-xl uppercase italic tracking-tighter">
                   Cookies
                 </h3>
                 <p className="text-sm text-muted-foreground mb-6 font-medium italic leading-relaxed">
@@ -101,7 +101,7 @@ export function ConsentBadge() {
                     disabled={consent === 'accepted'}
                     className={consent === 'accepted' 
                       ? "bg-green-500 text-white cursor-default opacity-90" 
-                      : "bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-widest rounded-xl h-10 px-6"
+                      : "bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-[10px] tracking-widest rounded-xl h-10 px-6"
                     }
                   >
                     {consent === 'accepted' ? '✓ ACCEPTÉ' : 'ACCEPTER'}
@@ -111,7 +111,7 @@ export function ConsentBadge() {
                     variant="outline"
                     size="sm"
                     disabled={consent === 'rejected'}
-                    className="border-2 border-foreground/10 hover:bg-secondary font-black uppercase text-[10px] tracking-widest rounded-xl h-10 px-6"
+                    className="border-2 border-foreground/10 hover:bg-secondary font-bold uppercase text-[10px] tracking-widest rounded-xl h-10 px-6"
                   >
                     {consent === 'rejected' ? '✗ REFUSÉ' : 'REFUSER'}
                   </Button>

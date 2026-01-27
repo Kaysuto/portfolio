@@ -1,11 +1,11 @@
- import { useState, useEffect, useRef, useMemo } from "react"
-import { ExternalLink, Calendar, Github, Globe, Star, Search, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect, useRef, useMemo } from "react"
+import { ExternalLink, Calendar, Github, Globe, Star, Search, ChevronLeft, ChevronRight, Rocket, Code2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DemoModal } from "@/components/ui/ProjectModal"
 import { getProjects } from "@/lib/supabase"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface Project {
@@ -24,6 +24,19 @@ interface Project {
   image_alt?: string
 }
 
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
+  hover: {
+    y: -10,
+    transition: { duration: 0.3, ease: "easeInOut" }
+  }
+}
+
 export function ProjectCards() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(false)
@@ -31,8 +44,6 @@ export function ProjectCards() {
   const hasFetched = useRef(false)
   const [modalProject, setModalProject] = useState<Project | null>(null)
   const [showModal, setShowModal] = useState(false)
-  const [selectedTech, setSelectedTech] = useState<string>("Tous")
-  const [searchQuery, setSearchQuery] = useState("")
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const fetchProjects = async () => {
@@ -80,21 +91,6 @@ export function ProjectCards() {
     fetchProjects()
   }, [])
 
-  const allTechs = useMemo(() => {
-    const techs = new Set<string>()
-    projects.forEach(p => p.tech_stack.forEach(t => techs.add(t)))
-    return ["Tous", ...Array.from(techs).sort()]
-  }, [projects])
-
-  const filteredProjects = useMemo(() => {
-    return projects.filter(p => {
-      const matchesTech = selectedTech === "Tous" || p.tech_stack.includes(selectedTech)
-      const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           p.description.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesTech && matchesSearch
-    })
-  }, [projects, selectedTech, searchQuery])
-
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const { scrollLeft, clientWidth } = scrollContainerRef.current
@@ -109,100 +105,67 @@ export function ProjectCards() {
     }
   }
 
-  const formatDate = useMemo(() => (dateString: string) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
     })
-  }, [])
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'En production': return 'bg-green-500/10 text-green-500 border-green-500/20'
-      case 'En développement': return 'bg-[#D3C0B1]/10 text-[#D3C0B1] border-[#D3C0B1]/20'
-      case 'Alpha': return 'bg-[#D3C0B1]/10 text-[#D3C0B1] border-[#D3C0B1]/20'
-      case 'Beta': return 'bg-orange-500/10 text-orange-500 border-orange-500/20'
-      default: return 'bg-[#D3C0B1]/10 text-[#D3C0B1] border-[#D3C0B1]/20'
+      case 'En production': return 'text-green-500 bg-green-500/10 border-green-500/20'
+      case 'En développement': return 'text-amber-500 bg-amber-500/10 border-amber-500/20'
+      case 'Alpha': return 'text-red-500 bg-red-500/10 border-red-500/20'
+      case 'Beta': return 'text-blue-500 bg-blue-500/10 border-blue-500/20'
+      default: return 'text-muted-foreground bg-muted/10 border-muted/20'
     }
   }
 
   return (
-    <div className="w-full space-y-12">
-      {/* Filters & Search - Studio Style */}
-      <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
-        <div className="flex flex-wrap justify-center md:justify-start gap-3">
-          {allTechs.slice(0, 8).map((tech) => (
-            <Button
-              key={tech}
-              variant={selectedTech === tech ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedTech(tech)}
-              className={cn(
-                "rounded-2xl px-6 transition-all duration-300 uppercase text-[10px] font-black tracking-widest h-10",
-                selectedTech === tech 
-                  ? "bg-[#D3C0B1] text-neutral-1 shadow-lg shadow-[#D3C0B1]/20" 
-                  : "bg-neutral-2 hover:bg-neutral-3 border-2 border-neutral-3"
-              )}
-            >
-              {tech}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="relative w-full md:w-80 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-10 group-focus-within:text-[#D3C0B1] transition-colors" size={18} />
-          <input
-            type="text"
-            placeholder="RECHERCHER UN PROJET..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-neutral-2 border-2 border-neutral-3 focus:border-[#D3C0B1] outline-none transition-all uppercase text-[10px] font-black tracking-widest"
-          />
-        </div>
-      </div>
-
+    <div className="w-full space-y-8">
       <AnimatePresence mode="wait">
         {error && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="p-6 bg-destructive/10 text-destructive rounded-2xl flex items-center justify-between border-2 border-destructive/20 font-black uppercase text-xs tracking-widest"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="p-6 bg-destructive/10 text-destructive rounded-2xl flex items-center justify-between border border-destructive/20"
           >
-            <div>ERREUR SYSTÈME : {error}</div>
-            <Button size="sm" variant="ghost" onClick={fetchProjects} className="font-black">REBOOT</Button>
+            <div className="font-bold">Erreur : {error}</div>
+            <Button size="sm" variant="outline" onClick={fetchProjects} className="border-destructive/30 hover:bg-destructive/10">Réessayer</Button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Horizontal Scroll Container */}
+      {/* Carousel Container */}
       <div className="relative group/carousel">
-        {/* Navigation Buttons - Studio Style */}
-        <div className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+        {/* Navigation Buttons */}
+        <div className="absolute -left-4 lg:-left-16 top-1/2 -translate-y-1/2 z-20 hidden md:block">
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={() => scroll('left')}
-            className="w-14 h-14 rounded-full bg-card border-2 border-foreground/10 hover:bg-primary hover:text-primary-foreground transition-all shadow-xl"
+            className="w-12 h-12 rounded-full bg-background/80 backdrop-blur-md border-border/50 hover:border-accent hover:text-accent transition-all shadow-xl"
           >
-            <ChevronLeft size={32} />
+            <ChevronLeft size={24} />
           </Button>
         </div>
-        <div className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+        <div className="absolute -right-4 lg:-right-16 top-1/2 -translate-y-1/2 z-20 hidden md:block">
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={() => scroll('right')}
-            className="w-14 h-14 rounded-full bg-card border-2 border-foreground/10 hover:bg-primary hover:text-primary-foreground transition-all shadow-xl"
+            className="w-12 h-12 rounded-full bg-background/80 backdrop-blur-md border-border/50 hover:border-accent hover:text-accent transition-all shadow-xl"
           >
-            <ChevronRight size={32} />
+            <ChevronRight size={24} />
           </Button>
         </div>
 
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-10 py-6 snap-x snap-mandatory scrollbar-hide scroll-smooth px-4 -mx-4"
+          className="flex overflow-x-auto gap-8 py-8 snap-x snap-mandatory scrollbar-hide scroll-smooth px-4 -mx-4"
           style={{ 
             msOverflowStyle: 'none', 
             scrollbarWidth: 'none',
@@ -210,40 +173,41 @@ export function ProjectCards() {
           }}
         >
           {loading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="min-w-[280px] md:min-w-[350px] h-[450px] bg-card animate-pulse snap-center rounded-[2rem] border-2 border-foreground/10" />
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="min-w-[300px] md:min-w-[400px] h-[500px] bg-card/40 animate-pulse snap-center rounded-[2.5rem] border border-border/50" />
             ))
-          ) : filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => (
+          ) : projects.length > 0 ? (
+            projects.map((project, index) => (
               <motion.div
                 key={project.id}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                whileHover="hover"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="min-w-[280px] md:min-w-[350px] snap-center"
+                className="min-w-[300px] md:min-w-[400px] snap-center"
               >
-                <Card className="relative h-full flex flex-col overflow-hidden bg-neutral-2 border-2 border-neutral-3 hover:border-[#D3C0B1] transition-all duration-500 rounded-[2rem] shadow-lg hover:shadow-2xl hover:shadow-[#D3C0B1]/10 group">
+                <Card className="relative h-full flex flex-col overflow-hidden bg-card/40 backdrop-blur-md border border-border/50 hover:border-accent/40 transition-all duration-500 rounded-[2.5rem] shadow-lg hover:shadow-2xl hover:shadow-accent/10 group">
                   {/* Image Section */}
-                  <div className="relative h-48 w-full overflow-hidden border-b-2 border-neutral-3">
+                  <div className="relative h-56 w-full overflow-hidden">
                     {project.image_url ? (
                       <img
                         src={project.image_url}
                         alt={project.image_alt || project.title}
-                        className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                        className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
-                      <div className="w-full h-full bg-neutral-3 flex items-center justify-center">
-                        <Globe size={48} className="text-[#D3C0B1]/20" />
+                      <div className="w-full h-full bg-accent/5 flex items-center justify-center">
+                        <Rocket size={64} className="text-accent/20" />
                       </div>
                     )}
                     
-                    {/* Status Badge - Studio Style */}
-                    <div className="absolute top-4 left-4">
+                    {/* Status Badge */}
+                    <div className="absolute top-6 left-6">
                       <Badge 
                         variant="outline" 
                         className={cn(
-                          "bg-neutral-2 border-2 border-neutral-3 px-3 py-1 text-[8px] uppercase tracking-[0.2em] font-black rounded-xl",
+                          "backdrop-blur-md px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-lg border",
                           getStatusColor(project.status)
                         )}
                       >
@@ -251,65 +215,69 @@ export function ProjectCards() {
                       </Badge>
                     </div>
 
-                    {/* Stats Overlay */}
-                    {(project.stars > 0) && (
-                      <div className="absolute top-4 right-4">
-                        <div className="flex items-center gap-1.5 px-2 py-1 bg-neutral-12 text-neutral-1 text-[10px] font-black uppercase tracking-tighter rounded-lg">
-                          <Star size={12} className="fill-current" />
+                    {/* Stars Badge */}
+                    {project.stars > 0 && (
+                      <div className="absolute top-6 right-6">
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-background/80 backdrop-blur-md text-foreground text-[10px] font-bold rounded-lg border border-border/50">
+                          <Star size={12} className="text-yellow-500 fill-yellow-500" />
                           {project.stars}
                         </div>
                       </div>
                     )}
+
+                    {/* Overlay on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
 
                   {/* Content Section */}
-                  <div className="flex-1 flex flex-col p-6">
+                  <div className="flex-1 flex flex-col p-8">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-[9px] text-neutral-10 flex items-center gap-1.5 uppercase tracking-widest font-black">
-                        <Calendar size={12} />
+                      <span className="text-xs text-muted-foreground flex items-center gap-2 font-bold">
+                        <Calendar size={14} className="text-accent" />
                         {formatDate(project.created_at)}
                       </span>
                       <div className="flex gap-2">
                         {project.tech_stack.slice(0, 2).map((tech) => (
-                          <span key={tech} className="text-[9px] font-black text-[#D3C0B1] uppercase tracking-tighter bg-neutral-3 px-2 py-0.5 rounded-md">
+                          <Badge key={tech} variant="secondary" className="text-[10px] bg-accent/5 text-accent border-accent/10 font-bold">
                             {tech}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-black mb-2 group-hover:text-[#D3C0B1] transition-colors line-clamp-1 tracking-tighter uppercase italic text-neutral-12">
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors line-clamp-1 tracking-tight">
                       {project.title}
                     </h3>
                     
-                    <p className="text-neutral-10 text-sm mb-6 line-clamp-2 leading-relaxed flex-1 font-medium italic">
-                      "{project.description}"
+                    <p className="text-muted-foreground text-sm mb-8 line-clamp-3 leading-relaxed flex-1 font-medium">
+                      {project.description}
                     </p>
 
-                    {/* Footer Actions - Studio Style */}
-                    <div className="flex items-center gap-3 pt-4 border-t-2 border-neutral-3">
+                    {/* Footer Actions */}
+                    <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                       {project.demo_url && (
                         <Button
-                          className="flex-1 gap-2 bg-neutral-12 hover:bg-[#D3C0B1] text-neutral-1 hover:text-neutral-1 font-black rounded-xl h-12 transition-all active:scale-95 uppercase text-[10px] tracking-widest italic"
+                          className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-12 shadow-lg shadow-accent/20 transition-all active:scale-95"
                           onClick={() => {
                             setModalProject(project)
                             setShowModal(true)
                           }}
                         >
-                          <ExternalLink size={16} />
-                          <span>Lancer</span>
+                          <ExternalLink size={18} />
+                          <span>Démo Live</span>
                         </Button>
                       )}
                       {project.github_url && (
-                        <a 
-                          href={project.github_url} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="p-3 bg-neutral-2 border-2 border-neutral-3 rounded-xl hover:border-[#D3C0B1] hover:text-[#D3C0B1] transition-all active:scale-90"
-                          title="Source Code"
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          asChild
+                          className="w-12 h-12 rounded-xl border-border/50 hover:border-accent hover:text-accent transition-all active:scale-90"
                         >
-                          <Github size={20} />
-                        </a>
+                          <a href={project.github_url} target="_blank" rel="noreferrer">
+                            <Github size={20} />
+                          </a>
+                        </Button>
                       )}
                     </div>
                   </div>
@@ -317,28 +285,24 @@ export function ProjectCards() {
               </motion.div>
             ))
           ) : (
-            <div className="w-full text-center py-20 bg-card rounded-[2rem] border-2 border-dashed border-foreground/10">
-              <Search size={48} className="mx-auto mb-4 text-primary/20" />
-              <p className="text-xl font-black uppercase italic tracking-tighter">Aucun projet trouvé</p>
-              <Button variant="link" onClick={() => { setSelectedTech("Tous"); setSearchQuery(""); }} className="text-primary font-black uppercase text-xs tracking-widest">
-                Réinitialiser
-              </Button>
+            <div className="w-full text-center py-32 bg-card/20 rounded-[3rem] border-2 border-dashed border-border/50">
+              <Code2 size={64} className="mx-auto mb-6 text-muted-foreground/20" />
+              <p className="text-2xl font-bold text-muted-foreground mb-4">Aucun projet disponible</p>
             </div>
           )}
         </div>
       </div>
 
-      {modalProject && (
-        <DemoModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false)
-            setModalProject(null)
-          }}
-          projectTitle={modalProject.title}
-          projectUrl={modalProject.demo_url || ''}
-        />
-      )}
+      <DemoModal
+        isOpen={showModal && !!modalProject}
+        onClose={() => {
+          setShowModal(false)
+          // Ne pas mettre modalProject à null immédiatement pour laisser l'animation se jouer
+          setTimeout(() => setModalProject(null), 500)
+        }}
+        projectTitle={modalProject?.title || ''}
+        projectUrl={modalProject?.demo_url || ''}
+      />
     </div>
   )
 }

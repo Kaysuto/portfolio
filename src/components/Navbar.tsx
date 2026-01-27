@@ -1,10 +1,26 @@
-import { Code, Sun, Moon, List, X } from "@phosphor-icons/react"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence, Variants } from "framer-motion"
+import { 
+  Sun, 
+  Moon, 
+  Menu, 
+  X, 
+  ArrowRight,
+  Sparkles
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 
+const navVariants: Variants = {
+  hidden: { y: -100, opacity: 0 },
+  visible: { 
+    y: 0, 
+    opacity: 1,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+  }
+}
 
 export function Navbar() {
   const { theme, toggle: toggleTheme } = useTheme()
@@ -14,246 +30,218 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("accueil")
 
+  const navLinks = [
+    { id: "accueil", label: "Accueil", path: "/" },
+    { id: "apropos", label: "À propos", path: "/" },
+    { id: "projets", label: "Projets", path: "/" },
+    { id: "contact", label: "Contact", path: "/" },
+    { id: "bio", label: "Bio", path: "/bio" }
+  ]
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
       
-      // Vérifier si on doit scroller vers une section (venant de la page bio)
-      const sectionToScroll = sessionStorage.getItem('scrollToSection')
-      if (sectionToScroll && location.pathname === '/') {
-        // Attendre que le DOM soit prêt
-        setTimeout(() => {
-          const element = document.getElementById(sectionToScroll)
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth" })
-            setActiveSection(sectionToScroll)
-            sessionStorage.removeItem('scrollToSection')
-          }
-        }, 100)
-      }
-      
-      // Si on est sur la page bio, mettre bio comme actif
       if (location.pathname === '/bio') {
         setActiveSection('bio')
-        return
-      }
-      
-      // Détection de la section active pour la page d'accueil
-      const sections = [
-        { id: "accueil" },
-        { id: "apropos" },
-        { id: "projets" },
-        { id: "contact" },
-      ]
-      let found = "accueil"
-      for (const section of sections) {
-        const el = document.getElementById(section.id)
-        if (el) {
-          const rect = el.getBoundingClientRect()
-          if (rect.top <= 80 && rect.bottom > 80) {
-            found = section.id
-            break
+      } else {
+        const sections = ["accueil", "apropos", "projets", "contact"]
+        const current = sections.find(section => {
+          const el = document.getElementById(section)
+          if (el) {
+            const rect = el.getBoundingClientRect()
+            return rect.top <= 120 && rect.bottom > 120
           }
-        }
+          return false
+        })
+        if (current) setActiveSection(current)
       }
-      setActiveSection(found)
-    }
-    
-    // Écouter les changements de navigation
-    const handlePopState = () => {
-      handleScroll()
     }
     
     window.addEventListener('scroll', handleScroll)
-    window.addEventListener('popstate', handlePopState)
     handleScroll()
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [location.pathname])
+
+  useEffect(() => {
+    const sectionToScroll = sessionStorage.getItem('scrollToSection')
+    if (sectionToScroll && location.pathname === '/') {
+      setTimeout(() => {
+        const element = document.getElementById(sectionToScroll)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+          sessionStorage.removeItem('scrollToSection')
+        }
+      }, 100)
     }
   }, [location.pathname])
 
+  const handleNavClick = (link: typeof navLinks[0]) => {
+    setIsMobileMenuOpen(false)
+    
+    if (link.path === '/bio') {
+      navigate('/bio')
+      return
+    }
 
-  const scrollToSection = (sectionId: string) => {
-    // Si on est sur la page bio, naviguer vers l'accueil avec l'ancre
-    if (location.pathname === '/bio') {
-      // Stocker la section cible dans sessionStorage
-      sessionStorage.setItem('scrollToSection', sectionId)
+    if (location.pathname !== '/') {
+      sessionStorage.setItem('scrollToSection', link.id)
       navigate('/')
       return
     }
     
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(link.id)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
-    setIsMobileMenuOpen(false)
-    setActiveSection(sectionId)
+    setActiveSection(link.id)
   }
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 animate-fadeIn ${
-      isScrolled
-        ? 'bg-background/95 backdrop-blur-md shadow-lg shadow-accent/5 border-b border-border/50'
-        : 'bg-transparent backdrop-blur-0 border-none shadow-none'
-    }`}>
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center h-16 justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group cursor-pointer animate-slideInFromLeft" onClick={() => scrollToSection('accueil')}>
-            <div className="p-1 bg-accent/5 rounded-lg group-hover:bg-accent/10 group-hover:scale-110 transition-all duration-300">
-              <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
-            </div>
-            <div className="transition-all duration-300 group-hover:scale-105">
-              <span className="font-medium text-foreground group-hover:text-accent">Kaysuto</span>
-              <span className="text-muted-foreground ml-1 group-hover:text-foreground">Kimiya</span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation Links - Centré */}
-          <div className="hidden md:flex items-center space-x-4 animate-fadeIn animate-delay-200 absolute left-1/2 transform -translate-x-1/2">
-            {[
-              { id: "accueil", label: "Accueil" },
-              { id: "apropos", label: "À propos" },
-              { id: "projets", label: "Projets" },
-              { id: "contact", label: "Contact" }
-            ].map((item, index) => (
-              <Button
-                key={item.id}
-                variant={activeSection === item.id ? "default" : "ghost"}
-                size="sm"
-                onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "relative px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
-                  activeSection === item.id
-                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-                    : "hover:bg-accent/10 hover:text-accent"
-                )}
-                style={{ animationDelay: `${(index + 3) * 0.1}s` }}
-              >
-                <span className="z-10">{item.label}</span>
-                {activeSection === item.id && (
-                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
-                )}
-              </Button>
-            ))}
-            
-            {/* Bouton Bio - Navigation vers page séparée */}
-            <Link to="/bio">
-              <Button
-                variant={activeSection === 'bio' ? "default" : "ghost"}
-                size="sm"
-                className={cn(
-                  "relative px-4 py-2 font-semibold group flex items-center transition-all duration-300",
-                  activeSection === 'bio'
-                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-                    : "hover:bg-accent/10 hover:text-accent"
-                )}
-                style={{ animationDelay: `${7 * 0.1}s` }}
-              >
-                <span className="z-10">Bio</span>
-                {activeSection === 'bio' && (
-                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
-                )}
-              </Button>
-            </Link>
+    <motion.nav 
+      initial="hidden"
+      animate="visible"
+      variants={navVariants}
+      className={cn(
+        "fixed top-0 w-full z-[100] transition-all duration-500 px-4 md:px-6",
+        isScrolled ? "py-4" : "py-8"
+      )}
+    >
+      <div className={cn(
+        "max-w-7xl mx-auto transition-all duration-500 rounded-[2.5rem] px-6 py-3 flex items-center justify-between",
+        isScrolled 
+          ? "bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl shadow-accent/10" 
+          : "bg-transparent border-transparent"
+      )}>
+        {/* Logo */}
+        <div 
+          className="flex items-center gap-4 group cursor-pointer"
+          onClick={() => handleNavClick(navLinks[0])}
+        >
+          <motion.div 
+            whileHover={{ rotate: 12, scale: 1.1 }}
+            className="p-2 bg-accent/10 rounded-2xl transition-colors"
+          >
+            <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-9 h-9 object-contain" />
+          </motion.div>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-foreground tracking-tight leading-none">Kaysuto</span>
+            <span className="text-[10px] font-semibold text-accent tracking-[0.2em] uppercase mt-1">Kimiya</span>
           </div>
+        </div>
 
-          {/* Right side buttons - Mobile and Desktop */}
-          <div className="flex items-center space-x-2 animate-slideInFromRight animate-delay-100 ml-auto md:ml-0">
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              className="p-2 hover:bg-accent/10 group transition-all duration-300 hover:scale-110"
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-1 bg-accent/5 backdrop-blur-md border border-accent/10 rounded-2xl p-1.5">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => handleNavClick(link)}
+              className={cn(
+                "relative px-6 py-2.5 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl overflow-hidden",
+                activeSection === link.id
+                  ? "text-accent-foreground"
+                  : "text-muted-foreground hover:text-accent"
+              )}
             >
-              <div className="relative">
-                {theme === 'dark' ? (
-                  <Sun size={18} className="text-accent group-hover:rotate-180 transition-transform duration-500" />
-                ) : (
-                  <Moon size={18} className="text-accent group-hover:-rotate-12 transition-transform duration-300" />
-                )}
-              </div>
-            </Button>
+              {activeSection === link.id && (
+                <motion.div
+                  layoutId="activeNav"
+                  className="absolute inset-0 bg-accent shadow-lg shadow-accent/20"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">{link.label}</span>
+            </button>
+          ))}
+        </div>
 
-            {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-accent/10 transition-all duration-300 hover:scale-110"
-            >
-              <div className="relative">
-                {isMobileMenuOpen ? (
-                  <X size={18} className="text-accent rotate-180 transition-transform duration-300" />
-                ) : (
-                  <List size={18} className="text-accent transition-transform duration-300" />
-                )}
-              </div>
-            </Button>
-          </div>
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="w-12 h-12 rounded-2xl hover:bg-accent/10 group transition-all"
+          >
+            <AnimatePresence mode="wait">
+              {theme === 'dark' ? (
+                <motion.div
+                  key="sun"
+                  initial={{ scale: 0, rotate: -90, opacity: 0 }}
+                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                  exit={{ scale: 0, rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Sun className="w-5 h-5 text-accent" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="moon"
+                  initial={{ scale: 0, rotate: 90, opacity: 0 }}
+                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                  exit={{ scale: 0, rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Moon className="w-5 h-5 text-accent" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden w-12 h-12 rounded-2xl bg-accent/5 hover:bg-accent/10 transition-all"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6 text-accent" /> : <Menu className="w-6 h-6 text-accent" />}
+          </Button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-        isMobileMenuOpen 
-          ? 'max-h-64 opacity-100' 
-          : 'max-h-0 opacity-0'
-      }`}>
-        <div className="border-t border-border bg-background/95 backdrop-blur-sm">
-          <div className="px-6 py-4 space-y-3">
-            {[
-              { id: "accueil", label: "Accueil" },
-              { id: "apropos", label: "À propos" },
-              { id: "projets", label: "Projets" },
-              { id: "contact", label: "Contact" }
-            ].map((item, index) => (
-              <Button
-                key={item.id}
-                variant={activeSection === item.id ? "default" : "ghost"}
-                size="sm"
-                onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "w-full text-left px-4 py-2 font-semibold transition-all duration-300 group flex items-center",
-                  activeSection === item.id
-                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-                    : "hover:bg-accent/10 hover:text-accent"
-                )}
-                style={{ animationDelay: isMobileMenuOpen ? `${(index + 1) * 0.1}s` : undefined }}
-              >
-                <span className="z-10">{item.label}</span>
-                {activeSection === item.id && (
-                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
-                )}
-              </Button>
-            ))}
-            
-            {/* Lien Bio Mobile */}
-            <Link to="/bio" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button
-                variant={activeSection === 'bio' ? "default" : "ghost"}
-                size="sm"
-                className={cn(
-                  "w-full text-left px-4 py-2 font-semibold group flex items-center transition-all duration-300",
-                  activeSection === 'bio'
-                    ? "bg-accent text-[#070201] dark:text-[#221512] shadow-md scale-105 hover:bg-accent/90 hover:text-[#070201] dark:hover:text-[#221512]"
-                    : "hover:bg-accent/10 hover:text-accent"
-                )}
-                style={{ animationDelay: isMobileMenuOpen ? `${5 * 0.1}s` : undefined }}
-              >
-                <span className="z-10">Bio</span>
-                {activeSection === 'bio' && (
-                  <span className="absolute inset-0 rounded-md border-2 border-accent animate-fadeIn pointer-events-none"></span>
-                )}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </nav>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-background/60 backdrop-blur-sm z-[-1]"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              className="md:hidden mt-4 bg-background/95 backdrop-blur-2xl border border-border/50 rounded-[2.5rem] shadow-2xl overflow-hidden"
+            >
+              <div className="p-8 space-y-4">
+                <div className="flex items-center gap-3 mb-6 px-2">
+                  <Sparkles className="w-5 h-5 text-accent" />
+                  <span className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Navigation</span>
+                </div>
+                
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => handleNavClick(link)}
+                    className={cn(
+                      "w-full flex items-center justify-between p-5 rounded-[1.5rem] transition-all font-bold uppercase tracking-widest text-sm",
+                      activeSection === link.id
+                        ? "bg-accent text-accent-foreground shadow-xl shadow-accent/20"
+                        : "bg-accent/5 text-foreground hover:bg-accent/10"
+                    )}
+                  >
+                    {link.label}
+                    <ArrowRight className={cn("w-5 h-5 transition-transform", activeSection === link.id && "translate-x-1")} />
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   )
 }

@@ -1,14 +1,39 @@
 import { useState, useEffect } from "react"
-import { GithubLogo, X } from "@phosphor-icons/react"
+import { motion, AnimatePresence, Variants } from "framer-motion"
+import { Github, ExternalLink, Users, GitBranch, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 import { GitHubModal } from "@/components/ui/GitHubModal"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface GitHubStats {
   public_repos: number
   followers: number
   following: number
+}
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15
+    }
+  }
+}
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
 }
 
 export function ProjectsSection() {
@@ -19,7 +44,6 @@ export function ProjectsSection() {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
-  // Compteurs animés pour les statistiques GitHub
   const reposCounter = useCounterAnimation({ 
     end: githubStats?.public_repos || 0, 
     duration: 2000 
@@ -56,113 +80,120 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-32 px-6 lg:px-12 section-lazy relative">
-      {/* Animated background shapes - positionnés pour éviter les composants */}
+    <section id="projets" className="py-32 px-6 lg:px-12 relative overflow-hidden">
+      {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-16 right-10 w-16 h-16 bg-accent/8 rounded-full animate-float-slow animate-delay-300"></div>
-        <div className="absolute top-1/3 left-12 w-12 h-12 bg-primary/10 rounded-full animate-float-medium animate-delay-500"></div>
-        <div className="absolute bottom-20 right-1/4 w-8 h-8 bg-secondary/15 rounded-full animate-bounce-slow animate-delay-700"></div>
-        <div className="absolute top-2/3 right-8 w-20 h-20 bg-muted/20 rounded-full animate-pulse-slow animate-delay-400"></div>
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.05, 0.1, 0.05] 
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute top-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
+        />
+        <motion.div 
+          animate={{ 
+            y: [0, 30, 0] 
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute bottom-1/4 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl"
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <motion.div 
+        className="max-w-7xl mx-auto relative z-10"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+      >
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Mes Projets</h2>
+        <motion.div className="text-center mb-24" variants={itemVariants}>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+            Mes <span className="text-accent">Projets</span>
+          </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Une sélection de projets qui illustrent ma passion pour la création 
             d'expériences numériques innovantes et performantes.
           </p>
-        </div>
+        </motion.div>
 
-
-        {/* Project Cards - affichage direct */}
-        <div className="mb-20">
+        {/* Project Cards */}
+        <motion.div className="mb-32" variants={itemVariants}>
           <ProjectCards />
-        </div>
+        </motion.div>
 
-        {/* GitHub Stats */}
-        <div className="flex justify-center">
-          <div className="bg-card border-2 border-border rounded-3xl p-10 w-full max-w-2xl hover:shadow-xl hover:shadow-accent/15 transition-all duration-500 group hover:border-accent/50">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">Statistiques GitHub</h3>
-              <a
-                href="https://github.com/Kaysuto"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-accent font-medium"
-              >
-                <GithubLogo size={20} className="mr-2 hover:rotate-12 transition-transform duration-300" />
-                @Kaysuto
-              </a>
-            </div>
-            
-            {loading ? (
-              <div className="grid grid-cols-3 gap-8">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="text-center">
-                    <div className="w-20 h-10 bg-muted rounded-lg animate-pulse mb-3 mx-auto"></div>
-                    <div className="w-24 h-5 bg-muted rounded animate-pulse mx-auto"></div>
+        {/* GitHub Stats Card */}
+        <motion.div className="flex justify-center" variants={itemVariants}>
+          <Card className="w-full max-w-3xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-[2.5rem]">
+            <CardContent className="p-10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-colors">
+                    <Github className="w-8 h-8 text-accent" />
                   </div>
-                ))}
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground">Statistiques GitHub</h3>
+                    <p className="text-muted-foreground">Activité en temps réel</p>
+                  </div>
+                </div>
               </div>
-            ) : githubStats ? (
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                <div className="text-center group/stat">
-                  <div 
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <GitBranch className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+                  <span 
                     ref={reposCounter.elementRef}
-                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {reposCounter.count}
-                  </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Repositories</p>
+                  </span>
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Repositories</p>
                 </div>
-                <div className="text-center group/stat">
-                  <div 
+                
+                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <Users className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+                  <span 
                     ref={followersCounter.elementRef}
-                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followersCounter.count}
-                  </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Followers</p>
+                  </span>
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Followers</p>
                 </div>
-                <div className="text-center group/stat">
-                  <div 
+                
+                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <Star className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+                  <span 
                     ref={followingCounter.elementRef}
-                    className="text-3xl sm:text-4xl font-bold text-accent mb-2 group-hover/stat:scale-110 transition-transform duration-300"
+                    className="text-4xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followingCounter.count}
-                  </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium group-hover/stat:text-foreground transition-colors duration-300">Following</p>
+                  </span>
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Following</p>
                 </div>
               </div>
-            ) : (
-              <p className="text-center text-muted-foreground">
-                Impossible de charger les statistiques GitHub
-              </p>
-            )}
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        {/* View More */}
-        <div className="text-center mt-20">
+        {/* View More Button */}
+        <motion.div className="text-center mt-20" variants={itemVariants}>
           <Button
             onClick={openModal}
-            variant="outline"
+            variant="default"
             size="lg"
-            className="border-2 border-accent text-accent hover:bg-accent/15 hover:border-accent/70 px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-medium hover:scale-105 transition-all duration-300"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-6 rounded-2xl text-lg font-bold shadow-lg shadow-accent/20 hover:scale-105 transition-all"
           >
-            {/* Icône ExternalLink supprimée car non disponible dans Phosphor */}
-            Voir tous mes projets sur GitHub
+            Voir tous mes projets
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      {/* Modal for GitHub projects - Version simplifiée */}
       <GitHubModal
         isOpen={showModal}
         onClose={closeModal}
       />
     </section>
-  );
+  )
 }
