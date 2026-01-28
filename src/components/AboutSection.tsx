@@ -74,16 +74,17 @@ export function AboutSection() {
     { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
     { name: "Vue.js", slug: "vuedotjs", url: "https://vuejs.org" },
     { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
-    { name: "Supabase", slug: "supabase", url: "https://supabase.com/", iconUrl: "https://i.imgur.com/xEZuSit.png" },
     { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
-    { name: "Git", slug: "git", url: "https://git-scm.com" },
-    { name: "Docker", slug: "docker", url: "https://www.docker.com" },
+    { name: "Supabase", slug: "supabase", url: "https://supabase.com/", iconUrl: "https://i.imgur.com/xEZuSit.png" },
     { name: "Linux", slug: "linux", url: "https://www.linux.org" },
-    { name: "VMware", slug: "vmware", url: "https://www.vmware.com" },
+    { name: "Docker", slug: "docker", url: "https://www.docker.com" },
     { name: "Proxmox", slug: "proxmox", url: "https://www.proxmox.com/", iconUrl: "https://i.imgur.com/TvQIvQ1.png" },
-    { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" },
+    { name: "VMware", slug: "vmware", url: "https://www.vmware.com" },
+    { name: "Git", slug: "git", url: "https://git-scm.com" },
+    { name: "YAML", slug: "yaml", url: "https://yaml.org/" },
     { name: "Byterover", slug: "byterover", url: "https://www.byterover.dev/", iconUrl: "https://i.imgur.com/jxUBre4.png" },
-    { name: "Superwhisper", slug: "superwhisper", url: "https://superwhisper.com/", iconUrl: "https://i.imgur.com/b9p7J8B.png" }
+    { name: "Superwhisper", slug: "superwhisper", url: "https://superwhisper.com/", iconUrl: "https://i.imgur.com/b9p7J8B.png" },
+    { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" }
   ]
 
   const handleTechClick = (tech: typeof techStack[0]) => {

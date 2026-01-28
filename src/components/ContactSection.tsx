@@ -1,15 +1,8 @@
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence, Variants } from "framer-motion"
+import { useState, useEffect } from "react"
+import { motion, Variants } from "framer-motion"
 import { 
   Mail, 
-  User, 
-  Building2, 
-  MessageSquare, 
-  Send, 
-  CheckCircle2, 
-  AlertCircle, 
   Copy, 
-  ChevronDown,
   Clock,
   Zap,
   ExternalLink
@@ -17,26 +10,19 @@ import {
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
+import { DiscordModal } from "@/components/ui/DiscordModal"
 
-interface FormData {
-  name: string
-  email: string
-  company: string
-  subject: string
-  projectType: string
-  budget: string
-  message: string
-}
-
-interface FormErrors {
-  name?: string
-  email?: string
-  message?: string
-}
+const DiscordIcon = ({ className }: { className?: string }) => (
+  <svg 
+    role="img" 
+    viewBox="0 0 24 24" 
+    className={className} 
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1971.3728.2914a.077.077 0 01-.0066.1277 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.419-2.157 2.419zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419z"/>
+  </svg>
+)
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -58,108 +44,19 @@ const itemVariants: Variants = {
 }
 
 export function ContactSection() {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    company: "",
-    subject: "",
-    projectType: "",
-    budget: "",
-    message: ""
-  })
-  
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  
-  const [isProjectTypeOpen, setIsProjectTypeOpen] = useState(false)
-  const [isBudgetOpen, setIsBudgetOpen] = useState(false)
-  
-  const projectTypeRef = useRef<HTMLDivElement>(null)
-  const budgetRef = useRef<HTMLDivElement>(null)
+  const [discordOnline, setDiscordOnline] = useState<number | null>(null)
+  const [showDiscordModal, setShowDiscordModal] = useState(false)
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (projectTypeRef.current && !projectTypeRef.current.contains(event.target as Node)) {
-        setIsProjectTypeOpen(false)
-      }
-      if (budgetRef.current && !budgetRef.current.contains(event.target as Node)) {
-        setIsBudgetOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Le nom est requis"
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Le nom doit contenir au moins 2 caractères"
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "L'email est requis"
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Veuillez entrer un email valide"
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Le message est requis"
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Le message doit contenir au moins 10 caractères"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!validateForm()) {
-      toast.error("Veuillez corriger les erreurs dans le formulaire")
-      return
-    }
-
-    setIsSubmitting(true)
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      setIsSuccess(true)
-      toast.success("Message envoyé avec succès !")
-      
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        subject: "",
-        projectType: "",
-        budget: "",
-        message: ""
+    fetch("https://discord.com/api/guilds/1352228798585638983/widget.json")
+      .then(res => res.json())
+      .then(data => {
+        if (data && typeof data.presence_count === "number") {
+          setDiscordOnline(data.presence_count)
+        }
       })
-      
-      setTimeout(() => setIsSuccess(false), 5000)
-    } catch (error) {
-      toast.error("Erreur lors de l'envoi.")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    if (errors[field as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }))
-    }
-  }
+      .catch(() => {})
+  }, [])
 
   const handleCopyEmail = async () => {
     try {
@@ -171,7 +68,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-20 px-6 bg-background relative overflow-hidden">
+    <section id="contact" className="py-16 px-6 bg-background relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <motion.div 
@@ -179,259 +76,146 @@ export function ContactSection() {
           transition={{ duration: 10, repeat: Infinity }}
           className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl"
         />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.08, 0.03] }}
+          transition={{ duration: 15, repeat: Infinity, delay: 2 }}
+          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl"
+        />
       </div>
 
       <motion.div 
-        className="max-w-7xl mx-auto relative z-10"
+        className="max-w-5xl mx-auto relative z-10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
       >
         {/* Section Header */}
-        <motion.div className="text-center mb-16" variants={itemVariants}>
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
-            Parlons de votre <span className="text-accent">projet</span>
+        <motion.div className="text-center mb-10" variants={itemVariants}>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
+            On reste en <span className="text-accent">contact</span> ?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Vous avez une idée ? Un projet en tête ? Remplissez ce formulaire et 
-            je vous répondrai dans les plus brefs délais.
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
+            Que ce soit pour un projet, une question ou simplement rejoindre ma communauté, 
+            choisissez le canal qui vous convient le mieux.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-12 items-start">
-          {/* Contact Form */}
-          <motion.div className="lg:col-span-3" variants={itemVariants}>
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5">
-              <CardContent className="p-6 md:p-10">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-2.5 bg-accent/10 rounded-xl">
-                    <MessageSquare className="w-5 h-5 text-accent" />
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+          
+          {/* Direct Email Card */}
+          <motion.div variants={itemVariants}>
+            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5 h-full transition-colors hover:bg-card/50">
+              <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="p-4 bg-accent/10 rounded-2xl mb-2">
+                    <Mail className="w-8 h-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground">Envoyer un message</h3>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="name" className="text-sm font-semibold ml-1">Nom complet *</Label>
-                      <div className="relative group">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange("name", e.target.value)}
-                          className={cn(
-                            "pl-12 h-12 rounded-xl bg-background/50 border-border/50 focus:border-accent/50 transition-all",
-                            errors.name && "border-destructive/50 focus:border-destructive/50"
-                          )}
-                          placeholder="John Doe"
-                        />
-                      </div>
-                      {errors.name && <p className="text-xs text-destructive font-medium ml-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.name}</p>}
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="email" className="text-sm font-semibold ml-1">Email *</Label>
-                      <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange("email", e.target.value)}
-                          className={cn(
-                            "pl-12 h-12 rounded-xl bg-background/50 border-border/50 focus:border-accent/50 transition-all",
-                            errors.email && "border-destructive/50 focus:border-destructive/50"
-                          )}
-                          placeholder="john@example.com"
-                        />
-                      </div>
-                      {errors.email && <p className="text-xs text-destructive font-medium ml-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.email}</p>}
-                    </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-bold text-foreground tracking-tight">Contact direct</h3>
+                    <p className="text-sm text-muted-foreground font-medium">
+                      Copiez mon adresse email ou ouvrez votre client habituel.
+                    </p>
                   </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="company" className="text-sm font-semibold ml-1">Entreprise (optionnel)</Label>
-                      <div className="relative group">
-                        <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
-                        <Input
-                          id="company"
-                          value={formData.company}
-                          onChange={(e) => handleInputChange("company", e.target.value)}
-                          className="pl-12 h-12 rounded-xl bg-background/50 border-border/50 focus:border-accent/50 transition-all"
-                          placeholder="Nom de l'entreprise"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-sm font-semibold ml-1">Type de projet</Label>
-                      <div className="relative" ref={projectTypeRef}>
-                        <button
-                          type="button"
-                          onClick={() => setIsProjectTypeOpen(!isProjectTypeOpen)}
-                          className="flex h-12 w-full items-center justify-between rounded-xl border border-border/50 bg-background/50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all"
-                        >
-                          <span className={formData.projectType ? 'text-foreground font-medium' : 'text-muted-foreground'}>
-                            {formData.projectType ? (
-                              {
-                                'web-app': 'Application Web',
-                                'mobile-app': 'Application Mobile',
-                                'website': 'Site Web',
-                                'ecommerce': 'E-commerce',
-                                'api': 'API/Backend',
-                                'consultation': 'Consultation',
-                                'other': 'Autre'
-                              }[formData.projectType]
-                            ) : 'Sélectionnez un type'}
-                          </span>
-                          <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", isProjectTypeOpen && "rotate-180")} />
-                        </button>
-                        <AnimatePresence>
-                          {isProjectTypeOpen && (
-                            <motion.ul 
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: 10 }}
-                              className="absolute top-full left-0 w-full mt-2 bg-card border border-border/50 rounded-xl z-50 p-2 shadow-xl backdrop-blur-xl"
-                            >
-                              {[
-                                { id: 'web-app', label: 'Application Web' },
-                                { id: 'mobile-app', label: 'Application Mobile' },
-                                { id: 'website', label: 'Site Web' },
-                                { id: 'ecommerce', label: 'E-commerce' },
-                                { id: 'api', label: 'API/Backend' },
-                                { id: 'consultation', label: 'Consultation' },
-                                { id: 'other', label: 'Autre' }
-                              ].map((item) => (
-                                <li key={item.id}>
-                                  <button
-                                    type="button"
-                                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-accent/10 hover:text-accent rounded-lg transition-colors font-medium"
-                                    onClick={() => { handleInputChange("projectType", item.id); setIsProjectTypeOpen(false); }}
-                                  >
-                                    {item.label}
-                                  </button>
-                                </li>
-                              ))}
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="message" className="text-sm font-semibold ml-1">Message *</Label>
-                    <textarea
-                      id="message"
-                      value={formData.message}
-                      onChange={(e) => handleInputChange("message", e.target.value)}
-                      rows={5}
-                      className={cn(
-                        "flex w-full rounded-xl border border-border/50 bg-background/50 px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 transition-all resize-none",
-                        errors.message && "border-destructive/50 focus-visible:ring-destructive/20"
-                      )}
-                      placeholder="Décrivez votre projet..."
-                    />
-                    {errors.message && <p className="text-xs text-destructive font-medium ml-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.message}</p>}
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting || isSuccess}
-                    className={cn(
-                      "w-full h-12 rounded-xl text-lg font-bold transition-all shadow-lg",
-                      isSuccess 
-                        ? "bg-green-500 hover:bg-green-600 text-white" 
-                        : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-accent/20"
-                    )}
-                  >
-                    {isSubmitting ? (
-                      <div className="w-6 h-6 border-3 border-current border-t-transparent rounded-full animate-spin" />
-                    ) : isSuccess ? (
-                      <div className="flex items-center gap-2"><CheckCircle2 className="w-6 h-6" /> Message envoyé !</div>
-                    ) : (
-                      <div className="flex items-center gap-2"><Send className="w-5 h-5" /> Envoyer le message</div>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Sidebar Info */}
-          <motion.div className="lg:col-span-2 space-y-8" variants={itemVariants}>
-            {/* Direct Contact Card */}
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-xl shadow-accent/5">
-              <CardContent className="p-6 md:p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-2.5 bg-accent/10 rounded-xl">
-                    <Mail className="w-5 h-5 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">Contact direct</h3>
                 </div>
                 
-                <p className="text-muted-foreground mb-8 leading-relaxed">
-                  Vous préférez m'écrire directement ? Copiez mon adresse email ou ouvrez votre client habituel.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="p-5 bg-accent/5 rounded-2xl border border-accent/10 flex items-center justify-between group">
+                <div className="w-full space-y-4 mt-6">
+                  <div 
+                    onClick={handleCopyEmail}
+                    className="p-4 bg-accent/5 rounded-2xl border border-accent/10 flex items-center justify-between group transition-all hover:bg-accent/10 cursor-pointer"
+                  >
                     <span className="text-lg font-bold text-foreground tracking-tight">contact@kimiya.pro</span>
-                    <button
-                      onClick={handleCopyEmail}
-                      className="p-2 hover:bg-accent/20 rounded-xl transition-all text-accent"
-                      title="Copier l'email"
-                    >
-                      <Copy className="w-5 h-5" />
-                    </button>
+                    <Copy className="w-5 h-5 text-accent" />
                   </div>
 
                   <Button 
-                    className="w-full h-12 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold gap-2 shadow-lg shadow-accent/20"
-                    onClick={() => window.location.href = "mailto:contact@kimiya.pro"}
+                    asChild
+                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <ExternalLink className="w-5 h-5" />
-                    Ouvrir le client email
+                    <a href="mailto:contact@kimiya.pro">
+                      Ouvrir le client email
+                    </a>
                   </Button>
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
 
-            {/* Status Cards */}
-            <div className="grid gap-4">
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="p-6 bg-green-500/10 border border-green-500/20 rounded-[2rem] flex items-start gap-4"
-              >
-                <div className="p-3 bg-green-500/20 rounded-2xl">
-                  <Zap className="w-6 h-6 text-green-500" />
+          {/* Discord Community Card */}
+          <motion.div variants={itemVariants}>
+            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5 h-full transition-colors hover:bg-card/50">
+              <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="p-4 bg-accent/10 rounded-2xl mb-2">
+                    <DiscordIcon className="w-8 h-8 text-accent" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-bold text-foreground tracking-tight italic">Communauté Discord</h3>
+                    <p className="text-sm text-muted-foreground font-medium">
+                      Rejoignez mon serveur pour échanger et suivre mon actualité en direct.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-foreground mb-1">Disponible</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">Ouvert à de nouvelles opportunités et collaborations passionnantes.</p>
-                </div>
-              </motion.div>
 
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-[2rem] flex items-start gap-4"
-              >
-                <div className="p-3 bg-blue-500/20 rounded-2xl">
-                  <Clock className="w-6 h-6 text-blue-500" />
+                <div className="w-full mt-6">
+                  {discordOnline !== null && (
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                      </span>
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{discordOnline} Membres en ligne</span>
+                    </div>
+                  )}
+                  <Button 
+                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    onClick={() => setShowDiscordModal(true)}
+                  >
+                    Rejoindre le serveur
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
                 </div>
-                <div>
-                  <h4 className="font-bold text-foreground mb-1">Réponse rapide</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">Je m'engage à vous répondre dans les 24 heures ouvrables.</p>
-                </div>
-              </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Availability Card */}
+          <motion.div 
+            variants={itemVariants}
+            whileHover={{ y: -5 }}
+            className="p-6 bg-green-500/10 border border-green-500/20 rounded-[2.5rem] flex items-start gap-5 transition-all"
+          >
+            <div className="p-3 bg-green-500/20 rounded-2xl">
+              <Zap className="w-6 h-6 text-green-500" />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-foreground mb-1">Disponible</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed font-medium">Prêt pour de nouvelles opportunités et collaborations passionnantes.</p>
             </div>
           </motion.div>
+
+          {/* Response Time Card */}
+          <motion.div 
+            variants={itemVariants}
+            whileHover={{ y: -5 }}
+            className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-[2.5rem] flex items-start gap-5 transition-all"
+          >
+            <div className="p-3 bg-blue-500/20 rounded-2xl">
+              <Clock className="w-6 h-6 text-blue-500" />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-foreground mb-1">Réponse rapide</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed font-medium">Je m'engage à traiter vos demandes en moins de 24 heures ouvrables.</p>
+            </div>
+          </motion.div>
+
         </div>
       </motion.div>
+
+      <DiscordModal 
+        isOpen={showDiscordModal}
+        onClose={() => setShowDiscordModal(false)}
+      />
     </section>
   )
 }

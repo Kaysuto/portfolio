@@ -80,7 +80,7 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projets" className="py-20 px-6 lg:px-12 relative overflow-hidden">
+    <section id="projets" className="py-16 px-6 lg:px-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <motion.div 
@@ -108,7 +108,7 @@ export function ProjectsSection() {
         variants={containerVariants}
       >
         {/* Section Header */}
-        <motion.div className="text-center mb-16" variants={itemVariants}>
+        <motion.div className="text-center mb-10" variants={itemVariants}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             Mes <span className="text-accent">Projets</span>
           </h2>
@@ -119,15 +119,15 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* Project Cards */}
-        <motion.div className="mb-32" variants={itemVariants}>
+        <motion.div className="mb-16" variants={itemVariants}>
           <ProjectCards />
         </motion.div>
 
         {/* GitHub Stats Card */}
         <motion.div className="flex justify-center" variants={itemVariants}>
-          <Card className="w-full max-w-3xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-[2.5rem]">
-            <CardContent className="p-10">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+          <Card className="w-full max-w-2xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-[2.5rem]">
+            <CardContent className="p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-colors">
                     <Github className="w-7 h-7 text-accent" />
@@ -139,38 +139,38 @@ export function ProjectsSection() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
-                  <GitBranch className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <GitBranch className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={reposCounter.elementRef}
-                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {reposCounter.count}
                   </span>
-                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Repositories</p>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Repositories</p>
                 </div>
                 
-                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
-                  <Users className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+                <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <Users className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followersCounter.elementRef}
-                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followersCounter.count}
                   </span>
-                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Followers</p>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Followers</p>
                 </div>
                 
-                <div className="flex flex-col items-center p-6 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
-                  <Star className="w-6 h-6 text-accent/50 mb-4 group-hover/stat:scale-110 transition-transform" />
+                <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <Star className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followingCounter.elementRef}
-                    className="text-3xl font-bold text-foreground tabular-nums mb-1"
+                    className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
                     {followingCounter.count}
                   </span>
-                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Following</p>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Following</p>
                 </div>
               </div>
             </CardContent>
@@ -178,7 +178,7 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* View More Button */}
-        <motion.div className="text-center mt-20" variants={itemVariants}>
+        <motion.div className="text-center mt-12" variants={itemVariants}>
           <Button
             onClick={openModal}
             variant="default"
