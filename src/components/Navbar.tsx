@@ -109,7 +109,7 @@ export function Navbar() {
       <div className={cn(
         "max-w-7xl mx-auto transition-all duration-500 rounded-[2.5rem] px-6 py-3 flex items-center justify-between",
         isScrolled 
-          ? "bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl shadow-accent/10" 
+          ? "bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl" 
           : "bg-transparent border-transparent"
       )}>
         {/* Logo */}
@@ -145,7 +145,7 @@ export function Navbar() {
               {activeSection === link.id && (
                 <motion.div
                   layoutId="activeNav"
-                  className="absolute inset-0 bg-accent shadow-lg shadow-accent/20"
+                  className="absolute inset-0 bg-accent"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
@@ -199,7 +199,7 @@ export function Navbar() {
                     className={cn(
                       "w-full flex items-center justify-between p-5 rounded-[1.5rem] transition-all font-bold uppercase tracking-widest text-sm",
                       activeSection === link.id
-                        ? "bg-accent text-accent-foreground shadow-xl shadow-accent/20"
+                        ? "bg-accent text-accent-foreground"
                         : "bg-accent/5 text-foreground hover:bg-accent/10"
                     )}
                   >

@@ -1,28 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from "react"
-import { ExternalLink, Calendar, Github, Globe, Star, Search, ChevronLeft, ChevronRight, Rocket, Code2 } from "lucide-react"
+import { ExternalLink, Calendar, Github, Globe, Star, Search, ChevronLeft, ChevronRight, Rocket, Code2, Heart, Eye, GitFork } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DemoModal } from "@/components/ui/ProjectModal"
-import { getProjects } from "@/lib/supabase"
 import { motion, AnimatePresence, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  tech_stack: string[]
-  status: 'En production' | 'En développement' | 'Alpha' | 'Beta'
-  type: string
-  github_url?: string
-  demo_url?: string
-  stars: number
-  forks: number
-  created_at: string
-  image_url?: string
-  image_alt?: string
-}
+import { projects as localProjects, type Project } from "@/data/projects"
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -38,7 +22,7 @@ const cardVariants: Variants = {
 }
 
 export function ProjectCards() {
-  const [projects, setProjects] = useState<Project[]>([])
+  const [projects, setProjects] = useState<Project[]>(localProjects)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
@@ -46,49 +30,11 @@ export function ProjectCards() {
   const [showModal, setShowModal] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const fetchProjects = async () => {
-    if (loading || hasFetched.current) return
-    hasFetched.current = true
-    setLoading(true)
-    setError(null)
-    try {
-      const data = await getProjects()
-      if (Array.isArray(data)) {
-        const mapStatus = (status: string): Project["status"] => {
-          switch (status) {
-            case 'published': return 'En production'
-            case 'dev': return 'En développement'
-            case 'alpha': return 'Alpha'
-            case 'beta': return 'Beta'
-            default: return 'En production'
-          }
-        }
-        const mapped = data.map((p: any) => ({
-          id: p.id,
-          title: p.title,
-          description: p.description,
-          tech_stack: p.technologies || [],
-          status: mapStatus(p.status),
-          type: p.type || '',
-          github_url: p.github_url || undefined,
-          demo_url: p.live_url || undefined,
-          stars: p.stars || 0,
-          forks: p.forks || 0,
-          created_at: p.created_at,
-          image_url: p.image_url || undefined,
-          image_alt: p.image_alt || p.title,
-        }))
-        setProjects(mapped)
-      }
-    } catch (e: any) {
-      setError(e?.message || String(e))
-    } finally {
-      setLoading(false)
-    }
-  }
+  // fetchProjects is no longer needed but kept as empty to avoid reference errors if any
+  const fetchProjects = async () => {}
 
   useEffect(() => {
-    fetchProjects()
+    // No fetch needed for static data
   }, [])
 
   const scroll = (direction: 'left' | 'right') => {
@@ -115,11 +61,11 @@ export function ProjectCards() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'En production': return 'text-green-500 bg-green-500/10 border-green-500/20'
-      case 'En développement': return 'text-amber-500 bg-amber-500/10 border-amber-500/20'
-      case 'Alpha': return 'text-red-500 bg-red-500/10 border-red-500/20'
-      case 'Beta': return 'text-blue-500 bg-blue-500/10 border-blue-500/20'
-      default: return 'text-muted-foreground bg-muted/10 border-muted/20'
+      case 'En production': return 'text-white bg-green-500/80 border-green-400/50 backdrop-blur-md shadow-lg shadow-green-500/20'
+      case 'En développement': return 'text-white bg-amber-500/80 border-amber-400/50 backdrop-blur-md shadow-lg shadow-amber-500/20'
+      case 'Alpha': return 'text-white bg-red-500/80 border-red-400/50 backdrop-blur-md shadow-lg shadow-red-500/20'
+      case 'Beta': return 'text-white bg-blue-500/80 border-blue-400/50 backdrop-blur-md shadow-lg shadow-blue-500/20'
+      default: return 'text-white bg-gray-500/80 border-gray-400/50 backdrop-blur-md'
     }
   }
 
@@ -187,7 +133,7 @@ export function ProjectCards() {
                 viewport={{ once: true }}
                 className="min-w-[280px] md:min-w-[350px] snap-center"
               >
-                <Card className="relative h-full flex flex-col overflow-hidden bg-card/40 backdrop-blur-md border border-border/50 hover:border-accent/40 transition-all duration-500 rounded-[2rem] shadow-lg hover:shadow-2xl hover:shadow-accent/10 group">
+                <Card className="relative h-full flex flex-col overflow-hidden bg-card border border-border/50 hover:border-accent/40 transition-all duration-500 rounded-[2rem] shadow-lg hover:shadow-2xl group">
                   {/* Image Section */}
                   <div className="relative h-48 w-full overflow-hidden">
                     {project.image_url ? (
@@ -202,31 +148,77 @@ export function ProjectCards() {
                       </div>
                     )}
                     
+                    {/* Overlay on Hover (Background) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+
                     {/* Status Badge */}
-                    <div className="absolute top-6 left-6">
-                      <Badge 
-                        variant="outline" 
-                        className={cn(
-                          "backdrop-blur-md px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-lg border",
-                          getStatusColor(project.status)
-                        )}
+                    <div className="absolute top-6 left-6 z-20">
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        whileHover={{ scale: 1.05 }}
+                        viewport={{ once: true }}
                       >
-                        {project.status}
-                      </Badge>
+                        <Badge 
+                          variant="outline" 
+                          className={cn(
+                            "px-3 py-1 text-[10px] uppercase tracking-wider font-bold rounded-lg border shadow-lg",
+                            getStatusColor(project.status)
+                          )}
+                        >
+                          {project.status}
+                        </Badge>
+                      </motion.div>
                     </div>
 
-                    {/* Stars Badge */}
-                    {project.stars > 0 && (
-                      <div className="absolute top-6 right-6">
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-background/80 backdrop-blur-md text-foreground text-[10px] font-bold rounded-lg border border-border/50">
-                          <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                    {/* Statistics Badges */}
+                    <div className="absolute top-6 right-6 flex flex-col items-end gap-2 z-20">
+                      {project.stars !== undefined && project.stars > 0 && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.5, x: 50 }}
+                          whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                          whileHover={{ scale: 1.1, x: -5 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+                          viewport={{ once: true }}
+                          className="flex items-center gap-1.5 px-3 py-1 bg-card border-2 border-border text-foreground text-[10px] font-bold rounded-lg shadow-md cursor-pointer group/stat"
+                        >
+                          <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+                            <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                          </motion.div>
                           {project.stars}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Overlay on Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </motion.div>
+                      )}
+                      {project.likes !== undefined && project.likes > 0 && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.5, x: 50 }}
+                          whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                          whileHover={{ scale: 1.1, x: -5 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.2 }}
+                          viewport={{ once: true }}
+                          className="flex items-center gap-1.5 px-3 py-1 bg-card border-2 border-border text-foreground text-[10px] font-bold rounded-lg shadow-md cursor-pointer group/stat"
+                        >
+                          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                            <Heart size={12} className="text-red-500 fill-red-500" />
+                          </motion.div>
+                          {project.likes}
+                        </motion.div>
+                      )}
+                      {project.views !== undefined && project.views > 0 && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.5, x: 50 }}
+                          whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                          whileHover={{ scale: 1.1, x: -5 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.3 }}
+                          viewport={{ once: true }}
+                          className="flex items-center gap-1.5 px-3 py-1 bg-card border-2 border-border text-foreground text-[10px] font-bold rounded-lg shadow-md cursor-pointer group/stat"
+                        >
+                          <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
+                            <Eye size={12} className="text-blue-500" />
+                          </motion.div>
+                          {project.views}
+                        </motion.div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Content Section */}
@@ -236,12 +228,52 @@ export function ProjectCards() {
                         <Calendar size={14} className="text-accent" />
                         {formatDate(project.created_at)}
                       </span>
-                      <div className="flex gap-2">
-                        {project.tech_stack.slice(0, 2).map((tech) => (
-                          <Badge key={tech} variant="secondary" className="text-[10px] bg-accent/5 text-accent border-accent/10 font-bold">
-                            {tech}
-                          </Badge>
+                      <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+                        {project.tech_stack.slice(0, 2).map((tech, i) => (
+                          <motion.div
+                            key={tech}
+                            initial={{ opacity: 0, x: 10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            viewport={{ once: true }}
+                          >
+                            <Badge variant="secondary" className="text-[10px] bg-accent/10 text-accent border-accent/20 font-bold py-0.5 px-2">
+                              {tech}
+                            </Badge>
+                          </motion.div>
                         ))}
+                        {project.tech_stack.length > 2 && (
+                          <div className="relative group/tags">
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              whileHover={{ y: -2 }}
+                              transition={{ delay: 0.3 }}
+                              viewport={{ once: true }}
+                            >
+                              <Badge variant="secondary" className="text-[10px] bg-accent text-accent-foreground border-transparent font-black py-0.5 px-2 cursor-help">
+                                +{project.tech_stack.length - 2}
+                              </Badge>
+                            </motion.div>
+                            
+                            {/* Hidden Tags Tooltip */}
+                            <div className="absolute bottom-full right-0 mb-3 opacity-0 group-hover/tags:opacity-100 pointer-events-none group-hover/tags:pointer-events-auto transition-all duration-300 translate-y-1 group-hover/tags:translate-y-0 z-50">
+                              <div className="bg-card/95 border border-border shadow-2xl rounded-xl p-3 flex flex-wrap gap-1.5 min-w-[140px] justify-center items-center backdrop-blur-xl">
+                                {project.tech_stack.slice(2).map((tech) => (
+                                  <Badge 
+                                    key={tech} 
+                                    variant="outline" 
+                                    className="text-[9px] bg-accent/5 text-accent border-accent/20 font-bold whitespace-nowrap text-center justify-center flex items-center h-6 px-2"
+                                  >
+                                    {tech}
+                                  </Badge>
+                                ))}
+                              </div>
+                              {/* Arrow */}
+                              <div className="absolute right-4 -bottom-1 w-2.5 h-2.5 bg-card border-r border-b border-border rotate-45 mx-auto" style={{ left: 'auto', right: '14px' }} />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -257,7 +289,7 @@ export function ProjectCards() {
                     <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                       {project.demo_url && (
                         <Button
-                          className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-10 shadow-lg shadow-accent/20 transition-all active:scale-95 text-sm"
+                          className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-xl h-10 shadow-lg transition-all active:scale-95 text-sm"
                           onClick={() => {
                             setModalProject(project)
                             setShowModal(true)

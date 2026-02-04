@@ -1,8 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PortfolioApp } from '@/PortfolioApp';
-import { AdminApp } from './admin/AdminApp';
-import { Login } from './admin/pages/Login';
-import MaintenancePage from './pages/MaintenancePage';
 import BioPage from './pages/BioPage';
 import { Layout } from '@/components/Layout';
 import { ScrollToTop } from '@/components/ScrollToTop';
@@ -17,20 +14,11 @@ const AppRouter: React.FC = () => {
     >
       <ScrollToTop />
       <Routes>
-        {/* Routes publiques - Portfolio avec Layout commun pour éviter la latence */}
+        {/* Routes publiques - Portfolio avec Layout commun */}
         <Route path="/" element={<Layout><PortfolioApp /></Layout>} />
         <Route path="/bio" element={<Layout><BioPage /></Layout>} />
-        <Route path="/maintenance" element={<MaintenancePage />} />
 
-        {/* Routes admin - Sans sécurité pour le développement */}
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin/*" element={<AdminApp />} />
-
-        {/* Redirection de /login vers /admin/login */}
-        <Route path="/login" element={<Navigate to="/admin/login" replace />} />
-
-        {/* 404 pour toute autre route - PLACÉ EN DERNIER */}
+        {/* 404 pour toute autre route - Redirection vers l'accueil */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

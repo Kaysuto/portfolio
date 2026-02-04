@@ -164,7 +164,7 @@ export function BioSection() {
                       url: link.url,
                       description: link.description || ''
                     })}
-                    className="group relative p-5 bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl hover:shadow-2xl hover:shadow-accent/10 transition-all duration-300 hover:border-accent/40 text-left w-full overflow-hidden"
+                    className="group relative p-5 bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:border-accent/40 text-left w-full overflow-hidden"
                   >
                     {/* Hover Glow Effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -244,7 +244,7 @@ export function BioSection() {
               <Button 
                 type="button"
                 onClick={handleLinkConfirm} 
-                className="flex-1 h-12 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-lg shadow-accent/20"
+                className="flex-1 h-12 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold"
               >
                 <ArrowUpRight className="h-5 w-5 mr-2" />
                 Ouvrir

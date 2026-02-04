@@ -608,23 +608,17 @@ section {
   }
 }
 
-@keyframes finger-glow {
+@keyframes finger-tap {
   0%, 100% {
-    opacity: 0.8;
-    filter: drop-shadow(0 0 2px currentColor);
+    transform: translateY(0) scale(1);
   }
   50% {
-    opacity: 1;
-    filter: drop-shadow(0 0 8px currentColor);
+    transform: translateY(-3px) scale(1.05);
   }
 }
 
 .animate-finger-tap {
   animation: finger-tap 2s ease-in-out infinite;
-}
-
-.animate-finger-glow {
-  animation: finger-glow 2s ease-in-out infinite;
 }
 
 /* Indicateur de scroll mobile élégant */
@@ -639,24 +633,8 @@ section {
   }
 }
 
-@keyframes scroll-indicator-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(var(--accent), 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 4px rgba(var(--accent), 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(var(--accent), 0);
-  }
-}
-
 .animate-scroll-pulse {
   animation: scroll-indicator-pulse 2s ease-in-out infinite;
-}
-
-.animate-scroll-glow {
-  animation: scroll-indicator-glow 2s ease-in-out infinite;
 }
 
 /* Amélioration de l'animation souris desktop */

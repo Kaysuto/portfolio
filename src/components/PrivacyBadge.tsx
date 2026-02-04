@@ -91,10 +91,10 @@ export function PrivacyBadge() {
                         onClick={handleAcceptAll} 
                         disabled={consent === 'accepted'}
                         className={cn(
-                          "flex-1 rounded-xl font-bold h-10 shadow-lg transition-all",
+                          "flex-1 rounded-xl font-bold h-10 transition-all",
                           consent === 'accepted' 
                             ? "bg-green-500/20 text-green-500 border border-green-500/20 hover:bg-green-500/20 cursor-default shadow-none" 
-                            : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-accent/10"
+                            : "bg-accent hover:bg-accent/90 text-accent-foreground"
                         )}
                       >
                         {consent === 'accepted' ? (

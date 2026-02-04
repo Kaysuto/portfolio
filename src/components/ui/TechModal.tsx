@@ -63,7 +63,7 @@ export function TechModal({ isOpen, onClose, techName, techUrl, techIcon, iconUr
           <Button 
             type="button"
             onClick={handleOpenTech} 
-            className="flex-1 h-14 rounded-2xl font-bold text-base shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 h-14 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
             style={{ backgroundColor: accentColor, color: 'black' }}
           >
             <ExternalLink className="h-5 w-5 mr-2" />

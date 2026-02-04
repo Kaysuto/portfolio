@@ -1,16 +1,11 @@
-import { LinksService, PortfolioLink } from '../admin/services/linksService';
+import { links as localLinks, type BioLink } from '../data/links';
+export type { BioLink };
 
 export interface BioLinkIcon {
   name: string;
-  phosphorIcon: string; // nom de l'icône Phosphor
+  phosphorIcon: string;
 }
 
-export interface BioLink extends PortfolioLink {
-  type: 'bio_link';
-  icon?: string; // nom de l'icône Phosphor pour l'affichage
-}
-
-// Mapping des liens bio avec leurs icônes par défaut
 const bioLinkIcons: Record<string, string> = {
   'Email': 'EnvelopeSimple',
   'Discord': 'DiscordLogo', 
@@ -26,10 +21,20 @@ export class BioLinksService {
   /**
    * Récupère tous les liens bio actifs
    */
+  /**
+   * Récupère tous les liens bio actifs (Sychrone pour l'approche statique)
+   */
+  static getBioLinksSync(): BioLink[] {
+    const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
+    return bioLinks.map(link => ({
+      ...link,
+      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    }));
+  }
+
   static async getBioLinks(): Promise<BioLink[]> {
     try {
-      const allLinks = await LinksService.getAllLinks();
-      const bioLinks = allLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
+      const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
       
       // Ajouter les icônes par défaut basées sur le titre
       return bioLinks.map(link => ({
@@ -38,7 +43,6 @@ export class BioLinksService {
       }));
       
     } catch (error) {
-      // console.error('Erreur lors de la récupération des liens bio:', error);
       throw error;
     }
   }
@@ -48,8 +52,7 @@ export class BioLinksService {
    */
   static async getAllBioLinks(): Promise<BioLink[]> {
     try {
-      const allLinks = await LinksService.getAllLinks();
-      const bioLinks = allLinks.filter(link => link.type === 'bio_link') as BioLink[];
+      const bioLinks = localLinks.filter(link => link.type === 'bio_link') as BioLink[];
       
       return bioLinks.map(link => ({
         ...link,
@@ -57,7 +60,6 @@ export class BioLinksService {
       }));
       
     } catch (error) {
-      // console.error('Erreur lors de la récupération de tous les liens bio:', error);
       throw error;
     }
   }

@@ -183,7 +183,7 @@ export function ProjectsSection() {
             onClick={openModal}
             variant="default"
             size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-accent/20 hover:scale-105 transition-all"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-4 rounded-2xl text-lg font-bold hover:scale-105 transition-all"
           >
             Voir tous mes projets
           </Button>

@@ -105,7 +105,7 @@ export function ContactSection() {
           
           {/* Direct Email Card */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5 h-full transition-colors hover:bg-card/50">
+            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl h-full transition-colors hover:bg-card/50">
               <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
                 <div className="flex flex-col items-center gap-4">
                   <div className="p-4 bg-accent/10 rounded-2xl mb-2">
@@ -130,7 +130,7 @@ export function ContactSection() {
 
                   <Button 
                     asChild
-                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <a href="mailto:contact@kimiya.pro">
                       Ouvrir le client email
@@ -143,7 +143,7 @@ export function ContactSection() {
 
           {/* Discord Community Card */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-accent/5 h-full transition-colors hover:bg-card/50">
+            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl h-full transition-colors hover:bg-card/50">
               <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
                 <div className="flex flex-col items-center gap-4">
                   <div className="p-4 bg-accent/10 rounded-2xl mb-2">
@@ -168,7 +168,7 @@ export function ContactSection() {
                     </div>
                   )}
                   <Button 
-                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 shadow-xl shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     onClick={() => setShowDiscordModal(true)}
                   >
                     Rejoindre le serveur

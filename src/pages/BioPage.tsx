@@ -18,7 +18,6 @@ import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useQuery } from '@tanstack/react-query';
 import { useTheme } from '@/hooks/use-theme';
 
 const containerVariants: Variants = {
@@ -46,11 +45,10 @@ const BioPage: React.FC = () => {
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
   const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
 
-  const { data: bioLinks = [], isLoading, error } = useQuery({
-    queryKey: ['bioLinks'],
-    queryFn: BioLinksService.getBioLinks,
-    staleTime: 1000 * 60 * 5,
-  });
+  // Bio links are now static, no longer using useQuery
+  const bioLinks = BioLinksService.getBioLinksSync();
+  const isLoading = false;
+  const error = null;
 
   const getIcon = (iconName: string) => {
     const iconMap: Record<string, any> = {
@@ -161,7 +159,7 @@ const BioPage: React.FC = () => {
                       url: link.url,
                       description: link.description || ''
                     })}
-                    className="group relative p-6 bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] hover:shadow-2xl hover:shadow-accent/10 transition-all duration-300 hover:border-accent/40 text-left w-full overflow-hidden"
+                    className="group relative p-6 bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] hover:shadow-2xl transition-all duration-300 hover:border-accent/40 text-left w-full overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
@@ -237,7 +235,7 @@ const BioPage: React.FC = () => {
               <Button 
                 type="button"
                 onClick={handleLinkConfirm} 
-                className="flex-1 h-14 rounded-2xl font-bold shadow-lg shadow-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 h-14 rounded-2xl font-bold shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: accentColor, color: 'black' }}
               >
                 <ArrowUpRight className="h-5 w-5 mr-2" />

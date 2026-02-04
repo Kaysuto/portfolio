@@ -144,7 +144,7 @@ export function Footer() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               whileHover={{ y: -5, scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="w-12 h-12 flex items-center justify-center bg-accent text-accent-foreground rounded-2xl transition-colors shadow-lg shadow-accent/20 group"
+              className="w-12 h-12 flex items-center justify-center bg-accent text-accent-foreground rounded-2xl transition-colors group"
               title="Retour en haut"
             >
               <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />

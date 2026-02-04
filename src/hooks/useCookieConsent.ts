@@ -40,6 +40,15 @@ export function useCookieConsent() {
     setIsLoaded(true)
   }, [])
 
+  // Sync Google Tag consent
+  useEffect(() => {
+    if (isLoaded && typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('consent', 'update', {
+        'analytics_storage': choices.analytics ? 'granted' : 'denied'
+      });
+    }
+  }, [choices.analytics, isLoaded])
+
   const saveChoices = (newChoices: CookieChoices, status: CookieConsentStatus = 'granular') => {
     setChoices(newChoices)
     setConsent(status)

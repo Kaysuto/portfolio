@@ -15,6 +15,25 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kaysuto.fr" />
     
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XCK74HB1QJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      
+      // Default consent mode
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'wait_for_update': 500
+      });
+
+      gtag('js', new Date());
+      gtag('config', 'G-XCK74HB1QJ');
+    </script>
+    
     <!-- Performance optimizations -->
     <link rel="dns-prefetch" href="https://api.github.com" />
     <link rel="preconnect" href="https://db.kaysuto.fr" crossorigin />
