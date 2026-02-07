@@ -25,8 +25,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           icons: ['@phosphor-icons/react'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
-          supabase: ['@supabase/supabase-js']
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select']
         },
         // Noms de fichiers avec hash pour cache busting optimal
         entryFileNames: 'assets/[name]-[hash].js',
@@ -53,39 +52,6 @@ export default defineConfig({
       overlay: false
     },
     proxy: {
-      '/api/supabase': {
-        target: 'https://db.kaysuto.fr',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/supabase/, ''),
-        configure: (proxy, options) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            // Transmettre les headers d'authentification originaux
-            if (req.headers['apikey']) {
-              proxyReq.setHeader('apikey', req.headers['apikey']);
-            }
-            if (req.headers['authorization']) {
-              proxyReq.setHeader('authorization', req.headers['authorization']);
-            }
-            // Headers CORS
-            proxyReq.setHeader('Access-Control-Allow-Origin', '*');
-            proxyReq.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey');
-            
-            // console.log(`🔄 Proxy Supabase: ${req.method} ${req.url}`);
-            // console.log(`📋 Headers transmis:`, {
-            //   apikey: req.headers['apikey'] ? 'présent' : 'absent',
-            //   authorization: req.headers['authorization'] ? 'présent' : 'absent'
-            // });
-          });
-          
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            // Ajouter les headers CORS à la réponse
-            proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-            proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-            proxyRes.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey';
-          });
-        }
-      },
       '/api/tailscale': {
         target: 'http://100.79.95.114:8000',
         changeOrigin: true,
