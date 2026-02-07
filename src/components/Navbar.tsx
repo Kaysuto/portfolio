@@ -102,16 +102,25 @@ export function Navbar() {
       animate="visible"
       variants={navVariants}
       className={cn(
-        "fixed top-0 w-full z-[100] transition-all duration-500 px-4 md:px-6",
+        "fixed top-0 w-full z-[100] transition-all duration-300 px-4 md:px-6",
         isScrolled ? "py-2" : "py-4"
       )}
     >
-      <div className={cn(
-        "max-w-7xl mx-auto transition-all duration-500 rounded-[2.5rem] px-6 py-3 flex items-center justify-between",
-        isScrolled 
-          ? "bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl" 
-          : "bg-transparent border-transparent"
-      )}>
+        <motion.div 
+          initial={false}
+          animate={{
+            paddingTop: isScrolled ? "0.75rem" : "1rem",
+            paddingBottom: isScrolled ? "0.75rem" : "1rem",
+            backdropFilter: isScrolled ? "blur(20px)" : "blur(0px)",
+          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className={cn(
+            "max-w-7xl mx-auto rounded-[2.5rem] px-6 flex items-center justify-between transition-all duration-300",
+            isScrolled 
+              ? "bg-background/80 shadow-2xl" 
+              : "bg-transparent shadow-none"
+          )}
+        >
         {/* Logo */}
         <div 
           className="flex items-center gap-4 group cursor-pointer"
@@ -136,7 +145,7 @@ export function Navbar() {
               key={link.id}
               onClick={() => handleNavClick(link)}
               className={cn(
-                "relative px-4 py-2 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl overflow-hidden",
+                "relative px-4 py-2 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl",
                 activeSection === link.id
                   ? "text-accent-foreground"
                   : "text-muted-foreground hover:text-accent"
@@ -145,8 +154,8 @@ export function Navbar() {
               {activeSection === link.id && (
                 <motion.div
                   layoutId="activeNav"
-                  className="absolute inset-0 bg-accent"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  className="absolute inset-0 bg-accent rounded-xl -z-10"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               <span className="relative z-10">{link.label}</span>
@@ -166,8 +175,8 @@ export function Navbar() {
           >
             {isMobileMenuOpen ? <X className="w-6 h-6 text-accent" /> : <Menu className="w-6 h-6 text-accent" />}
           </Button>
-        </div>
-      </div>
+          </div>
+        </motion.div>
 
       {/* Mobile Menu */}
       <AnimatePresence>

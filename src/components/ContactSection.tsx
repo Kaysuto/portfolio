@@ -150,7 +150,7 @@ export function ContactSection() {
                     <DiscordIcon className="w-8 h-8 text-accent" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-foreground tracking-tight italic">Communauté Discord</h3>
+                    <h3 className="text-xl font-bold text-foreground tracking-tight">Communauté Discord</h3>
                     <p className="text-sm text-muted-foreground font-medium">
                       Rejoignez mon serveur pour échanger et suivre mon actualité en direct.
                     </p>

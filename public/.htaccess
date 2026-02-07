@@ -3,9 +3,12 @@ AddType application/javascript .js
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
+  
+  # Rediriger tout vers index.html si le fichier ou dossier n'existe pas
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME} !-l
-  RewriteRule . /index.html [L]
+  RewriteRule ^ index.html [L]
 </IfModule>
+
+# Filet de sécurité pour les serveurs sans mod_rewrite
+ErrorDocument 404 /index.html

@@ -116,9 +116,7 @@ export function Footer() {
                 <Linkedin className="w-6 h-6" />
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-              Retrouvez mes projets sur GitHub et connectons-nous sur LinkedIn pour échanger sur nos expériences professionnelles.
-            </p>
+
           </motion.div>
         </div>
 
