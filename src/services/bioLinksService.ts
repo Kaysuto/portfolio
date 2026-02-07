@@ -8,19 +8,26 @@ export interface BioLinkIcon {
 
 const bioLinkIcons: Record<string, string> = {
   'Email': 'EnvelopeSimple',
-  'Discord': 'DiscordLogo', 
-  'Site personnel': 'Globe',
+  'Discord': 'DiscordLogo',
+  'Jelly': 'DiscordLogo',
   'Clover Games': 'GameController',
-  'DeviantArt': 'Palette',
-  'Emoji.gg': 'SmileyXEyes',
+  'Site principal': 'Globe',
+  'Mirum Orbis': 'Palette',
+  'NoHello': 'Globe',
+  'GitHub': 'GithubLogo',
+  'Twitch': 'TwitchLogo',
+  'Spotify': 'SpotifyLogo',
+  'Steam': 'GameController',
+  'Roblox': 'GameController',
+  'NameMC': 'GameController',
   'Pinterest': 'PaintBrush',
-  'GitHub': 'GithubLogo'
+  'AniList': 'Tv',
+  'Letterboxd': 'Film',
+  'Stats.fm': 'Music',
+  'Emoji.gg': 'SmileyXEyes'
 };
 
 export class BioLinksService {
-  /**
-   * Récupère tous les liens bio actifs
-   */
   /**
    * Récupère tous les liens bio actifs (Sychrone pour l'approche statique)
    */
@@ -32,55 +39,56 @@ export class BioLinksService {
     }));
   }
 
+  /**
+   * Récupère les liens groupés par catégorie
+   */
+  static getGroupedBioLinks(): Record<string, BioLink[]> {
+    const links = this.getBioLinksSync();
+    return links.reduce((acc, link) => {
+      const category = link.category || 'other';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(link);
+      return acc;
+    }, {} as Record<string, BioLink[]>);
+  }
+
   static async getBioLinks(): Promise<BioLink[]> {
     try {
       const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
-      
-      // Ajouter les icônes par défaut basées sur le titre
       return bioLinks.map(link => ({
         ...link,
         icon: bioLinkIcons[link.title] || 'LinkSimple'
       }));
-      
     } catch (error) {
       throw error;
     }
   }
 
-  /**
-   * Récupère tous les liens bio (actifs et inactifs) pour l'admin
-   */
   static async getAllBioLinks(): Promise<BioLink[]> {
     try {
       const bioLinks = localLinks.filter(link => link.type === 'bio_link') as BioLink[];
-      
       return bioLinks.map(link => ({
         ...link,
         icon: bioLinkIcons[link.title] || 'LinkSimple'
       }));
-      
     } catch (error) {
       throw error;
     }
   }
 
-  /**
-   * Met à jour l'icône d'un lien bio
-   */
   static updateIconMapping(title: string, icon: string) {
     bioLinkIcons[title] = icon;
   }
 
-  /**
-   * Retourne la liste des icônes disponibles pour les liens bio
-   */
   static getAvailableIcons(): string[] {
     return [
       'EnvelopeSimple', 'DiscordLogo', 'Globe', 'GameController', 
       'Palette', 'SmileyXEyes', 'PaintBrush', 'GithubLogo',
       'TwitterLogo', 'InstagramLogo', 'LinkedinLogo', 'YoutubeLogo',
       'TwitchLogo', 'SpotifyLogo', 'LinkSimple', 'Phone',
-      'MapPin', 'Calendar', 'Download', 'Share'
+      'MapPin', 'Calendar', 'Download', 'Share', 'Tv', 'Film', 'Music'
     ];
   }
 }

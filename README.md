@@ -8,7 +8,7 @@
 
 ## 🚀 Aperçu
 
-Portfolio moderne, minimaliste et performant (100% Lighthouse) avec thème dark/light, animations fluides, PWA et intégration Supabase optionnelle.
+Portfolio moderne, minimaliste et performant (100% Lighthouse) avec thème dark/light, animations fluides et PWA.
 
 ### ✨ Points forts
 - 🎯 Score Lighthouse 100% (Perf, A11y, SEO, Best Practices)
@@ -21,7 +21,6 @@ Portfolio moderne, minimaliste et performant (100% Lighthouse) avec thème dark/
 
 - React 19, TypeScript 5, Vite 6, Tailwind CSS 4
 - React Router 6, Web Vitals, Phosphor/Lucide Icons, Radix UI (sélecteurs/accessibles)
-- Supabase (optionnel) pour données dynamiques
 
 ## 🎨 Fonctionnalités principales
 
@@ -44,10 +43,6 @@ cd kimiyas-minimalist-p
 
 # Installer
 npm install
-
-# Variables d'environnement (option Supabase)
-# Copiez puis renseignez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY
-Copy-Item .env.example .env.local
 ```
 
 ### Scripts
@@ -77,7 +72,6 @@ kimiyas-minimalist-p/
 │   ├── lib/                # Config/utilitaires (supabase, theme, utils)
 │   ├── pages/              # Pages (Bio, Maintenance)
 │   └── styles/             # Styles globaux
-├── database/               # SQL et scripts DB
 ├── docs/                   # Mémoire Byterover consolidée
 ├── dist/                   # Build (ignoré en CI)
 └── config                  # Vite/Tailwind/TS (fichiers racine)
