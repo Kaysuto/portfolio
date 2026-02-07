@@ -75,7 +75,6 @@ export function AboutSection() {
     { name: "Vue.js", slug: "vuedotjs", url: "https://vuejs.org" },
     { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
     { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
-    { name: "Supabase", slug: "supabase", url: "https://supabase.com/", iconUrl: "https://i.imgur.com/xEZuSit.png" },
     { name: "Linux", slug: "linux", url: "https://www.linux.org" },
     { name: "Docker", slug: "docker", url: "https://www.docker.com" },
     { name: "Proxmox", slug: "proxmox", url: "https://www.proxmox.com/", iconUrl: "https://i.imgur.com/TvQIvQ1.png" },
