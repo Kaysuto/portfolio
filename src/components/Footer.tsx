@@ -69,7 +69,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium">
-              Full-Stack Maker polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux. Toujours en quête d'innovation et de nouveaux défis.
+              Product Builder polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux. Toujours en quête d'innovation et de nouveaux défis.
             </p>
           </motion.div>
 

@@ -5,9 +5,9 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
   // Titre fixe sans animation
-  useDocumentTitle("Full-Stack Maker", { 
-    enableTypingAnimation: false, 
-    dynamicSections: false 
+  useDocumentTitle("Product Builder", {
+    enableTypingAnimation: false,
+    dynamicSections: false
   });
 
   // Maintenance is now statically disabled or managed via build/env
@@ -60,8 +60,8 @@ export function PortfolioApp() {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya Kaysuto",
-            "jobTitle": "Full-Stack Maker",
-            "description": "Full-Stack Maker polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
+            "jobTitle": "Product Builder",
+            "description": "Product Builder polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",

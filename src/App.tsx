@@ -6,9 +6,9 @@ import { Toaster } from "sonner"
 import { useEffect } from "react"
 import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
 import { useQuery } from '@tanstack/react-query'
-import { getMaintenanceStatus } from './admin/services/maintenanceService'
+import { getMaintenanceStatus } from '@/services/maintenanceService'
 import { Wrench, Loader2 } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useTheme } from "@/hooks/use-theme"
 
 function MaintenancePage() {
@@ -107,8 +107,8 @@ function App() {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya Kaysuto",
-            "jobTitle": "Full-Stack Maker",
-            "description": "Full-Stack Maker polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
+            "jobTitle": "Product Builder",
+            "description": "Product Builder polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
             "url": "https://kimiya-portfolio.vercel.app",
             "sameAs": [
               "https://github.com/kaysuto",

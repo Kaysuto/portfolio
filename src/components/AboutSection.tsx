@@ -128,7 +128,7 @@ export function AboutSection() {
             À propos de <span className="text-accent">moi</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium">
-            Créateur passionné de 23 ans, j'allie expertise technique en infrastructure et créativité dans le développement full-stack.
+            Créateur passionné de 23 ans, j'allie expertise technique en infrastructure et créativité en tant que Product Builder.
           </p>
         </motion.div>
 
