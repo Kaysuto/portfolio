@@ -29,7 +29,7 @@ export function DemoModal({ isOpen, onClose, projectTitle, projectUrl }: DemoMod
           <div>
             <h3 className="text-3xl font-bold text-foreground tracking-tight">{projectTitle}</h3>
             <p className="text-muted-foreground font-medium">
-              Lancer la démonstration en direct
+              Visiter le site en direct
             </p>
           </div>
         </div>

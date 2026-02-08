@@ -25,7 +25,7 @@ export function GitHubFooterModal({ isOpen, onClose }: GitHubFooterModalProps) {
             <Github className="h-10 w-10 text-accent" />
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-foreground tracking-tight">@Kaysuto</h3>
+            <h3 className="text-3xl font-bold text-foreground tracking-tight">GitHub</h3>
             <p className="text-muted-foreground font-medium">
               Découvrez tous mes projets open source
             </p>
@@ -89,7 +89,7 @@ export function LinkedInFooterModal({ isOpen, onClose }: LinkedInFooterModalProp
             <Linkedin className="h-10 w-10 text-accent" />
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-foreground tracking-tight">Enzo Lauret</h3>
+            <h3 className="text-3xl font-bold text-foreground tracking-tight">LinkedIn</h3>
             <p className="text-muted-foreground font-medium">
               Connectons-nous sur LinkedIn
             </p>

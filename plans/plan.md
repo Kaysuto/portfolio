@@ -1,21 +1,21 @@
-# Plan d'amélioration de la page Bio
+# Plan : Création de la page Mentions Légales
 
-L'objectif est d'intégrer 17 nouveaux liens et d'améliorer l'organisation visuelle de la page en les catégorisant.
+## 1. Informations recueillies
+- **Éditeur** : Kaysuto Kimiya
+- **Hébergeur (Site)** : Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA
+- **Hébergeur (Infrastructure)** : Contabo GmbH, Aschauer Straße 32a, 81549 Munich, Germany (via Plesk)
+- **SIRET/SIREN** : Non requis pour un site personnel sans activité commerciale, mais peut être ajouté si disponible.
 
-## 1. Mise à jour des données ([`src/data/links.ts`](src/data/links.ts))
-- [ ] Étendre l'interface `BioLink` pour inclure un champ `category`.
-- [ ] Remplacer les liens existants par la nouvelle liste fournie.
-- [ ] Assigner une catégorie à chaque lien (`social`, `community`, `websites`).
+## 2. Étapes d'implémentation
+- [ ] Créer le composant de page `src/pages/MentionsLegales.tsx`.
+- [ ] Déclarer la nouvelle route `/mentions-legales` dans `src/AppRouter.tsx`.
+- [ ] Ajouter le lien "Mentions Légales" dans `src/components/Footer.tsx`.
+- [ ] Vérifier la responsivité et le style (cohérence avec le thème actuel).
 
-## 2. Mise à jour du service ([`src/services/bioLinksService.ts`](src/services/bioLinksService.ts))
-- [ ] Mettre à jour `bioLinkIcons` pour mapper les nouveaux titres aux icônes Lucide.
-- [ ] Ajouter une méthode pour récupérer les liens groupés par catégorie.
+## 3. Structure technique
+- Utilisation de `Layout` pour conserver la Navbar/Footer.
+- Section `prose` pour un texte lisible et structuré.
+- Bouton de retour à l'accueil.
 
-## 3. Amélioration de l'interface ([`src/pages/BioPage.tsx`](src/pages/BioPage.tsx))
-- [ ] Importer les nouvelles icônes Lucide nécessaires (`Twitch`, `Music`, `Tv`, `Film`, `BarChart3`, `Smile`).
-- [ ] Modifier le rendu pour afficher des sections par catégorie.
-- [ ] Optimiser le design pour la densité d'informations (17 liens).
-
-## 4. Validation
-- [ ] Vérifier que tous les liens s'ouvrent correctement.
-- [ ] Vérifier le responsive (mobile vs desktop).
+---
+**Validation** : Plan mis à jour avec les informations fournies. Prêt pour l'implémentation.

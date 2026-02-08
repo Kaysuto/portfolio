@@ -1,6 +1,7 @@
 import { motion, Variants } from "framer-motion"
-import { Github, Linkedin, Heart, ArrowUp, Globe } from "lucide-react"
+import { Github, Linkedin, Heart, ArrowUp, Globe, Scale } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
 import { useState } from "react"
 
@@ -135,6 +136,13 @@ export function Footer() {
               <Heart className="w-4 h-4 text-red-500 fill-red-500 animate-pulse" />
               <span>in France</span>
             </div>
+            <Link
+              to="/mentions-legales"
+              className="flex items-center gap-2 hover:text-accent transition-colors group"
+            >
+              <Scale className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+              <span>Mentions Légales</span>
+            </Link>
           </div>
           
           <div className="flex items-center gap-8">

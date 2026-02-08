@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { 
   ArrowUpRight, 
   Mail, 
@@ -113,14 +115,27 @@ const BioPage: React.FC = () => {
 
       <main className="flex-1 py-24 md:py-32 px-6 relative z-10">
         <div className="container mx-auto max-w-4xl">
-          <motion.div 
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link to="/">
+              <Button variant="ghost" className="mb-8 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
+                <ArrowLeft size={18} />
+                Retour à l'accueil
+              </Button>
+            </Link>
+          </motion.div>
+
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent mb-6 tracking-tighter">
-              Mes Liens
+            <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6">
+              Mes <span className="text-accent">Liens</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
               Retrouvez-moi sur mes différentes plateformes et projets.

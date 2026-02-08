@@ -1,8 +1,8 @@
 import { motion, AnimatePresence, Variants } from "framer-motion"
-import { ArrowRight, Download, MousePointer2, Sparkles, FileText } from "lucide-react"
+import { ArrowRight, MousePointer2, Sparkles, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CVModal } from "@/components/ui/CVModal"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { useTheme } from "@/hooks/use-theme"
 
@@ -28,8 +28,7 @@ const itemVariants: Variants = {
 
 export function HeroSection() {
   const { theme } = useTheme()
-  const [showModal, setShowModal] = useState(false)
-  const cvUrl = "https://www.youtube.com/watch?v=CY5Ii_YAPcw&list=RDCY5Ii_YAPcw&start_radio=1&pp=oAcB"
+  const navigate = useNavigate()
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [displayText, setDisplayText] = useState("")
@@ -113,32 +112,34 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <motion.div variants={itemVariants}>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10 font-medium tracking-tight">
-            Passionné par le{" "}
-            <span 
-              className="font-bold relative inline-block min-w-[280px] text-left cursor-default group/text"
-              style={{ color: theme === 'dark' ? '#D3C0B1' : '#C49D84' }}
-            >
-              {displayText}
-              <motion.span 
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
-                className="inline-block w-1 h-8 ml-1 align-middle"
-                style={{ backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84' }}
-              />
-            </span>
-          </p>
+          <div className="text-lg md:text-xl text-muted-foreground mb-10 font-medium tracking-tight flex flex-col items-center justify-center">
+            <p>
+              Passionné par le{" "}
+              <span
+                className="font-bold inline-block"
+                style={{ color: theme === 'dark' ? '#D3C0B1' : '#C49D84' }}
+              >
+                {displayText}
+                <motion.span
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                  className="inline-block w-1 h-6 ml-1 align-middle"
+                  style={{ backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84' }}
+                />
+              </span>
+            </p>
+          </div>
         </motion.div>
 
         {/* CTA Buttons */}
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <Button 
+          <Button
             onClick={scrollToProjects}
             size="lg"
-            className="h-14 px-8 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all hover:scale-105 group"
-            style={{ 
-              backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84', 
-              color: theme === 'dark' ? '#5D4A42' : 'black' 
+            className="w-full sm:w-auto h-14 px-8 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all hover:scale-105 group flex items-center justify-center"
+            style={{
+              backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84',
+              color: theme === 'dark' ? '#5D4A42' : 'black'
             }}
           >
             Voir mes projets
@@ -148,19 +149,20 @@ export function HeroSection() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
           >
             <Button
               variant="outline"
               size="lg"
-              onClick={() => setShowModal(true)}
-              className="h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center gap-3 transition-all shadow-lg group"
-              style={{ 
-                borderColor: theme === 'dark' ? '#D3C0B1' : '#C49D84', 
-                color: theme === 'dark' ? '#D3C0B1' : '#C49D84' 
+              onClick={() => navigate('/cv')}
+              className="w-full h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center justify-center gap-3 transition-all shadow-lg group"
+              style={{
+                borderColor: theme === 'dark' ? '#D3C0B1' : '#C49D84',
+                color: theme === 'dark' ? '#D3C0B1' : '#C49D84'
               }}
             >
-              <Download className="w-6 h-6 group-hover:animate-bounce" />
-              Télécharger CV
+              <FileText className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              Voir CV
             </Button>
           </motion.div>
         </motion.div>
@@ -184,11 +186,6 @@ export function HeroSection() {
         </div>
       </motion.div>
 
-      <CVModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        cvUrl={cvUrl}
-      />
     </section>
   )
 }

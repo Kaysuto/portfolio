@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence, Variants } from "framer-motion"
 import { 
-  Menu, 
-  X, 
+  Menu,
+  X,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  ChevronDown,
+  User,
+  FileText,
+  Scale
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeController } from "./ThemeController"
@@ -28,21 +32,32 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string>("accueil")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const navLinks = [
     { id: "accueil", label: "Accueil", path: "/" },
     { id: "apropos", label: "À propos", path: "/" },
     { id: "projets", label: "Projets", path: "/" },
-    { id: "contact", label: "Contact", path: "/" },
-    { id: "bio", label: "Bio", path: "/bio" }
+    { id: "contact", label: "Contact", path: "/" }
+  ]
+
+  const dropdownLinks = [
+    { id: "cv", label: "CV", path: "/cv", icon: FileText },
+    { id: "bio", label: "Bio", path: "/bio", icon: User },
+    { id: "mentions-legales", label: "Mentions", path: "/mentions-legales", icon: Scale }
   ]
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
       
-      if (location.pathname === '/bio') {
+      const path = location.pathname
+      if (path === '/bio') {
         setActiveSection('bio')
+      } else if (path === '/cv') {
+        setActiveSection('cv')
+      } else if (path === '/mentions-legales') {
+        setActiveSection('mentions-legales')
       } else {
         const sections = ["accueil", "apropos", "projets", "contact"]
         const current = sections.find(section => {
@@ -78,8 +93,8 @@ export function Navbar() {
   const handleNavClick = (link: typeof navLinks[0]) => {
     setIsMobileMenuOpen(false)
     
-    if (link.path === '/bio') {
-      navigate('/bio')
+    if (link.path === '/bio' || link.path === '/cv' || link.path === '/mentions-legales') {
+      navigate(link.path)
       return
     }
 
@@ -161,6 +176,59 @@ export function Navbar() {
               <span className="relative z-10">{link.label}</span>
             </button>
           ))}
+
+          {/* Dropdown Desktop */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            onMouseLeave={() => setIsDropdownOpen(false)}
+          >
+            <button
+              className={cn(
+                "relative px-4 py-2 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl flex items-center gap-2",
+                (activeSection === 'cv' || activeSection === 'bio' || activeSection === 'mentions-legales')
+                  ? "text-accent-foreground"
+                  : "text-muted-foreground hover:text-accent"
+              )}
+            >
+              {(activeSection === 'cv' || activeSection === 'bio' || activeSection === 'mentions-legales') && (
+                <motion.div
+                  layoutId="activeNav"
+                  className="absolute inset-0 bg-accent rounded-xl -z-10"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">Plus</span>
+              <ChevronDown className={cn("w-4 h-4 transition-transform duration-300", isDropdownOpen && "rotate-180")} />
+            </button>
+
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute top-full right-0 mt-2 w-32 bg-background/95 backdrop-blur-xl border border-accent/20 rounded-2xl shadow-2xl overflow-hidden p-1.5 z-50"
+                >
+                  {dropdownLinks.map((link) => (
+                    <button
+                      key={link.id}
+                      onClick={() => handleNavClick(link as any)}
+                      className={cn(
+                        "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all",
+                        activeSection === link.id
+                          ? "bg-accent text-accent-foreground"
+                          : "hover:bg-accent/10 text-muted-foreground hover:text-accent"
+                      )}
+                    >
+                      <link.icon className="w-3.5 h-3.5" />
+                      {link.label}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Actions */}
@@ -216,6 +284,29 @@ export function Navbar() {
                     <ArrowRight className={cn("w-5 h-5 transition-transform", activeSection === link.id && "translate-x-1")} />
                   </button>
                 ))}
+
+                <div className="pt-4 space-y-3">
+                  <div className="flex items-center gap-3 px-2 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent/60">Pages</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {dropdownLinks.map((link) => (
+                      <button
+                        key={link.id}
+                        onClick={() => handleNavClick(link as any)}
+                        className={cn(
+                          "flex flex-col items-center justify-center gap-3 p-6 rounded-[1.5rem] transition-all font-bold uppercase tracking-widest text-[10px]",
+                          activeSection === link.id
+                            ? "bg-accent text-accent-foreground"
+                            : "bg-accent/5 text-foreground hover:bg-accent/10"
+                        )}
+                      >
+                        <link.icon className="w-6 h-6" />
+                        {link.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </motion.div>
           </>

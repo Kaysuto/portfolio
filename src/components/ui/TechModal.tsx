@@ -35,7 +35,7 @@ export function TechModal({ isOpen, onClose, techName, techUrl, techIcon, iconUr
           <div>
             <h3 className="text-3xl font-bold text-foreground tracking-tight">{techName}</h3>
             <p className="text-muted-foreground font-medium">
-              Consulter la documentation officielle
+              Visiter le site officiel
             </p>
           </div>
         </div>

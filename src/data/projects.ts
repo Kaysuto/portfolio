@@ -69,7 +69,7 @@ export const projects: Project[] = [
   {
     id: '5',
     title: 'Profil Emoji.gg',
-    description: 'Profil Emoji.gg est un site web qui permet de créer un profil avec des emojis.',
+    description: 'Mon profil Emoji.gg est une galerie où je regroupe l \'intégralité de mes créations en pixel art.',
     tech_stack: ['Pixel Art', 'Emojis'],
     status: 'En production',
     type: 'Game Design',
@@ -77,5 +77,17 @@ export const projects: Project[] = [
     created_at: '2023-09-05T00:00:00Z',
     image_url: 'https://i.imgur.com/pfsAUov.png',
     image_alt: 'Profil Emoji.gg'
+  },
+  {
+    id: '6',
+    title: 'Naturopeps',
+    description: 'Assistant Web Marketing : optimisation SEO/SEA, amélioration des pages produits et mise en conformité des pages légales.',
+    tech_stack: ['SEO', 'SEA', 'Web Marketing', 'E-commerce'],
+    status: 'En production',
+    type: 'Marketing Digital',
+    demo_url: 'https://www.naturopeps.com/',
+    created_at: '2022-06-08T00:00:00Z',
+    image_url: 'https://i.imgur.com/BtQ5kqH.jpeg',
+    image_alt: 'Naturopeps'
   }
 ];
