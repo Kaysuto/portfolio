@@ -112,7 +112,7 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <motion.div variants={itemVariants}>
-          <div className="text-lg md:text-xl text-muted-foreground mb-10 font-medium tracking-tight flex flex-col items-center justify-center">
+          <div className="text-lg md:text-xl text-muted-foreground mb-16 font-medium tracking-tight flex flex-col items-center justify-center">
             <p>
               Passionné par le{" "}
               <span
@@ -132,30 +132,31 @@ export function HeroSection() {
         </motion.div>
 
         {/* CTA Buttons */}
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <Button
-            onClick={scrollToProjects}
-            size="lg"
-            className="w-full sm:w-auto h-14 px-8 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all hover:scale-105 group flex items-center justify-center"
-            style={{
-              backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84',
-              color: theme === 'dark' ? '#5D4A42' : 'black'
-            }}
-          >
-            Voir mes projets
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <motion.div variants={itemVariants} className="w-full sm:w-auto flex justify-center">
+            <Button
+              onClick={scrollToProjects}
+              size="lg"
+              className="w-fit h-14 px-8 rounded-2xl hover:opacity-90 text-lg font-bold shadow-xl transition-all group flex items-center justify-center"
+              style={{
+                backgroundColor: theme === 'dark' ? '#D3C0B1' : '#C49D84',
+                color: theme === 'dark' ? '#5D4A42' : 'black'
+              }}
+            >
+              Voir mes projets
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </motion.div>
           
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto"
+            variants={itemVariants}
+            className="w-full sm:w-auto flex justify-center"
           >
             <Button
               variant="outline"
               size="lg"
               onClick={() => navigate('/cv')}
-              className="w-full h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center justify-center gap-3 transition-all shadow-lg group"
+              className="w-fit h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center justify-center gap-3 transition-all shadow-lg group"
               style={{
                 borderColor: theme === 'dark' ? '#D3C0B1' : '#C49D84',
                 color: theme === 'dark' ? '#D3C0B1' : '#C49D84'
@@ -165,7 +166,7 @@ export function HeroSection() {
               Voir CV
             </Button>
           </motion.div>
-        </motion.div>
+        </div>
       </motion.div>
 
       {/* Scroll Indicator */}
