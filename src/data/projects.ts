@@ -67,18 +67,6 @@ export const projects: Project[] = [
     image_alt: 'NoHello'
   },
   {
-    id: '5',
-    title: 'Profil Emoji.gg',
-    description: 'Mon profil Emoji.gg est une galerie où je regroupe l \'intégralité de mes créations en pixel art.',
-    tech_stack: ['Pixel Art', 'Emojis'],
-    status: 'En production',
-    type: 'Game Design',
-    demo_url: 'https://emoji.gg/user/kaysuto',
-    created_at: '2023-09-05T00:00:00Z',
-    image_url: 'https://i.imgur.com/pfsAUov.png',
-    image_alt: 'Profil Emoji.gg'
-  },
-  {
     id: '6',
     title: 'Naturopeps',
     description: 'Assistant Web Marketing : optimisation SEO/SEA, amélioration des pages produits et mise en conformité des pages légales.',
