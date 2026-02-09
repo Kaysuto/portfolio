@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { initTheme, setTheme as persistTheme, applyTheme, type Theme } from '@/lib/theme'
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => initTheme('system'))
+  const [theme, setThemeState] = useState<Theme>(() => initTheme())
 
   useEffect(() => {
     // Écouter les changements de localStorage
@@ -25,7 +25,7 @@ export function useTheme() {
       
       // Prioriser localStorage, puis cookie
       const currentTheme = localTheme || cookieTheme;
-      if (currentTheme && currentTheme !== theme) {
+      if (currentTheme && currentTheme !== theme && (currentTheme === 'dark' || currentTheme === 'light')) {
         setThemeState(currentTheme);
       }
     }
@@ -33,10 +33,15 @@ export function useTheme() {
     // Vérifier les changements de cookies toutes les 500ms (pour détecter les changements cross-tab)
     const cookieInterval = setInterval(checkCookieChanges, 500);
     
-    // Écouter les changements de préférence système
+    // Écouter les changements de préférence système (seulement si l'utilisateur n'a pas fait de choix)
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const onSystemChange = () => {
-      if (theme === 'system') applyTheme('system')
+    const onSystemChange = (e: MediaQueryListEvent) => {
+      const hasUserChoice = localStorage.getItem('theme') !== null;
+      if (!hasUserChoice) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        applyTheme(newTheme);
+        setThemeState(newTheme);
+      }
     }
     
     window.addEventListener('storage', onStorage)

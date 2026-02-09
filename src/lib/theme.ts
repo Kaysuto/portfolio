@@ -1,4 +1,4 @@
-export type Theme = 'dark' | 'light' | 'system';
+export type Theme = 'dark' | 'light';
 
 const COOKIE_NAME = 'theme';
 const COOKIE_DAYS = 365;
@@ -15,12 +15,7 @@ function getCookie(name: string) {
 }
 
 export function applyTheme(theme: Theme) {
-  let effectiveTheme = theme;
-  if (theme === 'system') {
-    effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-
-  if (effectiveTheme === 'dark') {
+  if (theme === 'dark') {
     document.documentElement.classList.add('dark');
     document.documentElement.classList.remove('light');
   } else {
@@ -52,15 +47,21 @@ export function setTheme(theme: Theme) {
   applyTheme(theme);
 }
 
-export function initTheme(defaultTheme: Theme = 'system') {
+export function initTheme(): Theme {
   try {
     const cookie = getCookie(COOKIE_NAME) as Theme | null;
     const ls = (localStorage.getItem(COOKIE_NAME) as Theme | null);
-    const chosen = cookie || ls || defaultTheme;
-    applyTheme(chosen);
-    return chosen;
+    
+    if (cookie === 'dark' || cookie === 'light') return cookie;
+    if (ls === 'dark' || ls === 'light') return ls;
+
+    // Si aucun choix manuel, utiliser la préférence système
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    applyTheme(systemTheme);
+    return systemTheme;
   } catch (e) {
-    applyTheme(defaultTheme);
-    return defaultTheme;
+    const fallback = 'light';
+    applyTheme(fallback);
+    return fallback;
   }
 }

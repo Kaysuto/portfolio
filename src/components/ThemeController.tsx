@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion"
-import { Sun, Moon, Monitor, ChevronDown } from "lucide-react"
+import { Sun, Moon, ChevronDown } from "lucide-react"
 import { useTheme } from "@/hooks/use-theme"
 import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
@@ -13,7 +13,6 @@ export function ThemeController() {
   const themes: { id: Theme; label: string; icon: any }[] = [
     { id: 'light', label: 'Clair', icon: Sun },
     { id: 'dark', label: 'Sombre', icon: Moon },
-    { id: 'system', label: 'Système', icon: Monitor },
   ]
 
   const currentThemeInfo = themes.find(t => t.id === theme) || themes[1]
