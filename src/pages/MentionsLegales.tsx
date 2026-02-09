@@ -92,13 +92,74 @@ export default function MentionsLegales() {
                 <ShieldCheck size={24} />
                 <h2 className="text-xl font-bold uppercase tracking-widest">Propriété Intellectuelle</h2>
               </div>
-              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 prose prose-invert max-w-none">
-                <p className="text-muted-foreground leading-relaxed font-medium">
-                  L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.
-                </p>
-                <p className="text-muted-foreground leading-relaxed font-medium mt-4">
-                  La reproduction de tout ou partie de ce site sur un support électronique quel qu'il soit est formellement interdite sauf autorisation expresse du directeur de la publication.
-                </p>
+              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-6">
+                {/* Copyright Principal */}
+                <div className="border-l-4 border-accent pl-6 space-y-3">
+                  <p className="text-foreground font-black text-lg">
+                    © 2015-{new Date().getFullYear()} Kaysuto Kimiya. Tous droits réservés.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed font-medium">
+                    L'ensemble de ce portfolio, incluant mais sans s'y limiter : le code source, le design,
+                    l'interface utilisateur, les textes, les images, les créations pixel art, les animations
+                    et tous autres contenus sont la propriété exclusive de <span className="text-foreground font-bold">Kaysuto Kimiya</span>.
+                  </p>
+                </div>
+
+                {/* Protection Légale */}
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Protection Légale</h3>
+                  <p className="text-muted-foreground leading-relaxed font-medium">
+                    Ce site web et l'ensemble de ses contenus relèvent de la législation française et internationale
+                    sur le droit d'auteur et la propriété intellectuelle. Ils sont protégés par le Code de la
+                    propriété intellectuelle français et les conventions internationales applicables.
+                  </p>
+                </div>
+
+                {/* Restrictions d'Utilisation */}
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Restrictions d'Utilisation</h3>
+                  <ul className="space-y-3 text-muted-foreground font-medium">
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span>Toute reproduction, représentation, modification, publication, adaptation de tout ou partie
+                      des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans
+                      autorisation écrite préalable.</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span>Toute exploitation non autorisée du site ou de l'un quelconque des éléments qu'il contient
+                      sera considérée comme constitutive d'une contrefaçon et poursuivie conformément aux dispositions
+                      des articles L.335-2 et suivants du Code de Propriété Intellectuelle.</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span>Le code source est fourni à titre de démonstration et de référence uniquement pour
+                      l'évaluation des compétences professionnelles de l'auteur.</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span>Les projets présentés dans ce portfolio restent la propriété de leurs auteurs respectifs.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Exceptions */}
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Exceptions</h3>
+                  <p className="text-muted-foreground leading-relaxed font-medium">
+                    Les bibliothèques, frameworks et composants open-source utilisés dans ce portfolio conservent
+                    leurs licences respectives. Vous pouvez consulter le fichier LICENSE à la racine du projet
+                    pour plus de détails.
+                  </p>
+                </div>
+
+                {/* Contact */}
+                <div className="pt-6 border-t border-border/50">
+                  <p className="text-muted-foreground leading-relaxed font-medium">
+                    Pour toute demande d'autorisation, collaboration ou question concernant l'utilisation de ce
+                    portfolio, veuillez me contacter via la section <span className="text-accent font-bold">Contact</span> du site.
+                  </p>
+                </div>
               </div>
             </section>
           </div>

@@ -1,5 +1,5 @@
 import { motion, Variants } from "framer-motion"
-import { Github, Linkedin, Heart, ArrowUp, Globe, Scale } from "lucide-react"
+import { Github, Linkedin, ArrowUp, Scale } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
@@ -122,19 +122,15 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <motion.div 
+        <motion.div
           className="pt-6 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-6"
           variants={itemVariants}
         >
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-4 text-sm text-muted-foreground font-bold">
-            <div className="flex items-center gap-2">
-              <span className="text-xs opacity-50">© {currentYear}</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 text-sm text-muted-foreground font-bold">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs opacity-50">© 2015-{currentYear}</span>
               <span className="text-foreground tracking-tight">Kaysuto Kimiya</span>
-            </div>
-            <div className="flex items-center gap-2 bg-accent/5 px-4 py-1.5 rounded-full border border-accent/10">
-              <span>Made with</span>
-              <Heart className="w-4 h-4 text-red-500 fill-red-500 animate-pulse" />
-              <span>in France</span>
+              <span className="text-xs opacity-70">• Tous droits réservés</span>
             </div>
             <Link
               to="/mentions-legales"
@@ -144,9 +140,9 @@ export function Footer() {
               <span>Mentions Légales</span>
             </Link>
           </div>
-          
+
           <div className="flex items-center gap-8">
-            <motion.button 
+            <motion.button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               whileHover={{ y: -5, scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
