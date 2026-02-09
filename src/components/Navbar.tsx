@@ -4,7 +4,6 @@ import {
   Menu,
   X,
   ArrowRight,
-  Sparkles,
   ChevronDown,
   User,
   FileText,
@@ -263,9 +262,8 @@ export function Navbar() {
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               className="md:hidden mt-4 bg-background/95 backdrop-blur-2xl border border-border/50 rounded-[2.5rem] shadow-2xl overflow-hidden"
             >
-              <div className="p-8 space-y-4">
-                <div className="flex items-center gap-3 mb-6 px-2">
-                  <Sparkles className="w-5 h-5 text-accent" />
+              <div className="p-6 space-y-3">
+                <div className="flex items-center gap-3 mb-4 px-2">
                   <span className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Navigation</span>
                 </div>
                 
@@ -274,19 +272,19 @@ export function Navbar() {
                     key={link.id}
                     onClick={() => handleNavClick(link)}
                     className={cn(
-                      "w-full flex items-center justify-between p-5 rounded-[1.5rem] transition-all font-bold uppercase tracking-widest text-sm",
+                      "w-full flex items-center justify-between p-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-xs",
                       activeSection === link.id
                         ? "bg-accent text-accent-foreground"
                         : "bg-accent/5 text-foreground hover:bg-accent/10"
                     )}
                   >
                     {link.label}
-                    <ArrowRight className={cn("w-5 h-5 transition-transform", activeSection === link.id && "translate-x-1")} />
+                    <ArrowRight className={cn("w-4 h-4 transition-transform", activeSection === link.id && "translate-x-1")} />
                   </button>
                 ))}
 
-                <div className="pt-4 space-y-3">
-                  <div className="flex items-center gap-3 px-2 mb-2">
+                <div className="pt-2 space-y-2">
+                  <div className="flex items-center gap-3 px-2 mb-1">
                     <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent/60">Pages</span>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -295,13 +293,13 @@ export function Navbar() {
                         key={link.id}
                         onClick={() => handleNavClick(link as any)}
                         className={cn(
-                          "flex flex-col items-center justify-center gap-3 p-6 rounded-[1.5rem] transition-all font-bold uppercase tracking-widest text-[10px]",
+                          "flex flex-col items-center justify-center gap-2 p-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-[9px]",
                           activeSection === link.id
                             ? "bg-accent text-accent-foreground"
                             : "bg-accent/5 text-foreground hover:bg-accent/10"
                         )}
                       >
-                        <link.icon className="w-6 h-6" />
+                        <link.icon className="w-5 h-5" />
                         {link.label}
                       </button>
                     ))}
