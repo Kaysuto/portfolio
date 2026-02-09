@@ -23,8 +23,7 @@ const bioLinkIcons: Record<string, string> = {
   'Pinterest': 'PaintBrush',
   'AniList': 'Tv',
   'Letterboxd': 'Film',
-  'Stats.fm': 'Music',
-  'Emoji.gg': 'SmileyXEyes'
+  'Stats.fm': 'Music'
 };
 
 export class BioLinksService {

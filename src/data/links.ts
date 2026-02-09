@@ -171,17 +171,5 @@ export const links: BioLink[] = [
     click_count: 0,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
-  },
-  {
-    id: 'emojigg',
-    title: 'Emoji.gg',
-    url: 'https://emoji.gg/user/kaysuto',
-    type: 'bio_link',
-    category: 'social',
-    description: 'Mes emojis personnalisés',
-    is_active: true,
-    click_count: 0,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
   }
 ];
