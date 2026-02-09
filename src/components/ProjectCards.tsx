@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { ExternalLink, Calendar, Github, Star, Heart, Eye, ChevronLeft, ChevronRight, Rocket } from "lucide-react"
+import { ExternalLink, Calendar, Github, Star, Heart, Rocket } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,40 +27,9 @@ export function ProjectCards() {
   const [modalProject, setModalProject] = useState<Project | null>(null)
   const [showModal, setShowModal] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
-
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const handleScroll = () => {
-      const cardWidth = container.querySelector('.project-card-container')?.clientWidth || 350
-      const gap = 32
-      // On ajoute une petite marge pour éviter que l'index 0 ne soit sauté
-      const index = Math.round(container.scrollLeft / (cardWidth + gap))
-      setActiveIndex(index)
-    }
-
-    container.addEventListener('scroll', handleScroll)
-    return () => container.removeEventListener('scroll', handleScroll)
-  }, [projects.length])
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current
-      const cardWidth = container.querySelector('.project-card-container')?.clientWidth || 350
-      const gap = 32
-      const scrollAmount = cardWidth + gap
-      
-      container.scrollTo({
-        left: direction === 'left' ? container.scrollLeft - scrollAmount : container.scrollLeft + scrollAmount,
-        behavior: 'smooth'
-      })
-    }
-  }
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return
@@ -210,50 +179,6 @@ export function ProjectCards() {
           ))}
         </div>
 
-        {/* Navigation Bar */}
-        <div className="flex justify-center mt-8">
-          <div className="flex items-center gap-6 px-6 py-3 bg-card/40 backdrop-blur-2xl border border-border/50 rounded-full shadow-2xl">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => scroll('left')}
-              className="w-8 h-8 rounded-full hover:bg-accent/10 hover:text-accent transition-all"
-            >
-              <ChevronLeft size={18} />
-            </Button>
-
-            <div className="flex gap-2.5">
-              {projects.slice(0, 4).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    if (scrollContainerRef.current) {
-                      const container = scrollContainerRef.current
-                      const cardWidth = container.querySelector('.project-card-container')?.clientWidth || 400
-                      const gap = 32
-                      container.scrollTo({ left: i * (cardWidth + gap), behavior: 'smooth' })
-                    }
-                  }}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-500",
-                    activeIndex === i
-                      ? "w-10 bg-accent shadow-[0_0_20px_rgba(var(--accent),0.6)]"
-                      : "w-2 bg-muted-foreground/20 hover:bg-muted-foreground/40"
-                  )}
-                />
-              ))}
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => scroll('right')}
-              className="w-8 h-8 rounded-full hover:bg-accent/10 hover:text-accent transition-all"
-            >
-              <ChevronRight size={18} />
-            </Button>
-          </div>
-        </div>
       </div>
 
       <DemoModal
