@@ -1,8 +1,9 @@
-const CACHE_NAME = 'kimiya-portfolio-v1.7';
-const STATIC_CACHE = 'static-v1.7';
+const CACHE_NAME = 'kimiya-portfolio-v1.8';
+const STATIC_CACHE = 'static-v1.8';
 
 const STATIC_ASSETS = [
   '/',
+  '/index.html',
   '/manifest.json',
   '/robots.txt',
   '/sitemap.xml',
@@ -130,6 +131,11 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
+        // Si c'est une navigation (HTML) et qu'on a un 404, on sert l'index
+        if (event.request.mode === 'navigate' && response.status === 404) {
+          return caches.match('/index.html') || response;
+        }
+
         // Cache successful responses - clone BEFORE using
         if (response.status === 200 && response.ok) {
           const responseToCache = response.clone();
@@ -144,7 +150,14 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // Fallback to cache silently
         return caches.match(event.request).then(cached => {
-          return cached || new Response('', { status: 404 });
+          if (cached) return cached;
+          
+          // Si navigation échoue (offline), on sert l'index
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          
+          return new Response('', { status: 404 });
         });
       })
   );
