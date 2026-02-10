@@ -7,7 +7,7 @@ AddType application/javascript .js
   # Rediriger tout vers index.html si le fichier ou dossier n'existe pas
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [L]
+  RewriteRule . /index.html [L]
 </IfModule>
 
 # Filet de sécurité pour les serveurs sans mod_rewrite
