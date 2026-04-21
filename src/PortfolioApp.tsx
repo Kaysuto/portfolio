@@ -1,6 +1,6 @@
 import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
-import { AboutSection, ProjectsSection, ContactSection, SectionSkeleton, Suspense } from "@/components/LazyComponents"
+import { AboutSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
@@ -10,12 +10,7 @@ export function PortfolioApp() {
     dynamicSections: false
   });
 
-  // Maintenance is now statically disabled or managed via build/env
-  const maintenanceStatus = { is_enabled: false };
-
-  // Register Service Worker for PWA with better error handling
   useEffect(() => {
-    // Dynamic maintenance check via Supabase is removed
     if ('serviceWorker' in navigator && 'caches' in window) {
       const registerSW = async () => {
         try {
@@ -42,13 +37,13 @@ export function PortfolioApp() {
   return (
     <>
       <HeroSection />
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<AboutSectionSkeleton />}>
         <AboutSection />
       </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<ProjectsSectionSkeleton />}>
         <ProjectsSection />
       </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<ContactSectionSkeleton />}>
         <ContactSection />
       </Suspense>
       

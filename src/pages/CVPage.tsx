@@ -19,6 +19,7 @@ import {
   Video,
   Smartphone,
   ShieldCheck,
+  KeyRound,
   Palette,
   Cherry,
   Cpu,
@@ -71,8 +72,8 @@ const CVPage: React.FC = () => {
       ]
     },
     {
-      company: "Pôle emploi",
-      role: "Service Civique",
+      company: "France Travail",
+      role: "Conseiller numérique",
       period: "Août 2022 - Janvier 2023",
       missions: [
         "Accueil et assistance des demandeurs d'emploi",
@@ -149,7 +150,7 @@ const CVPage: React.FC = () => {
   ];
 
   const interests = [
-    { name: "Cryptographie", icon: ShieldCheck },
+    { name: "Cryptographie", icon: KeyRound },
     { name: "Design", icon: Palette },
     { name: "Culture Japonaise", icon: Cherry },
     { name: "Cloud/Technologie", icon: Cpu },
@@ -236,16 +237,6 @@ const CVPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column: About, Skills, Education */}
             <div className="lg:col-span-1 space-y-12">
-              {/* About */}
-              <motion.section variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">À Propos</h2>
-                <div className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-[2rem] p-8">
-                  <p className="text-muted-foreground leading-relaxed">
-                    "Organisé, sérieux et motivé, je développe continuellement mes compétences afin d'évoluer professionnellement. Je me tiens à votre disposition pour toutes amples informations."
-                  </p>
-                </div>
-              </motion.section>
-
               {/* Skills */}
               <motion.section variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Compétences</h2>
@@ -376,6 +367,31 @@ const CVPage: React.FC = () => {
                     <h3 className="font-bold text-lg mb-2">BEP & BAC PRO Électrotechnique (MELEC)</h3>
                   </motion.div>
                 </div>
+              </section>
+
+              {/* Certifications */}
+              <section>
+                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Certifications</h2>
+                <motion.a
+                  href="https://www.credly.com/badges/f518dc90-cbd2-4ec2-95e6-b58a35119ffc/linked_in?t=tardcp"
+                  target="_blank"
+                  rel="noreferrer"
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  whileHover={{ y: -4 }}
+                  className="flex items-center gap-5 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-6 hover:border-accent/30 transition-all group"
+                >
+                  <div className="p-3 bg-accent/10 rounded-xl shrink-0 group-hover:bg-accent/20 transition-colors">
+                    <ShieldCheck className="w-6 h-6 text-accent" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-foreground group-hover:text-accent transition-colors">Introduction to Cybersecurity</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">Cisco — Credly Badge</p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
+                </motion.a>
               </section>
 
               {/* Interests */}

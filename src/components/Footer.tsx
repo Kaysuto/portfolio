@@ -1,33 +1,22 @@
-import { motion, Variants } from "framer-motion"
-import { Github, Linkedin, ArrowUp, Scale } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Github, Linkedin, ArrowUp, Scale, FileText, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
-import { useState } from "react"
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-}
-
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-}
+import { useState, useEffect } from "react"
+import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const [isGithubModalOpen, setIsGithubModalOpen] = useState(false)
   const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > 400)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -50,16 +39,16 @@ export function Footer() {
       {/* Background Glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-30" />
       
-      <motion.div 
+      <motion.div
         className="max-w-7xl mx-auto relative z-10"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
-        variants={containerVariants}
+        viewport={VIEWPORT}
+        variants={staggerContainer}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
           {/* Brand Column */}
-          <motion.div className="space-y-8" variants={itemVariants}>
+          <motion.div className="col-span-2 md:col-span-1 space-y-8" variants={fadeInUp}>
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => scrollToSection('accueil')}>
               <div className="p-2 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-all duration-300 group-hover:rotate-6 shadow-inner">
                 <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
@@ -75,7 +64,7 @@ export function Footer() {
           </motion.div>
 
           {/* Navigation Column */}
-          <motion.div className="space-y-8" variants={itemVariants}>
+          <motion.div className="space-y-8" variants={fadeInUp}>
             <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Navigation</h4>
             <nav className="flex flex-col gap-4">
               {[
@@ -96,8 +85,30 @@ export function Footer() {
             </nav>
           </motion.div>
 
+          {/* Pages Column */}
+          <motion.div className="space-y-8" variants={fadeInUp}>
+            <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Pages</h4>
+            <nav className="flex flex-col gap-4">
+              {[
+                { to: '/cv', label: 'CV', icon: FileText },
+                { to: '/bio', label: 'Bio', icon: User },
+                { to: '/legal-notice', label: 'Mentions Légales', icon: Scale },
+              ].map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className="text-muted-foreground hover:text-accent transition-all text-base font-bold w-fit group flex items-center gap-3"
+                >
+                  <span className="w-2 h-2 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-300" />
+                  <Icon className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </motion.div>
+
           {/* Social Networks Column */}
-          <motion.div className="space-y-8" variants={itemVariants}>
+          <motion.div className="space-y-8" variants={fadeInUp}>
             <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Réseaux</h4>
             <div className="flex items-center gap-4">
               <Button
@@ -124,7 +135,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <motion.div
           className="pt-6 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-6"
-          variants={itemVariants}
+          variants={fadeInUp}
         >
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 text-sm text-muted-foreground font-bold">
             <div className="flex items-center gap-2.5">
@@ -132,25 +143,27 @@ export function Footer() {
               <span className="text-foreground tracking-tight">Kaysuto Kimiya</span>
               <span className="text-xs opacity-70">• Tous droits réservés</span>
             </div>
-            <Link
-              to="/mentions-legales"
-              className="flex items-center gap-2 hover:text-accent transition-colors group"
-            >
-              <Scale className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-              <span>Mentions Légales</span>
-            </Link>
           </div>
 
           <div className="flex items-center gap-8">
-            <motion.button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              whileHover={{ y: -5, scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="w-12 h-12 flex items-center justify-center bg-accent text-accent-foreground rounded-2xl transition-colors group"
-              title="Retour en haut"
-            >
-              <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
-            </motion.button>
+            <AnimatePresence>
+              {showBackToTop && (
+                <motion.button
+                  key="back-to-top"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  whileHover={{ y: -4, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="w-12 h-12 flex items-center justify-center bg-accent text-accent-foreground rounded-2xl transition-colors group"
+                  title="Retour en haut"
+                >
+                  <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
       </motion.div>

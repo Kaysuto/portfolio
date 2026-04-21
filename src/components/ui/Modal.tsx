@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { Button } from './button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
   isOpen: boolean;
@@ -100,7 +101,3 @@ export function Modal({
   );
 }
 
-// Helper function for cn if not imported
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
-}

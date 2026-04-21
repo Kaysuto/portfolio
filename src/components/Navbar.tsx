@@ -1,19 +1,27 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence, Variants } from "framer-motion"
-import { 
+import {
   Menu,
   X,
   ArrowRight,
   ChevronDown,
   User,
   FileText,
-  Scale
+  Scale,
+  type LucideIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeController } from "./ThemeController"
 import { cn } from "@/lib/utils"
-import { useTheme } from "@/hooks/use-theme"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
+import { SECTIONS } from "@/constants"
+
+interface NavLink {
+  id: string
+  label: string
+  path: string
+  icon?: LucideIcon
+}
 
 const navVariants: Variants = {
   hidden: { y: -100, opacity: 0 },
@@ -25,7 +33,6 @@ const navVariants: Variants = {
 }
 
 export function Navbar() {
-  const { theme, toggle: toggleTheme } = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -33,17 +40,17 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState<string>("accueil")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  const navLinks = [
+  const navLinks: NavLink[] = [
     { id: "accueil", label: "Accueil", path: "/" },
     { id: "apropos", label: "À propos", path: "/" },
     { id: "projets", label: "Projets", path: "/" },
     { id: "contact", label: "Contact", path: "/" }
   ]
 
-  const dropdownLinks = [
+  const dropdownLinks: NavLink[] = [
     { id: "cv", label: "CV", path: "/cv", icon: FileText },
     { id: "bio", label: "Bio", path: "/bio", icon: User },
-    { id: "mentions-legales", label: "Mentions", path: "/mentions-legales", icon: Scale }
+    { id: "legal-notice", label: "Mentions", path: "/legal-notice", icon: Scale }
   ]
 
   useEffect(() => {
@@ -55,11 +62,10 @@ export function Navbar() {
         setActiveSection('bio')
       } else if (path === '/cv') {
         setActiveSection('cv')
-      } else if (path === '/mentions-legales') {
-        setActiveSection('mentions-legales')
+      } else if (path === '/legal-notice') {
+        setActiveSection('legal-notice')
       } else {
-        const sections = ["accueil", "apropos", "projets", "contact"]
-        const current = sections.find(section => {
+        const current = SECTIONS.find(section => {
           const el = document.getElementById(section)
           if (el) {
             const rect = el.getBoundingClientRect()
@@ -89,10 +95,10 @@ export function Navbar() {
     }
   }, [location.pathname])
 
-  const handleNavClick = (link: typeof navLinks[0]) => {
+  const handleNavClick = (link: NavLink) => {
     setIsMobileMenuOpen(false)
     
-    if (link.path === '/bio' || link.path === '/cv' || link.path === '/mentions-legales') {
+    if (link.path === '/bio' || link.path === '/cv' || link.path === '/legal-notice') {
       navigate(link.path)
       return
     }
@@ -185,12 +191,12 @@ export function Navbar() {
             <button
               className={cn(
                 "relative px-4 py-2 text-sm font-semibold uppercase tracking-widest transition-all duration-300 rounded-xl flex items-center gap-2",
-                (activeSection === 'cv' || activeSection === 'bio' || activeSection === 'mentions-legales')
+                (activeSection === 'cv' || activeSection === 'bio' || activeSection === 'legal-notice')
                   ? "text-accent-foreground"
                   : "text-muted-foreground hover:text-accent"
               )}
             >
-              {(activeSection === 'cv' || activeSection === 'bio' || activeSection === 'mentions-legales') && (
+              {(activeSection === 'cv' || activeSection === 'bio' || activeSection === 'legal-notice') && (
                 <motion.div
                   layoutId="activeNav"
                   className="absolute inset-0 bg-accent rounded-xl -z-10"
@@ -207,20 +213,20 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute top-full right-0 mt-2 w-32 bg-background/95 backdrop-blur-xl border border-accent/20 rounded-2xl shadow-2xl overflow-hidden p-1.5 z-50"
+                  className="absolute top-full right-0 mt-2 w-32 bg-background/95 backdrop-blur-xl border border-accent/20 rounded-xl shadow-2xl overflow-hidden p-1.5 z-50"
                 >
                   {dropdownLinks.map((link) => (
                     <button
                       key={link.id}
-                      onClick={() => handleNavClick(link as any)}
+                      onClick={() => handleNavClick(link)}
                       className={cn(
-                        "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all",
+                        "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all",
                         activeSection === link.id
                           ? "bg-accent text-accent-foreground"
                           : "hover:bg-accent/10 text-muted-foreground hover:text-accent"
                       )}
                     >
-                      <link.icon className="w-3.5 h-3.5" />
+                      {link.icon && <link.icon className="w-3.5 h-3.5" />}
                       {link.label}
                     </button>
                   ))}
@@ -291,7 +297,7 @@ export function Navbar() {
                     {dropdownLinks.map((link) => (
                       <button
                         key={link.id}
-                        onClick={() => handleNavClick(link as any)}
+                        onClick={() => handleNavClick(link)}
                         className={cn(
                           "flex flex-col items-center justify-center gap-2 p-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-[9px]",
                           activeSection === link.id
@@ -299,7 +305,7 @@ export function Navbar() {
                             : "bg-accent/5 text-foreground hover:bg-accent/10"
                         )}
                       >
-                        <link.icon className="w-5 h-5" />
+                        {link.icon && <link.icon className="w-5 h-5" />}
                         {link.label}
                       </button>
                     ))}

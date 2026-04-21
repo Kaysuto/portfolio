@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface UseModalReturn {
   isModalOpen: boolean;
@@ -13,22 +13,20 @@ export const useModal = (): UseModalReturn => {
   const [modalMounted, setModalMounted] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsClosing(false);
     setModalMounted(true);
-    // Allow mount then trigger visible state to run transition
     setTimeout(() => setIsModalOpen(true), 10);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsClosing(true);
     setIsModalOpen(false);
-    // Wait for animation to finish then unmount
     setTimeout(() => {
       setModalMounted(false);
       setIsClosing(false);
     }, 220);
-  };
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -36,7 +34,7 @@ export const useModal = (): UseModalReturn => {
     };
     if (isModalOpen) document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [isModalOpen]);
+  }, [isModalOpen, closeModal]);
 
   return {
     isModalOpen,

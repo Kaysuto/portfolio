@@ -20,7 +20,7 @@ const AppRouter: React.FC = () => {
         <Route path="/" element={<Layout><PortfolioApp /></Layout>} />
         <Route path="/bio" element={<Layout><BioPage /></Layout>} />
         <Route path="/cv" element={<Layout><CVPage /></Layout>} />
-        <Route path="/mentions-legales" element={<Layout><MentionsLegales /></Layout>} />
+        <Route path="/legal-notice" element={<Layout><MentionsLegales /></Layout>} />
 
         {/* 404 pour toute autre route - Redirection vers l'accueil */}
         <Route path="*" element={<Navigate to="/" replace />} />

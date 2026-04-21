@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, ShieldCheck, Scale, Globe } from "lucide-react"
+import { ArrowLeft, ShieldCheck, Scale, Globe, Lock } from "lucide-react"
 import { Link } from "react-router-dom"
 
 export default function MentionsLegales() {
@@ -62,6 +62,15 @@ export default function MentionsLegales() {
                     <p className="text-sm font-bold">TVA : <span className="text-foreground">FR63914509906</span></p>
                     <p className="text-sm font-bold">APE : <span className="text-foreground">6201Z (Programmation informatique)</span></p>
                   </div>
+                  <div className="space-y-1 pt-4 border-t border-border/50">
+                    <p className="text-xs font-black uppercase tracking-widest text-accent/70">Contact</p>
+                    <p className="text-sm font-bold">
+                      Email : <a href="mailto:contact@kaysuto.fr" className="text-accent hover:underline">contact@kaysuto.fr</a>
+                    </p>
+                    <p className="text-sm font-bold text-muted-foreground">
+                      Directeur de publication : <span className="text-foreground">Kaysuto Kimiya</span>
+                    </p>
+                  </div>
                 </div>
               </section>
 
@@ -75,16 +84,78 @@ export default function MentionsLegales() {
                   <div>
                     <p className="font-black text-sm uppercase tracking-wider text-accent/70 mb-2">Plateforme</p>
                     <p className="font-bold">Vercel Inc.</p>
-                    <p className="text-sm text-muted-foreground">440 N Barranca Ave #4133, Covina, CA 91723, USA</p>
+                    <p className="text-sm text-muted-foreground">340 S Lemon Ave #4133, Walnut, CA 91789, USA</p>
+                    <p className="text-sm text-muted-foreground mt-1">DPO Europe : c/o EDPO, Avenue Huart Hamoir 71, 1030 Bruxelles, Belgique</p>
                   </div>
                   <div className="pt-4 border-t border-border/50">
-                    <p className="font-black text-sm uppercase tracking-wider text-accent/70 mb-2">Infrastructure</p>
-                    <p className="font-bold">Contabo GmbH</p>
-                    <p className="text-sm text-muted-foreground">Aschauer Straße 32a, 81549 Munich, Germany</p>
+                    <p className="font-black text-sm uppercase tracking-wider text-accent/70 mb-2">Base de données &amp; Backend</p>
+                    <p className="font-bold">Supabase Inc.</p>
+                    <p className="text-sm text-muted-foreground">65 Chulia Street #38-02/03, OCBC Centre, Singapore 049513</p>
+                    <p className="text-sm text-muted-foreground mt-1">Données stockées dans la région EU (Frankfurt, AWS eu-central-1)</p>
                   </div>
                 </div>
               </section>
             </div>
+
+
+{/* Données personnelles & RGPD */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-3 text-accent">
+                <Lock size={24} />
+                <h2 className="text-xl font-bold uppercase tracking-widest">Données personnelles &amp; Cookies</h2>
+              </div>
+              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-6">
+                <div className="border-l-4 border-accent pl-6">
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Ce site respecte votre vie privée. Aucune donnée personnelle n'est collectée à des fins commerciales ou publicitaires.
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Données collectées</h3>
+                  <ul className="space-y-3 text-muted-foreground font-medium">
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span><span className="text-foreground font-bold">Données de navigation</span> — adresse IP et pages consultées, collectées automatiquement par l'hébergeur (Vercel) à des fins techniques et de sécurité. Durée de conservation : 30 jours.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Cookies</h3>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Ce site utilise uniquement des cookies techniques strictement nécessaires à son fonctionnement :
+                  </p>
+                  <ul className="space-y-3 text-muted-foreground font-medium">
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span><span className="text-foreground font-bold">Préférence de thème</span> (clair / sombre) — stockée localement dans votre navigateur, sans transmission à un serveur.</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="text-accent font-bold mt-0.5">•</span>
+                      <span><span className="text-foreground font-bold">Consentement cookies</span> — mémorise votre choix afin de ne pas afficher la bannière à chaque visite.</span>
+                    </li>
+                  </ul>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Aucun cookie publicitaire, analytique tiers ou traceur n'est déposé sur votre appareil.
+                    Vous pouvez supprimer les cookies à tout moment depuis les paramètres de votre navigateur.
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-border/50 space-y-4">
+                  <h3 className="text-accent font-black text-sm uppercase tracking-widest">Vos droits (RGPD)</h3>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Conformément au Règlement (UE) 2016/679 (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès,
+                    de rectification, d'effacement, de limitation et d'opposition concernant vos données personnelles.
+                    Pour exercer ces droits, contactez&nbsp;:&nbsp;
+                    <a href="mailto:contact@kaysuto.fr" className="text-accent hover:underline font-bold">contact@kaysuto.fr</a>.
+                  </p>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    En cas de litige, vous pouvez saisir la <a href="https://www.cnil.fr" target="_blank" rel="noreferrer" className="text-accent hover:underline font-bold">CNIL</a> (Commission Nationale de l'Informatique et des Libertés).
+                  </p>
+                </div>
+              </div>
+            </section>
 
             {/* Propriété Intellectuelle */}
             <section className="space-y-4">
