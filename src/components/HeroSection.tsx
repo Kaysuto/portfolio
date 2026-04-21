@@ -117,34 +117,34 @@ export function HeroSection() {
         </motion.div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <motion.div variants={fadeInUp} className="w-full sm:w-auto flex justify-center">
+        <div className="flex flex-row gap-4 justify-center items-center flex-wrap">
+          <motion.div variants={fadeInUp}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 onClick={scrollToProjects}
                 size="lg"
-                className="w-fit h-14 px-8 rounded-2xl text-lg font-bold shadow-xl transition-opacity hover:opacity-90 group flex items-center justify-center"
+                className="h-11 px-5 text-sm sm:h-14 sm:px-8 sm:text-lg rounded-2xl font-bold shadow-xl transition-opacity hover:opacity-90 group flex items-center justify-center"
                 style={{
                   backgroundColor: accentColor,
                   color: theme === "dark" ? "#5D4A42" : "black",
                 }}
               >
                 Voir mes projets
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
           </motion.div>
 
-          <motion.div variants={fadeInUp} className="w-full sm:w-auto flex justify-center">
+          <motion.div variants={fadeInUp}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 variant="outline"
                 size="lg"
                 onClick={() => navigate("/cv")}
-                className="w-fit h-14 px-8 rounded-2xl border-2 text-lg font-bold flex items-center justify-center gap-3 shadow-lg group"
+                className="h-11 px-5 text-sm sm:h-14 sm:px-8 sm:text-lg rounded-2xl border-2 font-bold flex items-center justify-center gap-2 sm:gap-3 shadow-lg group"
                 style={{ borderColor: accentColor, color: accentColor }}
               >
-                <FileText className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                <FileText className="w-4 h-4 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
                 Voir CV
               </Button>
             </motion.div>

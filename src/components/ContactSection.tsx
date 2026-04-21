@@ -126,7 +126,10 @@ export function ContactSection() {
 
   useEffect(() => {
     fetch("https://discord.com/api/guilds/1352228798585638983/widget.json")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return
+        return res.json()
+      })
       .then((data) => {
         if (data && typeof data.presence_count === "number") {
           setDiscordOnline(data.presence_count)

@@ -3,11 +3,14 @@ import { motion, AnimatePresence, Variants } from "framer-motion"
 import {
   Menu,
   X,
-  ArrowRight,
   ChevronDown,
   User,
   FileText,
   Scale,
+  Home,
+  Info,
+  FolderOpen,
+  Mail,
   type LucideIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -41,10 +44,10 @@ export function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const navLinks: NavLink[] = [
-    { id: "accueil", label: "Accueil", path: "/" },
-    { id: "apropos", label: "À propos", path: "/" },
-    { id: "projets", label: "Projets", path: "/" },
-    { id: "contact", label: "Contact", path: "/" }
+    { id: "accueil", label: "Accueil", path: "/", icon: Home },
+    { id: "apropos", label: "À propos", path: "/", icon: Info },
+    { id: "projets", label: "Projets", path: "/", icon: FolderOpen },
+    { id: "contact", label: "Contact", path: "/", icon: Mail }
   ]
 
   const dropdownLinks: NavLink[] = [
@@ -259,58 +262,81 @@ export function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-background/60 backdrop-blur-sm z-[-1]"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[-1]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              className="md:hidden mt-4 bg-background/95 backdrop-blur-2xl border border-border/50 rounded-[2.5rem] shadow-2xl overflow-hidden"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="md:hidden mt-3 bg-background/98 backdrop-blur-2xl border border-border/40 rounded-3xl shadow-2xl overflow-hidden"
             >
-              <div className="p-6 space-y-3">
-                <div className="flex items-center gap-3 mb-4 px-2">
-                  <span className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Navigation</span>
-                </div>
-                
-                {navLinks.map((link) => (
-                  <button
+              <div className="p-3">
+                {/* Nav links */}
+                {navLinks.map((link, i) => (
+                  <motion.button
                     key={link.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.2 }}
                     onClick={() => handleNavClick(link)}
                     className={cn(
-                      "w-full flex items-center justify-between p-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-xs",
+                      "w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all",
                       activeSection === link.id
                         ? "bg-accent text-accent-foreground"
-                        : "bg-accent/5 text-foreground hover:bg-accent/10"
+                        : "text-foreground hover:bg-accent/8"
                     )}
                   >
-                    {link.label}
-                    <ArrowRight className={cn("w-4 h-4 transition-transform", activeSection === link.id && "translate-x-1")} />
-                  </button>
+                    {link.icon && (
+                      <link.icon className={cn(
+                        "w-4 h-4 shrink-0",
+                        activeSection === link.id ? "opacity-100" : "opacity-40"
+                      )} />
+                    )}
+                    <span className="font-semibold text-sm">{link.label}</span>
+                    {activeSection === link.id && (
+                      <motion.div
+                        layoutId="mobileActive"
+                        className="ml-auto w-1.5 h-1.5 rounded-full bg-current"
+                      />
+                    )}
+                  </motion.button>
                 ))}
 
-                <div className="pt-2 space-y-2">
-                  <div className="flex items-center gap-3 px-2 mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent/60">Pages</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {dropdownLinks.map((link) => (
-                      <button
-                        key={link.id}
-                        onClick={() => handleNavClick(link)}
-                        className={cn(
-                          "flex flex-col items-center justify-center gap-2 p-4 rounded-2xl transition-all font-bold uppercase tracking-widest text-[9px]",
-                          activeSection === link.id
-                            ? "bg-accent text-accent-foreground"
-                            : "bg-accent/5 text-foreground hover:bg-accent/10"
-                        )}
-                      >
-                        {link.icon && <link.icon className="w-5 h-5" />}
-                        {link.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* Separator */}
+                <div className="my-2 mx-4 border-t border-border/30" />
+
+                {/* Extra pages */}
+                {dropdownLinks.map((link, i) => (
+                  <motion.button
+                    key={link.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navLinks.length + i) * 0.05, duration: 0.2 }}
+                    onClick={() => handleNavClick(link)}
+                    className={cn(
+                      "w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all",
+                      activeSection === link.id
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-accent/8 hover:text-foreground"
+                    )}
+                  >
+                    {link.icon && (
+                      <link.icon className={cn(
+                        "w-4 h-4 shrink-0",
+                        activeSection === link.id ? "opacity-100" : "opacity-40"
+                      )} />
+                    )}
+                    <span className="font-semibold text-sm">{link.label}</span>
+                    {activeSection === link.id && (
+                      <motion.div
+                        layoutId="mobileActive"
+                        className="ml-auto w-1.5 h-1.5 rounded-full bg-current"
+                      />
+                    )}
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
           </>
