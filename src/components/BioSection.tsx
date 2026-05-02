@@ -84,24 +84,7 @@ export function BioSection() {
 
   return (
     <section id="bio" className="py-24 px-6 bg-background relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.05, 0.1, 0.05] 
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-40 right-8 w-64 h-64 bg-accent/10 rounded-full blur-3xl"
-        />
-        <motion.div 
-          animate={{ 
-            y: [0, -20, 0] 
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute bottom-40 left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"
-        />
-      </div>
+
 
       <div className="container mx-auto max-w-4xl relative z-10">
         <motion.div 
