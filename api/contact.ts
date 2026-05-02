@@ -28,9 +28,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ip =
     (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ?? "anonymous"
 
-  const { success } = await ratelimit.limit(ip)
-  if (!success) {
-    return res.status(429).json({ error: "Trop de tentatives. Réessaie dans quelques minutes." })
+  try {
+    const { success } = await ratelimit.limit(ip)
+    if (!success) {
+      return res.status(429).json({ error: "Trop de tentatives. Réessaie dans quelques minutes." })
+    }
+  } catch {
+    // Redis unavailable — allow the request through rather than blocking it
   }
 
   const { name, email, message } = req.body ?? {}

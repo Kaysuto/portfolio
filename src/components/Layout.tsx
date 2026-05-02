@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen text-foreground relative theme-fade">
+    <div className="min-h-screen text-foreground relative overflow-x-hidden theme-fade">
       {/* Background unifié */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-background" />
