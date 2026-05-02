@@ -68,7 +68,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   })
 
   if (!brevoRes.ok) {
-    console.error("Brevo error:", await brevoRes.text())
+    const brevoError = await brevoRes.text()
+    console.error("Brevo error status:", brevoRes.status, "body:", brevoError)
     return res.status(500).json({ error: "Erreur lors de l'envoi. Réessaie plus tard." })
   }
 
