@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Mail, Copy, Clock, Zap, ExternalLink, Send, Loader2 } from "lucide-react"
+import { Mail, Copy, ExternalLink, Send, Loader2, ArrowUpRight } from "lucide-react"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { DiscordModal } from "@/components/ui/DiscordModal"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 import { contactSchema, type ContactFormValues } from "@/lib/contact-schema"
+import { cn } from "@/lib/utils"
 
 const EMAIL = "contact@kaysuto.fr"
+const DISCORD_GUILD = "1352228798585638983"
+const DISCORD_INVITE = "https://discord.gg/AYrvJCA2DW"
 
 const DiscordIcon = ({ className }: { className?: string }) => (
   <svg role="img" viewBox="0 0 24 24" className={className} fill="currentColor">
@@ -29,34 +30,42 @@ function ContactForm() {
     defaultValues: { name: "", email: "", message: "" },
   })
 
-  const onSubmit = (values: ContactFormValues) => {
+  const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitting(true)
-    const subject = encodeURIComponent(`Message de ${values.name}`)
-    const body = encodeURIComponent(
-      `Nom : ${values.name}\nEmail : ${values.email}\n\n${values.message}`
-    )
-    setTimeout(() => {
-      window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`
-      toast.success("Message préparé ! Votre client email va s'ouvrir.")
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error ?? "Une erreur est survenue.")
+      } else {
+        toast.success("Message envoyé ! Je te réponds bientôt.")
+        form.reset()
+      }
+    } catch {
+      toast.error("Impossible d'envoyer le message. Vérifie ta connexion.")
+    } finally {
       setIsSubmitting(false)
-      form.reset()
-    }, 800)
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid sm:grid-cols-2 gap-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-semibold">Nom</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Nom</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Votre nom"
-                    className="rounded-xl h-11 bg-background/50 border-border/60 focus-visible:ring-accent/40"
+                    className="h-11 bg-accent/8 dark:bg-accent/8 border-accent/20 rounded-xl focus-visible:ring-accent/30 text-sm"
                     {...field}
                   />
                 </FormControl>
@@ -69,12 +78,12 @@ function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-semibold">Email</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="votre@email.fr"
-                    className="rounded-xl h-11 bg-background/50 border-border/60 focus-visible:ring-accent/40"
+                    placeholder="votre@email.com"
+                    className="h-11 bg-accent/8 dark:bg-accent/8 border-accent/20 rounded-xl focus-visible:ring-accent/30 text-sm"
                     {...field}
                   />
                 </FormControl>
@@ -89,12 +98,12 @@ function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-semibold">Message</FormLabel>
+              <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Message</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Dites-moi tout..."
+                  placeholder="Votre projet, votre question…"
                   rows={5}
-                  className="rounded-xl bg-background/50 border-border/60 focus-visible:ring-accent/40 resize-none"
+                  className="bg-accent/8 border-accent/20 rounded-xl focus-visible:ring-accent/30 resize-none text-sm p-4"
                   {...field}
                 />
               </FormControl>
@@ -103,18 +112,14 @@ function ContactForm() {
           )}
         />
 
-        <Button
+        <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold gap-2 transition-all active:scale-[0.98]"
+          className="w-full h-11 rounded-xl bg-accent text-background text-sm font-medium flex items-center justify-center gap-2 hover:opacity-80 transition-opacity disabled:opacity-50"
         >
-          {isSubmitting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Send className="w-4 h-4" />
-          )}
+          {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           Envoyer le message
-        </Button>
+        </button>
       </form>
     </Form>
   )
@@ -125,16 +130,9 @@ export function ContactSection() {
   const [showDiscordModal, setShowDiscordModal] = useState(false)
 
   useEffect(() => {
-    fetch("https://discord.com/api/guilds/1352228798585638983/widget.json")
-      .then((res) => {
-        if (!res.ok) return
-        return res.json()
-      })
-      .then((data) => {
-        if (data && typeof data.presence_count === "number") {
-          setDiscordOnline(data.presence_count)
-        }
-      })
+    fetch(`https://discord.com/api/guilds/${DISCORD_GUILD}/widget.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d?.presence_count != null) setDiscordOnline(d.presence_count) })
       .catch(() => {})
   }, [])
 
@@ -148,20 +146,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-16 px-6 bg-background relative overflow-hidden">
-      {/* Background blobs */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.08, 0.03] }}
-          transition={{ duration: 15, repeat: Infinity, delay: 2 }}
-          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl"
-        />
-      </div>
+    <section id="contact" className="py-24 px-6 relative overflow-hidden">
 
       <motion.div
         className="max-w-5xl mx-auto relative z-10"
@@ -171,128 +156,26 @@ export function ContactSection() {
         variants={staggerContainer}
       >
         {/* Header */}
-        <motion.div className="text-center mb-10" variants={fadeInUp}>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
-            On reste en <span className="text-accent">contact</span> ?
+        <motion.div variants={fadeInUp} className="mb-16 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+            Travaillons <span className="text-accent">ensemble.</span>
           </h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
-            Que ce soit pour un projet, une question ou simplement rejoindre ma communauté,
-            choisissez le canal qui vous convient le mieux.
+          <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
+            Projet, question, simple bonjour : écris-moi. Je réponds sous 48h en général.
+            Tu peux aussi passer par{" "}
+            <button onClick={handleCopyEmail} className="text-foreground underline underline-offset-2 hover:text-accent transition-colors">
+              mail direct
+            </button>{" "}
+            si tu préfères.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-          {/* Email Card */}
-          <motion.div variants={fadeInUp}>
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl h-full hover:bg-card/50 transition-colors">
-              <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="p-4 bg-accent/10 rounded-2xl mb-2">
-                    <Mail className="w-8 h-8 text-accent" />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-foreground tracking-tight">Contact direct</h3>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      Copiez mon adresse email ou ouvrez votre client habituel.
-                    </p>
-                  </div>
-                </div>
+        {/* Form */}
+        <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
+          <ContactForm />
+        </motion.div>
 
-                <div className="w-full space-y-4 mt-6">
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className="w-full p-4 bg-accent/5 rounded-2xl border border-accent/10 flex items-center justify-between hover:bg-accent/10 transition-colors cursor-pointer"
-                  >
-                    <span className="text-lg font-bold text-foreground tracking-tight">{EMAIL}</span>
-                    <Copy className="w-5 h-5 text-accent shrink-0" />
-                  </button>
-                  <Button
-                    asChild
-                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                  >
-                    <a href={`mailto:${EMAIL}`}>Ouvrir le client email</a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Discord Card */}
-          <motion.div variants={fadeInUp}>
-            <Card className="bg-card/40 backdrop-blur-md border-border/50 rounded-[2.5rem] overflow-hidden shadow-2xl h-full hover:bg-card/50 transition-colors">
-              <CardContent className="p-8 text-center flex flex-col items-center justify-between h-full">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="p-4 bg-accent/10 rounded-2xl mb-2">
-                    <DiscordIcon className="w-8 h-8 text-accent" />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-foreground tracking-tight">Communauté Discord</h3>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      Rejoignez mon serveur pour échanger et suivre mon actualité en direct.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="w-full mt-6">
-                  {discordOnline !== null && (
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                      </span>
-                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                        {discordOnline} Membres en ligne
-                      </span>
-                    </div>
-                  )}
-                  <Button
-                    className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                    onClick={() => setShowDiscordModal(true)}
-                  >
-                    Rejoindre le serveur
-                    <ExternalLink className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Info cards */}
-          <motion.div
-            variants={fadeInUp}
-            whileHover={{ y: -4 }}
-            className="p-6 bg-green-500/10 border border-green-500/20 rounded-[2.5rem] flex items-start gap-5 transition-all"
-          >
-            <div className="p-3 bg-green-500/20 rounded-2xl shrink-0">
-              <Zap className="w-6 h-6 text-green-500" />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold text-foreground mb-1">Disponible</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-                Prêt pour de nouvelles opportunités et collaborations passionnantes.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            whileHover={{ y: -4 }}
-            className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-[2.5rem] flex items-start gap-5 transition-all"
-          >
-            <div className="p-3 bg-blue-500/20 rounded-2xl shrink-0">
-              <Clock className="w-6 h-6 text-blue-500" />
-            </div>
-            <div>
-              <h4 className="text-lg font-bold text-foreground mb-1">Réponse rapide</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-                Je m'engage à traiter vos demandes en moins de 24 heures ouvrables.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-
-
+        {/* Status badges */}
       </motion.div>
 
       <DiscordModal isOpen={showDiscordModal} onClose={() => setShowDiscordModal(false)} />

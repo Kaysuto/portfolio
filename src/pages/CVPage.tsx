@@ -142,6 +142,7 @@ const CVPage: React.FC = () => {
   const tools = [
     { name: "React", slug: "react", url: "https://react.dev" },
     { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
+    { name: "Next.js", slug: "nextdotjs", url: "https://nextjs.org" },
     { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
     { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
     { name: "Docker", slug: "docker", url: "https://www.docker.com" },
@@ -167,21 +168,7 @@ const CVPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-40 right-8 w-64 h-64 bg-accent/10 rounded-full blur-3xl"
-        />
-        <motion.div 
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute bottom-40 left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"
-        />
-      </div>
-
+    <div className="min-h-screen relative flex flex-col">
       <main className="flex-1 py-24 md:py-32 px-6 relative z-10">
         <div className="container mx-auto max-w-5xl">
           <motion.div
@@ -214,7 +201,11 @@ const CVPage: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
                   <MapPin className="w-4 h-4 text-accent" />
-                  <span>Mobilité : Permis B & Véhiculé</span>
+                  <span>Langres, France</span>
+                </div>
+                <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
+                  <Car className="w-4 h-4 text-accent" />
+                  <span>Permis B & Véhiculé</span>
                 </div>
               </div>
             </div>
@@ -222,7 +213,7 @@ const CVPage: React.FC = () => {
             <Button
               onClick={() => setIsLinkedinModalOpen(true)}
               className="w-full md:w-auto h-14 px-8 rounded-2xl font-bold shadow-lg transition-all hover:scale-105 flex items-center justify-center"
-              style={{ backgroundColor: accentColor, color: 'black' }}
+              style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
             >
               <Linkedin className="w-5 h-5 mr-2" />
               Me contacter sur LinkedIn
@@ -392,6 +383,21 @@ const CVPage: React.FC = () => {
                   </div>
                   <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
                 </motion.a>
+                <motion.div
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="flex items-center gap-5 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-6"
+                >
+                  <div className="p-3 bg-accent/10 rounded-xl shrink-0">
+                    <Cpu className="w-6 h-6 text-accent" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-foreground">Introduction to IoT</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">Cisco Networking Academy</p>
+                  </div>
+                </motion.div>
               </section>
 
               {/* Interests */}

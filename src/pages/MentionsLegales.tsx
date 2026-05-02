@@ -5,21 +5,7 @@ import { Link } from "react-router-dom"
 
 export default function MentionsLegales() {
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-40 right-8 w-64 h-64 bg-accent/10 rounded-full blur-3xl"
-        />
-        <motion.div 
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute bottom-40 left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"
-        />
-      </div>
-
+    <div className="min-h-screen relative flex flex-col">
       <div className="flex-1 pt-32 pb-20 px-6 relative z-10">
         <motion.div 
           className="max-w-4xl mx-auto"
@@ -124,21 +110,20 @@ export default function MentionsLegales() {
                 <div className="pt-6 border-t border-border/50 space-y-4">
                   <h3 className="text-accent font-black text-sm uppercase tracking-widest">Cookies</h3>
                   <p className="text-muted-foreground font-medium leading-relaxed">
-                    Ce site utilise uniquement des cookies techniques strictement nécessaires à son fonctionnement :
+                    Ce site utilise un unique cookie technique, strictement nécessaire à son fonctionnement :
                   </p>
                   <ul className="space-y-3 text-muted-foreground font-medium">
                     <li className="flex gap-3">
                       <span className="text-accent font-bold mt-0.5">•</span>
-                      <span><span className="text-foreground font-bold">Préférence de thème</span> (clair / sombre) — stockée localement dans votre navigateur, sans transmission à un serveur.</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="text-accent font-bold mt-0.5">•</span>
-                      <span><span className="text-foreground font-bold">Consentement cookies</span> — mémorise votre choix afin de ne pas afficher la bannière à chaque visite.</span>
+                      <span><span className="text-foreground font-bold">Préférence de thème</span> (clair / sombre) — stockée dans votre navigateur (cookie + localStorage), sans transmission à un serveur tiers. Ce cookie est exempté de consentement au titre de l'article 82 de la loi Informatique et Libertés.</span>
                     </li>
                   </ul>
                   <p className="text-muted-foreground font-medium leading-relaxed">
-                    Aucun cookie publicitaire, analytique tiers ou traceur n'est déposé sur votre appareil.
-                    Vous pouvez supprimer les cookies à tout moment depuis les paramètres de votre navigateur.
+                    Les statistiques de visite sont mesurées via <span className="text-foreground font-bold">Umami Analytics</span>, un outil respectueux de la vie privée : aucun cookie n'est déposé, aucune donnée personnelle n'est collectée, et les données sont agrégées de façon anonyme.
+                    Vous pouvez consulter les statistiques publiques du site à tout moment.
+                  </p>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Aucun cookie publicitaire ou traceur tiers n'est déposé sur votre appareil.
                   </p>
                 </div>
 

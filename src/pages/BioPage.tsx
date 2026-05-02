@@ -32,7 +32,7 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05
+      staggerChildren: 0.1
     }
   }
 };
@@ -42,7 +42,7 @@ const itemVariants: Variants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.4, ease: "easeOut" }
+    transition: { duration: 0.5, ease: "easeOut" }
   }
 };
 
@@ -99,20 +99,7 @@ const BioPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div 
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-40 right-8 w-64 h-64 bg-accent/10 rounded-full blur-3xl"
-        />
-        <motion.div 
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute bottom-40 left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"
-        />
-      </div>
-
+    <div className="min-h-screen relative flex flex-col">
       <main className="flex-1 py-24 md:py-32 px-6 relative z-10">
         <div className="container mx-auto max-w-4xl">
           <motion.div
@@ -132,7 +119,7 @@ const BioPage: React.FC = () => {
             className="text-center mb-16"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6">
               Mes <span className="text-accent">Liens</span>
@@ -241,7 +228,7 @@ const BioPage: React.FC = () => {
             
             <div className="flex gap-4">
               <Button variant="outline" onClick={closeModal} className="flex-1 h-14 rounded-2xl font-bold">Annuler</Button>
-              <Button onClick={handleLinkConfirm} className="flex-1 h-14 rounded-2xl font-bold shadow-lg" style={{ backgroundColor: accentColor, color: 'black' }}>
+              <Button onClick={handleLinkConfirm} className="flex-1 h-14 rounded-2xl font-bold shadow-lg" style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}>
                 <ArrowUpRight className="h-5 w-5 mr-2" /> Ouvrir
               </Button>
             </div>

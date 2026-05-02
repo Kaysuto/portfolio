@@ -15,6 +15,7 @@ const bioLinkIcons: Record<string, string> = {
   'Mirum Orbis': 'Palette',
   'NoHello': 'Globe',
   'GitHub': 'GithubLogo',
+  'LinkedIn': 'LinkedinLogo',
   'Twitch': 'TwitchLogo',
   'Spotify': 'SpotifyLogo',
   'Steam': 'GameController',

@@ -65,6 +65,18 @@ export const links: BioLink[] = [
     updated_at: new Date().toISOString()
   },
   {
+    id: 'linkedin',
+    title: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/enzo-lauret/',
+    type: 'bio_link',
+    category: 'social',
+    description: 'Mon profil professionnel',
+    is_active: true,
+    click_count: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
     id: 'twitch',
     title: 'Twitch',
     url: 'https://twitch.tv/kaysuto',

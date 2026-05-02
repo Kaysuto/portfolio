@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, LinkSimple } from '@phosphor-icons/react';
+import { ArrowUpRight, EnvelopeSimple, DiscordLogo, Globe, GameController, Palette, SmileyXEyes, PaintBrush, GithubLogo, LinkSimple, LinkedinLogo } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
@@ -47,6 +47,7 @@ export function BioSection() {
       'SmileyXEyes': SmileyXEyes,
       'PaintBrush': PaintBrush,
       'GithubLogo': GithubLogo,
+      'LinkedinLogo': LinkedinLogo,
       'LinkSimple': LinkSimple
     };
     return iconMap[iconName] || LinkSimple;

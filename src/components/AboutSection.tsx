@@ -42,6 +42,7 @@ export function AboutSection() {
       techs: [
         { name: "React", slug: "react", url: "https://react.dev" },
         { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
+        { name: "Next.js", slug: "nextdotjs", url: "https://nextjs.org" },
         { name: "Vue.js", slug: "vuedotjs", url: "https://vuejs.org" },
         { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
       ]
@@ -96,7 +97,7 @@ export function AboutSection() {
   }
 
   return (
-    <section id="apropos" className="py-16 px-6 bg-background relative overflow-hidden">
+    <section id="apropos" className="py-16 px-6 relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
@@ -178,9 +179,9 @@ export function AboutSection() {
           <div className="grid sm:grid-cols-2 gap-4">
             {skills.map((skill, index) => (
               <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-300 group rounded-[2rem]">
+                <Card className="h-full bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group rounded-[2rem]">
                   <CardContent className="p-6">
-                    <div className="mb-4 p-3 bg-accent/10 rounded-xl w-fit group-hover:bg-accent/20 transition-colors duration-300">
+                    <div className="mb-4 p-3 bg-accent/15 rounded-xl w-fit group-hover:bg-accent/25 transition-colors duration-300">
                       {skill.icon}
                     </div>
                     <h4 className="font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
@@ -222,7 +223,7 @@ export function AboutSection() {
                       onClick={() => handleTechClick(tech)}
                       className="group relative"
                     >
-                      <div className="flex items-center gap-3 px-4 py-2.5 bg-card/40 backdrop-blur-sm border border-border/50 rounded-xl hover:bg-accent/5 hover:border-accent/30 transition-all duration-300 cursor-pointer">
+                      <div className="flex items-center gap-3 px-4 py-2.5 bg-accent/8 backdrop-blur-sm border border-accent/15 rounded-xl hover:bg-accent/15 hover:border-accent/40 transition-all duration-300 cursor-pointer">
                         <img 
                           src={(tech as any).iconUrl || `https://cdn.simpleicons.org/${tech.slug}`} 
                           alt={tech.name}

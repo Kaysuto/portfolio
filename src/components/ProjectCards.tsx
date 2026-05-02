@@ -48,7 +48,7 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
       whileHover={{ y: -8, transition: { type: "spring", stiffness: 280, damping: 22 } }}
       className="h-full"
     >
-      <Card className="relative h-[500px] flex flex-col overflow-hidden bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 hover:shadow-2xl transition-all duration-300 rounded-[2.5rem] shadow-lg group/card">
+      <Card className="relative h-[500px] flex flex-col overflow-hidden bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 rounded-[2.5rem] shadow-lg group/card">
         {/* Image */}
         <div className="relative h-56 w-full overflow-hidden bg-card isolate shrink-0">
           {project.image_url ? (
@@ -139,7 +139,7 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
                 variant="outline"
                 size="icon"
                 asChild
-                className="w-12 h-12 rounded-2xl border-border/50 hover:border-accent/50 transition-all shrink-0"
+                className="w-12 h-12 rounded-2xl bg-accent/8 border-accent/20 hover:border-accent/50 hover:bg-accent/15 transition-all shrink-0"
               >
                 <a href={project.github_url} target="_blank" rel="noreferrer" aria-label="GitHub">
                   <Github size={20} />
@@ -186,7 +186,7 @@ export function ProjectCards() {
       >
         <CarouselContent className="-ml-6 py-8">
           {localProjects.map((project, index) => (
-            <CarouselItem key={project.id} className="pl-6 basis-[300px] md:basis-[420px]">
+            <CarouselItem key={project.id} className="pl-6 basis-full md:basis-[420px]">
               <ProjectCard project={project} index={index} onDiscover={handleDiscover} />
             </CarouselItem>
           ))}

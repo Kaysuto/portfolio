@@ -49,31 +49,8 @@ export function HeroSection() {
   return (
     <section
       id="accueil"
-      className="min-h-screen flex items-center justify-center px-6 pt-20 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-6 relative"
     >
-      {/* Dot grid background */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
-        style={{
-          backgroundImage: `radial-gradient(circle, var(--border) 1px, transparent 1px)`,
-          backgroundSize: "24px 24px",
-        }}
-      />
-
-      {/* Glow orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-24 -left-24 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.05, 0.15, 0.05] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/2 -right-24 w-80 h-80 bg-primary/20 rounded-full blur-3xl"
-        />
-      </div>
-
       <motion.div
         className="max-w-5xl mx-auto text-center relative z-10"
         initial="hidden"
@@ -125,8 +102,8 @@ export function HeroSection() {
                 size="lg"
                 className="h-11 px-5 text-sm sm:h-14 sm:px-8 sm:text-lg rounded-2xl font-bold shadow-xl transition-opacity hover:opacity-90 group flex items-center justify-center"
                 style={{
-                  backgroundColor: accentColor,
-                  color: theme === "dark" ? "#5D4A42" : "black",
+                  backgroundColor: "var(--accent)",
+                  color: "var(--background)",
                 }}
               >
                 Voir mes projets
@@ -136,18 +113,22 @@ export function HeroSection() {
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => navigate("/cv")}
-                className="h-11 px-5 text-sm sm:h-14 sm:px-8 sm:text-lg rounded-2xl border-2 font-bold flex items-center justify-center gap-2 sm:gap-3 shadow-lg group"
-                style={{ borderColor: accentColor, color: accentColor }}
-              >
-                <FileText className="w-4 h-4 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
-                Voir CV
-              </Button>
-            </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate("/cv")}
+              className="h-11 px-5 text-sm sm:h-14 sm:px-8 sm:text-lg rounded-2xl border-2 font-bold flex items-center justify-center gap-2 sm:gap-3 shadow-lg group transition-colors"
+              style={{
+                borderColor: accentColor,
+                color: accentColor,
+                backgroundColor: "transparent",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = `${accentColor}18`)}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
+            >
+              <FileText className="w-4 h-4 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
+              Voir CV
+            </motion.button>
           </motion.div>
         </div>
       </motion.div>
@@ -157,7 +138,7 @@ export function HeroSection() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.6 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer group"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3 cursor-pointer group"
         onClick={scrollToProjects}
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground group-hover:text-accent transition-colors">
