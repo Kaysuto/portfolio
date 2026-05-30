@@ -1,6 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, PluginOption } from "vite";
+import { defineConfig } from "vite";
 
 import { resolve } from 'path'
 
@@ -22,10 +22,18 @@ export default defineConfig({
     // Optimisations simplifiées pour éviter les erreurs
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          icons: ['@phosphor-icons/react'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-dom') || id.includes('/react/') || id.includes('react-router')) {
+              return 'vendor'
+            }
+            if (id.includes('@phosphor-icons')) {
+              return 'icons'
+            }
+            if (id.includes('@radix-ui')) {
+              return 'ui'
+            }
+          }
         },
         // Noms de fichiers avec hash pour cache busting optimal
         entryFileNames: 'assets/[name]-[hash].js',
@@ -56,8 +64,8 @@ export default defineConfig({
         target: 'http://100.79.95.114:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/tailscale/, ''),
-        configure: (proxy, options) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
             // Headers d'authentification pour Tailscale
             if (req.headers['apikey']) {
               proxyReq.setHeader('apikey', req.headers['apikey']);
@@ -73,7 +81,7 @@ export default defineConfig({
             // console.log(`🔄 Proxy Tailscale: ${req.method} ${req.url}`);
           });
           
-          proxy.on('proxyRes', (proxyRes, req, res) => {
+          proxy.on('proxyRes', (proxyRes, _req, _res) => {
             // Headers CORS pour Tailscale
             proxyRes.headers['Access-Control-Allow-Origin'] = '*';
             proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';  

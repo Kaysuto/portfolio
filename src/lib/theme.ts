@@ -59,7 +59,7 @@ export function initTheme(): Theme {
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     applyTheme(systemTheme);
     return systemTheme;
-  } catch (e) {
+  } catch {
     const fallback = 'light';
     applyTheme(fallback);
     return fallback;

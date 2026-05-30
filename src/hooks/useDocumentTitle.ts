@@ -61,8 +61,8 @@ export const useDocumentTitle = (
   const [currentSection, setCurrentSection] = useState("accueil");
   const [currentTitle, setCurrentTitle] = useState("");
   
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Determine the current title based on route and active section
   useEffect(() => {

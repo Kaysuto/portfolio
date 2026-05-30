@@ -7,7 +7,7 @@ const ContactSection = lazy(() => import('./ContactSection').then(module => ({ d
 
 function AboutSkeleton() {
   return (
-    <div className="py-16 px-6 max-w-5xl mx-auto space-y-16">
+    <div className="py-24 px-6 max-w-5xl mx-auto space-y-16">
       <div className="text-center space-y-4">
         <Skeleton className="h-10 w-64 mx-auto" />
         <Skeleton className="h-5 w-96 mx-auto" />
@@ -21,7 +21,7 @@ function AboutSkeleton() {
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-[2rem]" />
+            <Skeleton key={i} className="h-32 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -31,14 +31,14 @@ function AboutSkeleton() {
 
 function ProjectsSkeleton() {
   return (
-    <div className="py-16 px-6 max-w-5xl mx-auto space-y-8">
+    <div className="py-24 px-6 max-w-5xl mx-auto space-y-8">
       <div className="text-center space-y-4">
         <Skeleton className="h-10 w-48 mx-auto" />
         <Skeleton className="h-5 w-72 mx-auto" />
       </div>
       <div className="flex gap-6 overflow-hidden">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="min-w-[300px] md:min-w-[420px] h-[500px] rounded-[2.5rem] shrink-0" />
+          <Skeleton key={i} className="min-w-[300px] md:min-w-[420px] h-[500px] rounded-3xl shrink-0" />
         ))}
       </div>
     </div>
@@ -47,18 +47,18 @@ function ProjectsSkeleton() {
 
 function ContactSkeleton() {
   return (
-    <div className="py-16 px-6 max-w-5xl mx-auto space-y-8">
+    <div className="py-24 px-6 max-w-5xl mx-auto space-y-8">
       <div className="text-center space-y-4">
         <Skeleton className="h-10 w-64 mx-auto" />
         <Skeleton className="h-5 w-80 mx-auto" />
       </div>
       <div className="grid md:grid-cols-2 gap-6">
-        <Skeleton className="h-64 rounded-[2.5rem]" />
-        <Skeleton className="h-64 rounded-[2.5rem]" />
-        <Skeleton className="h-24 rounded-[2.5rem]" />
-        <Skeleton className="h-24 rounded-[2.5rem]" />
+        <Skeleton className="h-64 rounded-3xl" />
+        <Skeleton className="h-64 rounded-3xl" />
+        <Skeleton className="h-24 rounded-3xl" />
+        <Skeleton className="h-24 rounded-3xl" />
       </div>
-      <Skeleton className="h-80 rounded-[2.5rem]" />
+      <Skeleton className="h-80 rounded-3xl" />
     </div>
   )
 }

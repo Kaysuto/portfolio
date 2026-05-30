@@ -33,7 +33,7 @@ export function useCookieConsent() {
     if (storedChoices) {
       try {
         setChoices(JSON.parse(storedChoices))
-      } catch (e) {
+      } catch {
         setChoices(DEFAULT_CHOICES)
       }
     }

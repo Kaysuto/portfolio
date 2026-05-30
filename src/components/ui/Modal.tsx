@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { Button } from './button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -66,7 +65,7 @@ export function Modal({
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className={cn(
-              "relative bg-card/90 backdrop-blur-2xl border border-border/50 rounded-[2.5rem] shadow-2xl w-full overflow-hidden",
+              "relative bg-card/90 backdrop-blur-2xl border border-border/50 rounded-3xl shadow-2xl w-full overflow-hidden",
               maxWidth,
               className
             )}

@@ -6,18 +6,13 @@ import {
   Briefcase, 
   GraduationCap, 
   Wrench, 
-  Heart, 
-  Linkedin, 
   MapPin, 
   Car, 
   ExternalLink,
   CheckCircle2,
   Globe,
-  Code2,
   Layout as LayoutIcon,
   Database,
-  Video,
-  Smartphone,
   ShieldCheck,
   KeyRound,
   Palette,
@@ -29,20 +24,11 @@ import {
   Headset,
   Dumbbell
 } from 'lucide-react';
+import { LinkedinLogo as Linkedin } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useTheme } from '@/hooks/use-theme';
+import { useSeo } from '@/hooks/useSeo';
 import { LinkedInFooterModal } from '@/components/ui/SocialModals';
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
 
 const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
@@ -54,14 +40,29 @@ const itemVariants: Variants = {
 };
 
 const CVPage: React.FC = () => {
-  useDocumentTitle("CV", { enableTypingAnimation: false });
-  const { theme } = useTheme();
+  useSeo({
+    title: "Kimiya - CV",
+    description: "CV de Kimiya Kaysuto : Technicien Informatique Polyvalent Junior, expert infrastructure, réseau et développement web full-stack.",
+    path: "/cv",
+    type: "profile",
+  });
   const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false);
-  const [selectedTech, setSelectedTech] = useState<{name: string, slug: string, url: string, iconUrl?: string} | null>(null);
-  const [isTechModalOpen, setIsTechModalOpen] = useState(false);
-  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
+  const [, setSelectedTech] = useState<{name: string, slug: string, url: string, iconUrl?: string} | null>(null);
+  const [, setIsTechModalOpen] = useState(false);
 
   const experiences = [
+    {
+      company: "Magna Engineered Glass Europe",
+      role: "Technicien Informatique Polyvalent Junior",
+      period: "2026 - Présent",
+      missions: [
+        "Gestion du parc informatique",
+        "Support utilisateurs",
+        "Administration réseau",
+        "Maintenance de l'infrastructure interne",
+        "Développement des applications internes"
+      ]
+    },
     {
       company: "Experis France & Exaion",
       role: "Technicien Data Center",
@@ -197,7 +198,7 @@ const CVPage: React.FC = () => {
               <div className="flex flex-wrap justify-center md:justify-start gap-4 text-muted-foreground font-medium">
                 <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
                   <Briefcase className="w-4 h-4 text-accent" />
-                  <span>Technicien Data Center</span>
+                  <span>Technicien Informatique</span>
                 </div>
                 <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
                   <MapPin className="w-4 h-4 text-accent" />
@@ -313,7 +314,7 @@ const CVPage: React.FC = () => {
                       <div className="absolute left-0 top-1 w-9 h-9 bg-background border-2 border-accent rounded-full flex items-center justify-center z-10">
                         <div className="w-2 h-2 bg-accent rounded-full" />
                       </div>
-                      <div className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-[2rem] p-8 hover:border-accent/30 transition-all group">
+                      <div className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-8 hover:border-accent/30 transition-all group">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                           <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">{exp.role}</h3>
                           <span className="text-sm font-bold text-accent/60 bg-accent/5 px-3 py-1 rounded-full">{exp.period}</span>
@@ -412,7 +413,7 @@ const CVPage: React.FC = () => {
                       whileInView="visible"
                       viewport={{ once: true }}
                       whileHover={{ y: -5, scale: 1.02 }}
-                      className="flex flex-col items-center justify-center gap-4 bg-card/30 backdrop-blur-sm border border-border/40 p-6 rounded-[2rem] hover:border-accent/30 transition-all group text-center"
+                      className="flex flex-col items-center justify-center gap-4 bg-card/30 backdrop-blur-sm border border-border/40 p-6 rounded-2xl hover:border-accent/30 transition-all group text-center"
                     >
                       <div className="p-4 bg-accent/5 rounded-2xl group-hover:bg-accent/10 transition-colors">
                         <interest.icon className="w-8 h-8 text-accent group-hover:scale-110 transition-transform" />

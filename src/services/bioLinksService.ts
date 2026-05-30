@@ -55,27 +55,19 @@ export class BioLinksService {
   }
 
   static async getBioLinks(): Promise<BioLink[]> {
-    try {
-      const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
-      return bioLinks.map(link => ({
-        ...link,
-        icon: bioLinkIcons[link.title] || 'LinkSimple'
-      }));
-    } catch (error) {
-      throw error;
-    }
+    const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
+    return bioLinks.map(link => ({
+      ...link,
+      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    }));
   }
 
   static async getAllBioLinks(): Promise<BioLink[]> {
-    try {
-      const bioLinks = localLinks.filter(link => link.type === 'bio_link') as BioLink[];
-      return bioLinks.map(link => ({
-        ...link,
-        icon: bioLinkIcons[link.title] || 'LinkSimple'
-      }));
-    } catch (error) {
-      throw error;
-    }
+    const bioLinks = localLinks.filter(link => link.type === 'bio_link') as BioLink[];
+    return bioLinks.map(link => ({
+      ...link,
+      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    }));
   }
 
   static updateIconMapping(title: string, icon: string) {

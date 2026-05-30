@@ -69,5 +69,5 @@ MIT — voir `LICENSE`.
 ---
 
 <div align="center">
-  <p>© 2025 Kimiya Kaysuto · <a href="https://kimiya-portfolio.vercel.app">kimiya-portfolio.vercel.app</a></p>
+  <p>© 2025 Kimiya Kaysuto · <a href="https://kaysuto.fr">kaysuto.fr</a></p>
 </div>

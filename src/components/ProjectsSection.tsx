@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence, Variants } from "framer-motion"
-import { Github, ExternalLink, Users, GitBranch, Star } from "lucide-react"
+import { motion, Variants } from "framer-motion"
+import { Users, GitBranch, Star } from "lucide-react"
+import { GithubLogo as Github } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { ProjectCards } from "@/components/ProjectCards"
 import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 import { GitHubModal } from "@/components/ui/GitHubModal"
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-
-interface GitHubStats {
-  public_repos: number
-  followers: number
-  following: number
-}
+import { fetchGitHubStats, type GitHubStats } from "@/services/githubService"
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -38,19 +33,23 @@ const itemVariants: Variants = {
 
 export function ProjectsSection() {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
 
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
   const reposCounter = useCounterAnimation({ 
-    end: githubStats?.public_repos || 0, 
+    end: githubStats?.publicRepos || 0, 
     duration: 2000 
   })
   const followersCounter = useCounterAnimation({ 
     end: githubStats?.followers || 0, 
     duration: 2300 
+  })
+  const starsCounter = useCounterAnimation({ 
+    end: githubStats?.totalStars || 0, 
+    duration: 2100 
   })
   const followingCounter = useCounterAnimation({ 
     end: githubStats?.following || 0, 
@@ -58,29 +57,14 @@ export function ProjectsSection() {
   })
 
   useEffect(() => {
-    const fetchGitHubStats = async () => {
-      try {
-        const response = await fetch("https://api.github.com/users/Kaysuto")
-        if (response.ok) {
-          const data = await response.json()
-          setGithubStats({
-            public_repos: data.public_repos,
-            followers: data.followers,
-            following: data.following
-          })
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération des stats GitHub:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchGitHubStats()
+      .then(setGithubStats)
+      .catch((error) => console.error("Erreur lors de la récupération des stats GitHub:", error))
+      .finally(() => setLoading(false))
   }, [])
 
   return (
-    <section id="projets" className="py-16 px-6 lg:px-12 relative overflow-hidden">
+    <section id="projets" className="py-24 px-6 lg:px-12 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <motion.div 
@@ -125,7 +109,7 @@ export function ProjectsSection() {
 
         {/* GitHub Stats Card */}
         <motion.div className="flex justify-center" variants={itemVariants}>
-          <Card className="w-full max-w-2xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-[2.5rem]">
+          <Card className="w-full max-w-2xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-3xl">
             <CardContent className="p-6 md:p-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
                 <div className="flex items-center gap-4">
@@ -139,7 +123,7 @@ export function ProjectsSection() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <GitBranch className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
@@ -152,6 +136,17 @@ export function ProjectsSection() {
                 </div>
                 
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
+                  <Star className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
+                  <span 
+                    ref={starsCounter.elementRef}
+                    className="text-2xl font-bold text-foreground tabular-nums mb-1"
+                  >
+                    {starsCounter.count}
+                  </span>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Étoiles</p>
+                </div>
+
+                <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <Users className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followersCounter.elementRef}
@@ -163,7 +158,7 @@ export function ProjectsSection() {
                 </div>
                 
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
-                  <Star className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
+                  <Users className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
                   <span 
                     ref={followingCounter.elementRef}
                     className="text-2xl font-bold text-foreground tabular-nums mb-1"

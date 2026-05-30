@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ArrowUpRight, User, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
+import { motion } from "framer-motion"
+import { User, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
 import { ThemeController } from "./ThemeController"
 import { cn } from "@/lib/utils"
 import { useNavigate, useLocation } from "react-router-dom"
+import { preloadRoute } from "@/routes/lazyRoutes"
 
 // ─── Animation tokens ────────────────────────────────────────────────────────
 const LUMA_EASE = [0.22, 1, 0.36, 1] as const
@@ -48,17 +49,28 @@ export function Navbar() {
     const routeMatch = ROUTE_LINKS.find(l => l.href === location.pathname)
     if (routeMatch) { setActiveId(routeMatch.id); return }
 
+    const intersecting = new Set<string>()
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id) })
+        entries.forEach(e => {
+          if (e.isIntersecting) intersecting.add(e.target.id)
+          else intersecting.delete(e.target.id)
+        })
+        const first = SCROLL_LINKS.find(l => intersecting.has(l.id))
+        setActiveId(first?.id ?? null)
       },
       { rootMargin: "-40% 0px -55% 0px" }
     )
-    SCROLL_LINKS.forEach(l => {
-      const el = document.getElementById(l.id)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
+    const observeAll = () => {
+      SCROLL_LINKS.forEach(l => {
+        const el = document.getElementById(l.id)
+        if (el) observer.observe(el)
+      })
+    }
+    observeAll()
+    // Retry for lazy-loaded sections
+    const timers = [200, 800, 2000].map(d => setTimeout(observeAll, d))
+    return () => { timers.forEach(clearTimeout); observer.disconnect() }
   }, [location.pathname])
 
   // Pending scroll after navigation
@@ -86,49 +98,45 @@ export function Navbar() {
     scrollTo(link.id)
   }, [navigate, location.pathname, scrollTo])
 
+  const handleLinkHover = useCallback((link: NavLink) => {
+    if (link.href.startsWith("/")) preloadRoute(link.href)
+  }, [])
+
   const handleLogoClick = useCallback(() => {
     if (location.pathname !== "/") { navigate("/"); return }
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [navigate, location.pathname])
 
-  const handleContactClick = useCallback(() => {
-    if (location.pathname !== "/") {
-      sessionStorage.setItem("scrollToSection", "contact")
-      navigate("/")
-      return
-    }
-    scrollTo("contact")
-  }, [navigate, location.pathname, scrollTo])
-
-  // ─── Shared pill animation ──────────────────────────────────────────────────
-  const pillMotion = {
-    initial:    { y: -16, opacity: 0 },
-    animate:    { y: 0, opacity: 1 },
-    exit:       { y: -16, opacity: 0 },
-    transition: { duration: 0.45, ease: LUMA_EASE },
-  }
 
   // ─── Shared active button ───────────────────────────────────────────────────
-  const NavBtn = ({ link }: { link: NavLink }) => (
-    <button
-      onClick={() => handleLinkClick(link)}
-      className={cn(
-        "relative px-4 py-2 rounded-full text-sm transition-all duration-150",
-        activeId === link.id
-          ? "text-foreground font-semibold"
-          : "text-muted-foreground hover:text-foreground"
-      )}
-    >
-      {activeId === link.id && (
-        <motion.div
-          layoutId="nav-active"
-          className="absolute inset-0 rounded-full bg-foreground/[0.12]"
-          transition={{ type: "spring", stiffness: 420, damping: 38 }}
-        />
-      )}
-      <span className="relative z-10">{link.label}</span>
-    </button>
-  )
+  const NavBtn = ({ link }: { link: NavLink }) => {
+    const Icon = link.icon
+    return (
+      <button
+        onClick={() => handleLinkClick(link)}
+        onMouseEnter={() => handleLinkHover(link)}
+        onFocus={() => handleLinkHover(link)}
+        className={cn(
+          "relative px-4 py-2 rounded-full text-sm transition-colors duration-150",
+          activeId === link.id
+            ? "text-foreground font-semibold"
+            : "text-muted-foreground hover:bg-foreground/10"
+        )}
+      >
+        {activeId === link.id && (
+          <motion.div
+            layoutId="nav-active"
+            className="absolute inset-0 rounded-full bg-accent/20 ring-1 ring-accent/30"
+            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          />
+        )}
+        <span className="relative z-10 flex items-center gap-1.5 whitespace-nowrap">
+          <Icon className="w-3.5 h-3.5 shrink-0" />
+          {link.label}
+        </span>
+      </button>
+    )
+  }
 
   // ─── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -142,7 +150,7 @@ export function Navbar() {
       >
         <motion.div
           animate={{
-            backgroundColor: isVisible ? "color-mix(in oklch, var(--background) 70%, transparent)" : "transparent",
+            backgroundColor: isVisible ? "var(--card)" : "transparent",
             borderColor: isVisible ? "color-mix(in oklch, var(--border) 8%, transparent)" : "transparent",
             boxShadow: isVisible ? "0 4px 24px 0 rgba(0,0,0,0.10)" : "none",
             backdropFilter: isVisible ? "blur(20px)" : "blur(0px)",
@@ -173,14 +181,6 @@ export function Navbar() {
               <Sep />
 
               <ThemeController />
-
-              <button
-                onClick={() => handleContactClick()}
-                className="flex items-center gap-1.5 h-9 px-5 rounded-full bg-accent text-background text-sm font-medium hover:opacity-75 transition-opacity shrink-0 ring-1 ring-accent/60"
-              >
-                Me contacter
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
         </motion.div>
       </motion.header>
 
@@ -194,6 +194,7 @@ export function Navbar() {
               <button
                 key={link.id}
                 onClick={() => handleLinkClick(link)}
+                onTouchStart={() => handleLinkHover(link)}
                 className="flex flex-col items-center gap-1 px-1 py-1 transition-colors duration-150"
               >
                 <div className={cn(

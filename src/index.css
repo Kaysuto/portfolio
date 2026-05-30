@@ -25,9 +25,25 @@ html.modal-open {
     border-color: var(--border);
     font-family: var(--font-sans);
   }
+
+  /* Opaque underlay so the page dot pattern doesn't bleed through translucent cards */
+  [data-slot="card"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--card);
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+html {
+  background-color: var(--background);
 }
 
 body {
+  background-color: var(--background);
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 

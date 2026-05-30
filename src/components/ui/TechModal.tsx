@@ -1,5 +1,5 @@
 import { Modal } from "./Modal";
-import { ExternalLink, Globe, Zap } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "./button";
 import { useTheme } from "@/hooks/use-theme";
 

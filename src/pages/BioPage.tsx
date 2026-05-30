@@ -10,21 +10,20 @@ import {
   Palette, 
   Ghost, 
   Paintbrush, 
-  Github, 
   Link as LinkIcon,
   Loader2,
   AlertCircle,
   Tv,
   Film,
   Music,
-  Twitch,
   Disc
 } from 'lucide-react';
+import { GithubLogo as Github, TwitchLogo as Twitch } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/Modal';
-import { BioLinksService, BioLink } from '@/services/bioLinksService';
+import { BioLinksService } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useSeo } from '@/hooks/useSeo';
 import { useTheme } from '@/hooks/use-theme';
 
 const containerVariants: Variants = {
@@ -47,10 +46,15 @@ const itemVariants: Variants = {
 };
 
 const BioPage: React.FC = () => {
-  useDocumentTitle("Bio", { enableTypingAnimation: false });
+  useSeo({
+    title: "Kimiya - Bio",
+    description: "Tous les liens de Kimiya Kaysuto : projets, réseaux sociaux, GitHub, Twitch et créations en un seul endroit.",
+    path: "/bio",
+    type: "profile",
+  });
   const { theme } = useTheme();
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
-  const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
+  const { isModalOpen, openModal: openModalBase, closeModal } = useModal();
 
   const groupedLinks = BioLinksService.getGroupedBioLinks();
   const isLoading = false;
@@ -136,7 +140,7 @@ const BioPage: React.FC = () => {
                 <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Chargement...</p>
               </motion.div>
             ) : error ? (
-              <motion.div key="error" className="text-center py-20 bg-destructive/5 border border-destructive/20 rounded-[2.5rem] p-12">
+              <motion.div key="error" className="text-center py-20 bg-destructive/5 border border-destructive/20 rounded-3xl p-12">
                 <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-6" />
                 <p className="text-destructive text-lg mb-8 font-bold">Erreur de chargement</p>
                 <Button onClick={() => window.location.reload()} variant="outline">Réessayer</Button>
@@ -217,7 +221,7 @@ const BioPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-accent/5 rounded-[1.5rem] p-6 border border-accent/10">
+            <div className="bg-accent/5 rounded-2xl p-6 border border-accent/10">
               <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">Lien externe :</p>
               <div className="bg-background/50 border border-border/50 rounded-xl p-4">
                 <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>

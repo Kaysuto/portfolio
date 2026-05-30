@@ -1,5 +1,6 @@
 import { Modal } from "./Modal";
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GithubLogo as Github } from "@phosphor-icons/react";
 import { Button } from "./button";
 import { useTheme } from "@/hooks/use-theme";
 

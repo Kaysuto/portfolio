@@ -2,8 +2,14 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, ShieldCheck, Scale, Globe, Lock } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useSeo } from "@/hooks/useSeo"
 
 export default function MentionsLegales() {
+  useSeo({
+    title: "Kimiya - Mentions légales",
+    description: "Mentions légales et politique de confidentialité du portfolio de Kimiya Kaysuto.",
+    path: "/legal-notice",
+  });
   return (
     <div className="min-h-screen relative flex flex-col">
       <div className="flex-1 pt-32 pb-20 px-6 relative z-10">
@@ -37,7 +43,7 @@ export default function MentionsLegales() {
                   <Scale size={24} />
                   <h2 className="text-xl font-bold uppercase tracking-widest">Éditeur</h2>
                 </div>
-                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-4">
+                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-4">
                   <div>
                     <p className="font-black text-lg">Kaysuto Kimiya</p>
                     <p className="text-muted-foreground font-medium">Entrepreneur individuel</p>
@@ -66,7 +72,7 @@ export default function MentionsLegales() {
                   <Globe size={24} />
                   <h2 className="text-xl font-bold uppercase tracking-widest">Hébergement</h2>
                 </div>
-                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-6">
+                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
                   <div>
                     <p className="font-black text-sm uppercase tracking-wider text-accent/70 mb-2">Plateforme</p>
                     <p className="font-bold">Vercel Inc.</p>
@@ -90,7 +96,7 @@ export default function MentionsLegales() {
                 <Lock size={24} />
                 <h2 className="text-xl font-bold uppercase tracking-widest">Données personnelles &amp; Cookies</h2>
               </div>
-              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-6">
+              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
                 <div className="border-l-4 border-accent pl-6">
                   <p className="text-muted-foreground font-medium leading-relaxed">
                     Ce site respecte votre vie privée. Aucune donnée personnelle n'est collectée à des fins commerciales ou publicitaires.
@@ -148,7 +154,7 @@ export default function MentionsLegales() {
                 <ShieldCheck size={24} />
                 <h2 className="text-xl font-bold uppercase tracking-widest">Propriété Intellectuelle</h2>
               </div>
-              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-[2rem] p-8 space-y-6">
+              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
                 {/* Copyright Principal */}
                 <div className="border-l-4 border-accent pl-6 space-y-3">
                   <p className="text-foreground font-black text-lg">

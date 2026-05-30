@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/Modal';
 import { BioLinksService, BioLink } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
-import { Badge } from '@/components/ui/badge';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -35,7 +34,7 @@ export function BioSection() {
   const [error, setError] = useState<string | null>(null);
   
   const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
-  const { isModalOpen, modalMounted, isClosing, openModal: openModalBase, closeModal } = useModal();
+  const { isModalOpen, openModal: openModalBase, closeModal } = useModal();
 
   const getIcon = (iconName: string) => {
     const iconMap: Record<string, any> = {
@@ -60,7 +59,7 @@ export function BioSection() {
         setError(null);
         const links = await BioLinksService.getBioLinks();
         setBioLinks(links);
-      } catch (err) {
+      } catch {
         setError('Erreur lors du chargement des liens');
       } finally {
         setIsLoading(false);

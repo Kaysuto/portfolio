@@ -8,7 +8,7 @@ import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
 export function AboutSection() {
   const ageCounter = useCounterAnimation({ end: 23, duration: 1800 })
-  const experienceCounter = useCounterAnimation({ end: 15, duration: 1800 })
+  const experienceCounter = useCounterAnimation({ end: 11, duration: 1800 })
 
   const [selectedTech, setSelectedTech] = useState<{name: string, slug: string, url: string} | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -17,22 +17,26 @@ export function AboutSection() {
     {
       icon: <Server className="w-6 h-6 text-accent" />,
       title: "Expertise Infra",
-      description: "Rigueur, sécurité et haute disponibilité héritées de mon parcours en datacenter."
+      description: "Rigueur, sécurité et haute disponibilité héritées de mon parcours en datacenter.",
+      span: "sm:col-span-2"
     },
     {
       icon: <Brain className="w-6 h-6 text-accent" />,
       title: "Modèles LLM",
-      description: "Exploration et intégration de l'IA pour créer des applications intelligentes."
+      description: "Exploration et intégration de l'IA pour créer des applications intelligentes.",
+      span: ""
     },
     {
       icon: <Code className="w-6 h-6 text-accent" />,
       title: "Qualité Code",
-      description: "Architecture propre et standards d'excellence pour des projets pérennes."
+      description: "Architecture propre et standards d'excellence pour des projets pérennes.",
+      span: ""
     },
     {
       icon: <Heart className="w-6 h-6 text-accent" />,
       title: "User First",
-      description: "Conception d'interfaces intuitives centrées sur l'expérience utilisateur."
+      description: "Conception d'interfaces intuitives centrées sur l'expérience utilisateur.",
+      span: "sm:col-span-2"
     }
   ]
 
@@ -97,7 +101,7 @@ export function AboutSection() {
   }
 
   return (
-    <section id="apropos" className="py-16 px-6 relative">
+    <section id="apropos" className="py-24 px-6 relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
@@ -125,7 +129,7 @@ export function AboutSection() {
             À propos de <span className="text-accent">moi</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium">
-            Créateur passionné de 23 ans, j'allie expertise technique en infrastructure et créativité en tant que Product Builder.
+            Technicien Informatique le jour, Product Builder la nuit — 11 ans de passion autodidacte pour la tech.
           </p>
         </motion.div>
 
@@ -139,10 +143,10 @@ export function AboutSection() {
                 Mon parcours
               </h3>
               <p className="text-muted-foreground text-base leading-relaxed mb-4 font-medium">
-                Mon expérience de 3 ans en datacenter m'a forgé une culture de la fiabilité et de la performance. Aujourd'hui, j'applique cette rigueur à la création d'applications web innovantes, de design pixel art et d'architectures réseau complexes.
+                Après 3 ans en datacenter, je suis désormais Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe — gestion du parc, support utilisateurs, administration réseau et maintenance de l'infrastructure interne.
               </p>
               <p className="text-muted-foreground text-base leading-relaxed font-medium">
-                Cette vision globale me permet de gérer aussi bien l'infrastructure matérielle que le développement logiciel et l'expérience utilisateur.
+                La nuit, je construis des applications web, explore l'IA et crée des expériences digitales. Cette double vie m'a forgé une vision à 360° : de l'infrastructure matérielle au produit logiciel.
               </p>
             </div>
 
@@ -170,18 +174,20 @@ export function AboutSection() {
                   </span>
                   <span className="text-lg font-bold text-muted-foreground">ans</span>
                 </div>
-                <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Expérience</p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-1 font-bold">Exp. autodidacte</p>
               </div>
             </div>
           </motion.div>
 
-          {/* Right - Skills Cards */}
-          <div className="grid sm:grid-cols-2 gap-4">
+          {/* Right - Skills Bento */}
+          <div className="grid sm:grid-cols-2 auto-rows-[1fr] gap-4">
             {skills.map((skill, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 group rounded-[2rem]">
-                  <CardContent className="p-6">
-                    <div className="mb-4 p-3 bg-accent/15 rounded-xl w-fit group-hover:bg-accent/25 transition-colors duration-300">
+              <motion.div key={index} variants={fadeInUp} className={skill.span}>
+                <Card className="group relative h-full overflow-hidden bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 rounded-2xl">
+                  {/* Halo décoratif */}
+                  <div className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 bg-accent/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <CardContent className="relative p-6">
+                    <div className="mb-4 p-3 bg-accent/15 rounded-xl w-fit group-hover:bg-accent/25 group-hover:scale-110 transition-all duration-300">
                       {skill.icon}
                     </div>
                     <h4 className="font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react"
-import { ExternalLink, Calendar, Github, Star, Heart, Rocket } from "lucide-react"
+import { ExternalLink, Calendar, Star, Heart, Rocket } from "lucide-react"
+import { GithubLogo as Github } from "@phosphor-icons/react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -48,7 +49,7 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
       whileHover={{ y: -8, transition: { type: "spring", stiffness: 280, damping: 22 } }}
       className="h-full"
     >
-      <Card className="relative h-[500px] flex flex-col overflow-hidden bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 rounded-[2.5rem] shadow-lg group/card">
+      <Card className="relative h-[500px] flex flex-col overflow-hidden bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-xl hover:shadow-accent/10 transition-all duration-300 rounded-3xl shadow-lg group/card">
         {/* Image */}
         <div className="relative h-56 w-full overflow-hidden bg-card isolate shrink-0">
           {project.image_url ? (

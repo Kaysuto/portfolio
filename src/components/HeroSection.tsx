@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { ArrowRight, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
@@ -49,8 +49,27 @@ export function HeroSection() {
   return (
     <section
       id="accueil"
-      className="min-h-screen flex items-center justify-center px-6 relative"
+      className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden"
     >
+      {/* Ambient background glow */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <motion.div
+          className="absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+          style={{ backgroundColor: `${accentColor}14` }}
+          animate={{ scale: [1, 1.08, 1], opacity: [0.6, 0.85, 0.6] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `radial-gradient(${accentColor} 1px, transparent 1px)`,
+            backgroundSize: "32px 32px",
+            maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent)",
+            WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent)",
+          }}
+        />
+      </div>
+
       <motion.div
         className="max-w-5xl mx-auto text-center relative z-10"
         initial="hidden"
@@ -77,7 +96,7 @@ export function HeroSection() {
 
         {/* Animated subtitle */}
         <motion.div variants={fadeInUp}>
-          <div className="text-lg md:text-xl text-muted-foreground mb-16 font-medium tracking-tight flex flex-col items-center justify-center">
+          <div className="text-lg md:text-xl text-muted-foreground mb-10 font-medium tracking-tight flex flex-col items-center justify-center">
             <p>
               Passionné par le{" "}
               <span className="font-bold inline-block" style={{ color: accentColor }}>
@@ -121,16 +140,17 @@ export function HeroSection() {
               style={{
                 borderColor: accentColor,
                 color: accentColor,
-                backgroundColor: "transparent",
+                backgroundColor: "var(--background)",
               }}
-              onMouseEnter={e => (e.currentTarget.style.backgroundColor = `${accentColor}18`)}
-              onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = "color-mix(in oklch, var(--accent) 12%, var(--background))")}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = "var(--background)")}
             >
               <FileText className="w-4 h-4 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
               Voir CV
             </motion.button>
           </motion.div>
         </div>
+
       </motion.div>
 
       {/* Scroll indicator */}

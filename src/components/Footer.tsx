@@ -1,22 +1,16 @@
-import { motion, AnimatePresence } from "framer-motion"
-import { Github, Linkedin, ArrowUp, Scale, FileText, User } from "lucide-react"
+import { motion } from "framer-motion"
+import { Scale, FileText, User, FolderOpen, Mail, BookOpen } from "lucide-react"
+import { GithubLogo as Github, LinkedinLogo as Linkedin } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const [isGithubModalOpen, setIsGithubModalOpen] = useState(false)
   const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false)
-  const [showBackToTop, setShowBackToTop] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setShowBackToTop(window.scrollY > 400)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -59,7 +53,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium">
-              Product Builder polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux. Toujours en quête d'innovation et de nouveaux défis.
+              Technicien Informatique le jour, Product Builder la nuit. Réseau, code & créativité.
             </p>
           </motion.div>
 
@@ -68,18 +62,17 @@ export function Footer() {
             <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Navigation</h4>
             <nav className="flex flex-col gap-4">
               {[
-                { id: 'accueil', label: 'Accueil' },
-                { id: 'apropos', label: 'À propos' },
-                { id: 'projets', label: 'Projets' },
-                { id: 'contact', label: 'Contact' }
-              ].map((link) => (
+                { id: 'apropos', label: 'À propos', icon: User },
+                { id: 'projets', label: 'Projets',  icon: FolderOpen },
+                { id: 'contact', label: 'Contact',  icon: Mail },
+              ].map(({ id, label, icon: Icon }) => (
                 <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
+                  key={id}
+                  onClick={() => scrollToSection(id)}
                   className="text-muted-foreground hover:text-accent transition-all text-base font-bold text-left w-fit group flex items-center gap-3"
                 >
-                  <span className="w-2 h-2 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-300" />
-                  {link.label}
+                  <Icon className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  {label}
                 </button>
               ))}
             </nav>
@@ -90,8 +83,8 @@ export function Footer() {
             <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Pages</h4>
             <nav className="flex flex-col gap-4">
               {[
-                { to: '/cv', label: 'CV', icon: FileText },
-                { to: '/bio', label: 'Bio', icon: User },
+                { to: '/cv',           label: 'CV',              icon: FileText },
+                { to: '/bio',          label: 'Bio',             icon: BookOpen },
                 { to: '/legal-notice', label: 'Mentions Légales', icon: Scale },
               ].map(({ to, label, icon: Icon }) => (
                 <Link
@@ -99,7 +92,6 @@ export function Footer() {
                   to={to}
                   className="text-muted-foreground hover:text-accent transition-all text-base font-bold w-fit group flex items-center gap-3"
                 >
-                  <span className="w-2 h-2 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-300" />
                   <Icon className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                   {label}
                 </Link>
@@ -112,17 +104,17 @@ export function Footer() {
             <h4 className="text-lg font-bold text-foreground tracking-widest uppercase">Réseaux</h4>
             <div className="flex items-center gap-4">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="w-12 h-12 rounded-2xl border-border/50 hover:border-accent hover:text-accent transition-all shadow-sm"
+                className="w-12 h-12 rounded-2xl border border-border/50 hover:border-accent hover:text-accent hover:bg-accent/10 transition-all shadow-sm"
                 onClick={() => setIsGithubModalOpen(true)}
               >
                 <Github className="w-6 h-6" />
               </Button>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="w-12 h-12 rounded-2xl border-border/50 hover:border-accent hover:text-accent transition-all shadow-sm"
+                className="w-12 h-12 rounded-2xl border border-border/50 hover:border-accent hover:text-accent hover:bg-accent/10 transition-all shadow-sm"
                 onClick={() => setIsLinkedinModalOpen(true)}
               >
                 <Linkedin className="w-6 h-6" />
@@ -143,27 +135,6 @@ export function Footer() {
               <span className="text-foreground tracking-tight">Kaysuto Kimiya</span>
               <span className="text-xs opacity-70">• Tous droits réservés</span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-8">
-            <AnimatePresence>
-              {showBackToTop && (
-                <motion.button
-                  key="back-to-top"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                  whileHover={{ y: -4, scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="w-12 h-12 flex items-center justify-center bg-accent text-accent-foreground rounded-2xl transition-colors group"
-                  title="Retour en haut"
-                >
-                  <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
-                </motion.button>
-              )}
-            </AnimatePresence>
           </div>
         </motion.div>
       </motion.div>

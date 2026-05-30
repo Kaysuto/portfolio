@@ -1,6 +1,5 @@
 import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
-import { motion } from "framer-motion"
 import { AboutSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
@@ -22,7 +21,7 @@ export function PortfolioApp() {
           if (registration.waiting) {
             registration.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
-        } catch (error) {
+        } catch {
           // Silently fail
         }
       };
@@ -37,19 +36,6 @@ export function PortfolioApp() {
 
   return (
     <div className="relative">
-      {/* Background unifié sur toutes les sections */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        {/* Dot grid */}
-        <div
-          className="absolute inset-0 opacity-70 dark:opacity-35"
-          style={{
-            backgroundImage: `radial-gradient(circle, var(--border) 1.5px, transparent 1.5px)`,
-            backgroundSize: "28px 28px",
-          }}
-        />
-
-      </div>
-
       <HeroSection />
       <Suspense fallback={<AboutSectionSkeleton />}>
         <AboutSection />
@@ -70,8 +56,8 @@ export function PortfolioApp() {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya Kaysuto",
-            "jobTitle": "Product Builder",
-            "description": "Product Builder polyvalent avec une expertise dans de multiples domaines : réseau, développement, design pixel art, création de mini-jeux Minecraft",
+            "jobTitle": "Technicien Informatique & Product Builder",
+            "description": "Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe le jour, Product Builder la nuit — 11 ans de passion autodidacte pour le code, les réseaux et la création.",
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",
@@ -80,7 +66,7 @@ export function PortfolioApp() {
             "knowsAbout": ["React", "TypeScript", "Node.js", "Réseau", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"],
             "worksFor": {
               "@type": "Organization",
-              "name": "Freelance"
+              "name": "Magna Engineered Glass Europe"
             }
           })
         }}

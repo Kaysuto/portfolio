@@ -58,7 +58,7 @@ export function PrivacyBadge() {
           exit={{ opacity: 0, y: 50, scale: 0.95 }}
           className="fixed bottom-6 left-6 right-6 md:left-6 md:right-auto md:max-w-md z-[100]"
         >
-          <Card className="bg-card/95 backdrop-blur-2xl border-border/50 shadow-2xl rounded-[2.5rem] overflow-hidden relative">
+          <Card className="bg-card/95 backdrop-blur-2xl border-border/50 shadow-2xl rounded-3xl overflow-hidden relative">
             <AnimatePresence mode="wait">
               {view === 'summary' ? (
                 <motion.div
