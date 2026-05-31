@@ -52,6 +52,10 @@ depcheck.txt
 # Dossiers d'outils locaux à ignorer complètement
 .kilocode/
 .cursor/
+.claude/
+.vercel/
+.github/
+CLAUDE.md
 
 # Fichiers vides générés automatiquement
 create-ip-whitelist.sql
