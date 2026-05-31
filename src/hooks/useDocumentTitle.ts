@@ -8,24 +8,24 @@ interface UseDocumentTitleOptions {
   dynamicSections?: boolean;
 }
 
-const PREFIX = "Kimiya - ";
+const PREFIXE = "Kimiya - ";
 
-const detectActiveSection = (): string => {
-  let activeSection = "accueil";
+const detecterSectionActive = (): string => {
+  let sectionActive = "accueil";
   for (const id of SECTIONS) {
     const element = document.getElementById(id);
     if (element) {
-      const rect = element.getBoundingClientRect();
-      if (rect.top <= 100 && rect.bottom >= 100) {
-        activeSection = id;
+      const rectangle = element.getBoundingClientRect();
+      if (rectangle.top <= 100 && rectangle.bottom >= 100) {
+        sectionActive = id;
       }
     }
   }
-  return activeSection;
+  return sectionActive;
 };
 
-const getSectionTitle = (section: string, basePath: string = ""): string => {
-  const titleMap: Record<string, string> = {
+const obtenirTitreSection = (section: string, cheminBase: string = ""): string => {
+  const mapTitres: Record<string, string> = {
     accueil: "Accueil",
     apropos: "À propos",
     projets: "Projets",
@@ -36,17 +36,17 @@ const getSectionTitle = (section: string, basePath: string = ""): string => {
     login: "Connexion Admin"
   };
 
-  if (basePath === "/bio") return titleMap.bio;
-  if (basePath === "/maintenance") return titleMap.maintenance;
-  if (basePath.includes("/admin")) {
-    return basePath.includes("/login") ? titleMap.login : titleMap.admin;
+  if (cheminBase === "/bio") return mapTitres.bio;
+  if (cheminBase === "/maintenance") return mapTitres.maintenance;
+  if (cheminBase.includes("/admin")) {
+    return cheminBase.includes("/login") ? mapTitres.login : mapTitres.admin;
   }
 
-  return titleMap[section] || titleMap.accueil;
+  return mapTitres[section] || mapTitres.accueil;
 };
 
 export const useDocumentTitle = (
-  baseTitle?: string,
+  titreBase?: string,
   options: UseDocumentTitleOptions = {}
 ) => {
   const {
@@ -56,95 +56,95 @@ export const useDocumentTitle = (
   } = options;
 
   const location = useLocation();
-  const [displayTitle, setDisplayTitle] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [currentSection, setCurrentSection] = useState("accueil");
-  const [currentTitle, setCurrentTitle] = useState("");
-  
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [titreAffiche, setTitreAffiche] = useState('');
+  const [estEnFrappe, setEstEnFrappe] = useState(false);
+  const [sectionCourante, setSectionCourante] = useState("accueil");
+  const [titreCourant, setTitreCourant] = useState("");
 
-  // Determine the current title based on route and active section
+  const refMinuteurFrappe = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const refMinuteurDefilement = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Détermine le titre courant en fonction de la route et de la section active
   useEffect(() => {
-    let titlePart: string;
+    let partieTitre: string;
     if (dynamicSections && location.pathname === "/") {
-      const section = detectActiveSection();
-      setCurrentSection(section);
-      titlePart = getSectionTitle(section);
+      const section = detecterSectionActive();
+      setSectionCourante(section);
+      partieTitre = obtenirTitreSection(section);
     } else {
-      titlePart = baseTitle || getSectionTitle("", location.pathname);
+      partieTitre = titreBase || obtenirTitreSection("", location.pathname);
     }
-    setCurrentTitle(titlePart);
-  }, [baseTitle, location.pathname, dynamicSections]);
+    setTitreCourant(partieTitre);
+  }, [titreBase, location.pathname, dynamicSections]);
 
-  // Track scroll for dynamic section titles
+  // Suit le défilement pour les titres dynamiques des sections
   useEffect(() => {
     if (!dynamicSections || location.pathname !== "/") return;
 
-    const handleScroll = () => {
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        const section = detectActiveSection();
-        if (section !== currentSection) {
-          setCurrentSection(section);
-          setCurrentTitle(getSectionTitle(section));
+    const gererDefilement = () => {
+      if (refMinuteurDefilement.current) clearTimeout(refMinuteurDefilement.current);
+      refMinuteurDefilement.current = setTimeout(() => {
+        const section = detecterSectionActive();
+        if (section !== sectionCourante) {
+          setSectionCourante(section);
+          setTitreCourant(obtenirTitreSection(section));
         }
       }, 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', gererDefilement);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      window.removeEventListener('scroll', gererDefilement);
+      if (refMinuteurDefilement.current) clearTimeout(refMinuteurDefilement.current);
     };
-  }, [dynamicSections, location.pathname, currentSection]);
+  }, [dynamicSections, location.pathname, sectionCourante]);
 
-  // Typing animation and document title update
+  // Animation de frappe et mise à jour du titre du document
   useEffect(() => {
     if (!enableTypingAnimation) {
-      document.title = PREFIX + currentTitle;
-      setDisplayTitle(currentTitle);
+      document.title = PREFIXE + titreCourant;
+      setTitreAffiche(titreCourant);
       return;
     }
 
-    // Reset animation when title changes
-    if (displayTitle.length > currentTitle.length || !currentTitle.startsWith(displayTitle)) {
-      setDisplayTitle('');
+    // Réinitialise l'animation lorsque le titre change
+    if (titreAffiche.length > titreCourant.length || !titreCourant.startsWith(titreAffiche)) {
+      setTitreAffiche('');
       return;
     }
 
-    if (displayTitle === currentTitle) {
-      document.title = PREFIX + displayTitle;
-      setIsTyping(false);
+    if (titreAffiche === titreCourant) {
+      document.title = PREFIXE + titreAffiche;
+      setEstEnFrappe(false);
       return;
     }
 
-    setIsTyping(true);
-    typingTimeoutRef.current = setTimeout(() => {
-      setDisplayTitle(prev => {
-        const next = currentTitle.slice(0, prev.length + 1);
-        document.title = PREFIX + next;
-        return next;
+    setEstEnFrappe(true);
+    refMinuteurFrappe.current = setTimeout(() => {
+      setTitreAffiche(precedent => {
+        const suivant = titreCourant.slice(0, precedent.length + 1);
+        document.title = PREFIXE + suivant;
+        return suivant;
       });
     }, typingSpeed);
 
     return () => {
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      if (refMinuteurFrappe.current) clearTimeout(refMinuteurFrappe.current);
     };
-  }, [displayTitle, currentTitle, typingSpeed, enableTypingAnimation]);
+  }, [titreAffiche, titreCourant, typingSpeed, enableTypingAnimation]);
 
-  // Cleanup on unmount
+  // Nettoyage au démontage
   useEffect(() => {
     return () => {
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      if (refMinuteurFrappe.current) clearTimeout(refMinuteurFrappe.current);
+      if (refMinuteurDefilement.current) clearTimeout(refMinuteurDefilement.current);
     };
   }, []);
 
   return {
-    displayTitle: PREFIX + (enableTypingAnimation ? displayTitle : currentTitle),
-    isTyping,
-    currentSection,
-    currentTitle: PREFIX + currentTitle
+    displayTitle: PREFIXE + (enableTypingAnimation ? titreAffiche : titreCourant),
+    isTyping: estEnFrappe,
+    currentSection: sectionCourante,
+    currentTitle: PREFIXE + titreCourant
   };
 };

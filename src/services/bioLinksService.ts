@@ -1,4 +1,4 @@
-import { links as localLinks, type BioLink } from '../data/links';
+import { links as liensLocaux, type BioLink } from '../data/links';
 export type { BioLink };
 
 export interface BioLinkIcon {
@@ -6,7 +6,7 @@ export interface BioLinkIcon {
   phosphorIcon: string;
 }
 
-const bioLinkIcons: Record<string, string> = {
+const iconesLiensBio: Record<string, string> = {
   'Email': 'EnvelopeSimple',
   'Discord': 'DiscordLogo',
   'Jelly': 'DiscordLogo',
@@ -29,13 +29,13 @@ const bioLinkIcons: Record<string, string> = {
 
 export class BioLinksService {
   /**
-   * Récupère tous les liens bio actifs (Sychrone pour l'approche statique)
+   * Récupère tous les liens bio actifs (synchrone pour l'approche statique)
    */
   static getBioLinksSync(): BioLink[] {
-    const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
-    return bioLinks.map(link => ({
-      ...link,
-      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    const liensBio = liensLocaux.filter(lien => lien.type === 'bio_link' && lien.is_active) as BioLink[];
+    return liensBio.map(lien => ({
+      ...lien,
+      icon: iconesLiensBio[lien.title] || 'LinkSimple'
     }));
   }
 
@@ -43,40 +43,40 @@ export class BioLinksService {
    * Récupère les liens groupés par catégorie
    */
   static getGroupedBioLinks(): Record<string, BioLink[]> {
-    const links = this.getBioLinksSync();
-    return links.reduce((acc, link) => {
-      const category = link.category || 'other';
-      if (!acc[category]) {
-        acc[category] = [];
+    const liens = this.getBioLinksSync();
+    return liens.reduce((accumulateur, lien) => {
+      const categorie = lien.category || 'other';
+      if (!accumulateur[categorie]) {
+        accumulateur[categorie] = [];
       }
-      acc[category].push(link);
-      return acc;
+      accumulateur[categorie].push(lien);
+      return accumulateur;
     }, {} as Record<string, BioLink[]>);
   }
 
   static async getBioLinks(): Promise<BioLink[]> {
-    const bioLinks = localLinks.filter(link => link.type === 'bio_link' && link.is_active) as BioLink[];
-    return bioLinks.map(link => ({
-      ...link,
-      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    const liensBio = liensLocaux.filter(lien => lien.type === 'bio_link' && lien.is_active) as BioLink[];
+    return liensBio.map(lien => ({
+      ...lien,
+      icon: iconesLiensBio[lien.title] || 'LinkSimple'
     }));
   }
 
   static async getAllBioLinks(): Promise<BioLink[]> {
-    const bioLinks = localLinks.filter(link => link.type === 'bio_link') as BioLink[];
-    return bioLinks.map(link => ({
-      ...link,
-      icon: bioLinkIcons[link.title] || 'LinkSimple'
+    const liensBio = liensLocaux.filter(lien => lien.type === 'bio_link') as BioLink[];
+    return liensBio.map(lien => ({
+      ...lien,
+      icon: iconesLiensBio[lien.title] || 'LinkSimple'
     }));
   }
 
   static updateIconMapping(title: string, icon: string) {
-    bioLinkIcons[title] = icon;
+    iconesLiensBio[title] = icon;
   }
 
   static getAvailableIcons(): string[] {
     return [
-      'EnvelopeSimple', 'DiscordLogo', 'Globe', 'GameController', 
+      'EnvelopeSimple', 'DiscordLogo', 'Globe', 'GameController',
       'Palette', 'SmileyXEyes', 'PaintBrush', 'GithubLogo',
       'TwitterLogo', 'InstagramLogo', 'LinkedinLogo', 'YoutubeLogo',
       'TwitchLogo', 'SpotifyLogo', 'LinkSimple', 'Phone',

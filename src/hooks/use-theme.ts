@@ -1,63 +1,63 @@
 import { useEffect, useState, useCallback } from 'react'
-import { initTheme, setTheme as persistTheme, applyTheme, type Theme } from '@/lib/theme'
+import { initTheme, setTheme as persisterTheme, applyTheme, type Theme } from '@/lib/theme'
 
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => initTheme())
 
   useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'theme' && e.newValue) setThemeState(e.newValue as Theme)
+    const surStockage = (evenement: StorageEvent) => {
+      if (evenement.key === 'theme' && evenement.newValue) setThemeState(evenement.newValue as Theme)
     }
 
-    const onThemeChange = (e: CustomEvent) => {
-      if (e.detail?.theme && e.detail.theme !== theme) {
-        setThemeState(e.detail.theme);
+    const surChangementTheme = (evenement: CustomEvent) => {
+      if (evenement.detail?.theme && evenement.detail.theme !== theme) {
+        setThemeState(evenement.detail.theme);
       }
     }
 
-    const checkCookieChanges = () => {
-      const cookieMatch = document.cookie.match(/(?:^|; )theme=([^;]*)/);
-      const cookieTheme = cookieMatch ? decodeURIComponent(cookieMatch[1]) as Theme : null;
-      const localTheme = localStorage.getItem('theme') as Theme | null;
-      const currentTheme = localTheme || cookieTheme;
-      if (currentTheme && currentTheme !== theme && (currentTheme === 'dark' || currentTheme === 'light')) {
-        setThemeState(currentTheme);
+    const verifierChangementsCookies = () => {
+      const correspondanceCookie = document.cookie.match(/(?:^|; )theme=([^;]*)/);
+      const themeCookie = correspondanceCookie ? decodeURIComponent(correspondanceCookie[1]) as Theme : null;
+      const themeLocal = localStorage.getItem('theme') as Theme | null;
+      const themeActuel = themeLocal || themeCookie;
+      if (themeActuel && themeActuel !== theme && (themeActuel === 'dark' || themeActuel === 'light')) {
+        setThemeState(themeActuel);
       }
     }
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const onSystemChange = (e: MediaQueryListEvent) => {
-      const hasUserChoice = localStorage.getItem('theme') !== null;
-      if (!hasUserChoice) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        applyTheme(newTheme);
-        setThemeState(newTheme);
+    const requeteMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    const surChangementSysteme = (evenement: MediaQueryListEvent) => {
+      const aChoixUtilisateur = localStorage.getItem('theme') !== null;
+      if (!aChoixUtilisateur) {
+        const nouveauTheme = evenement.matches ? 'dark' : 'light';
+        applyTheme(nouveauTheme);
+        setThemeState(nouveauTheme);
       }
     }
 
-    window.addEventListener('storage', onStorage)
-    window.addEventListener('themeChange', onThemeChange as EventListener)
-    window.addEventListener('focus', checkCookieChanges)
-    mediaQuery.addEventListener('change', onSystemChange)
+    window.addEventListener('storage', surStockage)
+    window.addEventListener('themeChange', surChangementTheme as EventListener)
+    window.addEventListener('focus', verifierChangementsCookies)
+    requeteMedia.addEventListener('change', surChangementSysteme)
 
     return () => {
-      window.removeEventListener('storage', onStorage)
-      window.removeEventListener('themeChange', onThemeChange as EventListener)
-      window.removeEventListener('focus', checkCookieChanges)
-      mediaQuery.removeEventListener('change', onSystemChange)
+      window.removeEventListener('storage', surStockage)
+      window.removeEventListener('themeChange', surChangementTheme as EventListener)
+      window.removeEventListener('focus', verifierChangementsCookies)
+      requeteMedia.removeEventListener('change', surChangementSysteme)
     }
   }, [theme])
 
-  const toggle = useCallback(() => {
-    const next = theme === 'dark' ? 'light' : 'dark'
-    persistTheme(next)
-    setThemeState(next)
+  const basculer = useCallback(() => {
+    const suivant = theme === 'dark' ? 'light' : 'dark'
+    persisterTheme(suivant)
+    setThemeState(suivant)
   }, [theme])
 
-  const setTheme = useCallback((t: Theme) => {
-    persistTheme(t)
-    setThemeState(t)
+  const setTheme = useCallback((nouveauTheme: Theme) => {
+    persisterTheme(nouveauTheme)
+    setThemeState(nouveauTheme)
   }, [])
 
-  return { theme, setTheme, toggle }
+  return { theme, setTheme, toggle: basculer }
 }

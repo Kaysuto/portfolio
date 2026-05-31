@@ -12,24 +12,24 @@ export function PortfolioApp() {
 
   useEffect(() => {
     if ('serviceWorker' in navigator && 'caches' in window) {
-      const registerSW = async () => {
+      const enregistrerSW = async () => {
         try {
-          const registration = await navigator.serviceWorker.register('/sw.js', {
+          const enregistrement = await navigator.serviceWorker.register('/sw.js', {
             scope: '/',
             updateViaCache: 'none'
           });
-          if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          if (enregistrement.waiting) {
+            enregistrement.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
         } catch {
-          // Silently fail
+          // Échec silencieux
         }
       };
-      
+
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(registerSW);
+        requestIdleCallback(enregistrerSW);
       } else {
-        registerSW();
+        enregistrerSW();
       }
     }
   }, []);
@@ -47,7 +47,7 @@ export function PortfolioApp() {
         <ContactSection />
       </Suspense>
       
-      {/* JSON-LD structured data for SEO */}
+      {/* Données structurées JSON-LD pour le SEO */}
       <script
         type="application/ld+json"
         suppressHydrationWarning

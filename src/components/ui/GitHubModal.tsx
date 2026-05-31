@@ -11,9 +11,9 @@ interface GitHubModalProps {
 
 export function GitHubModal({ isOpen, onClose }: GitHubModalProps) {
   const { theme } = useTheme();
-  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
+  const couleurAccent = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
-  const handleOpenGitHub = () => {
+  const gererOuvertureGitHub = () => {
     window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer");
     onClose();
   };
@@ -38,26 +38,26 @@ export function GitHubModal({ isOpen, onClose }: GitHubModalProps) {
             Lien externe :
           </p>
           <div className="bg-background/50 border border-border/50 rounded-xl p-4">
-            <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
+            <code className="text-sm font-bold break-all font-mono" style={{ color: couleurAccent }}>
               https://github.com/Kaysuto
             </code>
           </div>
         </div>
-        
+
         <div className="flex gap-4">
-          <Button 
+          <Button
             type="button"
-            variant="outline" 
+            variant="outline"
             onClick={onClose}
             className="flex-1 h-14 rounded-2xl border-border/50 hover:bg-accent/5 font-bold text-base"
           >
             Annuler
           </Button>
-          <Button 
+          <Button
             type="button"
-            onClick={handleOpenGitHub} 
+            onClick={gererOuvertureGitHub}
             className="flex-1 h-14 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundColor: accentColor, color: 'black' }}
+            style={{ backgroundColor: couleurAccent, color: 'black' }}
           >
             <ExternalLink className="h-5 w-5 mr-2" />
             Ouvrir

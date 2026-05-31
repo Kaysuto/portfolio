@@ -9,7 +9,7 @@ import { GitHubModal } from "@/components/ui/GitHubModal"
 import { Card, CardContent } from "@/components/ui/card"
 import { fetchGitHubStats, type GitHubStats } from "@/services/githubService"
 
-const containerVariants: Variants = {
+const variantesConteneur: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -19,7 +19,7 @@ const containerVariants: Variants = {
   }
 }
 
-const itemVariants: Variants = {
+const variantesElement: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
@@ -32,83 +32,83 @@ const itemVariants: Variants = {
 }
 
 export function ProjectsSection() {
-  const [githubStats, setGithubStats] = useState<GitHubStats | null>(null)
-  const [, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
+  const [statsGithub, setStatsGithub] = useState<GitHubStats | null>(null)
+  const [, setEstEnChargement] = useState(true)
+  const [afficherModale, setAfficherModale] = useState(false)
 
-  const openModal = () => setShowModal(true)
-  const closeModal = () => setShowModal(false)
+  const ouvrirModale = () => setAfficherModale(true)
+  const fermerModale = () => setAfficherModale(false)
 
-  const reposCounter = useCounterAnimation({ 
-    end: githubStats?.publicRepos || 0, 
-    duration: 2000 
+  const compteurDepots = useCounterAnimation({
+    end: statsGithub?.publicRepos || 0,
+    duration: 2000
   })
-  const followersCounter = useCounterAnimation({ 
-    end: githubStats?.followers || 0, 
-    duration: 2300 
+  const compteurAbonnes = useCounterAnimation({
+    end: statsGithub?.followers || 0,
+    duration: 2300
   })
-  const starsCounter = useCounterAnimation({ 
-    end: githubStats?.totalStars || 0, 
-    duration: 2100 
+  const compteurEtoiles = useCounterAnimation({
+    end: statsGithub?.totalStars || 0,
+    duration: 2100
   })
-  const followingCounter = useCounterAnimation({ 
-    end: githubStats?.following || 0, 
-    duration: 1800 
+  const compteurAbonnements = useCounterAnimation({
+    end: statsGithub?.following || 0,
+    duration: 1800
   })
 
   useEffect(() => {
     fetchGitHubStats()
-      .then(setGithubStats)
-      .catch((error) => console.error("Erreur lors de la récupération des stats GitHub:", error))
-      .finally(() => setLoading(false))
+      .then(setStatsGithub)
+      .catch((erreur) => console.error("Erreur lors de la récupération des stats GitHub:", erreur))
+      .finally(() => setEstEnChargement(false))
   }, [])
 
   return (
     <section id="projets" className="py-24 px-6 lg:px-12 relative overflow-hidden">
-      {/* Background Elements */}
+      {/* Éléments d'arrière-plan */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.05, 0.1, 0.05] 
+            opacity: [0.05, 0.1, 0.05]
           }}
           transition={{ duration: 10, repeat: Infinity }}
           className="absolute top-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
         />
-        <motion.div 
-          animate={{ 
-            y: [0, 30, 0] 
+        <motion.div
+          animate={{
+            y: [0, 30, 0]
           }}
           transition={{ duration: 8, repeat: Infinity }}
           className="absolute bottom-1/4 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl"
         />
       </div>
 
-      <motion.div 
+      <motion.div
         className="max-w-7xl mx-auto relative z-10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
+        variants={variantesConteneur}
       >
-        {/* Section Header */}
-        <motion.div className="text-center mb-10" variants={itemVariants}>
+        {/* En-tête de section */}
+        <motion.div className="text-center mb-10" variants={variantesElement}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             Mes <span className="text-accent">Projets</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Une sélection de projets qui illustrent ma passion pour la création 
+            Une sélection de projets qui illustrent ma passion pour la création
             d'expériences numériques innovantes et performantes.
           </p>
         </motion.div>
 
-        {/* Project Cards */}
-        <motion.div className="mb-16" variants={itemVariants}>
+        {/* Cartes de projets */}
+        <motion.div className="mb-16" variants={variantesElement}>
           <ProjectCards />
         </motion.div>
 
-        {/* GitHub Stats Card */}
-        <motion.div className="flex justify-center" variants={itemVariants}>
+        {/* Carte des statistiques GitHub */}
+        <motion.div className="flex justify-center" variants={variantesElement}>
           <Card className="w-full max-w-2xl bg-card/40 backdrop-blur-md border-border/50 hover:border-accent/40 transition-all duration-500 group overflow-hidden rounded-3xl">
             <CardContent className="p-6 md:p-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
@@ -122,48 +122,48 @@ export function ProjectsSection() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <GitBranch className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
-                  <span 
-                    ref={reposCounter.elementRef}
+                  <span
+                    ref={compteurDepots.elementRef}
                     className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
-                    {reposCounter.count}
+                    {compteurDepots.count}
                   </span>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Repositories</p>
                 </div>
-                
+
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <Star className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
-                  <span 
-                    ref={starsCounter.elementRef}
+                  <span
+                    ref={compteurEtoiles.elementRef}
                     className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
-                    {starsCounter.count}
+                    {compteurEtoiles.count}
                   </span>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Étoiles</p>
                 </div>
 
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <Users className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
-                  <span 
-                    ref={followersCounter.elementRef}
+                  <span
+                    ref={compteurAbonnes.elementRef}
                     className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
-                    {followersCounter.count}
+                    {compteurAbonnes.count}
                   </span>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Followers</p>
                 </div>
-                
+
                 <div className="flex flex-col items-center p-4 bg-accent/5 rounded-3xl border border-accent/10 group/stat hover:bg-accent/10 transition-colors">
                   <Users className="w-5 h-5 text-accent/50 mb-3 group-hover/stat:scale-110 transition-transform" />
-                  <span 
-                    ref={followingCounter.elementRef}
+                  <span
+                    ref={compteurAbonnements.elementRef}
                     className="text-2xl font-bold text-foreground tabular-nums mb-1"
                   >
-                    {followingCounter.count}
+                    {compteurAbonnements.count}
                   </span>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Following</p>
                 </div>
@@ -172,10 +172,10 @@ export function ProjectsSection() {
           </Card>
         </motion.div>
 
-        {/* View More Button */}
-        <motion.div className="text-center mt-12" variants={itemVariants}>
+        {/* Bouton voir plus */}
+        <motion.div className="text-center mt-12" variants={variantesElement}>
           <Button
-            onClick={openModal}
+            onClick={ouvrirModale}
             variant="default"
             size="lg"
             className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-4 rounded-2xl text-lg font-bold hover:scale-105 transition-all"
@@ -186,8 +186,8 @@ export function ProjectsSection() {
       </motion.div>
 
       <GitHubModal
-        isOpen={showModal}
-        onClose={closeModal}
+        isOpen={afficherModale}
+        onClose={fermerModale}
       />
     </section>
   )

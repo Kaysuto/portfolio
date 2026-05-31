@@ -6,19 +6,19 @@ import { ErrorFallback } from './ErrorFallback.tsx'
 import { NotificationProvider } from './components/NotificationProvider'
 import './index.css'
 
-window.addEventListener('error', (event) => {
-  if (event.error?.message?.includes('unstable_now') ||
-      event.error?.message?.includes('runtime.lastError') ||
-      event.error?.message?.includes('message channel closed')) {
-    event.preventDefault();
+window.addEventListener('error', (evenement) => {
+  if (evenement.error?.message?.includes('unstable_now') ||
+      evenement.error?.message?.includes('runtime.lastError') ||
+      evenement.error?.message?.includes('message channel closed')) {
+    evenement.preventDefault();
   }
 });
 
-window.addEventListener('unhandledrejection', (event) => {
-  if (event.reason?.message?.includes('runtime.lastError') ||
-      event.reason?.message?.includes('message channel closed') ||
-      event.reason?.message?.includes('listener indicated an asynchronous response')) {
-    event.preventDefault();
+window.addEventListener('unhandledrejection', (evenement) => {
+  if (evenement.reason?.message?.includes('runtime.lastError') ||
+      evenement.reason?.message?.includes('message channel closed') ||
+      evenement.reason?.message?.includes('listener indicated an asynchronous response')) {
+    evenement.preventDefault();
   }
 });
 

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react"
 
-const MOBILE_BREAKPOINT = 768
+const SEUIL_MOBILE = 768
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
+  const [estMobile, setEstMobile] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    const requeteMedia = window.matchMedia(`(max-width: ${SEUIL_MOBILE - 1}px)`)
+    const surChangement = () => {
+      setEstMobile(window.innerWidth < SEUIL_MOBILE)
     }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
+    requeteMedia.addEventListener("change", surChangement)
+    setEstMobile(window.innerWidth < SEUIL_MOBILE)
+    return () => requeteMedia.removeEventListener("change", surChangement)
   }, [])
 
-  return !!isMobile
+  return !!estMobile
 }

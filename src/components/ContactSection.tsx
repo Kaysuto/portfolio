@@ -15,24 +15,24 @@ const EMAIL = "contact@kaysuto.fr"
 const DISCORD_GUILD = "1352228798585638983"
 
 function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [estEnEnvoi, setEstEnEnvoi] = useState(false)
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: { name: "", email: "", message: "" },
   })
 
-  const onSubmit = async (values: ContactFormValues) => {
-    setIsSubmitting(true)
+  const surSoumission = async (valeurs: ContactFormValues) => {
+    setEstEnEnvoi(true)
     try {
-      const res = await fetch("/api/contact", {
+      const reponse = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(valeurs),
       })
-      const data = await res.json()
-      if (!res.ok) {
-        toast.error(data.error ?? "Une erreur est survenue.")
+      const donnees = await reponse.json()
+      if (!reponse.ok) {
+        toast.error(donnees.error ?? "Une erreur est survenue.")
       } else {
         toast.success("Message envoyé ! Je te réponds bientôt.")
         form.reset()
@@ -40,13 +40,13 @@ function ContactForm() {
     } catch {
       toast.error("Impossible d'envoyer le message. Vérifie ta connexion.")
     } finally {
-      setIsSubmitting(false)
+      setEstEnEnvoi(false)
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(surSoumission)} className="space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -106,10 +106,10 @@ function ContactForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={estEnEnvoi}
           className="w-full h-11 rounded-xl bg-accent text-background text-sm font-medium flex items-center justify-center gap-2 hover:opacity-80 transition-opacity disabled:opacity-50"
         >
-          {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {estEnEnvoi ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           Envoyer le message
         </button>
       </form>
@@ -118,17 +118,17 @@ function ContactForm() {
 }
 
 export function ContactSection() {
-  const [, setDiscordOnline] = useState<number | null>(null)
-  const [showDiscordModal, setShowDiscordModal] = useState(false)
+  const [, setDiscordEnLigne] = useState<number | null>(null)
+  const [afficherModaleDiscord, setAfficherModaleDiscord] = useState(false)
 
   useEffect(() => {
     fetch(`https://discord.com/api/guilds/${DISCORD_GUILD}/widget.json`)
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d?.presence_count != null) setDiscordOnline(d.presence_count) })
+      .then(reponse => reponse.ok ? reponse.json() : null)
+      .then(donnees => { if (donnees?.presence_count != null) setDiscordEnLigne(donnees.presence_count) })
       .catch(() => {})
   }, [])
 
-  const handleCopyEmail = async () => {
+  const gererCopieEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL)
       toast.success("Email copié !")
@@ -147,7 +147,7 @@ export function ContactSection() {
         viewport={VIEWPORT}
         variants={staggerContainer}
       >
-        {/* Header */}
+        {/* En-tête */}
         <motion.div variants={fadeInUp} className="mb-16 text-center">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
             Travaillons <span className="text-accent">ensemble.</span>
@@ -155,22 +155,22 @@ export function ContactSection() {
           <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
             Projet, question, simple bonjour : écris-moi. Je réponds sous 48h en général.
             Tu peux aussi passer par{" "}
-            <button onClick={handleCopyEmail} className="text-foreground underline underline-offset-2 hover:text-accent transition-colors">
+            <button onClick={gererCopieEmail} className="text-foreground underline underline-offset-2 hover:text-accent transition-colors">
               mail direct
             </button>{" "}
             si tu préfères.
           </p>
         </motion.div>
 
-        {/* Form */}
+        {/* Formulaire */}
         <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
           <ContactForm />
         </motion.div>
 
-        {/* Status badges */}
+        {/* Badges de statut */}
       </motion.div>
 
-      <DiscordModal isOpen={showDiscordModal} onClose={() => setShowDiscordModal(false)} />
+      <DiscordModal isOpen={afficherModaleDiscord} onClose={() => setAfficherModaleDiscord(false)} />
     </section>
   )
 }

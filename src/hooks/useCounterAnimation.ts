@@ -7,26 +7,26 @@ interface UseCounterAnimationProps {
 }
 
 export function useCounterAnimation({ end, duration = 2000, start = 0 }: UseCounterAnimationProps) {
-  const [count, setCount] = useState(start)
-  const [isVisible, setIsVisible] = useState(false)
-  const [hasAnimated, setHasAnimated] = useState(false)
-  const [currentEnd, setCurrentEnd] = useState(end)
-  const elementRef = useRef<HTMLDivElement>(null)
+  const [compteur, setCompteur] = useState(start)
+  const [estVisible, setEstVisible] = useState(false)
+  const [aDejaAnime, setADejaAnime] = useState(false)
+  const [valeurFinaleCourante, setValeurFinaleCourante] = useState(end)
+  const refElement = useRef<HTMLDivElement>(null)
 
   // Mettre à jour la valeur finale quand elle change
   useEffect(() => {
-    if (end !== currentEnd && end > 0) {
-      setCurrentEnd(end)
-      setHasAnimated(false) // Permettre une nouvelle animation si la valeur change
+    if (end !== valeurFinaleCourante && end > 0) {
+      setValeurFinaleCourante(end)
+      setADejaAnime(false) // Permettre une nouvelle animation si la valeur change
     }
-  }, [end, currentEnd])
+  }, [end, valeurFinaleCourante])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated && currentEnd > 0) {
-          setIsVisible(true)
-          setHasAnimated(true)
+    const observateur = new IntersectionObserver(
+      ([entree]) => {
+        if (entree.isIntersecting && !aDejaAnime && valeurFinaleCourante > 0) {
+          setEstVisible(true)
+          setADejaAnime(true)
         }
       },
       {
@@ -35,47 +35,47 @@ export function useCounterAnimation({ end, duration = 2000, start = 0 }: UseCoun
       }
     )
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current)
+    if (refElement.current) {
+      observateur.observe(refElement.current)
     }
 
     return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current)
+      if (refElement.current) {
+        observateur.unobserve(refElement.current)
       }
     }
-  }, [hasAnimated, currentEnd])
+  }, [aDejaAnime, valeurFinaleCourante])
 
   useEffect(() => {
-    if (!isVisible || currentEnd === 0) return
+    if (!estVisible || valeurFinaleCourante === 0) return
 
-    const startTime = Date.now()
-    const startValue = start
-    const endValue = currentEnd
+    const tempsDebut = Date.now()
+    const valeurDebut = start
+    const valeurFin = valeurFinaleCourante
 
-    const animate = () => {
-      const now = Date.now()
-      const elapsed = now - startTime
-      const progress = Math.min(elapsed / duration, 1)
+    const animer = () => {
+      const maintenant = Date.now()
+      const tempsEcoule = maintenant - tempsDebut
+      const progression = Math.min(tempsEcoule / duration, 1)
 
-      // Fonction d'easing plus fluide (ease-out quadratique avec transition douce)
-      const easeOutQuad = 1 - Math.pow(1 - progress, 2)
-      
+      // Fonction d'atténuation plus fluide (ease-out quadratique avec transition douce)
+      const attenuationSortieQuad = 1 - Math.pow(1 - progression, 2)
+
       // Interpolation avec nombres entiers uniquement
-      const currentCount = startValue + (endValue - startValue) * easeOutQuad
-      
-      // Utilisation de Math.floor pour avoir uniquement des entiers
-      setCount(Math.floor(currentCount))
+      const valeurCourante = valeurDebut + (valeurFin - valeurDebut) * attenuationSortieQuad
 
-      if (progress < 1) {
-        requestAnimationFrame(animate)
+      // Utilisation de Math.floor pour avoir uniquement des entiers
+      setCompteur(Math.floor(valeurCourante))
+
+      if (progression < 1) {
+        requestAnimationFrame(animer)
       } else {
-        setCount(endValue)
+        setCompteur(valeurFin)
       }
     }
 
-    requestAnimationFrame(animate)
-  }, [isVisible, currentEnd, start, duration])
+    requestAnimationFrame(animer)
+  }, [estVisible, valeurFinaleCourante, start, duration])
 
-  return { count, elementRef }
+  return { count: compteur, elementRef: refElement }
 }

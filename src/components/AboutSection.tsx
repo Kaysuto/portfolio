@@ -7,13 +7,13 @@ import { TechModal } from "@/components/ui/TechModal"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
 export function AboutSection() {
-  const ageCounter = useCounterAnimation({ end: 23, duration: 1800 })
-  const experienceCounter = useCounterAnimation({ end: 11, duration: 1800 })
+  const compteurAge = useCounterAnimation({ end: 23, duration: 1800 })
+  const compteurExperience = useCounterAnimation({ end: 11, duration: 1800 })
 
-  const [selectedTech, setSelectedTech] = useState<{name: string, slug: string, url: string} | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [techSelectionnee, setTechSelectionnee] = useState<{name: string, slug: string, url: string} | null>(null)
+  const [estModaleOuverte, setEstModaleOuverte] = useState(false)
 
-  const skills = [
+  const competences = [
     {
       icon: <Server className="w-6 h-6 text-accent" />,
       title: "Expertise Infra",
@@ -40,7 +40,7 @@ export function AboutSection() {
     }
   ]
 
-  const techCategories = [
+  const categoriesTech = [
     {
       title: "Frontend & Design",
       techs: [
@@ -95,14 +95,14 @@ export function AboutSection() {
     }
   ]
 
-  const handleTechClick = (tech: any) => {
-    setSelectedTech(tech)
-    setIsModalOpen(true)
+  const gererClicTech = (tech: any) => {
+    setTechSelectionnee(tech)
+    setEstModaleOuverte(true)
   }
 
   return (
     <section id="apropos" className="py-24 px-6 relative">
-      {/* Animated background elements */}
+      {/* Éléments d'arrière-plan animés */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           animate={{ y: [0, -15, 0] }}
@@ -123,7 +123,7 @@ export function AboutSection() {
         viewport={VIEWPORT}
         variants={staggerContainer}
       >
-        {/* Section Header */}
+        {/* En-tête de section */}
         <motion.div className="text-center mb-16" variants={fadeInUp}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             À propos de <span className="text-accent">moi</span>
@@ -133,9 +133,9 @@ export function AboutSection() {
           </p>
         </motion.div>
 
-        {/* Main Content */}
+        {/* Contenu principal */}
         <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Left - Personal Info */}
+          {/* Gauche - Infos personnelles */}
           <motion.div className="space-y-6" variants={fadeInUp}>
             <div className="prose prose-invert max-w-none">
               <h3 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-3">
@@ -150,15 +150,15 @@ export function AboutSection() {
               </p>
             </div>
 
-            {/* Age & Experience Stats */}
+            {/* Statistiques Âge & Expérience */}
             <div className="flex items-center gap-10 pt-4">
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-1">
-                  <span 
-                    ref={ageCounter.elementRef}
+                  <span
+                    ref={compteurAge.elementRef}
                     className="text-4xl font-bold text-accent tabular-nums"
                   >
-                    {ageCounter.count}
+                    {compteurAge.count}
                   </span>
                   <span className="text-lg font-bold text-muted-foreground">ans</span>
                 </div>
@@ -166,11 +166,11 @@ export function AboutSection() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-1">
-                  <span 
-                    ref={experienceCounter.elementRef}
+                  <span
+                    ref={compteurExperience.elementRef}
                     className="text-4xl font-bold text-accent tabular-nums"
                   >
-                    {experienceCounter.count}+
+                    {compteurExperience.count}+
                   </span>
                   <span className="text-lg font-bold text-muted-foreground">ans</span>
                 </div>
@@ -179,22 +179,22 @@ export function AboutSection() {
             </div>
           </motion.div>
 
-          {/* Right - Skills Bento */}
+          {/* Droite - Bento de compétences */}
           <div className="grid sm:grid-cols-2 auto-rows-[1fr] gap-4">
-            {skills.map((skill, index) => (
-              <motion.div key={index} variants={fadeInUp} className={skill.span}>
+            {competences.map((competence, index) => (
+              <motion.div key={index} variants={fadeInUp} className={competence.span}>
                 <Card className="group relative h-full overflow-hidden bg-accent/5 backdrop-blur-md border-accent/15 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 rounded-2xl">
                   {/* Halo décoratif */}
                   <div className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 bg-accent/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <CardContent className="relative p-6">
                     <div className="mb-4 p-3 bg-accent/15 rounded-xl w-fit group-hover:bg-accent/25 group-hover:scale-110 transition-all duration-300">
-                      {skill.icon}
+                      {competence.icon}
                     </div>
                     <h4 className="font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
-                      {skill.title}
+                      {competence.title}
                     </h4>
                     <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-                      {skill.description}
+                      {competence.description}
                     </p>
                   </CardContent>
                 </Card>
@@ -203,7 +203,7 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Tech Stack Section */}
+        {/* Section Stack Technique */}
         <motion.div className="mt-20" variants={fadeInUp}>
           <div className="flex items-center gap-4 mb-12">
             <div className="h-px flex-1 bg-border/50" />
@@ -213,25 +213,25 @@ export function AboutSection() {
             </h3>
             <div className="h-px flex-1 bg-border/50" />
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-10">
-            {techCategories.map((category) => (
-              <div key={category.title} className="space-y-4">
+            {categoriesTech.map((categorie) => (
+              <div key={categorie.title} className="space-y-4">
                 <h4 className="text-sm font-bold text-accent/70 uppercase tracking-widest px-2">
-                  {category.title}
+                  {categorie.title}
                 </h4>
                 <div className="flex flex-wrap gap-3">
-                  {category.techs.map((tech) => (
+                  {categorie.techs.map((tech) => (
                     <motion.button
                       key={tech.name}
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleTechClick(tech)}
+                      onClick={() => gererClicTech(tech)}
                       className="group relative"
                     >
                       <div className="flex items-center gap-3 px-4 py-2.5 bg-accent/8 backdrop-blur-sm border border-accent/15 rounded-xl hover:bg-accent/15 hover:border-accent/40 transition-all duration-300 cursor-pointer">
-                        <img 
-                          src={(tech as any).iconUrl || `https://cdn.simpleicons.org/${tech.slug}`} 
+                        <img
+                          src={(tech as any).iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
                           alt={tech.name}
                           className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all duration-300 object-contain"
                         />
@@ -249,15 +249,15 @@ export function AboutSection() {
       </motion.div>
 
       <TechModal
-        isOpen={isModalOpen && !!selectedTech}
+        isOpen={estModaleOuverte && !!techSelectionnee}
         onClose={() => {
-          setIsModalOpen(false)
-          setTimeout(() => setSelectedTech(null), 500)
+          setEstModaleOuverte(false)
+          setTimeout(() => setTechSelectionnee(null), 500)
         }}
-        techName={selectedTech?.name || ''}
-        techUrl={selectedTech?.url || ''}
-        techIcon={selectedTech?.slug || ''}
-        iconUrl={(selectedTech as any)?.iconUrl}
+        techName={techSelectionnee?.name || ''}
+        techUrl={techSelectionnee?.url || ''}
+        techIcon={techSelectionnee?.slug || ''}
+        iconUrl={(techSelectionnee as any)?.iconUrl}
       />
     </section>
   )

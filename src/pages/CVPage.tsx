@@ -30,7 +30,7 @@ import { useSeo } from '@/hooks/useSeo';
 import { LinkedInFooterModal } from '@/components/ui/SocialModals';
 
 
-const itemVariants: Variants = {
+const variantesElement: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
@@ -46,9 +46,9 @@ const CVPage: React.FC = () => {
     path: "/cv",
     type: "profile",
   });
-  const [isLinkedinModalOpen, setIsLinkedinModalOpen] = useState(false);
-  const [, setSelectedTech] = useState<{name: string, slug: string, url: string, iconUrl?: string} | null>(null);
-  const [, setIsTechModalOpen] = useState(false);
+  const [estModaleLinkedinOuverte, setEstModaleLinkedinOuverte] = useState(false);
+  const [, setTechSelectionnee] = useState<{name: string, slug: string, url: string, iconUrl?: string} | null>(null);
+  const [, setEstModaleTechOuverte] = useState(false);
 
   const experiences = [
     {
@@ -117,7 +117,7 @@ const CVPage: React.FC = () => {
     }
   ];
 
-  const skills = [
+  const competences = [
     {
       category: "Systèmes",
       items: ["Windows", "MacOS", "Linux", "Cloud (AWS, Azure)"],
@@ -140,7 +140,7 @@ const CVPage: React.FC = () => {
     }
   ];
 
-  const tools = [
+  const outils = [
     { name: "React", slug: "react", url: "https://react.dev" },
     { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
     { name: "Next.js", slug: "nextdotjs", url: "https://nextjs.org" },
@@ -151,7 +151,7 @@ const CVPage: React.FC = () => {
     { name: "Visual Studio Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
   ];
 
-  const interests = [
+  const interets = [
     { name: "Cryptographie", icon: KeyRound },
     { name: "Design", icon: Palette },
     { name: "Culture Japonaise", icon: Cherry },
@@ -163,9 +163,9 @@ const CVPage: React.FC = () => {
     { name: "Sport", icon: Dumbbell }
   ];
 
-  const handleTechClick = (tech: any) => {
-    setSelectedTech(tech);
-    setIsTechModalOpen(true);
+  const gererClicTech = (tech: any) => {
+    setTechSelectionnee(tech);
+    setEstModaleTechOuverte(true);
   };
 
   return (
@@ -212,7 +212,7 @@ const CVPage: React.FC = () => {
             </div>
             
             <Button
-              onClick={() => setIsLinkedinModalOpen(true)}
+              onClick={() => setEstModaleLinkedinOuverte(true)}
               className="w-full md:w-auto h-14 px-8 rounded-2xl font-bold shadow-lg transition-all hover:scale-105 flex items-center justify-center"
               style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
             >
@@ -222,27 +222,27 @@ const CVPage: React.FC = () => {
           </motion.div>
 
           <LinkedInFooterModal
-            isOpen={isLinkedinModalOpen}
-            onClose={() => setIsLinkedinModalOpen(false)}
+            isOpen={estModaleLinkedinOuverte}
+            onClose={() => setEstModaleLinkedinOuverte(false)}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column: About, Skills, Education */}
             <div className="lg:col-span-1 space-y-12">
-              {/* Skills */}
-              <motion.section variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              {/* Compétences */}
+              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Compétences</h2>
                 <div className="space-y-4">
-                  {skills.map((skill, idx) => (
+                  {competences.map((competence, idx) => (
                     <div key={idx} className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-5 group hover:border-accent/30 transition-colors">
                       <div className="flex items-center gap-3 mb-3">
-                        <skill.icon className="w-5 h-5 text-accent" />
-                        <h3 className="font-bold text-foreground">{skill.category}</h3>
+                        <competence.icon className="w-5 h-5 text-accent" />
+                        <h3 className="font-bold text-foreground">{competence.category}</h3>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {skill.items.map((item, i) => (
+                        {competence.items.map((element, i) => (
                           <span key={i} className="text-xs bg-accent/5 text-muted-foreground px-2 py-1 rounded-md border border-accent/5">
-                            {item}
+                            {element}
                           </span>
                         ))}
                       </div>
@@ -251,37 +251,37 @@ const CVPage: React.FC = () => {
                 </div>
               </motion.section>
 
-              {/* Tools */}
-              <motion.section variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              {/* Outils */}
+              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Outils & Techs</h2>
                 <div className="flex flex-wrap gap-3">
-                  {tools.map((tool, idx) => (
+                  {outils.map((outil, idx) => (
                     <motion.button
                       key={idx}
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleTechClick(tool);
+                      onClick={(evenement) => {
+                        evenement.preventDefault();
+                        evenement.stopPropagation();
+                        gererClicTech(outil);
                       }}
                       className="flex items-center gap-2 px-3 py-2 bg-card/30 backdrop-blur-sm border border-border/40 rounded-xl hover:border-accent/30 transition-all group cursor-pointer relative z-50"
                     >
                       <img
-                        src={tool.iconUrl || `https://cdn.simpleicons.org/${tool.slug}`}
-                        alt={tool.name}
+                        src={outil.iconUrl || `https://cdn.simpleicons.org/${outil.slug}`}
+                        alt={outil.name}
                         className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all object-contain"
                       />
                       <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
-                        {tool.name}
+                        {outil.name}
                       </span>
                     </motion.button>
                   ))}
                 </div>
               </motion.section>
 
-              {/* Languages */}
-              <motion.section variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              {/* Langues */}
+              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Langues</h2>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center bg-card/30 border border-border/40 p-4 rounded-xl">
@@ -296,16 +296,16 @@ const CVPage: React.FC = () => {
               </motion.section>
             </div>
 
-            {/* Right Column: Experience, Education, Interests */}
+            {/* Colonne droite : Expérience, Éducation, Centres d'intérêt */}
             <div className="lg:col-span-2 space-y-12">
-              {/* Experience */}
+              {/* Expérience */}
               <section>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Parcours Professionnel</h2>
                 <div className="space-y-8 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-[2px] before:bg-accent/10">
-                  {experiences.map((exp, idx) => (
-                    <motion.div 
+                  {experiences.map((experience, idx) => (
+                    <motion.div
                       key={idx}
-                      variants={itemVariants}
+                      variants={variantesElement}
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true }}
@@ -316,12 +316,12 @@ const CVPage: React.FC = () => {
                       </div>
                       <div className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-8 hover:border-accent/30 transition-all group">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
-                          <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">{exp.role}</h3>
-                          <span className="text-sm font-bold text-accent/60 bg-accent/5 px-3 py-1 rounded-full">{exp.period}</span>
+                          <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">{experience.role}</h3>
+                          <span className="text-sm font-bold text-accent/60 bg-accent/5 px-3 py-1 rounded-full">{experience.period}</span>
                         </div>
-                        <p className="text-lg font-semibold text-foreground/80 mb-4">{exp.company}</p>
+                        <p className="text-lg font-semibold text-foreground/80 mb-4">{experience.company}</p>
                         <ul className="space-y-3">
-                          {exp.missions.map((mission, i) => (
+                          {experience.missions.map((mission, i) => (
                             <li key={i} className="flex items-start gap-3 text-muted-foreground">
                               <CheckCircle2 className="w-5 h-5 text-accent/40 mt-0.5 flex-shrink-0" />
                               <span>{mission}</span>
@@ -334,12 +334,12 @@ const CVPage: React.FC = () => {
                 </div>
               </section>
 
-              {/* Education */}
+              {/* Formations */}
               <section>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Formations</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <motion.div 
-                    variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                  <motion.div
+                    variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}
                     className="bg-card/30 border border-border/40 rounded-2xl p-6"
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -348,8 +348,8 @@ const CVPage: React.FC = () => {
                     </div>
                     <h3 className="font-bold text-lg mb-2">Titre professionnel (BAC+2) d'Assistant Web Marketing</h3>
                   </motion.div>
-                  <motion.div 
-                    variants={itemVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                  <motion.div
+                    variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}
                     className="bg-card/30 border border-border/40 rounded-2xl p-6"
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -368,7 +368,7 @@ const CVPage: React.FC = () => {
                   href="https://www.credly.com/badges/f518dc90-cbd2-4ec2-95e6-b58a35119ffc/linked_in?t=tardcp"
                   target="_blank"
                   rel="noreferrer"
-                  variants={itemVariants}
+                  variants={variantesElement}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -385,7 +385,7 @@ const CVPage: React.FC = () => {
                   <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
                 </motion.a>
                 <motion.div
-                  variants={itemVariants}
+                  variants={variantesElement}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -401,14 +401,14 @@ const CVPage: React.FC = () => {
                 </motion.div>
               </section>
 
-              {/* Interests */}
+              {/* Centres d'intérêt */}
               <section>
                 <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Centres d'Intérêt</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {interests.map((interest, idx) => (
+                  {interets.map((interet, idx) => (
                     <motion.div
                       key={idx}
-                      variants={itemVariants}
+                      variants={variantesElement}
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true }}
@@ -416,9 +416,9 @@ const CVPage: React.FC = () => {
                       className="flex flex-col items-center justify-center gap-4 bg-card/30 backdrop-blur-sm border border-border/40 p-6 rounded-2xl hover:border-accent/30 transition-all group text-center"
                     >
                       <div className="p-4 bg-accent/5 rounded-2xl group-hover:bg-accent/10 transition-colors">
-                        <interest.icon className="w-8 h-8 text-accent group-hover:scale-110 transition-transform" />
+                        <interet.icon className="w-8 h-8 text-accent group-hover:scale-110 transition-transform" />
                       </div>
-                      <span className="font-bold text-sm tracking-tight text-foreground/90">{interest.name}</span>
+                      <span className="font-bold text-sm tracking-tight text-foreground/90">{interet.name}</span>
                     </motion.div>
                   ))}
                 </div>

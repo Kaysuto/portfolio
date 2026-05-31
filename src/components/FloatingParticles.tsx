@@ -11,18 +11,18 @@ interface Particle {
 }
 
 const FloatingParticles = memo(function FloatingParticles() {
-  const [particles, setParticles] = useState<Particle[]>([])
+  const [particules, setParticules] = useState<Particle[]>([])
 
-  // Optimization: Reduce particle count for better performance
-  const particleCount = useMemo(() => {
+  // Optimisation : réduit le nombre de particules pour de meilleures performances
+  const nombreParticules = useMemo(() => {
     return window.innerWidth < 768 ? 20 : 50
   }, [])
 
   useEffect(() => {
-    // Initialize particles with optimized count
-    const initialParticles: Particle[] = []
-    for (let i = 0; i < particleCount; i++) {
-      initialParticles.push({
+    // Initialise les particules avec le nombre optimisé
+    const particulesInitiales: Particle[] = []
+    for (let i = 0; i < nombreParticules; i++) {
+      particulesInitiales.push({
         id: i,
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -32,41 +32,41 @@ const FloatingParticles = memo(function FloatingParticles() {
         opacity: Math.random() * 0.3 + 0.1
       })
     }
-    setParticles(initialParticles)
+    setParticules(particulesInitiales)
 
-    // Animation loop
-    const animateParticles = () => {
-      setParticles(prev => 
-        prev.map(particle => {
-          const newX = particle.x + particle.speedX;
-          const newY = particle.y + particle.speedY;
-          
+    // Boucle d'animation
+    const animerParticules = () => {
+      setParticules(precedent =>
+        precedent.map(particule => {
+          const nouveauX = particule.x + particule.speedX;
+          const nouveauY = particule.y + particule.speedY;
+
           return {
-            ...particle,
-            // Update position and wrap around screen edges
-            x: newX > window.innerWidth ? 0 : newX < 0 ? window.innerWidth : newX,
-            y: newY > window.innerHeight ? 0 : newY < 0 ? window.innerHeight : newY
+            ...particule,
+            // Met à jour la position et boucle autour des bords de l'écran
+            x: nouveauX > window.innerWidth ? 0 : nouveauX < 0 ? window.innerWidth : nouveauX,
+            y: nouveauY > window.innerHeight ? 0 : nouveauY < 0 ? window.innerHeight : nouveauY
           };
         })
       )
     }
 
-    const interval = setInterval(animateParticles, 50)
-    return () => clearInterval(interval)
+    const intervalle = setInterval(animerParticules, 50)
+    return () => clearInterval(intervalle)
   }, [])
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {particles.map(particle => (
+      {particules.map(particule => (
         <div
-          key={particle.id}
+          key={particule.id}
           className="absolute rounded-full bg-accent/20 dark:bg-primary/15 animate-pulse"
           style={{
-            left: particle.x,
-            top: particle.y,
-            width: particle.size,
-            height: particle.size,
-            opacity: particle.opacity,
+            left: particule.x,
+            top: particule.y,
+            width: particule.size,
+            height: particule.size,
+            opacity: particule.opacity,
             transition: 'all 0.3s ease'
           }}
         />

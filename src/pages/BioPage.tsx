@@ -26,7 +26,7 @@ import { useModal } from '@/hooks/useModal';
 import { useSeo } from '@/hooks/useSeo';
 import { useTheme } from '@/hooks/use-theme';
 
-const containerVariants: Variants = {
+const variantesConteneur: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -36,7 +36,7 @@ const containerVariants: Variants = {
   }
 };
 
-const itemVariants: Variants = {
+const variantesElement: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,
@@ -53,15 +53,15 @@ const BioPage: React.FC = () => {
     type: "profile",
   });
   const { theme } = useTheme();
-  const [selectedLink, setSelectedLink] = useState<{name: string, url: string, description: string} | null>(null);
-  const { isModalOpen, openModal: openModalBase, closeModal } = useModal();
+  const [lienSelectionne, setLienSelectionne] = useState<{name: string, url: string, description: string} | null>(null);
+  const { isModalOpen, openModal: ouvrirModaleBase, closeModal } = useModal();
 
-  const groupedLinks = BioLinksService.getGroupedBioLinks();
-  const isLoading = false;
-  const error = null;
+  const liensGroupes = BioLinksService.getGroupedBioLinks();
+  const estEnChargement = false;
+  const erreur = null;
 
-  const getIcon = (iconName: string) => {
-    const iconMap: Record<string, any> = {
+  const obtenirIcone = (nomIcone: string) => {
+    const mapIcones: Record<string, any> = {
       'EnvelopeSimple': Mail,
       'DiscordLogo': Ghost,
       'Globe': Globe,
@@ -77,25 +77,25 @@ const BioPage: React.FC = () => {
       'TwitchLogo': Twitch,
       'SpotifyLogo': Disc
     };
-    const Icon = iconMap[iconName] || LinkIcon;
-    return <Icon size={24} />;
+    const Icone = mapIcones[nomIcone] || LinkIcon;
+    return <Icone size={24} />;
   };
 
-  const openModal = (link: {name: string, url: string, description: string}) => {
-    setSelectedLink(link);
-    openModalBase();
+  const ouvrirModale = (lien: {name: string, url: string, description: string}) => {
+    setLienSelectionne(lien);
+    ouvrirModaleBase();
   };
 
-  const handleLinkConfirm = () => {
-    if (selectedLink) {
-      window.open(selectedLink.url, '_blank', 'noopener,noreferrer');
+  const gererConfirmationLien = () => {
+    if (lienSelectionne) {
+      window.open(lienSelectionne.url, '_blank', 'noopener,noreferrer');
       closeModal();
     }
   };
 
-  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
+  const couleurAccent = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
-  const categoryLabels: Record<string, string> = {
+  const libellesCategorie: Record<string, string> = {
     'websites': 'Sites Web',
     'community': 'Communauté',
     'social': 'Social & Plateformes',
@@ -134,12 +134,12 @@ const BioPage: React.FC = () => {
           </motion.div>
 
           <AnimatePresence mode="wait">
-            {isLoading ? (
+            {estEnChargement ? (
               <motion.div key="loading" className="text-center py-20">
                 <Loader2 className="w-12 h-12 text-accent animate-spin mx-auto mb-6" />
                 <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Chargement...</p>
               </motion.div>
-            ) : error ? (
+            ) : erreur ? (
               <motion.div key="error" className="text-center py-20 bg-destructive/5 border border-destructive/20 rounded-3xl p-12">
                 <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-6" />
                 <p className="text-destructive text-lg mb-8 font-bold">Erreur de chargement</p>
@@ -147,33 +147,33 @@ const BioPage: React.FC = () => {
               </motion.div>
             ) : (
               <div className="space-y-16">
-                {Object.entries(groupedLinks).map(([category, links]) => (
-                  <section key={category} className="space-y-6">
-                    <motion.h2 
+                {Object.entries(liensGroupes).map(([categorie, liens]) => (
+                  <section key={categorie} className="space-y-6">
+                    <motion.h2
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 px-2"
                     >
-                      {categoryLabels[category] || category}
+                      {libellesCategorie[categorie] || categorie}
                     </motion.h2>
-                    <motion.div 
-                      variants={containerVariants}
+                    <motion.div
+                      variants={variantesConteneur}
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true }}
                       className="grid grid-cols-1 md:grid-cols-2 gap-4"
                     >
-                      {links.map((link) => (
+                      {liens.map((lien) => (
                         <motion.button
-                          key={link.id}
-                          variants={itemVariants}
+                          key={lien.id}
+                          variants={variantesElement}
                           whileHover={{ scale: 1.01, y: -2 }}
                           whileTap={{ scale: 0.99 }}
-                          onClick={() => openModal({
-                            name: link.title,
-                            url: link.url,
-                            description: link.description || ''
+                          onClick={() => ouvrirModale({
+                            name: lien.title,
+                            url: lien.url,
+                            description: lien.description || ''
                           })}
                           className="group relative p-4 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-accent/30 text-left w-full overflow-hidden"
                         >
@@ -181,15 +181,15 @@ const BioPage: React.FC = () => {
                             <div className="flex items-center space-x-4">
                               <div className="bg-accent/5 p-3 rounded-xl group-hover:bg-accent/10 transition-all duration-300">
                                 <div className="text-accent group-hover:scale-110 transition-transform duration-300">
-                                  {getIcon(link.icon || 'LinkSimple')}
+                                  {obtenirIcone(lien.icon || 'LinkSimple')}
                                 </div>
                               </div>
                               <div className="min-w-0">
                                 <h3 className="font-bold text-base text-foreground group-hover:text-accent transition-colors duration-300 truncate">
-                                  {link.title}
+                                  {lien.title}
                                 </h3>
                                 <p className="text-xs text-muted-foreground truncate group-hover:text-foreground/70 transition-colors duration-300">
-                                  {link.description}
+                                  {lien.description}
                                 </p>
                               </div>
                             </div>
@@ -207,32 +207,32 @@ const BioPage: React.FC = () => {
       </main>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} maxWidth="max-w-lg">
-        {selectedLink && (
+        {lienSelectionne && (
           <div className="space-y-8 p-2">
             <div className="flex items-center space-x-6">
               <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20 shadow-inner">
                 <div className="text-accent">
-                  {getIcon(BioLinksService.getBioLinksSync().find(l => l.title === selectedLink.name)?.icon || 'LinkSimple')}
+                  {obtenirIcone(BioLinksService.getBioLinksSync().find(l => l.title === lienSelectionne.name)?.icon || 'LinkSimple')}
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-foreground tracking-tight">{selectedLink.name}</h3>
-                <p className="text-sm text-muted-foreground font-medium">{selectedLink.description}</p>
+                <h3 className="text-2xl font-bold text-foreground tracking-tight">{lienSelectionne.name}</h3>
+                <p className="text-sm text-muted-foreground font-medium">{lienSelectionne.description}</p>
               </div>
             </div>
-            
+
             <div className="bg-accent/5 rounded-2xl p-6 border border-accent/10">
               <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">Lien externe :</p>
               <div className="bg-background/50 border border-border/50 rounded-xl p-4">
-                <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
-                  {selectedLink.url}
+                <code className="text-sm font-bold break-all font-mono" style={{ color: couleurAccent }}>
+                  {lienSelectionne.url}
                 </code>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <Button variant="outline" onClick={closeModal} className="flex-1 h-14 rounded-2xl font-bold">Annuler</Button>
-              <Button onClick={handleLinkConfirm} className="flex-1 h-14 rounded-2xl font-bold shadow-lg" style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}>
+              <Button onClick={gererConfirmationLien} className="flex-1 h-14 rounded-2xl font-bold shadow-lg" style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}>
                 <ArrowUpRight className="h-5 w-5 mr-2" /> Ouvrir
               </Button>
             </div>

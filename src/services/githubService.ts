@@ -7,7 +7,7 @@ export interface GitHubStats {
   totalStars: number
 }
 
-const USERNAME = 'Kaysuto'
+const NOM_UTILISATEUR = 'Kaysuto'
 const octokit = new Octokit()
 
 /**
@@ -15,28 +15,28 @@ const octokit = new Octokit()
  * dépôts publics, abonnés, abonnements et total d'étoiles cumulées.
  */
 export async function fetchGitHubStats(): Promise<GitHubStats> {
-  const { data: user } = await octokit.request('GET /users/{username}', {
-    username: USERNAME,
+  const { data: utilisateur } = await octokit.request('GET /users/{username}', {
+    username: NOM_UTILISATEUR,
   })
 
   // Cumul des étoiles sur les dépôts publics (1re page, 100 dépôts max).
-  let totalStars: number
+  let totalEtoiles: number
   try {
-    const { data: repos } = await octokit.request('GET /users/{username}/repos', {
-      username: USERNAME,
+    const { data: depots } = await octokit.request('GET /users/{username}/repos', {
+      username: NOM_UTILISATEUR,
       per_page: 100,
       type: 'owner',
       sort: 'updated',
     })
-    totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count ?? 0), 0)
+    totalEtoiles = depots.reduce((somme, depot) => somme + (depot.stargazers_count ?? 0), 0)
   } catch {
-    totalStars = 0
+    totalEtoiles = 0
   }
 
   return {
-    publicRepos: user.public_repos ?? 0,
-    followers: user.followers ?? 0,
-    following: user.following ?? 0,
-    totalStars,
+    publicRepos: utilisateur.public_repos ?? 0,
+    followers: utilisateur.followers ?? 0,
+    following: utilisateur.following ?? 0,
+    totalStars: totalEtoiles,
   }
 }

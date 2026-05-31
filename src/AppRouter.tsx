@@ -7,7 +7,7 @@ import { Layout } from '@/components/Layout';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { EASE_OUT } from '@/lib/animations';
 
-const pageVariants = {
+const variantesPage = {
   initial: { opacity: 0, y: 12 },
   enter: { opacity: 1, y: 0, transition: { duration: 0.35, ease: EASE_OUT } },
   exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: EASE_OUT } },
@@ -20,7 +20,7 @@ const AnimatedRoutes: React.FC = () => {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={location.pathname}
-        variants={pageVariants}
+        variants={variantesPage}
         initial="initial"
         animate="enter"
         exit="exit"

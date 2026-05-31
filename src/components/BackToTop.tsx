@@ -8,26 +8,26 @@ import { cn } from "@/lib/utils"
  * Placé au-dessus de la nav mobile pour éviter tout chevauchement.
  */
 export function BackToTop() {
-  const [isVisible, setIsVisible] = useState(false)
-  const reduceMotion = useReducedMotion()
+  const [estVisible, setEstVisible] = useState(false)
+  const mouvementReduit = useReducedMotion()
 
   useEffect(() => {
-    const onScroll = () => setIsVisible(window.scrollY > 600)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener("scroll", onScroll)
+    const surDefilement = () => setEstVisible(window.scrollY > 600)
+    window.addEventListener("scroll", surDefilement, { passive: true })
+    surDefilement()
+    return () => window.removeEventListener("scroll", surDefilement)
   }, [])
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" })
+  const defilerVersHaut = () => {
+    window.scrollTo({ top: 0, behavior: mouvementReduit ? "auto" : "smooth" })
   }
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {estVisible && (
         <motion.button
           type="button"
-          onClick={scrollToTop}
+          onClick={defilerVersHaut}
           aria-label="Retour en haut de la page"
           initial={{ opacity: 0, scale: 0.8, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

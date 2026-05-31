@@ -11,9 +11,9 @@ interface GitHubFooterModalProps {
 
 export function GitHubFooterModal({ isOpen, onClose }: GitHubFooterModalProps) {
   const { theme } = useTheme();
-  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
+  const couleurAccent = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
-  const handleOpenGitHub = () => {
+  const gererOuvertureGitHub = () => {
     window.open("https://github.com/Kaysuto", "_blank", "noopener,noreferrer");
     onClose();
   };
@@ -32,32 +32,32 @@ export function GitHubFooterModal({ isOpen, onClose }: GitHubFooterModalProps) {
             </p>
           </div>
         </div>
-        
+
         <div className="bg-accent/5 rounded-[1.5rem] p-6 border border-accent/10">
           <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">
             Lien externe :
           </p>
           <div className="bg-background/50 border border-border/50 rounded-xl p-4">
-            <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
+            <code className="text-sm font-bold break-all font-mono" style={{ color: couleurAccent }}>
               https://github.com/Kaysuto
             </code>
           </div>
         </div>
-        
+
         <div className="flex gap-4">
-          <Button 
+          <Button
             type="button"
-            variant="outline" 
+            variant="outline"
             onClick={onClose}
             className="flex-1 h-14 rounded-2xl border-border/50 hover:bg-accent/5 font-bold text-base"
           >
             Annuler
           </Button>
-          <Button 
+          <Button
             type="button"
-            onClick={handleOpenGitHub} 
+            onClick={gererOuvertureGitHub}
             className="flex-1 h-14 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundColor: accentColor, color: 'black' }}
+            style={{ backgroundColor: couleurAccent, color: 'black' }}
           >
             <ExternalLink className="h-5 w-5 mr-2" />
             Ouvrir
@@ -75,9 +75,9 @@ interface LinkedInFooterModalProps {
 
 export function LinkedInFooterModal({ isOpen, onClose }: LinkedInFooterModalProps) {
   const { theme } = useTheme();
-  const accentColor = theme === 'dark' ? '#D3C0B1' : '#C49D84';
+  const couleurAccent = theme === 'dark' ? '#D3C0B1' : '#C49D84';
 
-  const handleOpenLinkedIn = () => {
+  const gererOuvertureLinkedIn = () => {
     window.open("https://www.linkedin.com/in/enzo-lauret/", "_blank", "noopener,noreferrer");
     onClose();
   };
@@ -96,32 +96,32 @@ export function LinkedInFooterModal({ isOpen, onClose }: LinkedInFooterModalProp
             </p>
           </div>
         </div>
-        
+
         <div className="bg-accent/5 rounded-[1.5rem] p-6 border border-accent/10">
           <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">
             Lien externe :
           </p>
           <div className="bg-background/50 border border-border/50 rounded-xl p-4">
-            <code className="text-sm font-bold break-all font-mono" style={{ color: accentColor }}>
+            <code className="text-sm font-bold break-all font-mono" style={{ color: couleurAccent }}>
               https://www.linkedin.com/in/enzo-lauret/
             </code>
           </div>
         </div>
-        
+
         <div className="flex gap-4">
-          <Button 
+          <Button
             type="button"
-            variant="outline" 
+            variant="outline"
             onClick={onClose}
             className="flex-1 h-14 rounded-2xl border-border/50 hover:bg-accent/5 font-bold text-base"
           >
             Annuler
           </Button>
-          <Button 
+          <Button
             type="button"
-            onClick={handleOpenLinkedIn} 
+            onClick={gererOuvertureLinkedIn}
             className="flex-1 h-14 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundColor: accentColor, color: 'black' }}
+            style={{ backgroundColor: couleurAccent, color: 'black' }}
           >
             <ExternalLink className="h-5 w-5 mr-2" />
             Ouvrir

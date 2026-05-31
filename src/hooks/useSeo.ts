@@ -10,27 +10,27 @@ interface SeoOptions {
   type?: 'website' | 'article' | 'profile'
 }
 
-const SITE_URL = 'https://kaysuto.fr'
-const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`
+const URL_SITE = 'https://kaysuto.fr'
+const IMAGE_PAR_DEFAUT = `${URL_SITE}/og-image.jpg`
 
-function setMeta(selector: string, attr: 'name' | 'property', key: string, content: string) {
-  let el = document.head.querySelector<HTMLMetaElement>(selector)
-  if (!el) {
-    el = document.createElement('meta')
-    el.setAttribute(attr, key)
-    document.head.appendChild(el)
+function definirMeta(selecteur: string, attribut: 'name' | 'property', cle: string, contenu: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(selecteur)
+  if (!element) {
+    element = document.createElement('meta')
+    element.setAttribute(attribut, cle)
+    document.head.appendChild(element)
   }
-  el.setAttribute('content', content)
+  element.setAttribute('content', contenu)
 }
 
-function setCanonical(href: string) {
-  let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
-  if (!link) {
-    link = document.createElement('link')
-    link.setAttribute('rel', 'canonical')
-    document.head.appendChild(link)
+function definirCanonical(lien: string) {
+  let elementLien = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+  if (!elementLien) {
+    elementLien = document.createElement('link')
+    elementLien.setAttribute('rel', 'canonical')
+    document.head.appendChild(elementLien)
   }
-  link.setAttribute('href', href)
+  elementLien.setAttribute('href', lien)
 }
 
 /**
@@ -39,31 +39,31 @@ function setCanonical(href: string) {
  */
 export function useSeo({ title, description, path, image, type = 'website' }: SeoOptions) {
   useEffect(() => {
-    const previousTitle = document.title
+    const titrePrecedent = document.title
     const url = path
       ? path.startsWith('http')
         ? path
-        : `${SITE_URL}${path}`
-      : SITE_URL
-    const ogImage = image ?? DEFAULT_IMAGE
+        : `${URL_SITE}${path}`
+      : URL_SITE
+    const imageOg = image ?? IMAGE_PAR_DEFAUT
 
     document.title = title
     if (description) {
-      setMeta('meta[name="description"]', 'name', 'description', description)
-      setMeta('meta[property="og:description"]', 'property', 'og:description', description)
-      setMeta('meta[property="twitter:description"]', 'property', 'twitter:description', description)
+      definirMeta('meta[name="description"]', 'name', 'description', description)
+      definirMeta('meta[property="og:description"]', 'property', 'og:description', description)
+      definirMeta('meta[property="twitter:description"]', 'property', 'twitter:description', description)
     }
-    setMeta('meta[property="og:title"]', 'property', 'og:title', title)
-    setMeta('meta[property="og:url"]', 'property', 'og:url', url)
-    setMeta('meta[property="og:type"]', 'property', 'og:type', type)
-    setMeta('meta[property="og:image"]', 'property', 'og:image', ogImage)
-    setMeta('meta[property="twitter:title"]', 'property', 'twitter:title', title)
-    setMeta('meta[property="twitter:url"]', 'property', 'twitter:url', url)
-    setMeta('meta[property="twitter:image"]', 'property', 'twitter:image', ogImage)
-    setCanonical(url)
+    definirMeta('meta[property="og:title"]', 'property', 'og:title', title)
+    definirMeta('meta[property="og:url"]', 'property', 'og:url', url)
+    definirMeta('meta[property="og:type"]', 'property', 'og:type', type)
+    definirMeta('meta[property="og:image"]', 'property', 'og:image', imageOg)
+    definirMeta('meta[property="twitter:title"]', 'property', 'twitter:title', title)
+    definirMeta('meta[property="twitter:url"]', 'property', 'twitter:url', url)
+    definirMeta('meta[property="twitter:image"]', 'property', 'twitter:image', imageOg)
+    definirCanonical(url)
 
     return () => {
-      document.title = previousTitle
+      document.title = titrePrecedent
     }
   }, [title, description, path, image, type])
 }

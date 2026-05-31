@@ -3,15 +3,15 @@ export type Theme = 'dark' | 'light';
 const COOKIE_NAME = 'theme';
 const COOKIE_DAYS = 365;
 
-function setCookie(name: string, value: string, days = COOKIE_DAYS) {
-  const d = new Date();
-  d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value}; Path=/; Expires=${d.toUTCString()}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+function definirCookie(nom: string, valeur: string, jours = COOKIE_DAYS) {
+  const dateExpiration = new Date();
+  dateExpiration.setTime(dateExpiration.getTime() + jours * 24 * 60 * 60 * 1000);
+  document.cookie = `${nom}=${valeur}; Path=/; Expires=${dateExpiration.toUTCString()}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
 }
 
-function getCookie(name: string) {
-  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
-  return m ? decodeURIComponent(m[1]) : null;
+function obtenirCookie(nom: string) {
+  const correspondance = document.cookie.match(new RegExp('(?:^|; )' + nom + '=([^;]*)'));
+  return correspondance ? decodeURIComponent(correspondance[1]) : null;
 }
 
 export function applyTheme(theme: Theme) {
@@ -30,9 +30,9 @@ export function setTheme(theme: Theme) {
     localStorage.setItem(COOKIE_NAME, theme);
 
     // Vérifier le consentement des cookies avant de les définir
-    const consent = localStorage.getItem('cookie-consent');
-    if (consent === 'accepted') {
-      setCookie(COOKIE_NAME, theme);
+    const consentement = localStorage.getItem('cookie-consent');
+    if (consentement === 'accepted') {
+      definirCookie(COOKIE_NAME, theme);
     } else {
       // Si pas de consentement, définir quand même un cookie de session (sans expiration)
       // pour que le thème persiste pendant la session de navigation
@@ -41,27 +41,27 @@ export function setTheme(theme: Theme) {
 
     // Déclencher un événement personnalisé pour synchroniser toutes les instances
     window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme } }));
-  } catch (e) { 
-    console.warn('Could not save theme preference:', e);
+  } catch (erreur) {
+    console.warn('Impossible de sauvegarder la préférence de thème :', erreur);
   }
   applyTheme(theme);
 }
 
 export function initTheme(): Theme {
   try {
-    const cookie = getCookie(COOKIE_NAME) as Theme | null;
-    const ls = (localStorage.getItem(COOKIE_NAME) as Theme | null);
-    
-    if (cookie === 'dark' || cookie === 'light') return cookie;
-    if (ls === 'dark' || ls === 'light') return ls;
+    const themeCookie = obtenirCookie(COOKIE_NAME) as Theme | null;
+    const themeLocal = (localStorage.getItem(COOKIE_NAME) as Theme | null);
+
+    if (themeCookie === 'dark' || themeCookie === 'light') return themeCookie;
+    if (themeLocal === 'dark' || themeLocal === 'light') return themeLocal;
 
     // Si aucun choix manuel, utiliser la préférence système
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    applyTheme(systemTheme);
-    return systemTheme;
+    const themeSysteme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    applyTheme(themeSysteme);
+    return themeSysteme;
   } catch {
-    const fallback = 'light';
-    applyTheme(fallback);
-    return fallback;
+    const themeParDefaut = 'light';
+    applyTheme(themeParDefaut);
+    return themeParDefaut;
   }
 }

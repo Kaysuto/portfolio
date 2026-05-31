@@ -37,19 +37,19 @@ export function Modal({
   // Fermeture avec Escape
   useEffect(() => {
     if (!isOpen) return;
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const gererEchap = (evenement: KeyboardEvent) => {
+      if (evenement.key === 'Escape') onClose();
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', gererEchap);
+    return () => document.removeEventListener('keydown', gererEchap);
   }, [isOpen, onClose]);
 
   return createPortal(
     <AnimatePresence mode="wait">
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6">
-          {/* Backdrop */}
-          <motion.div 
+          {/* Arrière-plan */}
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -57,9 +57,9 @@ export function Modal({
             onClick={onClose}
             className="absolute inset-0 bg-background/60 backdrop-blur-md"
           />
-          
-          {/* Modal Panel */}
-          <motion.div 
+
+          {/* Panneau de la modale */}
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -71,9 +71,9 @@ export function Modal({
             )}
             role="dialog"
             aria-modal="true"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(evenement) => evenement.stopPropagation()}
           >
-            {/* Close Button */}
+            {/* Bouton de fermeture */}
             <button
               onClick={onClose}
               className="absolute top-6 right-6 p-2 rounded-xl bg-accent/5 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-all z-50"

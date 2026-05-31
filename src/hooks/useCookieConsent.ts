@@ -8,76 +8,76 @@ export interface CookieChoices {
 
 export type CookieConsentStatus = 'accepted' | 'rejected' | 'dismissed' | 'granular' | null
 
-const CONSENT_KEY = 'cookie-consent'
-const CHOICES_KEY = 'cookie-choices'
+const CLE_CONSENTEMENT = 'cookie-consent'
+const CLE_CHOIX = 'cookie-choices'
 
-const DEFAULT_CHOICES: CookieChoices = {
+const CHOIX_PAR_DEFAUT: CookieChoices = {
   essential: true,
   preferences: true,
   analytics: true
 }
 
 export function useCookieConsent() {
-  const [consent, setConsent] = useState<CookieConsentStatus>(null)
-  const [choices, setChoices] = useState<CookieChoices>(DEFAULT_CHOICES)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [consentement, setConsentement] = useState<CookieConsentStatus>(null)
+  const [choix, setChoix] = useState<CookieChoices>(CHOIX_PAR_DEFAUT)
+  const [estCharge, setEstCharge] = useState(false)
 
   useEffect(() => {
-    const storedConsent = localStorage.getItem(CONSENT_KEY) as CookieConsentStatus
-    const storedChoices = localStorage.getItem(CHOICES_KEY)
-    
-    if (storedConsent) {
-      setConsent(storedConsent)
+    const consentementStocke = localStorage.getItem(CLE_CONSENTEMENT) as CookieConsentStatus
+    const choixStockes = localStorage.getItem(CLE_CHOIX)
+
+    if (consentementStocke) {
+      setConsentement(consentementStocke)
     }
-    
-    if (storedChoices) {
+
+    if (choixStockes) {
       try {
-        setChoices(JSON.parse(storedChoices))
+        setChoix(JSON.parse(choixStockes))
       } catch {
-        setChoices(DEFAULT_CHOICES)
+        setChoix(CHOIX_PAR_DEFAUT)
       }
     }
-    setIsLoaded(true)
+    setEstCharge(true)
   }, [])
 
-  // Sync Google Tag consent
+  // Synchronise le consentement Google Tag
   useEffect(() => {
-    if (isLoaded && typeof window !== 'undefined' && (window as any).gtag) {
+    if (estCharge && typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('consent', 'update', {
-        'analytics_storage': choices.analytics ? 'granted' : 'denied'
+        'analytics_storage': choix.analytics ? 'granted' : 'denied'
       });
     }
-  }, [choices.analytics, isLoaded])
+  }, [choix.analytics, estCharge])
 
-  const saveChoices = (newChoices: CookieChoices, status: CookieConsentStatus = 'granular') => {
-    setChoices(newChoices)
-    setConsent(status)
-    localStorage.setItem(CHOICES_KEY, JSON.stringify(newChoices))
-    if (status) {
-      localStorage.setItem(CONSENT_KEY, status)
+  const enregistrerChoix = (nouveauxChoix: CookieChoices, statut: CookieConsentStatus = 'granular') => {
+    setChoix(nouveauxChoix)
+    setConsentement(statut)
+    localStorage.setItem(CLE_CHOIX, JSON.stringify(nouveauxChoix))
+    if (statut) {
+      localStorage.setItem(CLE_CONSENTEMENT, statut)
     }
   }
 
-  const acceptAll = () => {
-    saveChoices(DEFAULT_CHOICES, 'accepted')
+  const toutAccepter = () => {
+    enregistrerChoix(CHOIX_PAR_DEFAUT, 'accepted')
   }
 
-  const rejectAll = () => {
-    saveChoices({ essential: true, preferences: false, analytics: false }, 'rejected')
+  const toutRefuser = () => {
+    enregistrerChoix({ essential: true, preferences: false, analytics: false }, 'rejected')
   }
 
-  const dismissCookies = () => {
-    setConsent('dismissed')
-    localStorage.setItem(CONSENT_KEY, 'dismissed')
+  const ignorerCookies = () => {
+    setConsentement('dismissed')
+    localStorage.setItem(CLE_CONSENTEMENT, 'dismissed')
   }
 
   return {
-    consent,
-    choices,
-    isLoaded,
-    saveChoices,
-    acceptAll,
-    rejectAll,
-    dismissCookies
+    consent: consentement,
+    choices: choix,
+    isLoaded: estCharge,
+    saveChoices: enregistrerChoix,
+    acceptAll: toutAccepter,
+    rejectAll: toutRefuser,
+    dismissCookies: ignorerCookies
   }
 }

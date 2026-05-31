@@ -15,18 +15,18 @@ import {
 import { DemoModal } from "@/components/ui/ProjectModal"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { projects as localProjects, type Project } from "@/data/projects"
+import { projects as projetsLocaux, type Project } from "@/data/projects"
 import { scaleIn, VIEWPORT, EASE_OUT } from "@/lib/animations"
 
-const STATUS_STYLES: Record<Project["status"], string> = {
+const STYLES_STATUT: Record<Project["status"], string> = {
   "En production": "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
   "Beta": "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
   "Alpha": "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
   "En développement": "bg-zinc-500/15 text-zinc-500 dark:text-zinc-400 border-zinc-500/30",
 }
 
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("fr-FR", {
+function formaterDate(chaineDate: string) {
+  return new Date(chaineDate).toLocaleDateString("fr-FR", {
     year: "numeric",
     month: "short",
   })
@@ -65,22 +65,22 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
             </div>
           )}
 
-          {/* Bottom fade */}
+          {/* Dégradé en bas */}
           <div className="absolute inset-x-0 bottom-[-1px] h-12 bg-gradient-to-t from-card via-card/20 to-transparent pointer-events-none z-10" />
 
-          {/* Status badge */}
+          {/* Badge de statut */}
           <div className="absolute top-4 left-4 z-20">
             <span
               className={cn(
                 "inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border",
-                STATUS_STYLES[project.status]
+                STYLES_STATUT[project.status]
               )}
             >
               {project.status}
             </span>
           </div>
 
-          {/* Stats overlay */}
+          {/* Surcouche de statistiques */}
           <div className="absolute bottom-4 right-4 z-20 flex gap-2">
             {!!project.stars && project.stars > 0 && (
               <div className="flex items-center gap-1 text-white text-[10px] font-bold bg-black/40 backdrop-blur-md px-2 py-1 rounded-lg">
@@ -97,12 +97,12 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Contenu */}
         <div className="flex-1 flex flex-col p-8 min-h-0">
           <div className="flex items-center justify-between mb-4">
             <span className="text-[10px] text-accent font-black uppercase tracking-widest flex items-center gap-1.5">
               <Calendar size={11} />
-              {formatDate(project.created_at)}
+              {formaterDate(project.created_at)}
             </span>
             <div className="flex gap-1">
               {project.tech_stack.slice(0, 3).map((tech) => (
@@ -156,26 +156,26 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
 
 export function ProjectCards() {
   const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
-  const [modalProject, setModalProject] = useState<Project | null>(null)
-  const [showModal, setShowModal] = useState(false)
+  const [indexCourant, setIndexCourant] = useState(0)
+  const [nombreSlides, setNombreSlides] = useState(0)
+  const [projetModale, setProjetModale] = useState<Project | null>(null)
+  const [afficherModale, setAfficherModale] = useState(false)
 
   useEffect(() => {
     if (!api) return
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap())
-    api.on("select", () => setCurrent(api.selectedScrollSnap()))
+    setNombreSlides(api.scrollSnapList().length)
+    setIndexCourant(api.selectedScrollSnap())
+    api.on("select", () => setIndexCourant(api.selectedScrollSnap()))
   }, [api])
 
-  const handleDiscover = useCallback((project: Project) => {
-    setModalProject(project)
-    setShowModal(true)
+  const gererDecouverte = useCallback((projet: Project) => {
+    setProjetModale(projet)
+    setAfficherModale(true)
   }, [])
 
-  const handleCloseModal = useCallback(() => {
-    setShowModal(false)
-    setTimeout(() => setModalProject(null), 500)
+  const gererFermetureModale = useCallback(() => {
+    setAfficherModale(false)
+    setTimeout(() => setProjetModale(null), 500)
   }, [])
 
   return (
@@ -186,9 +186,9 @@ export function ProjectCards() {
         className="w-full"
       >
         <CarouselContent className="-ml-6 py-8">
-          {localProjects.map((project, index) => (
-            <CarouselItem key={project.id} className="pl-6 basis-full md:basis-[420px]">
-              <ProjectCard project={project} index={index} onDiscover={handleDiscover} />
+          {projetsLocaux.map((projet, index) => (
+            <CarouselItem key={projet.id} className="pl-6 basis-full md:basis-[420px]">
+              <ProjectCard project={projet} index={index} onDiscover={gererDecouverte} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -207,17 +207,17 @@ export function ProjectCards() {
         />
       </Carousel>
 
-      {/* Dots */}
-      {count > 1 && (
+      {/* Points indicateurs */}
+      {nombreSlides > 1 && (
         <div className="flex justify-center gap-2" aria-label="Slides">
-          {Array.from({ length: count }).map((_, i) => (
+          {Array.from({ length: nombreSlides }).map((_, i) => (
             <button
               key={i}
               aria-label={`Slide ${i + 1}`}
               onClick={() => api?.scrollTo(i)}
               className={cn(
                 "h-1.5 rounded-full transition-all duration-300",
-                i === current
+                i === indexCourant
                   ? "w-6 bg-accent"
                   : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
               )}
@@ -227,10 +227,10 @@ export function ProjectCards() {
       )}
 
       <DemoModal
-        isOpen={showModal && !!modalProject}
-        onClose={handleCloseModal}
-        projectTitle={modalProject?.title ?? ""}
-        projectUrl={modalProject?.demo_url ?? ""}
+        isOpen={afficherModale && !!projetModale}
+        onClose={gererFermetureModale}
+        projectTitle={projetModale?.title ?? ""}
+        projectUrl={projetModale?.demo_url ?? ""}
       />
     </div>
   )

@@ -9,38 +9,38 @@ export interface UseModalReturn {
 }
 
 export const useModal = (): UseModalReturn => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMounted, setModalMounted] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [estModaleOuverte, setEstModaleOuverte] = useState(false);
+  const [modaleMontee, setModaleMontee] = useState(false);
+  const [estEnFermeture, setEstEnFermeture] = useState(false);
 
-  const openModal = useCallback(() => {
-    setIsClosing(false);
-    setModalMounted(true);
-    setTimeout(() => setIsModalOpen(true), 10);
+  const ouvrirModale = useCallback(() => {
+    setEstEnFermeture(false);
+    setModaleMontee(true);
+    setTimeout(() => setEstModaleOuverte(true), 10);
   }, []);
 
-  const closeModal = useCallback(() => {
-    setIsClosing(true);
-    setIsModalOpen(false);
+  const fermerModale = useCallback(() => {
+    setEstEnFermeture(true);
+    setEstModaleOuverte(false);
     setTimeout(() => {
-      setModalMounted(false);
-      setIsClosing(false);
+      setModaleMontee(false);
+      setEstEnFermeture(false);
     }, 220);
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
+    const surTouche = (evenement: KeyboardEvent) => {
+      if (evenement.key === "Escape") fermerModale();
     };
-    if (isModalOpen) document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [isModalOpen, closeModal]);
+    if (estModaleOuverte) document.addEventListener("keydown", surTouche);
+    return () => document.removeEventListener("keydown", surTouche);
+  }, [estModaleOuverte, fermerModale]);
 
   return {
-    isModalOpen,
-    modalMounted,
-    isClosing,
-    openModal,
-    closeModal,
+    isModalOpen: estModaleOuverte,
+    modalMounted: modaleMontee,
+    isClosing: estEnFermeture,
+    openModal: ouvrirModale,
+    closeModal: fermerModale,
   };
 };

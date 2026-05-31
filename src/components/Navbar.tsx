@@ -6,124 +6,124 @@ import { cn } from "@/lib/utils"
 import { useNavigate, useLocation } from "react-router-dom"
 import { preloadRoute } from "@/routes/lazyRoutes"
 
-// ─── Animation tokens ────────────────────────────────────────────────────────
+// ─── Jetons d'animation ─────────────────────────────────────────────────────
 const LUMA_EASE = [0.22, 1, 0.36, 1] as const
 
-// ─── Types & data ─────────────────────────────────────────────────────────────
+// ─── Types & données ─────────────────────────────────────────────────────────
 type NavLink = { href: string; id: string; label: string; index: string; icon: React.ElementType }
 
-const SCROLL_LINKS: NavLink[] = [
+const LIENS_DEFILEMENT: NavLink[] = [
   { href: "#apropos", id: "apropos", label: "À propos", index: "01", icon: User },
   { href: "#projets", id: "projets", label: "Projets",  index: "02", icon: FolderOpen },
   { href: "#contact", id: "contact", label: "Contact",  index: "03", icon: Mail },
 ]
 
-const ROUTE_LINKS: NavLink[] = [
+const LIENS_ROUTES: NavLink[] = [
   { href: "/cv",  id: "cv",  label: "CV",  index: "04", icon: FileText },
   { href: "/bio", id: "bio", label: "Bio", index: "05", icon: BookOpen },
 ]
 
-const ALL_LINKS = [...SCROLL_LINKS, ...ROUTE_LINKS]
+const TOUS_LIENS = [...LIENS_DEFILEMENT, ...LIENS_ROUTES]
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── Sous-composants ──────────────────────────────────────────────────────────
 const Sep = () => <div className="w-px h-4 bg-border/50 shrink-0" />
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Composant ────────────────────────────────────────────────────────────────
 export function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeId,  setActiveId]  = useState<string | null>(null)
+  const [estVisible, setEstVisible] = useState(false)
+  const [idActif,  setIdActif]  = useState<string | null>(null)
 
-  // Pill visibility: appears after 80 px
+  // Visibilité de la pilule : apparaît après 80 px
   useEffect(() => {
-    const onScroll = () => setIsVisible(window.scrollY > 80)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener("scroll", onScroll)
+    const surDefilement = () => setEstVisible(window.scrollY > 80)
+    window.addEventListener("scroll", surDefilement, { passive: true })
+    surDefilement()
+    return () => window.removeEventListener("scroll", surDefilement)
   }, [])
 
-  // Scroll spy via IntersectionObserver
+  // Espion de défilement via IntersectionObserver
   useEffect(() => {
-    const routeMatch = ROUTE_LINKS.find(l => l.href === location.pathname)
-    if (routeMatch) { setActiveId(routeMatch.id); return }
+    const routeCorrespondante = LIENS_ROUTES.find(lien => lien.href === location.pathname)
+    if (routeCorrespondante) { setIdActif(routeCorrespondante.id); return }
 
-    const intersecting = new Set<string>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) intersecting.add(e.target.id)
-          else intersecting.delete(e.target.id)
+    const enIntersection = new Set<string>()
+    const observateur = new IntersectionObserver(
+      (entrees) => {
+        entrees.forEach(entree => {
+          if (entree.isIntersecting) enIntersection.add(entree.target.id)
+          else enIntersection.delete(entree.target.id)
         })
-        const first = SCROLL_LINKS.find(l => intersecting.has(l.id))
-        setActiveId(first?.id ?? null)
+        const premier = LIENS_DEFILEMENT.find(lien => enIntersection.has(lien.id))
+        setIdActif(premier?.id ?? null)
       },
       { rootMargin: "-40% 0px -55% 0px" }
     )
-    const observeAll = () => {
-      SCROLL_LINKS.forEach(l => {
-        const el = document.getElementById(l.id)
-        if (el) observer.observe(el)
+    const observerTout = () => {
+      LIENS_DEFILEMENT.forEach(lien => {
+        const element = document.getElementById(lien.id)
+        if (element) observateur.observe(element)
       })
     }
-    observeAll()
-    // Retry for lazy-loaded sections
-    const timers = [200, 800, 2000].map(d => setTimeout(observeAll, d))
-    return () => { timers.forEach(clearTimeout); observer.disconnect() }
+    observerTout()
+    // Nouvelle tentative pour les sections chargées paresseusement
+    const minuteurs = [200, 800, 2000].map(delai => setTimeout(observerTout, delai))
+    return () => { minuteurs.forEach(clearTimeout); observateur.disconnect() }
   }, [location.pathname])
 
-  // Pending scroll after navigation
+  // Défilement en attente après une navigation
   useEffect(() => {
-    const target = sessionStorage.getItem("scrollToSection")
-    if (!target || location.pathname !== "/") return
+    const cible = sessionStorage.getItem("scrollToSection")
+    if (!cible || location.pathname !== "/") return
     setTimeout(() => {
-      document.getElementById(target)?.scrollIntoView({ behavior: "smooth" })
+      document.getElementById(cible)?.scrollIntoView({ behavior: "smooth" })
       sessionStorage.removeItem("scrollToSection")
     }, 150)
   }, [location.pathname])
 
-  // ─── Handlers ──────────────────────────────────────────────────────────────
-  const scrollTo = useCallback((id: string) => {
+  // ─── Gestionnaires ─────────────────────────────────────────────────────────
+  const defilerVers = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   }, [])
 
-  const handleLinkClick = useCallback((link: NavLink) => {
-    if (link.href.startsWith("/")) { navigate(link.href); return }
+  const gererClicLien = useCallback((lien: NavLink) => {
+    if (lien.href.startsWith("/")) { navigate(lien.href); return }
     if (location.pathname !== "/") {
-      sessionStorage.setItem("scrollToSection", link.id)
+      sessionStorage.setItem("scrollToSection", lien.id)
       navigate("/")
       return
     }
-    scrollTo(link.id)
-  }, [navigate, location.pathname, scrollTo])
+    defilerVers(lien.id)
+  }, [navigate, location.pathname, defilerVers])
 
-  const handleLinkHover = useCallback((link: NavLink) => {
-    if (link.href.startsWith("/")) preloadRoute(link.href)
+  const gererSurvolLien = useCallback((lien: NavLink) => {
+    if (lien.href.startsWith("/")) preloadRoute(lien.href)
   }, [])
 
-  const handleLogoClick = useCallback(() => {
+  const gererClicLogo = useCallback(() => {
     if (location.pathname !== "/") { navigate("/"); return }
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [navigate, location.pathname])
 
 
-  // ─── Shared active button ───────────────────────────────────────────────────
+  // ─── Bouton actif partagé ───────────────────────────────────────────────────
   const NavBtn = ({ link }: { link: NavLink }) => {
-    const Icon = link.icon
+    const Icone = link.icon
     return (
       <button
-        onClick={() => handleLinkClick(link)}
-        onMouseEnter={() => handleLinkHover(link)}
-        onFocus={() => handleLinkHover(link)}
+        onClick={() => gererClicLien(link)}
+        onMouseEnter={() => gererSurvolLien(link)}
+        onFocus={() => gererSurvolLien(link)}
         className={cn(
           "relative px-4 py-2 rounded-full text-sm transition-colors duration-150",
-          activeId === link.id
+          idActif === link.id
             ? "text-foreground font-semibold"
             : "text-muted-foreground hover:bg-foreground/10"
         )}
       >
-        {activeId === link.id && (
+        {idActif === link.id && (
           <motion.div
             layoutId="nav-active"
             className="absolute inset-0 rounded-full bg-accent/20 ring-1 ring-accent/30"
@@ -131,17 +131,17 @@ export function Navbar() {
           />
         )}
         <span className="relative z-10 flex items-center gap-1.5 whitespace-nowrap">
-          <Icon className="w-3.5 h-3.5 shrink-0" />
+          <Icone className="w-3.5 h-3.5 shrink-0" />
           {link.label}
         </span>
       </button>
     )
   }
 
-  // ─── Render ─────────────────────────────────────────────────────────────────
+  // ─── Rendu ──────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── Desktop pill ─────────────────────────────────────────────────── */}
+      {/* ── Pilule desktop ───────────────────────────────────────────────── */}
       <motion.header
         className="fixed top-6 left-1/2 -translate-x-1/2 z-40 hidden md:block"
         initial={{ y: -16, opacity: 0 }}
@@ -150,17 +150,17 @@ export function Navbar() {
       >
         <motion.div
           animate={{
-            backgroundColor: isVisible ? "var(--card)" : "transparent",
-            borderColor: isVisible ? "color-mix(in oklch, var(--border) 8%, transparent)" : "transparent",
-            boxShadow: isVisible ? "0 4px 24px 0 rgba(0,0,0,0.10)" : "none",
-            backdropFilter: isVisible ? "blur(20px)" : "blur(0px)",
+            backgroundColor: estVisible ? "var(--card)" : "transparent",
+            borderColor: estVisible ? "color-mix(in oklch, var(--border) 8%, transparent)" : "transparent",
+            boxShadow: estVisible ? "0 4px 24px 0 rgba(0,0,0,0.10)" : "none",
+            backdropFilter: estVisible ? "blur(20px)" : "blur(0px)",
           }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="flex items-center gap-4 h-14 px-6 rounded-full border"
         >
 
               <button
-                onClick={handleLogoClick}
+                onClick={gererClicLogo}
                 className="font-mono text-base font-semibold text-foreground hover:opacity-60 transition-opacity shrink-0"
               >
                 Kaysuto
@@ -169,13 +169,13 @@ export function Navbar() {
               <Sep />
 
               <nav className="flex items-center gap-0.5">
-                {SCROLL_LINKS.map(l => <NavBtn key={l.id} link={l} />)}
+                {LIENS_DEFILEMENT.map(lien => <NavBtn key={lien.id} link={lien} />)}
               </nav>
 
               <Sep />
 
               <nav className="flex items-center gap-0.5">
-                {ROUTE_LINKS.map(l => <NavBtn key={l.id} link={l} />)}
+                {LIENS_ROUTES.map(lien => <NavBtn key={lien.id} link={lien} />)}
               </nav>
 
               <Sep />
@@ -184,30 +184,30 @@ export function Navbar() {
         </motion.div>
       </motion.header>
 
-      {/* ── Mobile bottom nav ────────────────────────────────────────────── */}
+      {/* ── Navigation mobile en bas ─────────────────────────────────────── */}
       <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 md:hidden">
         <div className="flex items-center gap-1 px-3 py-2 rounded-full bg-background/80 backdrop-blur-xl border border-border/[0.08] shadow-lg">
-          {ALL_LINKS.map((link) => {
-            const Icon = link.icon
-            const isActive = activeId === link.id
+          {TOUS_LIENS.map((lien) => {
+            const Icone = lien.icon
+            const estActif = idActif === lien.id
             return (
               <button
-                key={link.id}
-                onClick={() => handleLinkClick(link)}
-                onTouchStart={() => handleLinkHover(link)}
+                key={lien.id}
+                onClick={() => gererClicLien(lien)}
+                onTouchStart={() => gererSurvolLien(lien)}
                 className="flex flex-col items-center gap-1 px-1 py-1 transition-colors duration-150"
               >
                 <div className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-200",
-                  isActive ? "bg-foreground/[0.1]" : ""
+                  estActif ? "bg-foreground/[0.1]" : ""
                 )}>
-                  <Icon className={cn(
+                  <Icone className={cn(
                     "w-4 h-4 transition-colors duration-150 shrink-0",
-                    isActive ? "text-accent" : "text-muted-foreground"
+                    estActif ? "text-accent" : "text-muted-foreground"
                   )} />
-                  {isActive && (
+                  {estActif && (
                     <span className="text-xs font-semibold text-accent whitespace-nowrap">
-                      {link.label}
+                      {lien.label}
                     </span>
                   )}
                 </div>

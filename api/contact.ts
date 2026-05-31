@@ -13,8 +13,8 @@ const ratelimit = new Ratelimit({
   prefix: "kaysuto:contact",
 })
 
-function escapeHtml(str: string): string {
-  return str
+function echapperHtml(chaine: string): string {
+  return chaine
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(429).json({ error: "Trop de tentatives. Réessaie dans quelques minutes." })
     }
   } catch {
-    // Redis unavailable — allow the request through rather than blocking it
+    // Redis indisponible — on laisse passer la requête plutôt que de la bloquer
   }
 
   const { name, email, message } = req.body ?? {}
@@ -43,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: "Tous les champs sont requis." })
   }
 
-  const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const reponseBrevo = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -59,17 +59,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       replyTo: { email: email.trim(), name: name.trim() },
       subject: `[Portfolio] Message de ${name.trim()}`,
       htmlContent: `
-        <p><strong>Nom :</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email :</strong> ${escapeHtml(email)}</p>
+        <p><strong>Nom :</strong> ${echapperHtml(name)}</p>
+        <p><strong>Email :</strong> ${echapperHtml(email)}</p>
         <p><strong>Message :</strong></p>
-        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
+        <p>${echapperHtml(message).replace(/\n/g, "<br/>")}</p>
       `,
     }),
   })
 
-  if (!brevoRes.ok) {
-    const brevoError = await brevoRes.text()
-    console.error("Brevo error status:", brevoRes.status, "body:", brevoError)
+  if (!reponseBrevo.ok) {
+    const erreurBrevo = await reponseBrevo.text()
+    console.error("Erreur Brevo - statut :", reponseBrevo.status, "corps :", erreurBrevo)
     return res.status(500).json({ error: "Erreur lors de l'envoi. Réessaie plus tard." })
   }
 
