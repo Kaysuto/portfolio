@@ -8,6 +8,7 @@ const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
+  cacheDir: resolve(projectRoot, 'node_modules/.vite'),
   plugins: [
     react(),
     tailwindcss(),
@@ -59,36 +60,15 @@ export default defineConfig({
     hmr: {
       overlay: false
     },
-    proxy: {
-      '/api/tailscale': {
-        target: 'http://100.79.95.114:8000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/tailscale/, ''),
-        configure: (proxy, _options) => {
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            // Headers d'authentification pour Tailscale
-            if (req.headers['apikey']) {
-              proxyReq.setHeader('apikey', req.headers['apikey']);
-            }
-            if (req.headers['authorization']) {
-              proxyReq.setHeader('authorization', req.headers['authorization']);
-            }
-            // Headers CORS
-            proxyReq.setHeader('Access-Control-Allow-Origin', '*');
-            proxyReq.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            proxyReq.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey');
-            
-            // console.log(`🔄 Proxy Tailscale: ${req.method} ${req.url}`);
-          });
-          
-          proxy.on('proxyRes', (proxyRes, _req, _res) => {
-            // Headers CORS pour Tailscale
-            proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-            proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';  
-            proxyRes.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization, apikey';
-          });
-        }
-      }
+    // Nécessaire pour les partages réseau (UNC paths)
+    fs: {
+      strict: false,
+      allow: [projectRoot]
+    },
+    watch: {
+      usePolling: true,
+      interval: 1000,
+      ignored: ['**/.env*', '**/node_modules/**']
     }
   }
 });

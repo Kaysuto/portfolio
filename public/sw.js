@@ -84,8 +84,6 @@ self.addEventListener('fetch', (event) => {
     'google-analytics.com',
     'googletagmanager.com',
     'supabase',
-    '100.79.95.114',
-    'db.kaysuto.fr',
     'chrome-extension://',
     'moz-extension://'
   ];

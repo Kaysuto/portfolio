@@ -1,5 +1,5 @@
 # Robots.txt pour Portfolio Kimiya Kaysuto - Product Builder
-# Généré le 2 septembre 2025
+# Généré le 1 juin 2026
 
 # Autoriser tous les robots d'indexation
 User-agent: *
@@ -59,9 +59,9 @@ User-agent: DotBot
 Disallow: /
 
 # Localisation du sitemap
-Sitemap: https://kimiya-portfolio.vercel.app/sitemap.xml
+Sitemap: https://kaysuto.fr/sitemap.xml
 
 # Informations supplémentaires
-# Portfolio: https://kimiya-portfolio.vercel.app
+# Portfolio: https://kaysuto.fr
 # Propriétaire: Kimiya Kaysuto - Product Builder
-# Contact: [email sera ajouté si nécessaire]
+# Contact: contact@kaysuto.fr
