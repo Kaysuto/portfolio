@@ -55,9 +55,9 @@ export function PortfolioApp() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
-            "name": "Kimiya Kaysuto",
+            "name": "Kimiya",
             "jobTitle": "Technicien Informatique & Product Builder",
-            "description": "Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe le jour, Product Builder la nuit — 11 ans de passion autodidacte pour le code, les réseaux et la création.",
+            "description": "Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe le jour, Product Builder la nuit — plus de 12 ans de passion autodidacte pour le code, les réseaux et la création.",
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",

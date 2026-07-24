@@ -11,8 +11,8 @@
     <link rel="icon" type="image/x-icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <meta name="description" content="Portfolio de Kimiya, Product Builder polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
-    <meta name="keywords" content="product builder, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya Kaysuto" />
-    <meta name="author" content="Kimiya Kaysuto" />
+    <meta name="keywords" content="product builder, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya" />
+    <meta name="author" content="Kimiya" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kaysuto.fr" />
     
@@ -26,20 +26,16 @@
     <link rel="preload" href="/src/index.css" as="style" />
     <link rel="modulepreload" href="/src/main.tsx" />
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
-    <!-- Remove problematic preloads that cause warnings -->
-    
+    <!-- Polices auto-hébergées (Fraunces, Instrument Sans, Geist Mono) —
+         aucune requête vers un tiers. Empreintées et injectées par Vite. -->
+
     <!-- Prevent prefetching of source files -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kaysuto.fr" />
-    <meta property="og:title" content="Kimiya Kaysuto - Product Builder" />
+    <meta property="og:title" content="Kimiya - Product Builder" />
     <meta property="og:description" content="Portfolio de Kimiya, Product Builder polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="og:image" content="https://kaysuto.fr/og-image.jpg" />
     <meta property="og:locale" content="fr_FR" />
@@ -47,27 +43,27 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://kaysuto.fr" />
-    <meta property="twitter:title" content="Kimiya Kaysuto - Product Builder" />
+    <meta property="twitter:title" content="Kimiya - Product Builder" />
     <meta property="twitter:description" content="Portfolio de Kimiya, Product Builder polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="twitter:image" content="https://kaysuto.fr/og-image.jpg" />
     
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#4f46e5" />
+    <meta name="theme-color" content="#221A14" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4ECDC" media="(prefers-color-scheme: light)" />
     <meta name="color-scheme" content="dark light" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <!-- Critical CSS inline for LCP -->
+    <!-- CSS critique inline : évite le flash de couleur avant le chargement de index.css.
+         Les valeurs doivent rester alignées sur --background / --foreground de src/index.css. -->
     <style>
-        /* Montserrat font stack */
-        html{font-family:'Montserrat',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;scroll-behavior:smooth}
-        body{margin:0;background:#2A1F1A !important;color:#e6eef8;line-height:1.6;font-display:swap;transition:background-color 0.2s ease,color 0.2s ease}
-        html:not(.dark) body{background:#f9f6f0 !important;color:#1a0f08}
+        html{font-family:'Instrument Sans Variable',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;scroll-behavior:smooth;background:#F4ECDC}
+        html.dark{background:#221A14}
+        body{margin:0;background:#F4ECDC;color:#2A2018;line-height:1.6}
+        html.dark body{background:#221A14;color:#EFE5D3}
         #root{min-height:100vh}
         *{box-sizing:border-box}
-        /* Prevent CLS during font loading */
-        .font-inter{font-family:'Montserrat',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
     </style>
     
         <script>
@@ -115,7 +111,7 @@
         {
             "@context": "https://schema.org",
             "@type": "Person",
-            "name": "Kimiya Kaysuto",
+            "name": "Kimiya",
             "jobTitle": "Product Builder",
             "description": "Product Builder polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux Minecraft",
             "url": "https://kaysuto.fr",

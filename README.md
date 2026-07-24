@@ -1,4 +1,4 @@
-# 🌟 Portfolio — Kimiya Kaysuto
+# 🌟 Portfolio — Kimiya
 
 [![Lighthouse](https://img.shields.io/badge/Lighthouse-100%25-brightgreen?logo=lighthouse&logoColor=white)](https://kaysuto.fr)
 [![React](https://img.shields.io/badge/React-19-blue?logo=react&logoColor=white)](https://reactjs.org)
@@ -69,5 +69,5 @@ MIT — voir `LICENSE`.
 ---
 
 <div align="center">
-  <p>© 2015-2026 Kimiya Kaysuto · <a href="https://kaysuto.fr">kaysuto.fr</a></p>
+  <p>© 2015-2026 Kimiya · <a href="https://kaysuto.fr">kaysuto.fr</a></p>
 </div>

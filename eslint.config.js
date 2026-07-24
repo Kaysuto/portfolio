@@ -4,6 +4,13 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
+// typescript-eslint ne supporte pas encore l'API TypeScript 7 (cf. issue #10940).
+// Le projet installe donc les deux côte à côte, via des alias npm :
+//   · `tsc`               → TypeScript 7 (compilation et vérification de types)
+//   · import 'typescript' → @typescript/typescript6, l'API 6.0 que lit cet outil
+// Rien à changer ici quand typescript-eslint deviendra compatible : il suffira
+// de retirer l'alias `typescript` de package.json.
+
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'public', 'api', 'plans'] },
   {

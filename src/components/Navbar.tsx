@@ -1,44 +1,41 @@
 import { useState, useEffect, useCallback } from "react"
-import { motion } from "framer-motion"
+import { motion, useScroll, useSpring } from "framer-motion"
 import { User, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
 import { ThemeController } from "./ThemeController"
 import { cn } from "@/lib/utils"
 import { useNavigate, useLocation } from "react-router-dom"
 import { preloadRoute } from "@/routes/lazyRoutes"
 
-// ─── Jetons d'animation ─────────────────────────────────────────────────────
 const LUMA_EASE = [0.22, 1, 0.36, 1] as const
 
-// ─── Types & données ─────────────────────────────────────────────────────────
-type NavLink = { href: string; id: string; label: string; index: string; icon: React.ElementType }
+type NavLink = { href: string; id: string; label: string; icon: React.ElementType }
 
 const LIENS_DEFILEMENT: NavLink[] = [
-  { href: "#apropos", id: "apropos", label: "À propos", index: "01", icon: User },
-  { href: "#projets", id: "projets", label: "Projets",  index: "02", icon: FolderOpen },
-  { href: "#contact", id: "contact", label: "Contact",  index: "03", icon: Mail },
+  { href: "#apropos", id: "apropos", label: "À propos", icon: User },
+  { href: "#projets", id: "projets", label: "Projets", icon: FolderOpen },
+  { href: "#contact", id: "contact", label: "Contact", icon: Mail },
 ]
 
 const LIENS_ROUTES: NavLink[] = [
-  { href: "/cv",  id: "cv",  label: "CV",  index: "04", icon: FileText },
-  { href: "/bio", id: "bio", label: "Bio", index: "05", icon: BookOpen },
+  { href: "/cv", id: "cv", label: "CV", icon: FileText },
+  { href: "/bio", id: "bio", label: "Bio", icon: BookOpen },
 ]
 
 const TOUS_LIENS = [...LIENS_DEFILEMENT, ...LIENS_ROUTES]
 
-// ─── Sous-composants ──────────────────────────────────────────────────────────
-const Sep = () => <div className="w-px h-4 bg-border/50 shrink-0" />
-
-// ─── Composant ────────────────────────────────────────────────────────────────
 export function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [estVisible, setEstVisible] = useState(false)
-  const [idActif,  setIdActif]  = useState<string | null>(null)
+  const [estCondensee, setEstCondensee] = useState(false)
+  const [idActif, setIdActif] = useState<string | null>(null)
 
-  // Visibilité de la pilule : apparaît après 80 px
+  // Barre de progression de lecture, partagée par les deux affichages.
+  const { scrollYProgress } = useScroll()
+  const progression = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 })
+
   useEffect(() => {
-    const surDefilement = () => setEstVisible(window.scrollY > 80)
+    const surDefilement = () => setEstCondensee(window.scrollY > 80)
     window.addEventListener("scroll", surDefilement, { passive: true })
     surDefilement()
     return () => window.removeEventListener("scroll", surDefilement)
@@ -68,7 +65,6 @@ export function Navbar() {
       })
     }
     observerTout()
-    // Nouvelle tentative pour les sections chargées paresseusement
     const minuteurs = [200, 800, 2000].map(delai => setTimeout(observerTout, delai))
     return () => { minuteurs.forEach(clearTimeout); observateur.disconnect() }
   }, [location.pathname])
@@ -83,11 +79,6 @@ export function Navbar() {
     }, 150)
   }, [location.pathname])
 
-  // ─── Gestionnaires ─────────────────────────────────────────────────────────
-  const defilerVers = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
-  }, [])
-
   const gererClicLien = useCallback((lien: NavLink) => {
     if (lien.href.startsWith("/")) { navigate(lien.href); return }
     if (location.pathname !== "/") {
@@ -95,8 +86,8 @@ export function Navbar() {
       navigate("/")
       return
     }
-    defilerVers(lien.id)
-  }, [navigate, location.pathname, defilerVers])
+    document.getElementById(lien.id)?.scrollIntoView({ behavior: "smooth" })
+  }, [navigate, location.pathname])
 
   const gererSurvolLien = useCallback((lien: NavLink) => {
     if (lien.href.startsWith("/")) preloadRoute(lien.href)
@@ -107,120 +98,164 @@ export function Navbar() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [navigate, location.pathname])
 
-
-  // ─── Bouton actif partagé ───────────────────────────────────────────────────
-  const NavBtn = ({ link }: { link: NavLink }) => {
-    const Icone = link.icon
-    return (
-      <button
-        onClick={() => gererClicLien(link)}
-        onMouseEnter={() => gererSurvolLien(link)}
-        onFocus={() => gererSurvolLien(link)}
-        className={cn(
-          "relative px-4 py-2 rounded-full text-sm transition-colors duration-150",
-          idActif === link.id
-            ? "text-foreground font-semibold"
-            : "text-muted-foreground hover:bg-foreground/10"
-        )}
-      >
-        {idActif === link.id && (
-          <motion.div
-            layoutId="nav-active"
-            className="absolute inset-0 rounded-full bg-accent/20 ring-1 ring-accent/30"
-            transition={{ type: "spring", stiffness: 380, damping: 32 }}
-          />
-        )}
-        <span className="relative z-10 flex items-center gap-1.5 whitespace-nowrap">
-          <Icone className="w-3.5 h-3.5 shrink-0" />
-          {link.label}
-        </span>
-      </button>
-    )
-  }
-
-  // ─── Rendu ──────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── Pilule desktop ───────────────────────────────────────────────── */}
+      {/* ══ Desktop : bandeau pleine largeur, indicateur en soulignement ══ */}
       <motion.header
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-40 hidden md:block"
-        initial={{ y: -16, opacity: 0 }}
+        className="fixed top-0 inset-x-0 z-40 hidden md:block"
+        initial={{ y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, ease: LUMA_EASE }}
       >
-        <motion.div
-          animate={{
-            backgroundColor: estVisible ? "var(--card)" : "transparent",
-            borderColor: estVisible ? "color-mix(in oklch, var(--border) 8%, transparent)" : "transparent",
-            boxShadow: estVisible ? "0 4px 24px 0 rgba(0,0,0,0.10)" : "none",
-            backdropFilter: estVisible ? "blur(20px)" : "blur(0px)",
-          }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="flex items-center gap-4 h-14 px-6 rounded-full border"
+        {/*
+          Le flou reste constant et n'est activé que par la classe : animer
+          `backdrop-filter` obligeait le navigateur à refiltrer toute la zone
+          sous la barre à chaque frame de la transition. Seules les couleurs
+          sont animées, via une transition CSS.
+        */}
+        <div
+          className={cn(
+            "border-b transition-[background-color,border-color] duration-300 ease-out",
+            estCondensee
+              ? "bg-background/80 border-border/50 backdrop-blur-lg"
+              : "bg-transparent border-transparent"
+          )}
         >
+          <nav className="max-w-6xl mx-auto h-16 px-6 lg:px-12 flex items-center justify-between gap-8">
+            <button
+              onClick={gererClicLogo}
+              className="font-display text-lg font-bold text-foreground hover:text-accent transition-colors shrink-0 tracking-tight"
+            >
+              Kimiya
+            </button>
 
-              <button
-                onClick={gererClicLogo}
-                className="font-mono text-base font-semibold text-foreground hover:opacity-60 transition-opacity shrink-0"
-              >
-                Kaysuto
-              </button>
+            <ul className="flex items-center gap-1">
+              {TOUS_LIENS.map(lien => {
+                const estActif = idActif === lien.id
+                return (
+                  <li key={lien.id}>
+                    <button
+                      onClick={() => gererClicLien(lien)}
+                      onMouseEnter={() => gererSurvolLien(lien)}
+                      onFocus={() => gererSurvolLien(lien)}
+                      aria-current={estActif ? "page" : undefined}
+                      className={cn(
+                        "relative px-3.5 py-2 text-sm rounded-lg transition-colors duration-150",
+                        estActif
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <span className="relative z-10">{lien.label}</span>
+                      {estActif && (
+                        <motion.span
+                          layoutId="nav-underline"
+                          className="absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-accent"
+                          transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                        />
+                      )}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
 
-              <Sep />
-
-              <nav className="flex items-center gap-0.5">
-                {LIENS_DEFILEMENT.map(lien => <NavBtn key={lien.id} link={lien} />)}
-              </nav>
-
-              <Sep />
-
-              <nav className="flex items-center gap-0.5">
-                {LIENS_ROUTES.map(lien => <NavBtn key={lien.id} link={lien} />)}
-              </nav>
-
-              <Sep />
-
+            <div className="shrink-0">
               <ThemeController />
-        </motion.div>
+            </div>
+          </nav>
+
+          {/* Progression de lecture */}
+          <motion.div
+            className="h-[2px] origin-left bg-accent/70"
+            style={{ scaleX: progression }}
+            aria-hidden="true"
+          />
+        </div>
       </motion.header>
 
-      {/* ── Navigation mobile en bas ─────────────────────────────────────── */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 md:hidden">
-        <div className="flex items-center gap-1 px-3 py-2 rounded-full bg-background/80 backdrop-blur-xl border border-border/[0.08] shadow-lg">
+      {/* ══ Mobile : en-tête minimal + barre d'onglets en bas ══ */}
+      <motion.header
+        className="fixed top-0 inset-x-0 z-40 md:hidden"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: LUMA_EASE }}
+      >
+        <div
+          className={cn(
+            "border-b transition-[background-color,border-color] duration-300 ease-out",
+            estCondensee
+              ? "bg-background/85 border-border/50 backdrop-blur-lg"
+              : "bg-transparent border-transparent"
+          )}
+        >
+          <div className="h-14 px-5 flex items-center justify-between">
+            <button
+              onClick={gererClicLogo}
+              className="font-display text-base font-bold text-foreground tracking-tight"
+            >
+              Kimiya
+            </button>
+            <ThemeController />
+          </div>
+          <motion.div
+            className="h-[2px] origin-left bg-accent/70"
+            style={{ scaleX: progression }}
+            aria-hidden="true"
+          />
+        </div>
+      </motion.header>
+
+      {/*
+        Barre d'onglets : cinq colonnes de largeur égale et libellés toujours
+        visibles. L'ancienne version n'affichait le libellé que sur l'onglet
+        actif, ce qui faisait sauter la largeur des voisins à chaque défilement.
+      */}
+      <nav
+        className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-border/60 bg-background/85 backdrop-blur-xl"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        aria-label="Navigation principale"
+      >
+        <ul className="grid grid-cols-5">
           {TOUS_LIENS.map((lien) => {
             const Icone = lien.icon
             const estActif = idActif === lien.id
             return (
-              <button
-                key={lien.id}
-                onClick={() => gererClicLien(lien)}
-                onTouchStart={() => gererSurvolLien(lien)}
-                className="flex flex-col items-center gap-1 px-1 py-1 transition-colors duration-150"
-              >
-                <div className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-200",
-                  estActif ? "bg-foreground/[0.1]" : ""
-                )}>
-                  <Icone className={cn(
-                    "w-4 h-4 transition-colors duration-150 shrink-0",
-                    estActif ? "text-accent" : "text-muted-foreground"
-                  )} />
+              <li key={lien.id}>
+                <button
+                  onClick={() => gererClicLien(lien)}
+                  onTouchStart={() => gererSurvolLien(lien)}
+                  aria-current={estActif ? "page" : undefined}
+                  className="relative w-full h-16 flex flex-col items-center justify-center gap-1 px-1"
+                >
                   {estActif && (
-                    <span className="text-xs font-semibold text-accent whitespace-nowrap">
-                      {lien.label}
-                    </span>
+                    <motion.span
+                      layoutId="nav-tab-actif"
+                      className="absolute top-0 inset-x-4 h-[2px] rounded-full bg-accent"
+                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                    />
                   )}
-                </div>
-              </button>
+                  <Icone
+                    className={cn(
+                      "w-[18px] h-[18px] shrink-0 transition-colors duration-150",
+                      estActif ? "text-accent" : "text-muted-foreground"
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={cn(
+                      "text-[10px] leading-none tracking-tight truncate max-w-full transition-colors duration-150",
+                      estActif ? "text-accent font-bold" : "text-muted-foreground font-medium"
+                    )}
+                  >
+                    {lien.label}
+                  </span>
+                </button>
+              </li>
             )
           })}
-          <div className="w-px h-4 bg-border/50 mx-1 shrink-0" />
-          <div className="px-1">
-            <ThemeController />
-          </div>
-        </div>
+        </ul>
       </nav>
-
     </>
   )
 }

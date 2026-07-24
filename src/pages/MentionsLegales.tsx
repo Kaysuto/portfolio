@@ -7,7 +7,7 @@ import { useSeo } from "@/hooks/useSeo"
 export default function MentionsLegales() {
   useSeo({
     title: "Kimiya - Mentions légales",
-    description: "Mentions légales et politique de confidentialité du portfolio de Kimiya Kaysuto.",
+    description: "Mentions légales et politique de confidentialité du portfolio de Kimiya.",
     path: "/legal-notice",
   });
   return (
@@ -43,9 +43,9 @@ export default function MentionsLegales() {
                   <Scale size={24} />
                   <h2 className="text-xl font-bold uppercase tracking-widest">Éditeur</h2>
                 </div>
-                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-4">
+                <div className="bg-card/60 border border-border/50 rounded-2xl p-8 space-y-4">
                   <div>
-                    <p className="font-black text-lg">Kaysuto Kimiya</p>
+                    <p className="font-black text-lg">Kimiya</p>
                     <p className="text-muted-foreground font-medium">Entrepreneur individuel</p>
                   </div>
                   <div className="space-y-1 pt-4 border-t border-border/50">
@@ -60,7 +60,7 @@ export default function MentionsLegales() {
                       Email : <a href="mailto:contact@kaysuto.fr" className="text-accent hover:underline">contact@kaysuto.fr</a>
                     </p>
                     <p className="text-sm font-bold text-muted-foreground">
-                      Directeur de publication : <span className="text-foreground">Kaysuto Kimiya</span>
+                      Directeur de publication : <span className="text-foreground">Kimiya</span>
                     </p>
                   </div>
                 </div>
@@ -72,7 +72,7 @@ export default function MentionsLegales() {
                   <Globe size={24} />
                   <h2 className="text-xl font-bold uppercase tracking-widest">Hébergement</h2>
                 </div>
-                <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
+                <div className="bg-card/60 border border-border/50 rounded-2xl p-8 space-y-6">
                   <div>
                     <p className="font-black text-sm uppercase tracking-wider text-accent/70 mb-2">Plateforme</p>
                     <p className="font-bold">Vercel Inc.</p>
@@ -96,7 +96,7 @@ export default function MentionsLegales() {
                 <Lock size={24} />
                 <h2 className="text-xl font-bold uppercase tracking-widest">Données personnelles &amp; Cookies</h2>
               </div>
-              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
+              <div className="bg-card/60 border border-border/50 rounded-2xl p-8 space-y-6">
                 <div className="border-l-4 border-accent pl-6">
                   <p className="text-muted-foreground font-medium leading-relaxed">
                     Ce site respecte votre vie privée. Aucune donnée personnelle n'est collectée à des fins commerciales ou publicitaires.
@@ -154,16 +154,16 @@ export default function MentionsLegales() {
                 <ShieldCheck size={24} />
                 <h2 className="text-xl font-bold uppercase tracking-widest">Propriété Intellectuelle</h2>
               </div>
-              <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 space-y-6">
+              <div className="bg-card/60 border border-border/50 rounded-2xl p-8 space-y-6">
                 {/* Copyright Principal */}
                 <div className="border-l-4 border-accent pl-6 space-y-3">
                   <p className="text-foreground font-black text-lg">
-                    © 2015-{new Date().getFullYear()} Kaysuto Kimiya. Tous droits réservés.
+                    © 2015-{new Date().getFullYear()} Kimiya. Tous droits réservés.
                   </p>
                   <p className="text-muted-foreground leading-relaxed font-medium">
                     L'ensemble de ce portfolio, incluant mais sans s'y limiter : le code source, le design,
                     l'interface utilisateur, les textes, les images, les créations pixel art, les animations
-                    et tous autres contenus sont la propriété exclusive de <span className="text-foreground font-bold">Kaysuto Kimiya</span>.
+                    et tous autres contenus sont la propriété exclusive de <span className="text-foreground font-bold">Kimiya</span>.
                   </p>
                 </div>
 

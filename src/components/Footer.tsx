@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
 import { useState } from "react"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
+import { Sticker } from "@/components/ui/Sticker"
 
 export function Footer() {
   const anneeCourante = new Date().getFullYear()
@@ -29,7 +30,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-card/30 backdrop-blur-md border-t border-border/50 py-16 px-6 relative overflow-hidden">
+    <footer className="bg-card/50 border-t border-border/50 py-16 px-6 relative overflow-hidden">
       {/* Halo de fond */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-30" />
       
@@ -44,12 +45,10 @@ export function Footer() {
           {/* Colonne identité */}
           <motion.div className="col-span-2 md:col-span-1 space-y-8" variants={fadeInUp}>
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => defilerVersSection('accueil')}>
-              <div className="p-2 bg-accent/10 rounded-2xl group-hover:bg-accent/20 transition-all duration-300 group-hover:rotate-6 shadow-inner">
-                <img src="https://i.imgur.com/tDPPBl1.png" alt="Logo" className="w-8 h-8 object-contain" />
-              </div>
+              <Sticker name="coeur" size={96} className="shrink-0 group-hover:-translate-y-1" />
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-foreground tracking-tighter leading-none">Kaysuto</span>
-                <span className="text-xs font-bold text-accent tracking-[0.2em] uppercase mt-0.5">Kimiya</span>
+                <span className="font-display text-xl font-bold text-foreground tracking-tight leading-none">Kimiya</span>
+                <span className="text-xs font-bold text-accent tracking-[0.2em] uppercase mt-1">Product Builder</span>
               </div>
             </div>
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs font-medium">
@@ -132,7 +131,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 text-sm text-muted-foreground font-bold">
             <div className="flex items-center gap-2.5">
               <span className="text-xs opacity-50">© 2015-{anneeCourante}</span>
-              <span className="text-foreground tracking-tight">Kaysuto Kimiya</span>
+              <span className="text-foreground tracking-tight">Kimiya</span>
               <span className="text-xs opacity-70">• Tous droits réservés</span>
             </div>
           </div>

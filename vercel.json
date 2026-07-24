@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node node_modules/typescript/bin/tsc -b --noCheck && node node_modules/vite/bin/vite.js build --configLoader native",
+  "buildCommand": "node node_modules/@typescript/native/bin/tsc -b --noCheck && node node_modules/vite/bin/vite.js build --configLoader native",
   "rewrites": [
     {
       "source": "/(.*)",

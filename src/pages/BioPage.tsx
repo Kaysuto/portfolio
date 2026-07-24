@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { 
-  ArrowUpRight, 
-  Mail, 
-  Globe, 
-  Gamepad2, 
-  Palette, 
-  Ghost, 
-  Paintbrush, 
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Mail,
+  Globe,
+  Gamepad2,
+  Palette,
+  Ghost,
+  Paintbrush,
   Link as LinkIcon,
-  Loader2,
-  AlertCircle,
   Tv,
   Film,
   Music,
@@ -20,225 +18,171 @@ import {
 } from 'lucide-react';
 import { GithubLogo as Github, TwitchLogo as Twitch } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
-import { Modal } from '@/components/ui/Modal';
+import { ExternalLinkModal } from '@/components/ui/ExternalLinkModal';
+import { Sticker } from '@/components/ui/Sticker';
 import { BioLinksService } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
 import { useSeo } from '@/hooks/useSeo';
-import { useTheme } from '@/hooks/use-theme';
+import { fadeInUp, staggerContainer, VIEWPORT } from '@/lib/animations';
 
-const variantesConteneur: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
+const MAP_ICONES: Record<string, React.ElementType> = {
+  EnvelopeSimple: Mail,
+  DiscordLogo: Ghost,
+  Globe,
+  GameController: Gamepad2,
+  Palette,
+  SmileyXEyes: Ghost,
+  PaintBrush: Paintbrush,
+  GithubLogo: Github,
+  LinkSimple: LinkIcon,
+  Tv,
+  Film,
+  Music,
+  TwitchLogo: Twitch,
+  SpotifyLogo: Disc,
 };
 
-const variantesElement: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
+const LIBELLES_CATEGORIE: Record<string, string> = {
+  websites: 'Sites Web',
+  community: 'Communauté',
+  social: 'Social & Plateformes',
+  other: 'Autres',
 };
+
+function IconeLien({ nom, className }: { nom: string; className?: string }) {
+  const Icone = MAP_ICONES[nom] ?? LinkIcon;
+  return <Icone size={22} className={className} aria-hidden="true" />;
+}
 
 const BioPage: React.FC = () => {
   useSeo({
     title: "Kimiya - Bio",
-    description: "Tous les liens de Kimiya Kaysuto : projets, réseaux sociaux, GitHub, Twitch et créations en un seul endroit.",
+    description: "Tous les liens de Kimiya : projets, réseaux sociaux, GitHub, Twitch et créations en un seul endroit.",
     path: "/bio",
     type: "profile",
   });
-  const { theme } = useTheme();
-  const [lienSelectionne, setLienSelectionne] = useState<{name: string, url: string, description: string} | null>(null);
-  const { isModalOpen, openModal: ouvrirModaleBase, closeModal } = useModal();
+
+  const [lienSelectionne, setLienSelectionne] = useState<{ name: string; url: string; description: string; icon: string } | null>(null);
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   const liensGroupes = BioLinksService.getGroupedBioLinks();
-  const estEnChargement = false;
-  const erreur = null;
-
-  const obtenirIcone = (nomIcone: string) => {
-    const mapIcones: Record<string, any> = {
-      'EnvelopeSimple': Mail,
-      'DiscordLogo': Ghost,
-      'Globe': Globe,
-      'GameController': Gamepad2,
-      'Palette': Palette,
-      'SmileyXEyes': Ghost,
-      'PaintBrush': Paintbrush,
-      'GithubLogo': Github,
-      'LinkSimple': LinkIcon,
-      'Tv': Tv,
-      'Film': Film,
-      'Music': Music,
-      'TwitchLogo': Twitch,
-      'SpotifyLogo': Disc
-    };
-    const Icone = mapIcones[nomIcone] || LinkIcon;
-    return <Icone size={24} />;
-  };
-
-  const ouvrirModale = (lien: {name: string, url: string, description: string}) => {
-    setLienSelectionne(lien);
-    ouvrirModaleBase();
-  };
-
-  const gererConfirmationLien = () => {
-    if (lienSelectionne) {
-      window.open(lienSelectionne.url, '_blank', 'noopener,noreferrer');
-      closeModal();
-    }
-  };
-
-  const couleurAccent = theme === 'dark' ? '#D3C0B1' : '#C49D84';
-
-  const libellesCategorie: Record<string, string> = {
-    'websites': 'Sites Web',
-    'community': 'Communauté',
-    'social': 'Social & Plateformes',
-    'other': 'Autres'
-  };
+  const nombreTotal = Object.values(liensGroupes).reduce((total, liens) => total + liens.length, 0);
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      <main className="flex-1 py-24 md:py-32 px-6 relative z-10">
-        <div className="container mx-auto max-w-4xl">
+      <main className="flex-1 py-24 md:py-32 px-6 lg:px-12 relative z-10">
+        <div className="mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
             <Link to="/">
-              <Button variant="ghost" className="mb-8 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
+              <Button variant="ghost" className="mb-10 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
                 <ArrowLeft size={18} />
                 Retour à l'accueil
               </Button>
             </Link>
           </motion.div>
 
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: -20 }}
+          {/* En-tête aligné à gauche, avec compteur en marge */}
+          <motion.header
+            className="flex flex-wrap items-end justify-between gap-6 pb-10 mb-4 border-b border-border/60"
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-6">
-              Mes <span className="text-accent">Liens</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium">
-              Retrouvez-moi sur mes différentes plateformes et projets.
-            </p>
-          </motion.div>
+            <div>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-accent mb-4">
+                Bio
+              </p>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
+                Mes <span className="text-accent">Liens</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed font-medium max-w-xl">
+                Retrouvez-moi sur mes différentes plateformes et projets.
+              </p>
+            </div>
+            <div className="flex items-end gap-5">
+              <Sticker name="dodo" size={128} className="hidden sm:block" />
+              <p className="text-5xl font-bold text-accent/25 tabular-nums leading-none">
+                {String(nombreTotal).padStart(2, '0')}
+              </p>
+            </div>
+          </motion.header>
 
-          <AnimatePresence mode="wait">
-            {estEnChargement ? (
-              <motion.div key="loading" className="text-center py-20">
-                <Loader2 className="w-12 h-12 text-accent animate-spin mx-auto mb-6" />
-                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Chargement...</p>
-              </motion.div>
-            ) : erreur ? (
-              <motion.div key="error" className="text-center py-20 bg-destructive/5 border border-destructive/20 rounded-3xl p-12">
-                <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-6" />
-                <p className="text-destructive text-lg mb-8 font-bold">Erreur de chargement</p>
-                <Button onClick={() => window.location.reload()} variant="outline">Réessayer</Button>
-              </motion.div>
-            ) : (
-              <div className="space-y-16">
-                {Object.entries(liensGroupes).map(([categorie, liens]) => (
-                  <section key={categorie} className="space-y-6">
-                    <motion.h2
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 px-2"
+          {/* Une catégorie par bande, étiquette collante à gauche */}
+          <div className="divide-y divide-border/60">
+            {Object.entries(liensGroupes).map(([categorie, liens]) => (
+              <motion.section
+                key={categorie}
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={VIEWPORT}
+                className="grid lg:grid-cols-12 gap-x-10 gap-y-5 py-10"
+              >
+                <div className="lg:col-span-3">
+                  <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground lg:sticky lg:top-28">
+                    {LIBELLES_CATEGORIE[categorie] || categorie}
+                  </h2>
+                </div>
+
+                <ul className="lg:col-span-9 divide-y divide-border/40">
+                  {liens.map((lien) => (
+                    <motion.li
+                      key={lien.id}
+                      variants={fadeInUp}
+                      whileHover={{ x: 6 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     >
-                      {libellesCategorie[categorie] || categorie}
-                    </motion.h2>
-                    <motion.div
-                      variants={variantesConteneur}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                    >
-                      {liens.map((lien) => (
-                        <motion.button
-                          key={lien.id}
-                          variants={variantesElement}
-                          whileHover={{ scale: 1.01, y: -2 }}
-                          whileTap={{ scale: 0.99 }}
-                          onClick={() => ouvrirModale({
+                      <button
+                        onClick={() => {
+                          setLienSelectionne({
                             name: lien.title,
                             url: lien.url,
-                            description: lien.description || ''
-                          })}
-                          className="group relative p-4 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-accent/30 text-left w-full overflow-hidden"
-                        >
-                          <div className="relative flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                              <div className="bg-accent/5 p-3 rounded-xl group-hover:bg-accent/10 transition-all duration-300">
-                                <div className="text-accent group-hover:scale-110 transition-transform duration-300">
-                                  {obtenirIcone(lien.icon || 'LinkSimple')}
-                                </div>
-                              </div>
-                              <div className="min-w-0">
-                                <h3 className="font-bold text-base text-foreground group-hover:text-accent transition-colors duration-300 truncate">
-                                  {lien.title}
-                                </h3>
-                                <p className="text-xs text-muted-foreground truncate group-hover:text-foreground/70 transition-colors duration-300">
-                                  {lien.description}
-                                </p>
-                              </div>
-                            </div>
-                            <ArrowUpRight className="w-4 h-4 text-accent/30 group-hover:text-accent transition-colors duration-300 flex-shrink-0" />
-                          </div>
-                        </motion.button>
-                      ))}
-                    </motion.div>
-                  </section>
-                ))}
-              </div>
-            )}
-          </AnimatePresence>
+                            description: lien.description || '',
+                            icon: lien.icon || 'LinkSimple',
+                          });
+                          openModal();
+                        }}
+                        className="group w-full flex items-center gap-5 py-4 text-left hover:bg-accent/[0.04] rounded-xl px-3 -mx-3 transition-colors"
+                      >
+                        <span className="text-accent shrink-0 group-hover:scale-110 transition-transform">
+                          <IconeLien nom={lien.icon || 'LinkSimple'} />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-bold text-base text-foreground group-hover:text-accent transition-colors truncate">
+                            {lien.title}
+                          </span>
+                          <span className="block text-sm text-muted-foreground truncate">
+                            {lien.description}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          className="w-4 h-4 text-muted-foreground/50 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.section>
+            ))}
+          </div>
         </div>
       </main>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} maxWidth="max-w-lg">
-        {lienSelectionne && (
-          <div className="space-y-8 p-2">
-            <div className="flex items-center space-x-6">
-              <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20 shadow-inner">
-                <div className="text-accent">
-                  {obtenirIcone(BioLinksService.getBioLinksSync().find(l => l.title === lienSelectionne.name)?.icon || 'LinkSimple')}
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-foreground tracking-tight">{lienSelectionne.name}</h3>
-                <p className="text-sm text-muted-foreground font-medium">{lienSelectionne.description}</p>
-              </div>
-            </div>
-
-            <div className="bg-accent/5 rounded-2xl p-6 border border-accent/10">
-              <p className="text-[10px] text-muted-foreground mb-4 font-bold uppercase tracking-widest">Lien externe :</p>
-              <div className="bg-background/50 border border-border/50 rounded-xl p-4">
-                <code className="text-sm font-bold break-all font-mono" style={{ color: couleurAccent }}>
-                  {lienSelectionne.url}
-                </code>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <Button variant="outline" onClick={closeModal} className="flex-1 h-14 rounded-2xl font-bold">Annuler</Button>
-              <Button onClick={gererConfirmationLien} className="flex-1 h-14 rounded-2xl font-bold shadow-lg" style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}>
-                <ArrowUpRight className="h-5 w-5 mr-2" /> Ouvrir
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      {lienSelectionne && (
+        <ExternalLinkModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          icon={<IconeLien nom={lienSelectionne.icon} className="text-accent" />}
+          title={lienSelectionne.name}
+          subtitle={lienSelectionne.description}
+          url={lienSelectionne.url}
+        />
+      )}
     </div>
   );
 };

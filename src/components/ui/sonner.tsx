@@ -1,19 +1,30 @@
-import { useTheme } from "next-themes"
 import { CSSProperties } from "react"
 import { Toaster as Sonner, ToasterProps } from "sonner"
+import { useTheme } from "@/hooks/use-theme"
 
+/**
+ * Toaster habillé aux couleurs du site : reprend les tokens `--popover`,
+ * `--accent` et `--destructive` plutôt que le thème par défaut de sonner.
+ */
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  const { theme } = useTheme()
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme={theme}
       className="toaster group"
+      toastOptions={{ className: "rounded-2xl font-medium" }}
       style={
         {
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
+          "--success-bg": "var(--popover)",
+          "--success-text": "var(--sage)",
+          "--success-border": "color-mix(in oklch, var(--sage) 35%, transparent)",
+          "--error-bg": "var(--popover)",
+          "--error-text": "var(--destructive)",
+          "--error-border": "color-mix(in oklch, var(--destructive) 35%, transparent)",
         } as CSSProperties
       }
       {...props}

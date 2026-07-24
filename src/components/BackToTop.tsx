@@ -35,8 +35,9 @@ export function BackToTop() {
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.92 }}
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.25rem)" }}
           className={cn(
-            "fixed right-5 bottom-24 md:bottom-6 z-40 grid place-items-center",
+            "fixed right-5 md:!bottom-6 z-30 grid place-items-center",
             "size-11 rounded-full text-accent-foreground",
             "bg-accent shadow-lg shadow-accent/20 ring-1 ring-accent/30",
             "hover:bg-accent/90 transition-colors"

@@ -1,206 +1,127 @@
-/* Contournement Radix Select : forcer la scrollbar visible même quand le dropdown est ouvert */
-.radix-select-content-opened,
-body.radix-select-content-opened {
-  overflow-y: auto !important;
-}
-
-/* Modal scroll lock - Force le blocage du scroll */
-body.modal-open {
-  overflow: hidden !important;
-  position: fixed !important;
-  width: 100% !important;
-  -webkit-overflow-scrolling: auto !important;
-}
-
-html.modal-open {
-  overflow: hidden !important;
-}
-
 /* stylelint-disable at-rule-no-unknown */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Typographie — tout auto-hébergé, aucune requête tierce
+     · Fraunces        — titres. Serif à empattements doux, avec axes optiques
+                         (opsz) et « wonk » : le pendant typographique du trait
+                         de pinceau de l'illustration.
+     · Instrument Sans — texte courant. Humaniste, chaleureux, très lisible en
+                         petit corps ; s'accorde bien mieux à Fraunces que Geist.
+     · Geist Mono      — chiffres, numéros de section, URLs.
+   Les paquets @fontsource découpent par unicode-range : seuls les sous-ensembles
+   réellement utilisés sont téléchargés, et Vite les empreinte pour le cache.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/instrument-sans/wght.css';
+
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
-@layer base {
-  * {
-    border-color: var(--border);
-    font-family: var(--font-sans);
-  }
+@custom-variant dark (&:is(.dark *));
 
-  /* Opaque underlay so the page dot pattern doesn't bleed through translucent cards */
-  [data-slot="card"]::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: var(--card);
-    border-radius: inherit;
-    z-index: -1;
-    pointer-events: none;
-  }
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
 }
 
-html {
-  background-color: var(--background);
+/* stylelint-disable-next-line at-rule-no-unknown */
+@theme {
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
 }
 
-body {
-  background-color: var(--background);
-  transition: background-color 0.5s ease, color 0.5s ease;
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   Palette « Encre & Parchemin »
+   Dérivée de l'illustration du personnage :
+     · le papier crème vieilli du fond        → background / card
+     · les cheveux châtain et le trait d'encre → primary / accent
+     · le feuillage vert-de-gris               → sage
+     · les yeux bleu-ardoise                   → steel
+     · les éclats et le cercle doré            → gold
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Refined Noisette Color Palette - Couleurs renforcées */
-  --background: oklch(0.98 0.015 80);       /* #F9F6F0 - Fond principal plus contrasté */
-  --foreground: oklch(0.08 0.04 45);        /* #1A0F08 - Texte très sombre et fort */
+  /* ── Thème clair : le parchemin ─────────────────────────────────────────── */
+  --background: oklch(0.938 0.021 84);      /* #F4ECDC — papier crème */
+  --foreground: oklch(0.245 0.019 58);      /* #2A2018 — encre sépia */
 
-  --card: oklch(0.99 0.01 80);              /* #FEFCF9 - Blanc crème */
-  --card-foreground: oklch(0.08 0.04 45);   /* #1A0F08 - Texte très sombre */
+  --card: oklch(0.972 0.013 85);            /* #FBF6EC — papier plus clair */
+  --card-foreground: oklch(0.245 0.019 58);
 
-  --popover: oklch(0.96 0.02 80);           /* #F5F0E8 - Ivoire plus marqué */
-  --popover-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
+  --popover: oklch(0.972 0.013 85);
+  --popover-foreground: oklch(0.245 0.019 58);
 
-  --primary: oklch(0.35 0.12 42);           /* #5D3A25 - Chocolat très foncé et riche */
-  --primary-foreground: oklch(0.98 0.01 80); /* Blanc crème pour contraste */
+  --primary: oklch(0.418 0.055 55);         /* #6B4A32 — châtain des cheveux */
+  --primary-foreground: oklch(0.972 0.013 85);
 
-  --secondary: oklch(0.82 0.05 60);         /* #D4BE9F - Crème plus marquée */
-  --secondary-foreground: oklch(0.08 0.04 45); /* #1A0F08 - Texte très sombre */
+  --secondary: oklch(0.882 0.028 82);       /* #E4D8C0 — beige de l'écharpe */
+  --secondary-foreground: oklch(0.245 0.019 58);
 
-  --muted: oklch(0.76 0.04 55);             /* #C4B5A3 - Beige plus intense */
-  --muted-foreground: oklch(0.25 0.03 50);  /* Texte muted plus contrasté */
+  --muted: oklch(0.862 0.028 82);
+  --muted-foreground: oklch(0.420 0.025 68); /* lisible sur --background (≈4.9:1) */
 
-  --accent: oklch(0.72 0.06 55);            /* #B8956A - Accent plus profond et visible */
-  --accent-foreground: oklch(0.15 0.04 45); /* Chocolat très sombre pour contraste sur accent */
+  --accent: oklch(0.500 0.095 62);          /* #895622 — bronze du trait de pinceau (5.1:1 sur le fond) */
+  --accent-foreground: oklch(0.972 0.013 85);
 
-  --destructive: oklch(0.50 0.25 25);       /* #C41E3A - Rouge plus intense */
-  --destructive-foreground: oklch(0.98 0.01 80); /* Texte blanc sur rouge */
+  --destructive: oklch(0.475 0.135 32);     /* terre cuite plutôt que rouge pur */
+  --destructive-foreground: oklch(0.972 0.013 85);
 
-  --border: oklch(0.70 0.04 55);            /* #B3A28F - Bordure plus forte */
-  --input: oklch(0.90 0.02 70);             /* #EDE6D8 - Input plus contrasté */
-  --ring: oklch(0.72 0.06 55);              /* Focus accent renforcé */
+  --border: oklch(0.800 0.033 80);
+  --input: oklch(0.930 0.020 82);
+  --ring: oklch(0.500 0.095 62);
+
+  /* ── Tons narratifs ─────────────────────────────────────────────────────── */
+  /* sage et steel restent assez sombres pour servir de couleur de texte
+     sur --card (≈5:1) ; gold est purement décoratif (halos, éclats). */
+  --sage: oklch(0.520 0.062 120);           /* #646E45 — feuillage vert-de-gris */
+  --steel: oklch(0.500 0.048 233);          /* #47687A — bleu-ardoise des yeux */
+  --gold: oklch(0.620 0.100 78);            /* éclats dorés */
 
   --radius: 1rem;
 }
 
-/* Modal animations */
-.modal-overlay {
-  animation: overlayFadeIn 0.3s ease-out forwards;
-}
-
-.modal-overlay.closing {
-  animation: overlayFadeOut 0.3s ease-out forwards;
-}
-
-.modal-panel {
-  animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.modal-panel.closing {
-  animation: modalSlideOut 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
-}
-
-@keyframes overlayFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes overlayFadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8) translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes modalSlideOut {
-  from {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.8) translateY(-30px);
-  }
-}
-
-.modal-enter {
-  animation: modalFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes modalFadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9) translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.modal-exit {
-  animation: modalFadeOut 0.3s ease-out forwards;
-}
-
-@keyframes modalFadeOut {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.9) translateY(-20px);
-  }
-}
-
-/* Dark theme with warmer tones */
 .dark {
-  --background: oklch(0.25 0.02 45);        /* Chocolat foncé mais plus doux et plus clair */
-  --foreground: oklch(0.92 0.02 80);        /* Crème claire */
-  
-  --card: oklch(0.22 0.02 45);              /* Chocolat foncé pour cartes, plus clair */
-  --card-foreground: oklch(0.92 0.02 80);   /* Crème claire */
-  
-  --popover: oklch(0.22 0.02 45);           /* Chocolat foncé pour popovers, plus clair */
-  --popover-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --primary: oklch(0.68 0.07 55);           /* Accent sophistiqué en mode sombre */
-  --primary-foreground: oklch(0.10 0.02 45); /* Chocolat très foncé */
-  
-  --secondary: oklch(0.28 0.02 50);         /* Chocolat moyen plus clair */
-  --secondary-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --muted: oklch(0.30 0.02 50);             /* Chocolat-beige foncé plus clair */
-  --muted-foreground: oklch(0.65 0.03 60);  /* Beige moyen */
-  
-  --accent: oklch(0.82 0.03 60);            /* Accent clair et doux */
-  --accent-foreground: oklch(0.15 0.04 45); /* Chocolat très sombre pour contraste sur accent */
-  
-  --destructive: oklch(0.65 0.2 25);        /* Rouge plus doux en dark */
-  --destructive-foreground: oklch(0.92 0.02 80); /* Crème claire */
-  
-  --border: oklch(0.35 0.02 50);            /* Bordure chocolat moyen plus clair */
-  --input: oklch(0.32 0.02 50);             /* Input chocolat moyen plus clair */
-  --ring: oklch(0.82 0.03 60);              /* Focus accent sophistiqué */
+  /* ── Thème sombre : l'encre ─────────────────────────────────────────────── */
+  --background: oklch(0.187 0.016 55);      /* #221A14 — brun nuit */
+  --foreground: oklch(0.925 0.021 85);      /* #EFE5D3 — crème */
+
+  --card: oklch(0.228 0.016 55);
+  --card-foreground: oklch(0.925 0.021 85);
+
+  --popover: oklch(0.228 0.016 55);
+  --popover-foreground: oklch(0.925 0.021 85);
+
+  --primary: oklch(0.705 0.055 65);         /* châtain éclairci */
+  --primary-foreground: oklch(0.187 0.016 55);
+
+  --secondary: oklch(0.268 0.016 55);
+  --secondary-foreground: oklch(0.925 0.021 85);
+
+  --muted: oklch(0.285 0.016 55);
+  --muted-foreground: oklch(0.685 0.026 78);
+
+  --accent: oklch(0.800 0.072 76);          /* #DDB77C — or chaud */
+  --accent-foreground: oklch(0.187 0.016 55);
+
+  --destructive: oklch(0.635 0.135 32);
+  --destructive-foreground: oklch(0.925 0.021 85);
+
+  --border: oklch(0.318 0.019 62);
+  --input: oklch(0.268 0.016 55);
+  --ring: oklch(0.800 0.072 76);
+
+  --sage: oklch(0.715 0.058 120);
+  --steel: oklch(0.675 0.045 233);
+  --gold: oklch(0.800 0.090 80);
 }
 
-/* Disable CSS validation for @theme - Tailwind CSS v4 syntax */
 /* stylelint-disable-next-line at-rule-no-unknown */
-@theme {
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -221,6 +142,10 @@ body {
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-sage: var(--sage);
+  --color-steel: var(--steel);
+  --color-gold: var(--gold);
+
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.5);
@@ -229,440 +154,132 @@ body {
   --radius-full: 9999px;
 }
 
-/* Custom scrollbar */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Base
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    background-color: var(--background);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* Fraunces porte les titres. `opsz` suit le corps du texte et `SOFT` arrondit
+     légèrement les empattements, pour rester dans le registre dessiné. */
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 25, 'WONK' 1;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-variation-settings: 'opsz' 96, 'SOFT' 30, 'WONK' 1;
+  }
+
+  section {
+    scroll-margin-top: 100px;
+  }
+
+  /* Fond opaque sous les cartes translucides, pour que le motif de points
+     de la page ne transparaisse pas au travers. */
+  [data-slot='card']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--card);
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Transition de thème (respecte prefers-reduced-motion)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html,
+  .theme-fade {
+    transition:
+      background-color 220ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      color 220ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      border-color 220ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Flottement des stickers
+   Confié au CSS plutôt qu'à Framer Motion : les sections parentes déclarent des
+   `variants`, dont les libellés se propagent aux composants `motion` enfants et
+   écrasaient l'animation continue. Une animation CSS y échappe, tourne sur le
+   compositeur et ne coûte rien au fil principal.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes sticker-flottement {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--sticker-rot-a));
+  }
+  50% {
+    transform: translateY(var(--sticker-y)) rotate(var(--sticker-rot-b));
+  }
+}
+
+.sticker-flotte {
+  animation: sticker-flottement var(--sticker-duree) ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker-flotte {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Barre de défilement
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--muted);
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: color-mix(in oklch, var(--accent) 55%, var(--muted));
   border-radius: 4px;
-  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: var(--accent);
 }
 
-/* Smooth scroll behavior */
 html {
-  scroll-behavior: smooth;
-}
-
-section {
-  scroll-margin-top: 100px;
-}
-
-/* Performance optimizations */
-.section-lazy {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-}
-
-/* Line clamp utilities */
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-4 {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Custom animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes stagger {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideOutToBottom {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(90deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(180deg);
-  }
-  75% {
-    transform: translateY(-10px) rotate(270deg);
-  }
-}
-
-@keyframes float-medium {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-  }
-  25% {
-    transform: translateY(-15px) translateX(10px);
-  }
-  50% {
-    transform: translateY(-8px) translateX(-5px);
-  }
-  75% {
-    transform: translateY(-12px) translateX(8px);
-  }
-}
-
-@keyframes float-fast {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-25px) scale(1.1);
-  }
-}
-
-@keyframes bounce-slow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes gradient-x {
-  0%, 100% {
-    background-size: 200% 200%;
-    background-position: left center;
-  }
-  50% {
-    background-size: 200% 200%;
-    background-position: right center;
-  }
-}
-
-@keyframes card-hover {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-.animate-stagger {
-  animation: stagger 0.6s ease-out;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
-}
-
-.animate-slideInFromLeft {
-  animation: slideInFromLeft 0.8s ease-out;
-}
-
-.animate-slideInFromRight {
-  animation: slideInFromRight 0.8s ease-out;
-}
-
-.animate-slideInFromBottom {
-  animation: slideInFromBottom 0.6s ease-out;
-}
-
-.animate-slideOutToBottom {
-  animation: slideOutToBottom 0.3s ease-in;
-}
-
-.animate-fadeOut {
-  animation: fadeOut 0.3s ease-out;
-}
-
-.animate-modalSlideIn {
-  animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.animate-modalSlideOut {
-  animation: modalSlideOut 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
-}
-
-.animate-scaleIn {
-  animation: scaleIn 0.6s ease-out;
-}
-
-.animate-float-slow {
-  animation: float-slow 6s ease-in-out infinite;
-}
-
-.animate-float-medium {
-  animation: float-medium 4s ease-in-out infinite;
-}
-
-.animate-float-fast {
-  animation: float-fast 3s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float-slow 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float-medium 5s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-.animate-bounce-slow {
-  animation: bounce-slow 3s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-gradient-x {
-  background: linear-gradient(-45deg, var(--accent), var(--primary), var(--accent), var(--primary));
-  background-size: 400% 400%;
-  animation: gradient-x 3s ease infinite;
-}
-
-.animate-card-hover {
-  transition: all 0.3s ease;
-}
-
-.animate-card-hover:hover {
-  animation: card-hover 0.3s ease forwards;
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-/* Stagger delay classes */
-.animate-delay-100 {
-  animation-delay: 0.1s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-200 {
-  animation-delay: 0.2s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-300 {
-  animation-delay: 0.3s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-400 {
-  animation-delay: 0.4s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-500 {
-  animation-delay: 0.5s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-600 {
-  animation-delay: 0.6s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-700 {
-  animation-delay: 0.7s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-800 {
-  animation-delay: 0.8s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-900 {
-  animation-delay: 0.9s;
-  animation-fill-mode: both;
-}
-
-.animate-delay-1000 {
-  animation-delay: 1s;
-  animation-fill-mode: both;
-}
-
-/* Animation personnalisée pour le doigt mobile */
-@keyframes finger-tap {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) scale(1.05);
-  }
-}
-
-@keyframes finger-tap {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) scale(1.05);
-  }
-}
-
-.animate-finger-tap {
-  animation: finger-tap 2s ease-in-out infinite;
-}
-
-/* Indicateur de scroll mobile élégant */
-@keyframes scroll-indicator-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-}
-
-.animate-scroll-pulse {
-  animation: scroll-indicator-pulse 2s ease-in-out infinite;
-}
-
-/* Amélioration de l'animation souris desktop */
-@keyframes mouse-outline {
-  0%, 100% {
-    stroke-dasharray: 0 100;
-  }
-  50% {
-    stroke-dasharray: 50 50;
-  }
-}
-
-.animate-mouse-outline {
-  animation: mouse-outline 2s ease-in-out infinite;
+  scrollbar-color: color-mix(in oklch, var(--accent) 55%, var(--muted)) var(--muted);
 }

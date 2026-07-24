@@ -69,3 +69,5 @@ src/admin/pages/Settings.tsx
 src/components/HeroSection_clean.tsx
 src/hooks/useAuth.ts
 src/scripts/testSupabaseConnection.ts
+# Sources haute résolution des stickers (les versions servies sont dans public/stickers)
+design/stickers-sources/

@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
     body: JSON.stringify({
       sender: {
-        name: "Portfolio Kaysuto",
+        name: "Portfolio Kimiya",
         email: process.env.CONTACT_FROM_EMAIL,
       },
       to: [{ email: process.env.CONTACT_TO_EMAIL, name: "Kimiya" }],

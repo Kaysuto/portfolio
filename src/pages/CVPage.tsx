@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import {
-  Briefcase, 
-  GraduationCap, 
-  Wrench, 
-  MapPin, 
-  Car, 
+  ArrowLeft,
+  Briefcase,
+  GraduationCap,
+  Wrench,
+  MapPin,
+  Car,
   ExternalLink,
   CheckCircle2,
   Globe,
@@ -26,407 +26,393 @@ import {
 } from 'lucide-react';
 import { LinkedinLogo as Linkedin } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
+import { TechModal } from '@/components/ui/TechModal';
 import { useSeo } from '@/hooks/useSeo';
 import { LinkedInFooterModal } from '@/components/ui/SocialModals';
+import { fadeInUp, staggerContainer, VIEWPORT } from '@/lib/animations';
 
+type Outil = { name: string; slug: string; url: string; iconUrl?: string };
 
-const variantesElement: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
+const EXPERIENCES = [
+  {
+    company: "Magna Engineered Glass Europe",
+    role: "Technicien Informatique Polyvalent Junior",
+    period: "2026 - Présent",
+    missions: [
+      "Gestion du parc informatique",
+      "Support utilisateurs",
+      "Administration réseau",
+      "Maintenance de l'infrastructure interne",
+      "Développement des applications internes"
+    ]
+  },
+  {
+    company: "Experis France & Exaion",
+    role: "Technicien Data Center",
+    period: "Février 2023 - Février 2026",
+    missions: [
+      "Chargé de la gestion opérationnelle d'un data center (installation, câblage, maintenance)",
+      "Pilotage de l'approvisionnement réseau multi-équipes"
+    ]
+  },
+  {
+    company: "France Travail",
+    role: "Conseiller numérique",
+    period: "Août 2022 - Janvier 2023",
+    missions: [
+      "Accueil et assistance des demandeurs d'emploi",
+      "Relance de rendez-vous",
+      "Traitement administratif",
+      "Utilisation des outils numériques",
+      "Animation d'ateliers professionnels"
+    ]
+  },
+  {
+    company: "ESCCI et NaturOPeps",
+    role: "Assistant Web Marketing",
+    period: "Août 2021 - Juin 2022",
+    missions: [
+      "Analyse et refonte de la stratégie digitale",
+      "Optimisation du contenu (SEO/SEA)",
+      "Mise en place d'outils de suivi de performance",
+      "Réalisation d'études stratégiques"
+    ]
+  },
+  {
+    company: "Varenne Gastronomie",
+    role: "Magasinier",
+    period: "Août 2020 - Octobre 2020",
+    missions: [
+      "Chargement de marchandises",
+      "Réception de commandes",
+      "Contrôle qualité et stockage des produits"
+    ]
+  },
+  {
+    company: "Ayonis, fabricant de métrologie",
+    role: "Électricien",
+    period: "Novembre 2019 - Décembre 2019",
+    missions: [
+      "Installation et connexion d'équipements électriques",
+      "Réparations",
+      "Lecture et création de dossiers d'installation, de maintenance et de mise en service"
+    ]
   }
-};
+];
+
+const COMPETENCES = [
+  { category: "Systèmes", items: ["Windows", "MacOS", "Linux", "Cloud (AWS, Azure)"], icon: Globe },
+  { category: "Réseaux", items: ["Administration serveurs", "Sécurité", "Architecture"], icon: Database },
+  { category: "Web Marketing", items: ["SEO/SEA", "Analytics", "Réseaux sociaux"], icon: LayoutIcon },
+  { category: "Outils", items: ["Bases de données SQL", "Gestion de projet", "Montage vidéo"], icon: Wrench }
+];
+
+const OUTILS: Outil[] = [
+  { name: "React", slug: "react", url: "https://react.dev" },
+  { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
+  { name: "Next.js", slug: "nextdotjs", url: "https://nextjs.org" },
+  { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
+  { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
+  { name: "Docker", slug: "docker", url: "https://www.docker.com" },
+  { name: "Nginx", slug: "nginx", url: "https://nginx.org" },
+  { name: "Visual Studio Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
+];
+
+const FORMATIONS = [
+  { annee: "2022", intitule: "Titre professionnel (BAC+2) d'Assistant Web Marketing" },
+  { annee: "2020", intitule: "BEP & BAC PRO Électrotechnique (MELEC)" },
+];
+
+const INTERETS = [
+  { name: "Cryptographie", icon: KeyRound },
+  { name: "Design", icon: Palette },
+  { name: "Culture Japonaise", icon: Cherry },
+  { name: "Cloud/Technologie", icon: Cpu },
+  { name: "Création de contenu", icon: PenTool },
+  { name: "Jeux Vidéos", icon: Gamepad2 },
+  { name: "Streaming", icon: Radio },
+  { name: "Réalité Virtuelle", icon: Headset },
+  { name: "Sport", icon: Dumbbell }
+];
+
+/** Bande de section : étiquette collante à gauche, contenu à droite. */
+function Bande({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={VIEWPORT}
+      className="grid lg:grid-cols-12 gap-x-10 gap-y-6 py-12 border-t border-border/60"
+    >
+      <div className="lg:col-span-3">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground lg:sticky lg:top-28">
+          {label}
+        </h2>
+      </div>
+      <div className="lg:col-span-9">{children}</div>
+    </motion.section>
+  );
+}
 
 const CVPage: React.FC = () => {
   useSeo({
     title: "Kimiya - CV",
-    description: "CV de Kimiya Kaysuto : Technicien Informatique Polyvalent Junior, expert infrastructure, réseau et développement web full-stack.",
+    description: "CV de Kimiya : Technicien Informatique Polyvalent Junior, expert infrastructure, réseau et développement web full-stack.",
     path: "/cv",
     type: "profile",
   });
+
   const [estModaleLinkedinOuverte, setEstModaleLinkedinOuverte] = useState(false);
-  const [, setTechSelectionnee] = useState<{name: string, slug: string, url: string, iconUrl?: string} | null>(null);
-  const [, setEstModaleTechOuverte] = useState(false);
+  const [outilSelectionne, setOutilSelectionne] = useState<Outil | null>(null);
+  const [estModaleOutilOuverte, setEstModaleOutilOuverte] = useState(false);
 
-  const experiences = [
-    {
-      company: "Magna Engineered Glass Europe",
-      role: "Technicien Informatique Polyvalent Junior",
-      period: "2026 - Présent",
-      missions: [
-        "Gestion du parc informatique",
-        "Support utilisateurs",
-        "Administration réseau",
-        "Maintenance de l'infrastructure interne",
-        "Développement des applications internes"
-      ]
-    },
-    {
-      company: "Experis France & Exaion",
-      role: "Technicien Data Center",
-      period: "Février 2023 - Février 2026",
-      missions: [
-        "Chargé de la gestion opérationnelle d'un data center (installation, câblage, maintenance)",
-        "Pilotage de l'approvisionnement réseau multi-équipes"
-      ]
-    },
-    {
-      company: "France Travail",
-      role: "Conseiller numérique",
-      period: "Août 2022 - Janvier 2023",
-      missions: [
-        "Accueil et assistance des demandeurs d'emploi",
-        "Relance de rendez-vous",
-        "Traitement administratif",
-        "Utilisation des outils numériques",
-        "Animation d'ateliers professionnels"
-      ]
-    },
-    {
-      company: "ESCCI et NaturOPeps",
-      role: "Assistant Web Marketing",
-      period: "Août 2021 - Juin 2022",
-      missions: [
-        "Analyse et refonte de la stratégie digitale",
-        "Optimisation du contenu (SEO/SEA)",
-        "Mise en place d'outils de suivi de performance",
-        "Réalisation d'études stratégiques"
-      ]
-    },
-    {
-      company: "Varenne Gastronomie",
-      role: "Magasinier",
-      period: "Août 2020 - Octobre 2020",
-      missions: [
-        "Chargement de marchandises",
-        "Réception de commandes",
-        "Contrôle qualité et stockage des produits"
-      ]
-    },
-    {
-      company: "Ayonis, fabricant de métrologie",
-      role: "Électricien",
-      period: "Novembre 2019 - Décembre 2019",
-      missions: [
-        "Installation et connexion d'équipements électriques",
-        "Réparations",
-        "Lecture et création de dossiers d'installation, de maintenance et de mise en service"
-      ]
-    }
-  ];
-
-  const competences = [
-    {
-      category: "Systèmes",
-      items: ["Windows", "MacOS", "Linux", "Cloud (AWS, Azure)"],
-      icon: Globe
-    },
-    {
-      category: "Réseaux",
-      items: ["Administration serveurs", "Sécurité", "Architecture"],
-      icon: Database
-    },
-    {
-      category: "Web Marketing",
-      items: ["SEO/SEA", "Analytics", "Réseaux sociaux"],
-      icon: LayoutIcon
-    },
-    {
-      category: "Outils",
-      items: ["Bases de données SQL", "Gestion de projet", "Montage vidéo"],
-      icon: Wrench
-    }
-  ];
-
-  const outils = [
-    { name: "React", slug: "react", url: "https://react.dev" },
-    { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
-    { name: "Next.js", slug: "nextdotjs", url: "https://nextjs.org" },
-    { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
-    { name: "Tailwind CSS", slug: "tailwindcss", url: "https://tailwindcss.com" },
-    { name: "Docker", slug: "docker", url: "https://www.docker.com" },
-    { name: "Nginx", slug: "nginx", url: "https://nginx.org" },
-    { name: "Visual Studio Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
-  ];
-
-  const interets = [
-    { name: "Cryptographie", icon: KeyRound },
-    { name: "Design", icon: Palette },
-    { name: "Culture Japonaise", icon: Cherry },
-    { name: "Cloud/Technologie", icon: Cpu },
-    { name: "Création de contenu", icon: PenTool },
-    { name: "Jeux Vidéos", icon: Gamepad2 },
-    { name: "Streaming", icon: Radio },
-    { name: "Réalité Virtuelle", icon: Headset },
-    { name: "Sport", icon: Dumbbell }
-  ];
-
-  const gererClicTech = (tech: any) => {
-    setTechSelectionnee(tech);
-    setEstModaleTechOuverte(true);
+  const ouvrirOutil = (outil: Outil) => {
+    setOutilSelectionne(outil);
+    setEstModaleOutilOuverte(true);
   };
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      <main className="flex-1 py-24 md:py-32 px-6 relative z-10">
-        <div className="container mx-auto max-w-5xl">
+      <main className="flex-1 py-24 md:py-32 px-6 lg:px-12 relative z-10">
+        <div className="mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
             <Link to="/">
-              <Button variant="ghost" className="mb-8 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
+              <Button variant="ghost" className="mb-10 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
                 <ArrowLeft size={18} />
                 Retour à l'accueil
               </Button>
             </Link>
           </motion.div>
 
-          {/* Header Section */}
-          <motion.div
-            className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16 text-center md:text-left"
-            initial={{ opacity: 0, y: -20 }}
+          {/* Bandeau d'en-tête pleine largeur */}
+          <motion.header
+            className="pb-10 border-b border-border/60"
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <div className="flex flex-col items-center md:items-start">
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
-                Mon <span className="text-accent">CV</span>
-              </h1>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-muted-foreground font-medium">
-                <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
-                  <Briefcase className="w-4 h-4 text-accent" />
-                  <span>Technicien Informatique</span>
-                </div>
-                <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
-                  <MapPin className="w-4 h-4 text-accent" />
-                  <span>Langres, France</span>
-                </div>
-                <div className="flex items-center gap-2 bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
-                  <Car className="w-4 h-4 text-accent" />
-                  <span>Permis B & Véhiculé</span>
-                </div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-accent mb-4">
+              Curriculum vitæ
+            </p>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+              <div>
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">
+                  Mon <span className="text-accent">CV</span>
+                </h1>
+                <ul className="flex flex-wrap gap-x-6 gap-y-3 text-muted-foreground font-medium">
+                  <li className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-accent" aria-hidden="true" />
+                    <span>Technicien Informatique</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-accent" aria-hidden="true" />
+                    <span>France</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Car className="w-4 h-4 text-accent" aria-hidden="true" />
+                    <span>Permis B &amp; Véhiculé</span>
+                  </li>
+                </ul>
               </div>
+
+              <Button
+                onClick={() => setEstModaleLinkedinOuverte(true)}
+                className="w-full lg:w-auto h-13 px-7 py-3.5 rounded-2xl font-bold bg-accent text-accent-foreground hover:bg-accent/90 transition-all hover:scale-[1.02] flex items-center justify-center shrink-0"
+              >
+                <Linkedin className="w-5 h-5 mr-2" aria-hidden="true" />
+                Me contacter sur LinkedIn
+              </Button>
             </div>
-            
-            <Button
-              onClick={() => setEstModaleLinkedinOuverte(true)}
-              className="w-full md:w-auto h-14 px-8 rounded-2xl font-bold shadow-lg transition-all hover:scale-105 flex items-center justify-center"
-              style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
-            >
-              <Linkedin className="w-5 h-5 mr-2" />
-              Me contacter sur LinkedIn
-            </Button>
-          </motion.div>
+          </motion.header>
 
-          <LinkedInFooterModal
-            isOpen={estModaleLinkedinOuverte}
-            onClose={() => setEstModaleLinkedinOuverte(false)}
-          />
+          {/* ── Parcours professionnel : frise verticale ────────────────────── */}
+          <Bande label="Parcours Professionnel">
+            <ol className="relative border-l border-border/60 ml-2">
+              {EXPERIENCES.map((experience) => (
+                <motion.li key={`${experience.company}-${experience.period}`} variants={fadeInUp} className="relative pl-8 pb-10 last:pb-0">
+                  <motion.span
+                    className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-accent ring-4 ring-background"
+                    aria-hidden="true"
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={VIEWPORT}
+                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                  />
+                  <p className="font-mono text-xs font-bold text-accent mb-2">{experience.period}</p>
+                  <h3 className="text-xl font-bold text-foreground tracking-tight">{experience.role}</h3>
+                  <p className="text-base font-semibold text-muted-foreground mb-4">{experience.company}</p>
+                  <ul className="space-y-2">
+                    {experience.missions.map((mission) => (
+                      <li key={mission} className="flex items-start gap-3 text-sm md:text-base text-muted-foreground">
+                        <CheckCircle2 className="w-4 h-4 text-accent/50 mt-1 shrink-0" aria-hidden="true" />
+                        <span className="leading-relaxed">{mission}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.li>
+              ))}
+            </ol>
+          </Bande>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Left Column: About, Skills, Education */}
-            <div className="lg:col-span-1 space-y-12">
-              {/* Compétences */}
-              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Compétences</h2>
-                <div className="space-y-4">
-                  {competences.map((competence, idx) => (
-                    <div key={idx} className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-5 group hover:border-accent/30 transition-colors">
-                      <div className="flex items-center gap-3 mb-3">
-                        <competence.icon className="w-5 h-5 text-accent" />
-                        <h3 className="font-bold text-foreground">{competence.category}</h3>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {competence.items.map((element, i) => (
-                          <span key={i} className="text-xs bg-accent/5 text-muted-foreground px-2 py-1 rounded-md border border-accent/5">
-                            {element}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.section>
-
-              {/* Outils */}
-              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Outils & Techs</h2>
-                <div className="flex flex-wrap gap-3">
-                  {outils.map((outil, idx) => (
-                    <motion.button
-                      key={idx}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(evenement) => {
-                        evenement.preventDefault();
-                        evenement.stopPropagation();
-                        gererClicTech(outil);
-                      }}
-                      className="flex items-center gap-2 px-3 py-2 bg-card/30 backdrop-blur-sm border border-border/40 rounded-xl hover:border-accent/30 transition-all group cursor-pointer relative z-50"
-                    >
-                      <img
-                        src={outil.iconUrl || `https://cdn.simpleicons.org/${outil.slug}`}
-                        alt={outil.name}
-                        className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all object-contain"
-                      />
-                      <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
-                        {outil.name}
+          {/* ── Compétences : lignes plutôt que cartes ──────────────────────── */}
+          <Bande label="Compétences">
+            <ul className="divide-y divide-border/50">
+              {COMPETENCES.map(({ category, items, icon: Icone }) => (
+                <motion.li
+                  key={category}
+                  variants={fadeInUp}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 first:pt-0 last:pb-0"
+                >
+                  <span className="flex items-center gap-2.5 sm:w-44 shrink-0">
+                    <Icone className="w-4 h-4 text-accent" aria-hidden="true" />
+                    <span className="font-bold text-foreground">{category}</span>
+                  </span>
+                  <span className="flex flex-wrap gap-2">
+                    {items.map((element) => (
+                      <span
+                        key={element}
+                        className="text-xs font-medium bg-accent/[0.07] text-muted-foreground px-2.5 py-1 rounded-lg border border-accent/10"
+                      >
+                        {element}
                       </span>
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.section>
+                    ))}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+          </Bande>
 
-              {/* Langues */}
-              <motion.section variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-6 px-2">Langues</h2>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center bg-card/30 border border-border/40 p-4 rounded-xl">
-                    <span className="font-bold">Français</span>
-                    <span className="text-accent text-sm">Maternel</span>
-                  </div>
-                  <div className="flex justify-between items-center bg-card/30 border border-border/40 p-4 rounded-xl">
-                    <span className="font-bold">Anglais</span>
-                    <span className="text-accent text-sm">Niveau B2 avancé</span>
-                  </div>
-                </div>
-              </motion.section>
-            </div>
+          {/* ── Outils ──────────────────────────────────────────────────────── */}
+          <Bande label="Outils &amp; Techs">
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-2.5">
+              {OUTILS.map((outil) => (
+                <motion.button
+                  key={outil.name}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => ouvrirOutil(outil)}
+                  className="flex items-center gap-2.5 px-3.5 py-2 bg-accent/[0.06] border border-accent/15 rounded-xl hover:bg-accent/12 hover:border-accent/40 transition-colors group cursor-pointer"
+                >
+                  <img
+                    src={outil.iconUrl || `https://cdn.simpleicons.org/${outil.slug}`}
+                    alt=""
+                    aria-hidden="true"
+                    className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all object-contain"
+                  />
+                  <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                    {outil.name}
+                  </span>
+                </motion.button>
+              ))}
+            </motion.div>
+          </Bande>
 
-            {/* Colonne droite : Expérience, Éducation, Centres d'intérêt */}
-            <div className="lg:col-span-2 space-y-12">
-              {/* Expérience */}
-              <section>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Parcours Professionnel</h2>
-                <div className="space-y-8 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-[2px] before:bg-accent/10">
-                  {experiences.map((experience, idx) => (
-                    <motion.div
-                      key={idx}
-                      variants={variantesElement}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      className="relative pl-12"
-                    >
-                      <div className="absolute left-0 top-1 w-9 h-9 bg-background border-2 border-accent rounded-full flex items-center justify-center z-10">
-                        <div className="w-2 h-2 bg-accent rounded-full" />
-                      </div>
-                      <div className="bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-8 hover:border-accent/30 transition-all group">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
-                          <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">{experience.role}</h3>
-                          <span className="text-sm font-bold text-accent/60 bg-accent/5 px-3 py-1 rounded-full">{experience.period}</span>
-                        </div>
-                        <p className="text-lg font-semibold text-foreground/80 mb-4">{experience.company}</p>
-                        <ul className="space-y-3">
-                          {experience.missions.map((mission, i) => (
-                            <li key={i} className="flex items-start gap-3 text-muted-foreground">
-                              <CheckCircle2 className="w-5 h-5 text-accent/40 mt-0.5 flex-shrink-0" />
-                              <span>{mission}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </section>
+          {/* ── Formations ──────────────────────────────────────────────────── */}
+          <Bande label="Formations">
+            <ul className="divide-y divide-border/50">
+              {FORMATIONS.map(({ annee, intitule }) => (
+                <motion.li key={annee} variants={fadeInUp} className="flex items-start gap-5 py-4 first:pt-0 last:pb-0">
+                  <GraduationCap className="w-5 h-5 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+                  <span className="font-mono text-xs font-bold text-accent tabular-nums pt-1 shrink-0">{annee}</span>
+                  <h3 className="font-bold text-base md:text-lg text-foreground leading-snug">{intitule}</h3>
+                </motion.li>
+              ))}
+            </ul>
+          </Bande>
 
-              {/* Formations */}
-              <section>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Formations</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <motion.div
-                    variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                    className="bg-card/30 border border-border/40 rounded-2xl p-6"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <GraduationCap className="w-6 h-6 text-accent" />
-                      <span className="font-bold text-accent">2022</span>
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">Titre professionnel (BAC+2) d'Assistant Web Marketing</h3>
-                  </motion.div>
-                  <motion.div
-                    variants={variantesElement} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                    className="bg-card/30 border border-border/40 rounded-2xl p-6"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <GraduationCap className="w-6 h-6 text-accent" />
-                      <span className="font-bold text-accent">2020</span>
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">BEP & BAC PRO Électrotechnique (MELEC)</h3>
-                  </motion.div>
-                </div>
-              </section>
-
-              {/* Certifications */}
-              <section>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Certifications</h2>
-                <motion.a
+          {/* ── Certifications ──────────────────────────────────────────────── */}
+          <Bande label="Certifications">
+            <ul className="divide-y divide-border/50">
+              <motion.li variants={fadeInUp}>
+                <a
                   href="https://www.credly.com/badges/f518dc90-cbd2-4ec2-95e6-b58a35119ffc/linked_in?t=tardcp"
                   target="_blank"
                   rel="noreferrer"
-                  variants={variantesElement}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="flex items-center gap-5 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-6 hover:border-accent/30 transition-all group"
+                  className="group flex items-center gap-5 py-4 hover:bg-accent/[0.04] rounded-xl px-3 -mx-3 transition-colors"
                 >
-                  <div className="p-3 bg-accent/10 rounded-xl shrink-0 group-hover:bg-accent/20 transition-colors">
-                    <ShieldCheck className="w-6 h-6 text-accent" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-foreground group-hover:text-accent transition-colors">Introduction to Cybersecurity</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">Cisco — Credly Badge</p>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
-                </motion.a>
-                <motion.div
-                  variants={variantesElement}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="flex items-center gap-5 bg-card/30 backdrop-blur-sm border border-border/40 rounded-2xl p-6"
+                  <ShieldCheck className="w-5 h-5 text-accent shrink-0" aria-hidden="true" />
+                  <span className="flex-1 min-w-0">
+                    <span className="block font-bold text-foreground group-hover:text-accent transition-colors">
+                      Introduction to Cybersecurity
+                    </span>
+                    <span className="block text-sm text-muted-foreground mt-0.5">Cisco — Credly Badge</span>
+                  </span>
+                  <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-accent transition-colors shrink-0" aria-hidden="true" />
+                </a>
+              </motion.li>
+              <motion.li variants={fadeInUp}>
+                <a
+                  href="https://www.credly.com/badges/9dd2bc13-5bb2-45e9-8261-e20c45d699a1/linked_in?t=teyn8c"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-5 py-4 hover:bg-accent/[0.04] rounded-xl px-3 -mx-3 transition-colors"
                 >
-                  <div className="p-3 bg-accent/10 rounded-xl shrink-0">
-                    <Cpu className="w-6 h-6 text-accent" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-foreground">Introduction to IoT</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">Cisco Networking Academy</p>
-                  </div>
-                </motion.div>
-              </section>
+                  <Cpu className="w-5 h-5 text-accent shrink-0" aria-hidden="true" />
+                  <span className="flex-1 min-w-0">
+                    <span className="block font-bold text-foreground group-hover:text-accent transition-colors">
+                      Introduction to IoT
+                    </span>
+                    <span className="block text-sm text-muted-foreground mt-0.5">Cisco Networking Academy</span>
+                  </span>
+                  <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-accent transition-colors shrink-0" aria-hidden="true" />
+                </a>
+              </motion.li>
+            </ul>
+          </Bande>
 
-              {/* Centres d'intérêt */}
-              <section>
-                <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-accent/60 mb-8 px-2">Centres d'Intérêt</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {interets.map((interet, idx) => (
-                    <motion.div
-                      key={idx}
-                      variants={variantesElement}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      className="flex flex-col items-center justify-center gap-4 bg-card/30 backdrop-blur-sm border border-border/40 p-6 rounded-2xl hover:border-accent/30 transition-all group text-center"
-                    >
-                      <div className="p-4 bg-accent/5 rounded-2xl group-hover:bg-accent/10 transition-colors">
-                        <interet.icon className="w-8 h-8 text-accent group-hover:scale-110 transition-transform" />
-                      </div>
-                      <span className="font-bold text-sm tracking-tight text-foreground/90">{interet.name}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          </div>
+          {/* ── Langues ─────────────────────────────────────────────────────── */}
+          <Bande label="Langues">
+            <ul className="divide-y divide-border/50">
+              {[
+                { langue: 'Français', niveau: 'Maternel' },
+                { langue: 'Anglais', niveau: 'Niveau B2 avancé' },
+              ].map(({ langue, niveau }) => (
+                <motion.li key={langue} variants={fadeInUp} className="flex justify-between items-center py-4 first:pt-0 last:pb-0">
+                  <span className="font-bold text-foreground">{langue}</span>
+                  <span className="text-accent text-sm font-medium">{niveau}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </Bande>
+
+          {/* ── Centres d'intérêt ───────────────────────────────────────────── */}
+          <Bande label="Centres d'Intérêt">
+            <motion.ul variants={fadeInUp} className="flex flex-wrap gap-2.5">
+              {INTERETS.map(({ name, icon: Icone }) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-2.5 px-4 py-2.5 bg-accent/[0.06] border border-accent/15 rounded-xl"
+                >
+                  <Icone className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+                  <span className="text-sm font-bold text-foreground/90 tracking-tight">{name}</span>
+                </li>
+              ))}
+            </motion.ul>
+          </Bande>
         </div>
       </main>
+
+      <LinkedInFooterModal
+        isOpen={estModaleLinkedinOuverte}
+        onClose={() => setEstModaleLinkedinOuverte(false)}
+      />
+
+      <TechModal
+        isOpen={estModaleOutilOuverte && !!outilSelectionne}
+        onClose={() => {
+          setEstModaleOutilOuverte(false);
+          setTimeout(() => setOutilSelectionne(null), 500);
+        }}
+        techName={outilSelectionne?.name ?? ''}
+        techUrl={outilSelectionne?.url ?? ''}
+        techIcon={outilSelectionne?.slug ?? ''}
+        iconUrl={outilSelectionne?.iconUrl}
+      />
     </div>
   );
 };
