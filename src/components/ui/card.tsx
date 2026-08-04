@@ -2,8 +2,19 @@ import { ComponentProps } from "react"
 
 import { cn } from "@/lib/utils"
 
+/*
+  Mira délimite les surfaces par un anneau d'un pixel tiré du texte plutôt que
+  par une ombre portée : le contour reste net aux deux thèmes, là où une ombre
+  disparaît sur fond sombre.
+*/
 function Card({ className, ...props }: ComponentProps<"div">) {
-  return <div data-slot="card" className={cn("relative isolate rounded-xl bg-card shadow-sm", className)} {...props} />
+  return (
+    <div
+      data-slot="card"
+      className={cn("relative isolate rounded-lg bg-card text-xs/relaxed ring-1 ring-foreground/10", className)}
+      {...props}
+    />
+  )
 }
 
 function CardHeader({ className, ...props }: ComponentProps<"div">) {
@@ -23,7 +34,7 @@ function CardTitle({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
-      className={cn("leading-none font-semibold", className)}
+      className={cn("text-sm leading-none font-medium", className)}
       {...props}
     />
   )
@@ -33,7 +44,7 @@ function CardDescription({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("text-muted-foreground text-xs/relaxed", className)}
       {...props}
     />
   )

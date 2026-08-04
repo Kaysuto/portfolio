@@ -25,7 +25,7 @@ export function DiscordModal({ isOpen, onClose }: DiscordModalProps) {
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<DiscordIcon className="h-10 w-10 text-accent" />}
+      icon={<DiscordIcon className="size-5 text-accent-texte" />}
       title="Discord"
       subtitle="Rejoignez ma communauté d'échange"
       url={URL_DISCORD}

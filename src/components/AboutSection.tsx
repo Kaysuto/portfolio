@@ -1,10 +1,8 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Brain, Code, Heart, Server } from "lucide-react"
-import { useCounterAnimation } from "@/hooks/useCounterAnimation"
 import { TechModal } from "@/components/ui/TechModal"
 import { SectionHeading, RailLabel } from "@/components/ui/SectionHeading"
-import { Sticker } from "@/components/ui/Sticker"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
 type Tech = { name: string; slug: string; url: string; iconUrl?: string }
@@ -61,6 +59,7 @@ const CATEGORIES_TECH: { title: string; techs: Tech[] }[] = [
       { name: "Linux", slug: "linux", url: "https://www.linux.org" },
       { name: "Docker", slug: "docker", url: "https://www.docker.com" },
       { name: "Nginx", slug: "nginx", url: "https://nginx.org" },
+      { name: "Apache", slug: "apache", url: "https://httpd.apache.org" },
       { name: "Fail2Ban", slug: "fail2ban", url: "https://www.fail2ban.org", iconUrl: "https://avatars.githubusercontent.com/u/1087378?s=48&v=4" },
       { name: "Proxmox", slug: "proxmox", url: "https://www.proxmox.com/", iconUrl: "https://i.imgur.com/TvQIvQ1.png" },
       { name: "VMware", slug: "vmware", url: "https://www.vmware.com" },
@@ -77,7 +76,7 @@ const CATEGORIES_TECH: { title: string; techs: Tech[] }[] = [
       { name: "Raycast", slug: "raycast", url: "https://www.raycast.com" },
       { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png" },
       { name: "Byterover", slug: "byterover", url: "https://www.byterover.dev/", iconUrl: "https://i.imgur.com/jxUBre4.png" },
-      { name: "Superwhisper", slug: "superwhisper", url: "https://superwhisper.com/", iconUrl: "https://i.imgur.com/b9p7J8B.png" },
+      { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png" },
       { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" },
       { name: "Ubuntu", slug: "ubuntu", url: "https://ubuntu.com" },
       { name: "Debian", slug: "debian", url: "https://www.debian.org" },
@@ -88,9 +87,6 @@ const CATEGORIES_TECH: { title: string; techs: Tech[] }[] = [
 ]
 
 export function AboutSection() {
-  const compteurAge = useCounterAnimation({ end: 24, duration: 1800 })
-  const compteurExperience = useCounterAnimation({ end: 12, duration: 1800 })
-
   const [techSelectionnee, setTechSelectionnee] = useState<Tech | null>(null)
   const [estModaleOuverte, setEstModaleOuverte] = useState(false)
 
@@ -110,112 +106,86 @@ export function AboutSection() {
       >
         <SectionHeading
           index="01"
-          title={<>À propos de <span className="text-accent">moi</span></>}
+          title={<>À propos de <span className="text-accent-texte">moi</span></>}
           lead="Technicien Informatique le jour, Product Builder la nuit — plus de 12 ans de passion autodidacte pour la tech."
         />
 
-        {/* ── Parcours : rail d'étiquette + texte, avec chiffres en marge ───── */}
+        {/* ── Parcours ─────────────────────────────────────────────────────── */}
         <motion.div
           variants={fadeInUp}
-          className="grid lg:grid-cols-12 gap-x-10 gap-y-8 py-12 border-t border-border/60"
+          className="flex flex-col items-center text-center py-12 border-t border-border/60"
         >
-          <div className="lg:col-span-3">
-            <RailLabel>Mon parcours</RailLabel>
-            <Sticker name="reflechit" size={160} className="hidden lg:block mt-6 -ml-4" />
-          </div>
+          <RailLabel>Mon parcours</RailLabel>
 
-          <div className="lg:col-span-6 space-y-5">
-            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-medium">
+          <div className="mt-6 space-y-4 max-w-3xl">
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
               Après 3 ans en datacenter, je suis désormais Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe — gestion du parc, support utilisateurs, administration réseau et maintenance de l'infrastructure interne.
             </p>
-            <p className="text-muted-foreground text-base md:text-lg leading-relaxed font-medium">
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
               La nuit, je construis des applications web, explore l'IA et crée des expériences digitales. Cette double vie m'a forgé une vision à 360° : de l'infrastructure matérielle au produit logiciel.
             </p>
           </div>
-
-          <dl className="lg:col-span-3 flex lg:flex-col gap-8 lg:gap-6 lg:border-l lg:border-border/60 lg:pl-8">
-            <div>
-              <dd className="flex items-baseline gap-1">
-                <span ref={compteurAge.elementRef} className="text-4xl font-bold text-accent tabular-nums">
-                  {compteurAge.count}
-                </span>
-                <span className="text-base font-bold text-muted-foreground">ans</span>
-              </dd>
-              <dt className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-1.5 font-bold">Âge</dt>
-            </div>
-            <div>
-              <dd className="flex items-baseline gap-1">
-                <span ref={compteurExperience.elementRef} className="text-4xl font-bold text-accent tabular-nums">
-                  {compteurExperience.count}+
-                </span>
-                <span className="text-base font-bold text-muted-foreground">ans</span>
-              </dd>
-              <dt className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-1.5 font-bold">Exp. autodidacte</dt>
-            </div>
-          </dl>
         </motion.div>
 
-        {/* ── Compétences : liste numérotée plutôt que grille de cartes ────── */}
+        {/* ── Compétences ──────────────────────────────────────────────────── */}
         <motion.div
           variants={fadeInUp}
-          className="grid lg:grid-cols-12 gap-x-10 gap-y-8 py-12 border-t border-border/60"
+          className="flex flex-col items-center py-12 border-t border-border/60"
         >
-          <div className="lg:col-span-3">
-            <RailLabel>Ce que j'apporte</RailLabel>
-          </div>
+          <RailLabel>Ce que j'apporte</RailLabel>
 
-          <ul className="lg:col-span-9 divide-y divide-border/50">
+          <ul className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10 w-full">
             {COMPETENCES.map(({ icon: Icone, title, description }, index) => (
               <motion.li
                 key={title}
                 variants={fadeInUp}
-                whileHover={{ x: 6 }}
+                whileHover={{ y: -4 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="group flex items-start gap-5 py-5 first:pt-0 last:pb-0"
+                className="group flex flex-col items-center text-center"
               >
-                <span className="font-mono text-xs font-bold text-accent/70 tabular-nums pt-1 w-6 shrink-0">
+                <span className="font-mono text-[10px] font-medium text-accent-texte/70 tabular-nums">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <Icone className="w-5 h-5 text-accent shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                <div className="min-w-0">
-                  <h3 className="font-bold text-foreground mb-1 group-hover:text-accent transition-colors">
-                    {title}
-                  </h3>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-medium">
-                    {description}
-                  </p>
-                </div>
+                <span className="mt-3 grid place-items-center size-10 rounded-lg bg-accent/15 ring-1 ring-accent/25 group-hover:bg-accent/25 transition-colors">
+                  <Icone className="size-4 text-accent-texte" />
+                </span>
+                <h3 className="mt-4 text-sm font-medium text-foreground group-hover:text-accent-texte transition-colors">
+                  {title}
+                </h3>
+                <p className="mt-1.5 text-xs/relaxed text-muted-foreground max-w-[24ch]">
+                  {description}
+                </p>
               </motion.li>
             ))}
           </ul>
         </motion.div>
 
         {/* ── Stack technique : une ligne par catégorie ─────────────────────── */}
-        <motion.div variants={fadeInUp} className="pt-12 border-t border-border/60">
-          <RailLabel className="lg:static mb-8 block">Technologies favorites</RailLabel>
+        <motion.div variants={fadeInUp} className="flex flex-col items-center pt-12 border-t border-border/60">
+          <RailLabel>Technologies favorites</RailLabel>
 
-          <div className="space-y-8">
+          <div className="mt-8 space-y-8 w-full">
             {CATEGORIES_TECH.map((categorie) => (
-              <div key={categorie.title} className="grid lg:grid-cols-12 gap-x-10 gap-y-4 items-start">
-                <h3 className="lg:col-span-3 text-sm font-bold text-accent tracking-tight pt-1.5">
+              <div key={categorie.title} className="flex flex-col items-center gap-3">
+                <h3 className="text-xs font-medium text-accent-texte tracking-tight">
                   {categorie.title}
                 </h3>
-                <div className="lg:col-span-9 flex flex-wrap gap-2.5">
+                <div className="flex flex-wrap justify-center gap-1.5 max-w-3xl">
                   {categorie.techs.map((tech) => (
                     <motion.button
                       key={tech.name}
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => gererClicTech(tech)}
-                      className="flex items-center gap-2.5 px-3.5 py-2 bg-accent/[0.06] border border-accent/15 rounded-xl hover:bg-accent/12 hover:border-accent/40 transition-colors cursor-pointer group"
+                      className="flex items-center gap-2 h-7 px-2 bg-input/20 dark:bg-input/30 border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors cursor-pointer group"
                     >
                       <img
                         src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
                         alt=""
                         aria-hidden="true"
-                        className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all object-contain"
+                        className="size-3.5 grayscale group-hover:grayscale-0 transition-all object-contain"
                       />
-                      <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                      <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                         {tech.name}
                       </span>
                     </motion.button>

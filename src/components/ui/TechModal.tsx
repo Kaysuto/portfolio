@@ -19,7 +19,7 @@ export function TechModal({ isOpen, onClose, techName, techUrl, techIcon, iconUr
         <img
           src={iconUrl || `https://cdn.simpleicons.org/${techIcon}`}
           alt={techName}
-          className="w-12 h-12 object-contain"
+          className="size-5 object-contain"
         />
       }
       title={techName}

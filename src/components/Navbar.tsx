@@ -23,6 +23,44 @@ const LIENS_ROUTES: NavLink[] = [
 
 const TOUS_LIENS = [...LIENS_DEFILEMENT, ...LIENS_ROUTES]
 
+/** Entrée de la barre desktop, partagée par le groupe d'ancres et celui des pages. */
+function LienNav({
+  lien,
+  estActif,
+  onClic,
+  onSurvol,
+}: {
+  lien: NavLink
+  estActif: boolean
+  onClic: (lien: NavLink) => void
+  onSurvol: (lien: NavLink) => void
+}) {
+  return (
+    <button
+      onClick={() => onClic(lien)}
+      onMouseEnter={() => onSurvol(lien)}
+      onFocus={() => onSurvol(lien)}
+      aria-current={estActif ? "page" : undefined}
+      className={cn(
+        "relative px-2.5 py-1.5 text-xs rounded-md transition-colors duration-150",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        estActif
+          ? "text-foreground font-medium"
+          : "text-muted-foreground hover:text-foreground font-normal"
+      )}
+    >
+      {estActif && (
+        <motion.span
+          layoutId="nav-pastille"
+          className="absolute inset-0 rounded-md bg-foreground/8"
+          transition={{ type: "spring", stiffness: 400, damping: 34 }}
+        />
+      )}
+      <span className="relative z-10">{lien.label}</span>
+    </button>
+  )
+}
+
 export function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -35,7 +73,7 @@ export function Navbar() {
   const progression = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 })
 
   useEffect(() => {
-    const surDefilement = () => setEstCondensee(window.scrollY > 80)
+    const surDefilement = () => setEstCondensee(window.scrollY > 24)
     window.addEventListener("scroll", surDefilement, { passive: true })
     surDefilement()
     return () => window.removeEventListener("scroll", surDefilement)
@@ -100,120 +138,142 @@ export function Navbar() {
 
   return (
     <>
-      {/* ══ Desktop : bandeau pleine largeur, indicateur en soulignement ══ */}
-      <motion.header
-        className="fixed top-0 inset-x-0 z-40 hidden md:block"
-        initial={{ y: -24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, ease: LUMA_EASE }}
-      >
-        {/*
-          Le flou reste constant et n'est activé que par la classe : animer
-          `backdrop-filter` obligeait le navigateur à refiltrer toute la zone
-          sous la barre à chaque frame de la transition. Seules les couleurs
-          sont animées, via une transition CSS.
-        */}
-        <div
-          className={cn(
-            "border-b transition-[background-color,border-color] duration-300 ease-out",
-            estCondensee
-              ? "bg-background/80 border-border/50 backdrop-blur-lg"
-              : "bg-transparent border-transparent"
-          )}
+      {/*
+        ══ Desktop : îlot flottant ══
+        L'enveloppe `fixed` est transparente et ne capte pas les clics ; seul
+        l'îlot en `w-fit` est visible et interactif, ce qui laisse la page
+        défiler librement de part et d'autre.
+      */}
+      <div className="fixed top-3 inset-x-0 z-40 hidden md:flex justify-center px-4 pointer-events-none">
+        <motion.header
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.45, ease: LUMA_EASE }}
+          className="pointer-events-auto"
         >
-          <nav className="max-w-6xl mx-auto h-16 px-6 lg:px-12 flex items-center justify-between gap-8">
+          {/*
+            Le flou est porté par `.surface-flottante` et reste constant : animer
+            `backdrop-filter` obligerait le navigateur à refiltrer toute la zone
+            sous la barre à chaque frame. Seules les couleurs sont animées.
+          */}
+          <nav
+            className={cn(
+              "relative flex items-center gap-1 h-12 pl-3 pr-2 rounded-xl overflow-hidden",
+              "transition-[background-color,border-color,box-shadow] duration-300 ease-out",
+              /* Rien à désactiver hors état condensé : l'îlot n'a pas de fond
+                 par défaut. Émettre `bg-transparent`/`shadow-none` en face de
+                 `.surface-flottante` mettrait deux règles de même spécificité
+                 en concurrence pour rien. */
+              estCondensee && "surface-flottante"
+            )}
+          >
             <button
               onClick={gererClicLogo}
-              className="font-display text-lg font-bold text-foreground hover:text-accent transition-colors shrink-0 tracking-tight"
+              className="font-display text-sm font-semibold text-foreground hover:text-accent-texte transition-colors shrink-0 tracking-tight px-1.5"
             >
               Kimiya
             </button>
 
-            <ul className="flex items-center gap-1">
-              {TOUS_LIENS.map(lien => {
-                const estActif = idActif === lien.id
-                return (
-                  <li key={lien.id}>
-                    <button
-                      onClick={() => gererClicLien(lien)}
-                      onMouseEnter={() => gererSurvolLien(lien)}
-                      onFocus={() => gererSurvolLien(lien)}
-                      aria-current={estActif ? "page" : undefined}
-                      className={cn(
-                        "relative px-3.5 py-2 text-sm rounded-lg transition-colors duration-150",
-                        estActif
-                          ? "text-foreground font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <span className="relative z-10">{lien.label}</span>
-                      {estActif && (
-                        <motion.span
-                          layoutId="nav-underline"
-                          className="absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-accent"
-                          transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                        />
-                      )}
-                    </button>
-                  </li>
-                )
-              })}
+            <span
+              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              aria-hidden="true"
+            />
+
+            {/*
+              Deux groupes distincts, séparés par un filet : à gauche les
+              ancres qui font défiler l'accueil, à droite les pages qui ont
+              leur propre URL. Les mêler dans une liste unique laissait croire
+              que « CV » et « Bio » étaient des sections de la page d'accueil.
+            */}
+            <ul className="flex items-center gap-0.5" aria-label="Sections de l'accueil">
+              {LIENS_DEFILEMENT.map(lien => (
+                <li key={lien.id}>
+                  <LienNav
+                    lien={lien}
+                    estActif={idActif === lien.id}
+                    onClic={gererClicLien}
+                    onSurvol={gererSurvolLien}
+                  />
+                </li>
+              ))}
             </ul>
+
+            <span
+              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              aria-hidden="true"
+            />
+
+            <ul className="flex items-center gap-0.5" aria-label="Pages">
+              {LIENS_ROUTES.map(lien => (
+                <li key={lien.id}>
+                  <LienNav
+                    lien={lien}
+                    estActif={idActif === lien.id}
+                    onClic={gererClicLien}
+                    onSurvol={gererSurvolLien}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            <span
+              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              aria-hidden="true"
+            />
 
             <div className="shrink-0">
               <ThemeController />
             </div>
+
+            {/* Progression de lecture, filante sur l'arête basse de l'îlot */}
+            <motion.div
+              className="absolute bottom-0 inset-x-0 h-px origin-left bg-accent"
+              style={{ scaleX: progression }}
+              aria-hidden="true"
+            />
           </nav>
+        </motion.header>
+      </div>
 
-          {/* Progression de lecture */}
-          <motion.div
-            className="h-[2px] origin-left bg-accent/70"
-            style={{ scaleX: progression }}
-            aria-hidden="true"
-          />
-        </div>
-      </motion.header>
-
-      {/* ══ Mobile : en-tête minimal + barre d'onglets en bas ══ */}
-      <motion.header
-        className="fixed top-0 inset-x-0 z-40 md:hidden"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: LUMA_EASE }}
-      >
-        <div
+      {/* ══ Mobile : îlot haut minimal ══ */}
+      <div className="fixed top-2 inset-x-0 z-40 md:hidden px-3 pointer-events-none">
+        <motion.header
+          initial={{ y: -16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4, ease: LUMA_EASE }}
           className={cn(
-            "border-b transition-[background-color,border-color] duration-300 ease-out",
-            estCondensee
-              ? "bg-background/85 border-border/50 backdrop-blur-lg"
-              : "bg-transparent border-transparent"
+            "pointer-events-auto relative flex items-center justify-between h-12 pl-3 pr-1.5 rounded-xl overflow-hidden",
+            "transition-[background-color,border-color,box-shadow] duration-300 ease-out",
+            estCondensee && "surface-flottante"
           )}
         >
-          <div className="h-14 px-5 flex items-center justify-between">
-            <button
-              onClick={gererClicLogo}
-              className="font-display text-base font-bold text-foreground tracking-tight"
-            >
-              Kimiya
-            </button>
-            <ThemeController />
-          </div>
+          <button
+            onClick={gererClicLogo}
+            className="font-display text-sm font-semibold text-foreground tracking-tight"
+          >
+            Kimiya
+          </button>
+          <ThemeController />
           <motion.div
-            className="h-[2px] origin-left bg-accent/70"
+            className="absolute bottom-0 inset-x-0 h-px origin-left bg-accent"
             style={{ scaleX: progression }}
             aria-hidden="true"
           />
-        </div>
-      </motion.header>
+        </motion.header>
+      </div>
 
       {/*
-        Barre d'onglets : cinq colonnes de largeur égale et libellés toujours
-        visibles. L'ancienne version n'affichait le libellé que sur l'onglet
-        actif, ce qui faisait sauter la largeur des voisins à chaque défilement.
+        ══ Mobile : barre d'onglets flottante ══
+        Cinq colonnes de largeur égale et libellés toujours visibles : n'afficher
+        le libellé que sur l'onglet actif faisait sauter la largeur des voisins à
+        chaque défilement.
       */}
-      <nav
-        className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-border/60 bg-background/85 backdrop-blur-xl"
-        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      <motion.nav
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: LUMA_EASE, delay: 0.1 }}
+        className="fixed inset-x-3 z-40 md:hidden rounded-xl surface-flottante overflow-hidden"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         aria-label="Navigation principale"
       >
         <ul className="grid grid-cols-5">
@@ -226,26 +286,26 @@ export function Navbar() {
                   onClick={() => gererClicLien(lien)}
                   onTouchStart={() => gererSurvolLien(lien)}
                   aria-current={estActif ? "page" : undefined}
-                  className="relative w-full h-16 flex flex-col items-center justify-center gap-1 px-1"
+                  className="relative w-full h-14 flex flex-col items-center justify-center gap-1 px-1"
                 >
                   {estActif && (
                     <motion.span
-                      layoutId="nav-tab-actif"
-                      className="absolute top-0 inset-x-4 h-[2px] rounded-full bg-accent"
+                      layoutId="nav-onglet-actif"
+                      className="absolute inset-1 rounded-md bg-foreground/8"
                       transition={{ type: "spring", stiffness: 400, damping: 34 }}
                     />
                   )}
                   <Icone
                     className={cn(
-                      "w-[18px] h-[18px] shrink-0 transition-colors duration-150",
-                      estActif ? "text-accent" : "text-muted-foreground"
+                      "relative z-10 w-[17px] h-[17px] shrink-0 transition-colors duration-150",
+                      estActif ? "text-accent-texte" : "text-muted-foreground"
                     )}
                     aria-hidden="true"
                   />
                   <span
                     className={cn(
-                      "text-[10px] leading-none tracking-tight truncate max-w-full transition-colors duration-150",
-                      estActif ? "text-accent font-bold" : "text-muted-foreground font-medium"
+                      "relative z-10 text-[10px] leading-none tracking-tight truncate max-w-full transition-colors duration-150",
+                      estActif ? "text-accent-texte font-medium" : "text-muted-foreground font-normal"
                     )}
                   >
                     {lien.label}
@@ -255,7 +315,7 @@ export function Navbar() {
             )
           })}
         </ul>
-      </nav>
+      </motion.nav>
     </>
   )
 }

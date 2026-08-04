@@ -13,7 +13,7 @@ export function DemoModal({ isOpen, onClose, projectTitle, projectUrl }: DemoMod
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<Globe className="h-10 w-10 text-accent" />}
+      icon={<Globe className="size-5 text-accent-texte" />}
       title={projectTitle}
       subtitle="Visiter le site en direct"
       url={projectUrl}

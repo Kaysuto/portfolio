@@ -37,13 +37,14 @@ export function BackToTop() {
           whileTap={{ scale: 0.92 }}
           style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.25rem)" }}
           className={cn(
-            "fixed right-5 md:!bottom-6 z-30 grid place-items-center",
-            "size-11 rounded-full text-accent-foreground",
-            "bg-accent shadow-lg shadow-accent/20 ring-1 ring-accent/30",
-            "hover:bg-accent/90 transition-colors"
+            "fixed right-4 md:!bottom-5 z-30 grid place-items-center",
+            "size-10 rounded-md text-accent-foreground",
+            "bg-accent ring-1 ring-accent/30",
+            "hover:bg-accent/90 transition-colors",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           )}
         >
-          <ArrowUp className="size-5" />
+          <ArrowUp className="size-4" />
         </motion.button>
       )}
     </AnimatePresence>

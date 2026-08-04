@@ -19,7 +19,6 @@ import {
 import { GithubLogo as Github, TwitchLogo as Twitch } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { ExternalLinkModal } from '@/components/ui/ExternalLinkModal';
-import { Sticker } from '@/components/ui/Sticker';
 import { BioLinksService } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
 import { useSeo } from '@/hooks/useSeo';
@@ -51,7 +50,7 @@ const LIBELLES_CATEGORIE: Record<string, string> = {
 
 function IconeLien({ nom, className }: { nom: string; className?: string }) {
   const Icone = MAP_ICONES[nom] ?? LinkIcon;
-  return <Icone size={22} className={className} aria-hidden="true" />;
+  return <Icone size={18} className={className} aria-hidden="true" />;
 }
 
 const BioPage: React.FC = () => {
@@ -78,8 +77,8 @@ const BioPage: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <Link to="/">
-              <Button variant="ghost" className="mb-10 gap-2 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-colors">
-                <ArrowLeft size={18} />
+              <Button variant="ghost" className="mb-10 text-muted-foreground hover:text-accent-texte">
+                <ArrowLeft />
                 Retour à l'accueil
               </Button>
             </Link>
@@ -87,31 +86,31 @@ const BioPage: React.FC = () => {
 
           {/* En-tête aligné à gauche, avec compteur en marge */}
           <motion.header
-            className="flex flex-wrap items-end justify-between gap-6 pb-10 mb-4 border-b border-border/60"
+            className="flex flex-col items-center text-center gap-4 pb-10 mb-4 border-b border-border/60"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-accent mb-4">
+            <div className="flex flex-col items-center">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-accent-texte mb-4">
                 Bio
               </p>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
-                Mes <span className="text-accent">Liens</span>
+              <h1 className="text-4xl md:text-6xl font-semibold mb-4">
+                Mes <span className="text-accent-texte">Liens</span>
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed font-medium max-w-xl">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto">
                 Retrouvez-moi sur mes différentes plateformes et projets.
               </p>
             </div>
-            <div className="flex items-end gap-5">
-              <Sticker name="dodo" size={128} className="hidden sm:block" />
-              <p className="text-5xl font-bold text-accent/25 tabular-nums leading-none">
-                {String(nombreTotal).padStart(2, '0')}
-              </p>
-            </div>
+            <p
+              className="font-mono text-3xl font-medium text-accent-texte/30 tabular-nums leading-none"
+              title={`${nombreTotal} liens`}
+            >
+              {String(nombreTotal).padStart(2, '0')}
+            </p>
           </motion.header>
 
-          {/* Une catégorie par bande, étiquette collante à gauche */}
+          {/* Une catégorie par bande, intertitre centré au-dessus des liens */}
           <div className="divide-y divide-border/60">
             {Object.entries(liensGroupes).map(([categorie, liens]) => (
               <motion.section
@@ -120,15 +119,13 @@ const BioPage: React.FC = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={VIEWPORT}
-                className="grid lg:grid-cols-12 gap-x-10 gap-y-5 py-10"
+                className="flex flex-col items-center py-10"
               >
-                <div className="lg:col-span-3">
-                  <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground lg:sticky lg:top-28">
-                    {LIBELLES_CATEGORIE[categorie] || categorie}
-                  </h2>
-                </div>
+                <h2 className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
+                  {LIBELLES_CATEGORIE[categorie] || categorie}
+                </h2>
 
-                <ul className="lg:col-span-9 divide-y divide-border/40">
+                <ul className="mt-6 w-full max-w-2xl divide-y divide-border/40">
                   {liens.map((lien) => (
                     <motion.li
                       key={lien.id}
@@ -146,21 +143,21 @@ const BioPage: React.FC = () => {
                           });
                           openModal();
                         }}
-                        className="group w-full flex items-center gap-5 py-4 text-left hover:bg-accent/[0.04] rounded-xl px-3 -mx-3 transition-colors"
+                        className="group w-full flex items-center gap-4 py-3 text-left hover:bg-muted rounded-md px-2 -mx-2 transition-colors"
                       >
-                        <span className="text-accent shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="text-accent-texte shrink-0 group-hover:scale-110 transition-transform">
                           <IconeLien nom={lien.icon || 'LinkSimple'} />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block font-bold text-base text-foreground group-hover:text-accent transition-colors truncate">
+                          <span className="block text-sm font-medium text-foreground group-hover:text-accent-texte transition-colors truncate">
                             {lien.title}
                           </span>
-                          <span className="block text-sm text-muted-foreground truncate">
+                          <span className="block text-xs text-muted-foreground truncate">
                             {lien.description}
                           </span>
                         </span>
                         <ArrowUpRight
-                          className="w-4 h-4 text-muted-foreground/50 group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                          className="size-3.5 text-muted-foreground/50 group-hover:text-accent-texte group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
                           aria-hidden="true"
                         />
                       </button>
@@ -177,7 +174,7 @@ const BioPage: React.FC = () => {
         <ExternalLinkModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          icon={<IconeLien nom={lienSelectionne.icon} className="text-accent" />}
+          icon={<IconeLien nom={lienSelectionne.icon} className="text-accent-texte" />}
           title={lienSelectionne.name}
           subtitle={lienSelectionne.description}
           url={lienSelectionne.url}

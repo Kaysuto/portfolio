@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { DiscordModal } from "@/components/ui/DiscordModal"
 import { SectionHeading } from "@/components/ui/SectionHeading"
-import { Sticker } from "@/components/ui/Sticker"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 import { contactSchema, type ContactFormValues } from "@/lib/contact-schema"
 
@@ -58,13 +58,11 @@ function ContactForm() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Nom</FormLabel>
+                <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Nom</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Votre nom"
-                    className="h-11 bg-input border-accent/20 rounded-xl focus-visible:ring-accent/30 text-sm"
-                    {...field}
-                  />
+                  {/* h-9 plutôt que la hauteur Mira par défaut : le formulaire
+                      est la principale action de la page, il gagne un cran. */}
+                  <Input placeholder="Votre nom" className="h-9" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -75,14 +73,9 @@ function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Email</FormLabel>
+                <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Email</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="votre@email.com"
-                    className="h-11 bg-input border-accent/20 rounded-xl focus-visible:ring-accent/30 text-sm"
-                    {...field}
-                  />
+                  <Input type="email" placeholder="votre@email.com" className="h-9" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -95,28 +88,23 @@ function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Message</FormLabel>
+              <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Message</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Votre projet, votre question…"
-                  rows={5}
-                  className="bg-input border-accent/20 rounded-xl focus-visible:ring-accent/30 resize-none text-sm p-4"
-                  {...field}
-                />
+                <Textarea placeholder="Votre projet, votre question…" rows={5} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <button
+        <Button
           type="submit"
           disabled={estEnEnvoi}
-          className="w-full h-11 rounded-xl bg-accent text-accent-foreground text-sm font-medium flex items-center justify-center gap-2 hover:opacity-80 transition-opacity disabled:opacity-50"
+          className="w-full h-9"
         >
-          {estEnEnvoi ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {estEnEnvoi ? <Loader2 className="animate-spin" /> : <Send />}
           Envoyer le message
-        </button>
+        </Button>
 
         {/* Confirmation visuelle après l'envoi, en complément du toast */}
         <AnimatePresence>
@@ -126,9 +114,8 @@ function ContactForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="flex items-center justify-center gap-3 text-sm font-bold text-sage pt-2"
+              className="flex items-center justify-center gap-3 text-sm font-medium text-success pt-2"
             >
-              <Sticker name="pouce" size={88} />
               Message bien reçu, merci !
             </motion.p>
           )}
@@ -167,39 +154,41 @@ export function ContactSection() {
         viewport={VIEWPORT}
         variants={staggerContainer}
       >
-        <SectionHeading index="03" title={<>Travaillons <span className="text-accent">ensemble.</span></>} />
-
-        <div className="grid lg:grid-cols-12 gap-x-12 gap-y-10 pt-12 border-t border-border/60">
-          {/* Colonne éditoriale */}
-          <motion.div variants={fadeInUp} className="lg:col-span-5 space-y-8">
-            <p className="text-lg text-muted-foreground leading-relaxed">
+        <SectionHeading
+          index="03"
+          title={<>Travaillons <span className="text-accent-texte">ensemble.</span></>}
+          lead={
+            <>
               Projet, question, simple bonjour : écris-moi. Je réponds sous 48h en général.
               Tu peux aussi passer par{" "}
               <button
                 onClick={gererCopieEmail}
-                className="text-foreground underline underline-offset-2 hover:text-accent transition-colors"
+                className="text-foreground underline underline-offset-2 hover:text-accent-texte transition-colors"
               >
                 mail direct
               </button>{" "}
               si tu préfères.
-            </p>
+            </>
+          }
+        />
 
-            <div className="border-l-2 border-accent/30 pl-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-2">
-                Mail direct
-              </p>
-              <button
-                onClick={gererCopieEmail}
-                className="flex items-center gap-2 text-base font-bold text-foreground hover:text-accent transition-colors group"
-              >
-                <span className="font-mono">{EMAIL}</span>
-                <Copy className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
-              </button>
-            </div>
+        <div className="flex flex-col items-center pt-12 border-t border-border/60">
+          {/* Mail direct */}
+          <motion.div variants={fadeInUp} className="flex flex-col items-center mb-10">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground mb-2">
+              Mail direct
+            </p>
+            <button
+              onClick={gererCopieEmail}
+              className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-accent-texte transition-colors group"
+            >
+              <span className="font-mono">{EMAIL}</span>
+              <Copy className="size-3.5 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+            </button>
           </motion.div>
 
           {/* Formulaire */}
-          <motion.div variants={fadeInUp} className="lg:col-span-7">
+          <motion.div variants={fadeInUp} className="w-full max-w-2xl text-left">
             <ContactForm />
           </motion.div>
         </div>

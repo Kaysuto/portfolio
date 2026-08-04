@@ -13,7 +13,7 @@ export function KofiModal({ isOpen, onClose }: KofiModalProps) {
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<Coffee className="h-10 w-10 text-accent" />}
+      icon={<Coffee className="size-5 text-accent-texte" />}
       title="Soutenir mon travail"
       subtitle="Offrez-moi un café sur Ko-fi"
       url={URL_KOFI}

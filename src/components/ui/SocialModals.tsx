@@ -17,7 +17,7 @@ export function LinkedInFooterModal({ isOpen, onClose }: SocialModalProps) {
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<Linkedin className="h-10 w-10 text-accent" />}
+      icon={<Linkedin className="size-5 text-accent-texte" />}
       title="LinkedIn"
       subtitle="Connectons-nous sur LinkedIn"
       url={URL_LINKEDIN}

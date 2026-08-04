@@ -1,24 +1,28 @@
 /* stylelint-disable at-rule-no-unknown */
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Typographie — tout auto-hébergé, aucune requête tierce
-     · Fraunces        — titres. Serif à empattements doux, avec axes optiques
-                         (opsz) et « wonk » : le pendant typographique du trait
-                         de pinceau de l'illustration.
-     · Instrument Sans — texte courant. Humaniste, chaleureux, très lisible en
-                         petit corps ; s'accorde bien mieux à Fraunces que Geist.
-     · Geist Mono      — chiffres, numéros de section, URLs.
-   Les paquets @fontsource découpent par unicode-range : seuls les sous-ensembles
-   réellement utilisés sont téléchargés, et Vite les empreinte pour le cache.
+   Typographie — Geist, auto-hébergée, aucune requête tierce
+     · Geist      — tout le site : titres et texte courant. Grotesque neutre,
+                    dessinée par Vercel, aux formes fermées et à la chasse
+                    régulière : elle disparaît derrière le contenu, ce qui est
+                    exactement le registre de shadcn/ui.
+     · Geist Mono — chiffres, numéros de section, étiquettes capitales, URLs.
+   Deux fichiers variables, deux requêtes : moins que les paquets @fontsource
+   découpés par unicode-range qu'ils remplacent.
    ═══════════════════════════════════════════════════════════════════════════ */
-
-@import '@fontsource-variable/fraunces/full.css';
-@import '@fontsource-variable/instrument-sans/wght.css';
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: 'Geist Mono';
@@ -30,94 +34,113 @@
 
 /* stylelint-disable-next-line at-rule-no-unknown */
 @theme {
-  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Palette « Encre & Parchemin »
-   Dérivée de l'illustration du personnage :
-     · le papier crème vieilli du fond        → background / card
-     · les cheveux châtain et le trait d'encre → primary / accent
-     · le feuillage vert-de-gris               → sage
-     · les yeux bleu-ardoise                   → steel
-     · les éclats et le cercle doré            → gold
+   Palette « Noisette » — crème & chocolat
+   Restituée telle quelle depuis le commit 3f9a255 : c'est la palette tirée du
+   personnage, elle porte l'identité du site et ne se négocie pas.
+     · crème et ivoire        → background / card / popover
+     · chocolat foncé          → foreground / primary
+     · beige et noisette       → secondary / muted / border
+     · noisette clair          → accent
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Thème clair : le parchemin ─────────────────────────────────────────── */
-  --background: oklch(0.938 0.021 84);      /* #F4ECDC — papier crème */
-  --foreground: oklch(0.245 0.019 58);      /* #2A2018 — encre sépia */
+  /* ── Thème clair ────────────────────────────────────────────────────────── */
+  --background: oklch(0.98 0.015 80); /* #F9F6F0 — crème */
+  --foreground: oklch(0.08 0.04 45); /* #1A0F08 — chocolat très foncé */
 
-  --card: oklch(0.972 0.013 85);            /* #FBF6EC — papier plus clair */
-  --card-foreground: oklch(0.245 0.019 58);
+  --card: oklch(0.99 0.01 80); /* #FEFCF9 — blanc crème */
+  --card-foreground: oklch(0.08 0.04 45);
 
-  --popover: oklch(0.972 0.013 85);
-  --popover-foreground: oklch(0.245 0.019 58);
+  --popover: oklch(0.96 0.02 80); /* #F5F0E8 — ivoire */
+  --popover-foreground: oklch(0.08 0.04 45);
 
-  --primary: oklch(0.418 0.055 55);         /* #6B4A32 — châtain des cheveux */
-  --primary-foreground: oklch(0.972 0.013 85);
+  /* Chocolat #5D3A25 — la couleur que le commit d'origine annonçait en
+     commentaire. La valeur qui l'accompagnait, oklch(0.35 0.12 42), rend en
+     réalité #6A1B00 : un rouille saturé, étranger à la gamme crème/chocolat et
+     très voyant sur les boutons pleins. Chroma ramenée de 0.12 à 0.06, teinte
+     de 42 à 51 : on retrouve le chocolat décrit. */
+  --primary: oklch(0.385 0.06 51); /* #5D3A25 — chocolat riche */
+  --primary-foreground: oklch(0.98 0.01 80); /* crème, 9.5:1 dessus */
 
-  --secondary: oklch(0.882 0.028 82);       /* #E4D8C0 — beige de l'écharpe */
-  --secondary-foreground: oklch(0.245 0.019 58);
+  --secondary: oklch(0.82 0.05 60); /* #D4BE9F — crème marquée */
+  --secondary-foreground: oklch(0.08 0.04 45);
 
-  --muted: oklch(0.862 0.028 82);
-  --muted-foreground: oklch(0.420 0.025 68); /* lisible sur --background (≈4.9:1) */
+  --muted: oklch(0.76 0.04 55); /* #C4B5A3 — beige */
+  --muted-foreground: oklch(0.25 0.03 50);
 
-  --accent: oklch(0.500 0.095 62);          /* #895622 — bronze du trait de pinceau (5.1:1 sur le fond) */
-  --accent-foreground: oklch(0.972 0.013 85);
+  --accent: oklch(0.72 0.06 55); /* #B8956A — noisette */
+  --accent-foreground: oklch(0.15 0.04 45);
 
-  --destructive: oklch(0.475 0.135 32);     /* terre cuite plutôt que rouge pur */
-  --destructive-foreground: oklch(0.972 0.013 85);
+  --destructive: oklch(0.5 0.25 25); /* #C41E3A */
+  --destructive-foreground: oklch(0.98 0.01 80);
 
-  --border: oklch(0.800 0.033 80);
-  --input: oklch(0.930 0.020 82);
-  --ring: oklch(0.500 0.095 62);
+  --border: oklch(0.7 0.04 55); /* #B3A28F */
+  --input: oklch(0.9 0.02 70); /* #EDE6D8 */
 
-  /* ── Tons narratifs ─────────────────────────────────────────────────────── */
-  /* sage et steel restent assez sombres pour servir de couleur de texte
-     sur --card (≈5:1) ; gold est purement décoratif (halos, éclats). */
-  --sage: oklch(0.520 0.062 120);           /* #646E45 — feuillage vert-de-gris */
-  --steel: oklch(0.500 0.048 233);          /* #47687A — bleu-ardoise des yeux */
-  --gold: oklch(0.620 0.100 78);            /* éclats dorés */
+  /* Noisette approfondi, à réserver au texte et aux tracés fins.
+     --accent (#C39B81) est une couleur de *surface* : posée en texte sur le
+     crème elle ne donne que 2,4:1, très en deçà du seuil lisible de 4,5:1.
+     Cette variante reste dans la même famille (teinte 50-55, chroma proche)
+     mais assombrie jusqu'à 7,3:1. En thème sombre les deux se confondent :
+     l'accent clair y est déjà parfaitement lisible. */
+  --accent-texte: oklch(0.45 0.09 50); /* #7C4523 */
 
-  --radius: 1rem;
+  /* L'anneau de focus est un repère d'accessibilité : il suit la teinte
+     lisible, sans quoi il disparaissait sur le crème. */
+  --ring: oklch(0.45 0.09 50);
+
+  /* ── Couleurs de statut ─────────────────────────────────────────────────── */
+  /* Accordées à la palette : olive et ardoise plutôt que vert et bleu vifs. */
+  --success: oklch(0.48 0.09 135);
+  --info: oklch(0.46 0.07 240);
+
+  /* La palette est restituée telle quelle, mais pas les formes : le commit
+     d'origine posait 1rem, la densité Mira demande 8 px. L'échelle donne
+     4 / 8 / 12 / 16 / 24. */
+  --radius: 0.5rem;
 }
 
 .dark {
-  /* ── Thème sombre : l'encre ─────────────────────────────────────────────── */
-  --background: oklch(0.187 0.016 55);      /* #221A14 — brun nuit */
-  --foreground: oklch(0.925 0.021 85);      /* #EFE5D3 — crème */
+  /* ── Thème sombre ───────────────────────────────────────────────────────── */
+  --background: oklch(0.25 0.02 45); /* chocolat foncé */
+  --foreground: oklch(0.92 0.02 80); /* crème claire */
 
-  --card: oklch(0.228 0.016 55);
-  --card-foreground: oklch(0.925 0.021 85);
+  --card: oklch(0.22 0.02 45);
+  --card-foreground: oklch(0.92 0.02 80);
 
-  --popover: oklch(0.228 0.016 55);
-  --popover-foreground: oklch(0.925 0.021 85);
+  --popover: oklch(0.22 0.02 45);
+  --popover-foreground: oklch(0.92 0.02 80);
 
-  --primary: oklch(0.705 0.055 65);         /* châtain éclairci */
-  --primary-foreground: oklch(0.187 0.016 55);
+  --primary: oklch(0.68 0.07 55);
+  --primary-foreground: oklch(0.1 0.02 45);
 
-  --secondary: oklch(0.268 0.016 55);
-  --secondary-foreground: oklch(0.925 0.021 85);
+  --secondary: oklch(0.28 0.02 50);
+  --secondary-foreground: oklch(0.92 0.02 80);
 
-  --muted: oklch(0.285 0.016 55);
-  --muted-foreground: oklch(0.685 0.026 78);
+  --muted: oklch(0.3 0.02 50);
+  --muted-foreground: oklch(0.65 0.03 60);
 
-  --accent: oklch(0.800 0.072 76);          /* #DDB77C — or chaud */
-  --accent-foreground: oklch(0.187 0.016 55);
+  --accent: oklch(0.82 0.03 60);
+  --accent-foreground: oklch(0.15 0.04 45);
 
-  --destructive: oklch(0.635 0.135 32);
-  --destructive-foreground: oklch(0.925 0.021 85);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.92 0.02 80);
 
-  --border: oklch(0.318 0.019 62);
-  --input: oklch(0.268 0.016 55);
-  --ring: oklch(0.800 0.072 76);
+  --border: oklch(0.35 0.02 50);
+  --input: oklch(0.32 0.02 50);
+  --ring: oklch(0.82 0.03 60);
 
-  --sage: oklch(0.715 0.058 120);
-  --steel: oklch(0.675 0.045 233);
-  --gold: oklch(0.800 0.090 80);
+  /* Sur fond chocolat, l'accent clair passe déjà très bien en texte. */
+  --accent-texte: oklch(0.82 0.03 60);
+
+  --success: oklch(0.75 0.11 140);
+  --info: oklch(0.72 0.08 240);
 }
 
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -142,15 +165,15 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-sage: var(--sage);
-  --color-steel: var(--steel);
-  --color-gold: var(--gold);
+  --color-success: var(--success);
+  --color-info: var(--info);
+  --color-accent-texte: var(--accent-texte);
 
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.5);
-  --radius-xl: calc(var(--radius) * 2);
-  --radius-2xl: calc(var(--radius) * 3);
+  --radius-sm: calc(var(--radius) * 0.5); /*  4px */
+  --radius-md: var(--radius); /*  8px */
+  --radius-lg: calc(var(--radius) * 1.5); /* 12px */
+  --radius-xl: calc(var(--radius) * 2); /* 16px */
+  --radius-2xl: calc(var(--radius) * 3); /* 24px */
   --radius-full: 9999px;
 }
 
@@ -172,21 +195,29 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
+    /* Les colonnes de chiffres (repères du hero, dates du CV) demandent leur
+       alignement au cas par cas via l'utilitaire `tabular-nums` : l'imposer
+       ici déchausserait les chiffres au fil du texte courant. */
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Fraunces porte les titres. `opsz` suit le corps du texte et `SOFT` arrondit
-     légèrement les empattements, pour rester dans le registre dessiné. */
+  /* Geist est une grotesque : sans resserrement, les grands corps paraissent
+     lâches. Le crénage suit le corps — plus le titre est gros, plus il serre. */
   h1,
   h2,
   h3,
   .font-display {
     font-family: var(--font-display);
-    font-variation-settings: 'SOFT' 25, 'WONK' 1;
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.022em;
   }
 
   h1 {
-    font-variation-settings: 'opsz' 96, 'SOFT' 30, 'WONK' 1;
+    letter-spacing: -0.038em;
+  }
+
+  h2 {
+    letter-spacing: -0.03em;
   }
 
   section {
@@ -203,6 +234,31 @@
     border-radius: inherit;
     z-index: -1;
     pointer-events: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Surfaces flottantes (barre de navigation, pied de page)
+   Le flou d'arrière-plan est déclaré une fois ici plutôt que répété en
+   utilitaires : `backdrop-filter` crée un contexte d'empilement et coûte cher,
+   mieux vaut un seul endroit où l'ajuster. `supports` évite d'appliquer la
+   surface semi-transparente aux navigateurs sans flou, où elle laisserait lire
+   le contenu par transparence.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.surface-flottante {
+  background-color: color-mix(in oklch, var(--background) 72%, transparent);
+  border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+  box-shadow:
+    0 1px 2px -1px color-mix(in oklch, var(--foreground) 8%, transparent),
+    0 8px 24px -12px color-mix(in oklch, var(--foreground) 22%, transparent);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .surface-flottante {
+    background-color: color-mix(in oklch, var(--background) 62%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    backdrop-filter: blur(12px) saturate(150%);
   }
 }
 
@@ -231,35 +287,6 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Flottement des stickers
-   Confié au CSS plutôt qu'à Framer Motion : les sections parentes déclarent des
-   `variants`, dont les libellés se propagent aux composants `motion` enfants et
-   écrasaient l'animation continue. Une animation CSS y échappe, tourne sur le
-   compositeur et ne coûte rien au fil principal.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-@keyframes sticker-flottement {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--sticker-rot-a));
-  }
-  50% {
-    transform: translateY(var(--sticker-y)) rotate(var(--sticker-rot-b));
-  }
-}
-
-.sticker-flotte {
-  animation: sticker-flottement var(--sticker-duree) ease-in-out infinite;
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sticker-flotte {
-    animation: none;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
    Barre de défilement
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -268,18 +295,18 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--muted);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklch, var(--accent) 55%, var(--muted));
+  background: color-mix(in oklch, var(--foreground) 22%, transparent);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: color-mix(in oklch, var(--foreground) 38%, transparent);
 }
 
 html {
-  scrollbar-color: color-mix(in oklch, var(--accent) 55%, var(--muted)) var(--muted);
+  scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
 }

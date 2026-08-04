@@ -10,7 +10,7 @@ export function ThemeController() {
     <button
       onClick={() => setTheme(estSombre ? "light" : "dark")}
       aria-label={estSombre ? "Passer en mode clair" : "Passer en mode sombre"}
-      className="relative w-9 h-9 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/8 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+      className="relative size-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-foreground/8 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -22,8 +22,8 @@ export function ThemeController() {
           className="absolute"
         >
           {estSombre
-            ? <Moon className="w-4 h-4" />
-            : <Sun  className="w-4 h-4" />
+            ? <Moon className="size-3.5" />
+            : <Sun  className="size-3.5" />
           }
         </motion.span>
       </AnimatePresence>

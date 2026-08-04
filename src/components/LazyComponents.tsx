@@ -21,7 +21,7 @@ function AboutSkeleton() {
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-2xl" />
+            <Skeleton key={i} className="h-32 rounded-lg" />
           ))}
         </div>
       </div>
@@ -38,7 +38,7 @@ function ProjectsSkeleton() {
       </div>
       <div className="flex gap-6 overflow-hidden">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="min-w-[300px] md:min-w-[420px] h-[500px] rounded-3xl shrink-0" />
+          <Skeleton key={i} className="min-w-[300px] md:min-w-[420px] h-[500px] rounded-lg shrink-0" />
         ))}
       </div>
     </div>
@@ -53,12 +53,12 @@ function ContactSkeleton() {
         <Skeleton className="h-5 w-80 mx-auto" />
       </div>
       <div className="grid md:grid-cols-2 gap-6">
-        <Skeleton className="h-64 rounded-3xl" />
-        <Skeleton className="h-64 rounded-3xl" />
-        <Skeleton className="h-24 rounded-3xl" />
-        <Skeleton className="h-24 rounded-3xl" />
+        <Skeleton className="h-64 rounded-lg" />
+        <Skeleton className="h-64 rounded-lg" />
+        <Skeleton className="h-24 rounded-lg" />
+        <Skeleton className="h-24 rounded-lg" />
       </div>
-      <Skeleton className="h-80 rounded-3xl" />
+      <Skeleton className="h-80 rounded-lg" />
     </div>
   )
 }

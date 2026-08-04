@@ -13,7 +13,20 @@ const variantesPage = {
   exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: EASE_OUT } },
 };
 
-const AnimatedRoutes: React.FC = () => {
+/**
+ * Seul le contenu de page est animé.
+ *
+ * Auparavant chaque `Route` montait sa propre instance de `Layout`, si bien que
+ * la barre de navigation et le pied de page étaient détruits puis reconstruits
+ * à chaque navigation — et surtout, ils se retrouvaient à l'intérieur du bloc
+ * animé. Or un ancêtre porteur d'un `transform` devient le bloc conteneur de
+ * ses descendants `position: fixed` : le temps de la transition, la barre
+ * cessait d'être ancrée au viewport et traversait l'écran (mesuré : de -797 px
+ * à 12 px depuis une page défilée).
+ *
+ * `Layout` est donc monté une seule fois, au-dessus des routes.
+ */
+const RoutesAnimees: React.FC = () => {
   const location = useLocation();
 
   return (
@@ -24,16 +37,14 @@ const AnimatedRoutes: React.FC = () => {
         initial="initial"
         animate="enter"
         exit="exit"
-        style={{ backgroundColor: 'var(--background)', minHeight: '100vh' }}
       >
         <Routes location={location}>
-          {/* Routes publiques - Portfolio avec Layout commun */}
-          <Route path="/" element={<Layout><PortfolioApp /></Layout>} />
-          <Route path="/bio" element={<Layout><Suspense fallback={null}><BioPage /></Suspense></Layout>} />
-          <Route path="/cv" element={<Layout><Suspense fallback={null}><CVPage /></Suspense></Layout>} />
-          <Route path="/legal-notice" element={<Layout><Suspense fallback={null}><MentionsLegales /></Suspense></Layout>} />
+          <Route path="/" element={<PortfolioApp />} />
+          <Route path="/bio" element={<Suspense fallback={null}><BioPage /></Suspense>} />
+          <Route path="/cv" element={<Suspense fallback={null}><CVPage /></Suspense>} />
+          <Route path="/legal-notice" element={<Suspense fallback={null}><MentionsLegales /></Suspense>} />
 
-          {/* 404 pour toute autre route - Redirection vers l'accueil */}
+          {/* 404 : redirection vers l'accueil */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>
@@ -45,7 +56,9 @@ const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <AnimatedRoutes />
+      <Layout>
+        <RoutesAnimees />
+      </Layout>
     </BrowserRouter>
   );
 };

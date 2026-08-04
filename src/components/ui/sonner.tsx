@@ -13,15 +13,15 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme}
       className="toaster group"
-      toastOptions={{ className: "rounded-2xl font-medium" }}
+      toastOptions={{ className: "rounded-lg font-medium" }}
       style={
         {
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
           "--success-bg": "var(--popover)",
-          "--success-text": "var(--sage)",
-          "--success-border": "color-mix(in oklch, var(--sage) 35%, transparent)",
+          "--success-text": "var(--success)",
+          "--success-border": "color-mix(in oklch, var(--success) 35%, transparent)",
           "--error-bg": "var(--popover)",
           "--error-text": "var(--destructive)",
           "--error-border": "color-mix(in oklch, var(--destructive) 35%, transparent)",

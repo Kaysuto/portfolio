@@ -55,7 +55,7 @@ export function Modal({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={onClose}
-            className="absolute inset-0 bg-background/60 backdrop-blur-md"
+            className="absolute inset-0 bg-background/70 backdrop-blur-xs"
           />
 
           {/* Panneau de la modale */}
@@ -63,9 +63,9 @@ export function Modal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            transition={{ type: "spring", damping: 26, stiffness: 340 }}
             className={cn(
-              "relative bg-card/90 backdrop-blur-2xl border border-border/50 rounded-3xl shadow-2xl w-full overflow-hidden",
+              "relative bg-popover text-popover-foreground ring-1 ring-foreground/10 rounded-xl w-full overflow-hidden",
               maxWidth,
               className
             )}
@@ -76,15 +76,15 @@ export function Modal({
             {/* Bouton de fermeture */}
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-xl bg-accent/5 hover:bg-accent/10 text-muted-foreground hover:text-accent transition-all z-50"
+              className="absolute top-3 right-3 grid place-items-center size-8 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               aria-label="Fermer"
             >
-              <X className="w-5 h-5" />
+              <X className="size-4" />
             </button>
 
-            <div className="p-8 md:p-10">
+            <div className="p-4 sm:p-5">
               {title && (
-                <h2 className="text-2xl font-bold text-foreground mb-8 tracking-tight">
+                <h2 className="text-sm font-medium text-foreground mb-4 pr-10">
                   {title}
                 </h2>
               )}
