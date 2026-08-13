@@ -40,35 +40,35 @@ export function ExternalLinkModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-sm">
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <div className="size-10 shrink-0 rounded-md bg-muted flex items-center justify-center">
+          <div className="size-12 shrink-0 rounded-md bg-muted flex items-center justify-center">
             {icon}
           </div>
           <div className="min-w-0">
-            <h3 className="text-sm font-medium text-foreground tracking-tight">{title}</h3>
-            <p className="text-xs text-muted-foreground">{subtitle}</p>
+            <h3 className="text-base font-medium text-foreground tracking-tight">{title}</h3>
+            <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
         </div>
 
         <div>
-          <p className="font-mono text-[10px] text-muted-foreground mb-1.5 font-medium uppercase tracking-[0.2em]">
+          <p className="font-mono text-xs text-muted-foreground mb-2 font-medium uppercase tracking-[0.2em]">
             {linkLabel}
           </p>
-          <div className="bg-input/20 dark:bg-input/30 border border-input rounded-md px-2 py-1.5">
-            <code className="text-xs break-all font-mono text-accent-texte">{url}</code>
+          <div className="bg-input/20 dark:bg-input/30 border border-input rounded-md px-3 py-2">
+            <code className="text-sm break-all font-mono text-accent-texte">{url}</code>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={onClose} className="flex-1 h-9">
+          <Button type="button" variant="outline" onClick={onClose} className="flex-1 h-10">
             Annuler
           </Button>
           <Button
             type="button"
             onClick={ouvrirLien}
-            className="flex-1 h-9"
+            className="flex-1 h-10"
           >
             <ExternalLink />
             {actionLabel}

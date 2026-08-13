@@ -50,7 +50,7 @@ const LIBELLES_CATEGORIE: Record<string, string> = {
 
 function IconeLien({ nom, className }: { nom: string; className?: string }) {
   const Icone = MAP_ICONES[nom] ?? LinkIcon;
-  return <Icone size={18} className={className} aria-hidden="true" />;
+  return <Icone size={22} className={className} aria-hidden="true" />;
 }
 
 const BioPage: React.FC = () => {
@@ -92,18 +92,18 @@ const BioPage: React.FC = () => {
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             <div className="flex flex-col items-center">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-accent-texte mb-4">
+              <p className="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent-texte mb-5">
                 Bio
               </p>
-              <h1 className="text-4xl md:text-6xl font-semibold mb-4">
+              <h1 className="text-5xl md:text-7xl font-semibold mb-4">
                 Mes <span className="text-accent-texte">Liens</span>
               </h1>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto">
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto">
                 Retrouvez-moi sur mes différentes plateformes et projets.
               </p>
             </div>
             <p
-              className="font-mono text-3xl font-medium text-accent-texte/30 tabular-nums leading-none"
+              className="font-mono text-4xl font-medium text-accent-texte/30 tabular-nums leading-none"
               title={`${nombreTotal} liens`}
             >
               {String(nombreTotal).padStart(2, '0')}
@@ -121,11 +121,11 @@ const BioPage: React.FC = () => {
                 viewport={VIEWPORT}
                 className="flex flex-col items-center py-10"
               >
-                <h2 className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
+                <h2 className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
                   {LIBELLES_CATEGORIE[categorie] || categorie}
                 </h2>
 
-                <ul className="mt-6 w-full max-w-2xl divide-y divide-border/40">
+                <ul className="mt-8 w-full max-w-2xl divide-y divide-border/40">
                   {liens.map((lien) => (
                     <motion.li
                       key={lien.id}
@@ -143,21 +143,21 @@ const BioPage: React.FC = () => {
                           });
                           openModal();
                         }}
-                        className="group w-full flex items-center gap-4 py-3 text-left hover:bg-muted rounded-md px-2 -mx-2 transition-colors"
+                        className="group w-full flex items-center gap-4 py-4 text-left hover:bg-muted rounded-md px-2 -mx-2 transition-colors"
                       >
                         <span className="text-accent-texte shrink-0 group-hover:scale-110 transition-transform">
                           <IconeLien nom={lien.icon || 'LinkSimple'} />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-medium text-foreground group-hover:text-accent-texte transition-colors truncate">
+                          <span className="block text-base font-medium text-foreground group-hover:text-accent-texte transition-colors truncate">
                             {lien.title}
                           </span>
-                          <span className="block text-xs text-muted-foreground truncate">
+                          <span className="block text-sm text-muted-foreground truncate">
                             {lien.description}
                           </span>
                         </span>
                         <ArrowUpRight
-                          className="size-3.5 text-muted-foreground/50 group-hover:text-accent-texte group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                          className="size-4 text-muted-foreground/50 group-hover:text-accent-texte group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
                           aria-hidden="true"
                         />
                       </button>

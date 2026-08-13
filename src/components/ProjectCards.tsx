@@ -55,7 +55,7 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
 
         <span
           className={cn(
-            "absolute top-3 left-3 z-20 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider border",
+            "absolute top-3 left-3 z-20 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider border",
             STYLES_STATUT[project.status]
           )}
         >
@@ -64,14 +64,14 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
 
         <div className="absolute bottom-3 right-3 z-20 flex gap-1.5">
           {!!project.stars && project.stars > 0 && (
-            <span className="flex items-center gap-1 text-white text-[10px] font-medium bg-black/60 px-1.5 py-0.5 rounded-sm tabular-nums">
-              <Star size={11} className="text-amber-300 fill-amber-300" aria-hidden="true" />
+            <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
+              <Star size={13} className="text-amber-300 fill-amber-300" aria-hidden="true" />
               {project.stars}
             </span>
           )}
           {!!project.likes && project.likes > 0 && (
-            <span className="flex items-center gap-1 text-white text-[10px] font-medium bg-black/60 px-1.5 py-0.5 rounded-sm tabular-nums">
-              <Heart size={11} className="text-rose-400 fill-rose-400" aria-hidden="true" />
+            <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
+              <Heart size={13} className="text-rose-400 fill-rose-400" aria-hidden="true" />
               {project.likes}
             </span>
           )}
@@ -79,40 +79,40 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
       </div>
 
       {/* Contenu */}
-      <div className="flex-1 flex flex-col p-4 min-h-0">
+      <div className="flex-1 flex flex-col p-5 min-h-0">
         <div className="flex items-center justify-between gap-3 mb-2">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-            <Calendar size={11} aria-hidden="true" />
+          <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 shrink-0">
+            <Calendar size={13} aria-hidden="true" />
             {formaterDate(project.created_at)}
           </span>
           <div className="flex gap-1 flex-wrap justify-end">
             {project.tech_stack.slice(0, 3).map((tech) => (
-              <Badge key={tech} variant="secondary" className="text-[10px] px-1.5 py-0">
+              <Badge key={tech} variant="secondary" className="text-[11px] px-2 py-0">
                 {tech}
               </Badge>
             ))}
           </div>
         </div>
 
-        <h3 className="text-base font-semibold mb-1.5 group-hover/card:text-accent-texte transition-colors tracking-tight">
+        <h3 className="text-lg font-semibold mb-2 group-hover/card:text-accent-texte transition-colors tracking-tight">
           {project.title}
         </h3>
 
-        <p className="text-muted-foreground text-xs/relaxed line-clamp-3 flex-1">
+        <p className="text-muted-foreground text-sm/relaxed line-clamp-3 flex-1">
           {project.description}
         </p>
 
         <div className="flex items-center gap-2 pt-4 mt-auto">
           {project.demo_url && (
-            <Button className="flex-1 gap-1.5" onClick={() => onDiscover(project)}>
-              <ExternalLink size={14} aria-hidden="true" />
+            <Button className="flex-1 gap-2" onClick={() => onDiscover(project)}>
+              <ExternalLink size={16} aria-hidden="true" />
               Découvrir
             </Button>
           )}
           {project.github_url && (
             <Button variant="outline" size="icon" asChild className="shrink-0">
               <a href={project.github_url} target="_blank" rel="noreferrer" aria-label={`Dépôt GitHub de ${project.title}`}>
-                <Github size={16} />
+                <Github size={18} />
               </a>
             </Button>
           )}

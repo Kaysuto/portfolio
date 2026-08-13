@@ -13,7 +13,7 @@ export function GitHubModal({ isOpen, onClose }: GitHubModalProps) {
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<Github className="size-5 text-accent-texte" />}
+      icon={<Github className="size-6 text-accent-texte" />}
       title="GitHub"
       subtitle="Découvrez tous mes projets open source"
       url={URL_GITHUB}

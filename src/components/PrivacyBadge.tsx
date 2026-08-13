@@ -56,7 +56,7 @@ export function PrivacyBadge() {
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.95 }}
-          className="fixed bottom-4 left-4 right-4 md:left-4 md:right-auto md:max-w-sm z-[100]"
+          className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.75rem)] md:bottom-4 left-4 right-4 md:left-4 md:right-auto md:max-w-md z-[100]"
         >
           <Card className="surface-flottante rounded-xl overflow-hidden relative ring-0">
             <AnimatePresence mode="wait">
@@ -66,20 +66,20 @@ export function PrivacyBadge() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="p-4 space-y-3"
+                  className="p-5 space-y-4"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="size-8 bg-muted rounded-md flex items-center justify-center flex-shrink-0">
-                      <Cookie className="size-4 text-accent-texte" />
+                    <div className="size-10 bg-muted rounded-md flex items-center justify-center flex-shrink-0">
+                      <Cookie className="size-5 text-accent-texte" />
                     </div>
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-medium text-foreground tracking-tight">Confidentialité</h3>
-                        <button onClick={gererFermeture} className="grid place-items-center size-6 hover:bg-muted rounded-sm transition-colors text-muted-foreground" aria-label="Fermer">
-                          <X className="size-3.5" />
+                        <h3 className="text-base font-medium text-foreground tracking-tight">Confidentialité</h3>
+                        <button onClick={gererFermeture} className="grid place-items-center size-7 hover:bg-muted rounded-sm transition-colors text-muted-foreground" aria-label="Fermer">
+                          <X className="size-4" />
                         </button>
                       </div>
-                      <p className="text-xs/relaxed text-muted-foreground">
+                      <p className="text-sm/relaxed text-muted-foreground">
                         Nous utilisons des cookies pour optimiser votre expérience. Personnalisez vos choix ci-dessous.
                       </p>
                     </div>
@@ -131,14 +131,14 @@ export function PrivacyBadge() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="p-4 space-y-4"
+                  className="p-5 space-y-5"
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <Settings className="size-4 text-accent-texte" />
+                    <h3 className="text-base font-medium text-foreground flex items-center gap-2">
+                      <Settings className="size-5 text-accent-texte" />
                       Préférences cookies
                     </h3>
-                    <button onClick={() => setVue('summary')} className="text-xs font-medium text-accent-texte hover:underline">Retour</button>
+                    <button onClick={() => setVue('summary')} className="text-sm font-medium text-accent-texte hover:underline">Retour</button>
                   </div>
 
                   <div className="space-y-2">
@@ -152,29 +152,29 @@ export function PrivacyBadge() {
                         key={element.key}
                         onClick={() => !element.required && basculerChoix(element.key as keyof CookieChoices)}
                         className={cn(
-                          "flex items-center gap-3 p-2 rounded-md border transition-colors cursor-pointer",
+                          "flex items-center gap-3 p-2.5 rounded-md border transition-colors cursor-pointer",
                           choixTemporaires[element.key as keyof CookieChoices]
                             ? "bg-muted/60 border-border"
                             : "bg-transparent border-transparent opacity-60"
                         )}
                       >
                         <div className={cn(
-                          "size-7 rounded-sm flex items-center justify-center flex-shrink-0",
+                          "size-9 rounded-sm flex items-center justify-center flex-shrink-0",
                           choixTemporaires[element.key as keyof CookieChoices] ? "bg-accent/10 text-accent-texte" : "bg-muted text-muted-foreground"
                         )}>
-                          <element.icon className="size-3.5" />
+                          <element.icon className="size-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium">{element.label}</p>
-                          <p className="text-[10px] text-muted-foreground leading-tight">{element.desc}</p>
+                          <p className="text-sm font-medium">{element.label}</p>
+                          <p className="text-xs text-muted-foreground leading-tight">{element.desc}</p>
                         </div>
                         <div className={cn(
-                          "w-8 h-[18px] rounded-full relative transition-colors p-0.5 shrink-0",
+                          "w-10 h-[22px] rounded-full relative transition-colors p-0.5 shrink-0",
                           choixTemporaires[element.key as keyof CookieChoices] ? "bg-accent" : "bg-muted-foreground/30"
                         )}>
                           <motion.div
-                            animate={{ x: choixTemporaires[element.key as keyof CookieChoices] ? 14 : 0 }}
-                            className="size-3.5 bg-white rounded-full"
+                            animate={{ x: choixTemporaires[element.key as keyof CookieChoices] ? 18 : 0 }}
+                            className="size-[18px] bg-white rounded-full"
                           />
                         </div>
                       </div>
@@ -184,11 +184,11 @@ export function PrivacyBadge() {
                   <Button
                     onClick={gererEnregistrementSelection}
                     disabled={estEnregistre}
-                    className="w-full h-9"
+                    className="w-full h-11"
                   >
                     {estEnregistre ? (
                       <>
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check className="size-3.5" /></motion.div>
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check className="size-4" /></motion.div>
                         Choix enregistrés !
                       </>
                     ) : 'Enregistrer ma sélection'}
@@ -206,10 +206,10 @@ export function PrivacyBadge() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setEstDeploye(true)}
-          className="surface-flottante fixed bottom-4 left-4 size-10 rounded-md z-[100] flex items-center justify-center text-accent-texte hover:text-foreground transition-colors group"
+          className="surface-flottante fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.75rem)] md:bottom-4 left-4 size-12 rounded-md z-[100] flex items-center justify-center text-accent-texte hover:text-foreground transition-colors group"
           aria-label="Préférences de confidentialité"
         >
-          <Cookie className="size-4 group-hover:rotate-12 transition-transform" />
+          <Cookie className="size-5 group-hover:rotate-12 transition-transform" />
         </motion.button>
       )}
     </AnimatePresence>

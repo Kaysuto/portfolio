@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { fadeInUp, staggerContainer, EASE_OUT } from "@/lib/animations"
+import { ScrollIndicator } from "@/components/ui/ScrollIndicator"
 
 const TEXTES_ANIMES = [
   "code & créativité",
@@ -50,24 +51,37 @@ export function HeroSection() {
   }
 
   /*
-    min-h en `svh` plutôt qu'un plein écran : le contenu ne mesure que ~610 px,
-    et un `min-h-screen` laissait 330 px de vide de chaque côté sur les grands
-    moniteurs. Sous ~880 px de haut, la section se cale sur son contenu.
+    Le hero occupe au moins toute la hauteur visible : à l'arrivée sur le site,
+    la section suivante doit rester entièrement sous la ligne de flottaison,
+    quelle que soit la résolution. Le contenu ne mesurant que ~610 px, il est
+    centré verticalement dans ce qui reste.
+
+    `svh` et non `vh` : sur mobile `100vh` vaut la hauteur barres du navigateur
+    rétractées, plus grande que ce qu'on voit réellement en arrivant — le bas du
+    hero passerait sous la barre d'adresse. `dvh` réglerait le problème mais
+    ferait varier la hauteur pendant le défilement. `svh` cale sur le viewport
+    le plus petit, donc sur ce qui est visible à l'arrivée.
   */
   return (
     <section
       id="accueil"
-      className="min-h-[70svh] flex flex-col justify-center px-6 lg:px-12 relative overflow-hidden"
+      className="min-h-[100svh] flex flex-col px-6 lg:px-12 relative overflow-hidden"
     >
+      {/*
+        `my-auto` plutôt que `justify-center` sur la section : l'espace libre se
+        répartit au-dessus et en dessous de ce bloc, ce qui le centre dans la
+        hauteur restante une fois le repère de défilement posé en bas. Avec
+        `justify-center`, les deux enfants auraient été centrés ensemble.
+      */}
       <motion.div
-        className="w-full max-w-6xl mx-auto relative z-10 pt-24 md:pt-28 pb-12 md:pb-16"
+        className="w-full max-w-6xl mx-auto my-auto relative z-10 pt-24 md:pt-28 pb-12 md:pb-16"
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
       >
         <div className="flex flex-col items-center text-center">
           <motion.div variants={fadeInUp}>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] mb-8">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] mb-8">
               <span className="block text-muted-foreground text-2xl md:text-3xl lg:text-4xl font-normal tracking-tight mb-3">
                 Salut, je suis
               </span>
@@ -84,14 +98,14 @@ export function HeroSection() {
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <p className="text-lg md:text-2xl text-muted-foreground tracking-tight mb-10">
+            <p className="text-xl md:text-3xl text-muted-foreground tracking-tight mb-10">
               Passionné par le{" "}
               <span className="font-medium inline-block text-foreground">
                 {texteAffiche}
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 0.8, repeat: Infinity }}
-                  className="inline-block w-[3px] h-5 md:h-6 ml-0.5 align-middle rounded-full bg-accent-texte"
+                  className="inline-block w-[3px] h-6 md:h-8 ml-0.5 align-middle rounded-full bg-accent-texte"
                 />
               </span>
             </p>
@@ -124,10 +138,10 @@ export function HeroSection() {
             <div key={libelle}>
               <dt className="sr-only">{libelle}</dt>
               <dd>
-                <span className="block text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tabular-nums leading-none tracking-tight">
+                <span className="block text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground tabular-nums leading-none tracking-tight">
                   {valeur}
                 </span>
-                <span className="block mt-2 font-mono text-[10px] font-medium uppercase tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground leading-tight">
+                <span className="block mt-2.5 font-mono text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground leading-tight">
                   {libelle}
                 </span>
               </dd>
@@ -135,6 +149,8 @@ export function HeroSection() {
           ))}
         </motion.dl>
       </motion.div>
+
+      <ScrollIndicator />
     </section>
   )
 }

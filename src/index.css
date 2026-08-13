@@ -221,7 +221,9 @@
   }
 
   section {
-    scroll-margin-top: 100px;
+    /* Arête basse de l'îlot desktop (16px du haut + 64px de haut) + une marge
+       de respiration, pour qu'une section ancrée ne s'arrête pas sous la barre. */
+    scroll-margin-top: 120px;
   }
 
   /* Fond opaque sous les cartes translucides, pour que le motif de points
@@ -260,6 +262,54 @@
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     backdrop-filter: blur(12px) saturate(150%);
   }
+}
+
+/* Repère de défilement du hero.
+
+   Ces deux boucles sont en CSS et non en JS : elles tournent en permanence, et
+   une animation compositée ne coûte rien alors qu'une boucle framer-motion
+   réveille le fil principal à chaque frame pour deux propriétés triviales.
+
+   Aucun `animation-fill-mode` : c'est ce qui fait dégrader proprement sous
+   `prefers-reduced-motion`. La règle globale plus bas ramène la durée à 0,01 ms
+   sur une seule itération ; sans fill-mode, l'élément retombe alors sur son
+   style de base, point visible en haut de la coque, plutôt que de se figer sur
+   la dernière frame où il est transparent. */
+
+@keyframes molette-defilement {
+  0%,
+  8% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes chevron-defilement {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(7px);
+  }
+}
+
+.molette-animee {
+  animation: molette-defilement 1.9s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.chevron-anime {
+  animation: chevron-defilement 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

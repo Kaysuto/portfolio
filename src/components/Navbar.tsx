@@ -42,7 +42,7 @@ function LienNav({
       onFocus={() => onSurvol(lien)}
       aria-current={estActif ? "page" : undefined}
       className={cn(
-        "relative px-2.5 py-1.5 text-xs rounded-md transition-colors duration-150",
+        "relative px-4 py-3 text-sm rounded-lg transition-colors duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
         estActif
           ? "text-foreground font-medium"
@@ -52,7 +52,7 @@ function LienNav({
       {estActif && (
         <motion.span
           layoutId="nav-pastille"
-          className="absolute inset-0 rounded-md bg-foreground/8"
+          className="absolute inset-0 rounded-lg bg-foreground/8"
           transition={{ type: "spring", stiffness: 400, damping: 34 }}
         />
       )}
@@ -144,7 +144,7 @@ export function Navbar() {
         l'îlot en `w-fit` est visible et interactif, ce qui laisse la page
         défiler librement de part et d'autre.
       */}
-      <div className="fixed top-3 inset-x-0 z-40 hidden md:flex justify-center px-4 pointer-events-none">
+      <div className="fixed top-4 inset-x-0 z-40 hidden md:flex justify-center px-4 pointer-events-none">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -158,7 +158,7 @@ export function Navbar() {
           */}
           <nav
             className={cn(
-              "relative flex items-center gap-1 h-12 pl-3 pr-2 rounded-xl overflow-hidden",
+              "relative flex items-center gap-1 h-16 pl-5 pr-3 rounded-2xl overflow-hidden",
               "transition-[background-color,border-color,box-shadow] duration-300 ease-out",
               /* Rien à désactiver hors état condensé : l'îlot n'a pas de fond
                  par défaut. Émettre `bg-transparent`/`shadow-none` en face de
@@ -169,13 +169,13 @@ export function Navbar() {
           >
             <button
               onClick={gererClicLogo}
-              className="font-display text-sm font-semibold text-foreground hover:text-accent-texte transition-colors shrink-0 tracking-tight px-1.5"
+              className="font-display text-lg font-semibold text-foreground hover:text-accent-texte transition-colors shrink-0 tracking-tight px-1.5"
             >
               Kimiya
             </button>
 
             <span
-              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              className="w-px h-6 mx-2.5 bg-border shrink-0"
               aria-hidden="true"
             />
 
@@ -199,7 +199,7 @@ export function Navbar() {
             </ul>
 
             <span
-              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              className="w-px h-6 mx-2.5 bg-border shrink-0"
               aria-hidden="true"
             />
 
@@ -217,7 +217,7 @@ export function Navbar() {
             </ul>
 
             <span
-              className="w-px h-4 mx-1.5 bg-border shrink-0"
+              className="w-px h-6 mx-2.5 bg-border shrink-0"
               aria-hidden="true"
             />
 
@@ -235,38 +235,16 @@ export function Navbar() {
         </motion.header>
       </div>
 
-      {/* ══ Mobile : îlot haut minimal ══ */}
-      <div className="fixed top-2 inset-x-0 z-40 md:hidden px-3 pointer-events-none">
-        <motion.header
-          initial={{ y: -16, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4, ease: LUMA_EASE }}
-          className={cn(
-            "pointer-events-auto relative flex items-center justify-between h-12 pl-3 pr-1.5 rounded-xl overflow-hidden",
-            "transition-[background-color,border-color,box-shadow] duration-300 ease-out",
-            estCondensee && "surface-flottante"
-          )}
-        >
-          <button
-            onClick={gererClicLogo}
-            className="font-display text-sm font-semibold text-foreground tracking-tight"
-          >
-            Kimiya
-          </button>
-          <ThemeController />
-          <motion.div
-            className="absolute bottom-0 inset-x-0 h-px origin-left bg-accent"
-            style={{ scaleX: progression }}
-            aria-hidden="true"
-          />
-        </motion.header>
-      </div>
-
       {/*
         ══ Mobile : barre d'onglets flottante ══
-        Cinq colonnes de largeur égale et libellés toujours visibles : n'afficher
+        Six colonnes de largeur égale et libellés toujours visibles : n'afficher
         le libellé que sur l'onglet actif faisait sauter la largeur des voisins à
         chaque défilement.
+
+        Il n'y a volontairement pas d'îlot en haut sur mobile : deux barres
+        simultanées à l'écran, c'était une de trop. Le contrôleur de thème a
+        rejoint cette barre, et la progression de lecture s'est déplacée sur son
+        arête haute, là où elle borde le contenu qui défile.
       */}
       <motion.nav
         initial={{ y: 20, opacity: 0 }}
@@ -276,7 +254,14 @@ export function Navbar() {
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         aria-label="Navigation principale"
       >
-        <ul className="grid grid-cols-5">
+        {/* Progression de lecture, filante sur l'arête haute de la barre */}
+        <motion.div
+          className="absolute top-0 inset-x-0 h-px origin-left bg-accent z-10"
+          style={{ scaleX: progression }}
+          aria-hidden="true"
+        />
+
+        <ul className="grid grid-cols-6">
           {TOUS_LIENS.map((lien) => {
             const Icone = lien.icon
             const estActif = idActif === lien.id
@@ -286,7 +271,7 @@ export function Navbar() {
                   onClick={() => gererClicLien(lien)}
                   onTouchStart={() => gererSurvolLien(lien)}
                   aria-current={estActif ? "page" : undefined}
-                  className="relative w-full h-14 flex flex-col items-center justify-center gap-1 px-1"
+                  className="relative w-full h-16 flex flex-col items-center justify-center gap-1.5 px-1"
                 >
                   {estActif && (
                     <motion.span
@@ -297,14 +282,14 @@ export function Navbar() {
                   )}
                   <Icone
                     className={cn(
-                      "relative z-10 w-[17px] h-[17px] shrink-0 transition-colors duration-150",
+                      "relative z-10 w-[20px] h-[20px] shrink-0 transition-colors duration-150",
                       estActif ? "text-accent-texte" : "text-muted-foreground"
                     )}
                     aria-hidden="true"
                   />
                   <span
                     className={cn(
-                      "relative z-10 text-[10px] leading-none tracking-tight truncate max-w-full transition-colors duration-150",
+                      "relative z-10 text-[11px] leading-none tracking-tight truncate max-w-full transition-colors duration-150",
                       estActif ? "text-accent-texte font-medium" : "text-muted-foreground font-normal"
                     )}
                   >
@@ -314,6 +299,11 @@ export function Navbar() {
               </li>
             )
           })}
+
+          {/* Sixième colonne : bascule de thème, au gabarit des onglets */}
+          <li>
+            <ThemeController variante="onglet" />
+          </li>
         </ul>
       </motion.nav>
     </>

@@ -35,11 +35,11 @@ export function ProjectsSection() {
         >
           <button
             onClick={() => setAfficherModale(true)}
-            className="inline-flex items-center gap-2.5 text-sm font-medium text-foreground hover:text-accent-texte transition-colors group"
+            className="inline-flex items-center gap-3 text-base font-medium text-foreground hover:text-accent-texte transition-colors group"
           >
-            <Github className="size-4 text-accent-texte" aria-hidden="true" />
+            <Github className="size-5 text-accent-texte" aria-hidden="true" />
             Voir tous mes projets
-            <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </motion.div>
       </motion.div>

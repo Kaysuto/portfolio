@@ -76,15 +76,15 @@ export function Modal({
             {/* Bouton de fermeture */}
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 grid place-items-center size-8 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="absolute top-3 right-3 grid place-items-center size-9 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               aria-label="Fermer"
             >
-              <X className="size-4" />
+              <X className="size-[18px]" />
             </button>
 
-            <div className="p-4 sm:p-5">
+            <div className="p-5 sm:p-6">
               {title && (
-                <h2 className="text-sm font-medium text-foreground mb-4 pr-10">
+                <h2 className="text-base font-medium text-foreground mb-4 pr-10">
                   {title}
                 </h2>
               )}

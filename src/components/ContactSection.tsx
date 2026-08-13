@@ -51,18 +51,18 @@ function ContactForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(surSoumission)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(surSoumission)} className="space-y-5">
         <div className="grid sm:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Nom</FormLabel>
+                <FormLabel className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Nom</FormLabel>
                 <FormControl>
-                  {/* h-9 plutôt que la hauteur Mira par défaut : le formulaire
+                  {/* h-11 plutôt que la hauteur par défaut : le formulaire
                       est la principale action de la page, il gagne un cran. */}
-                  <Input placeholder="Votre nom" className="h-9" {...field} />
+                  <Input placeholder="Votre nom" className="h-11" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,9 +73,9 @@ function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Email</FormLabel>
+                <FormLabel className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="votre@email.com" className="h-9" {...field} />
+                  <Input type="email" placeholder="votre@email.com" className="h-11" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +88,7 @@ function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Message</FormLabel>
+              <FormLabel className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Message</FormLabel>
               <FormControl>
                 <Textarea placeholder="Votre projet, votre question…" rows={5} {...field} />
               </FormControl>
@@ -100,7 +100,7 @@ function ContactForm() {
         <Button
           type="submit"
           disabled={estEnEnvoi}
-          className="w-full h-9"
+          className="w-full h-11"
         >
           {estEnEnvoi ? <Loader2 className="animate-spin" /> : <Send />}
           Envoyer le message
@@ -114,7 +114,7 @@ function ContactForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="flex items-center justify-center gap-3 text-sm font-medium text-success pt-2"
+              className="flex items-center justify-center gap-3 text-base font-medium text-success pt-2"
             >
               Message bien reçu, merci !
             </motion.p>
@@ -175,15 +175,15 @@ export function ContactSection() {
         <div className="flex flex-col items-center pt-12 border-t border-border/60">
           {/* Mail direct */}
           <motion.div variants={fadeInUp} className="flex flex-col items-center mb-10">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground mb-2">
+            <p className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground mb-3">
               Mail direct
             </p>
             <button
               onClick={gererCopieEmail}
-              className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-accent-texte transition-colors group"
+              className="flex items-center gap-2.5 text-base font-medium text-foreground hover:text-accent-texte transition-colors group"
             >
               <span className="font-mono">{EMAIL}</span>
-              <Copy className="size-3.5 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+              <Copy className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
             </button>
           </motion.div>
 

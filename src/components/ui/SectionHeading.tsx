@@ -20,10 +20,10 @@ export function SectionHeading({ index, title, lead, className }: SectionHeading
   return (
     <motion.div
       variants={fadeInUp}
-      className={cn("mb-14 flex flex-col items-center text-center", className)}
+      className={cn("mb-16 flex flex-col items-center text-center", className)}
     >
       <motion.span
-        className="font-mono text-[10px] font-medium text-accent-texte tabular-nums tracking-[0.3em]"
+        className="font-mono text-xs font-medium text-accent-texte tabular-nums tracking-[0.3em]"
         initial={{ opacity: 0, y: -6 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VIEWPORT}
@@ -32,14 +32,14 @@ export function SectionHeading({ index, title, lead, className }: SectionHeading
         {index}
       </motion.span>
 
-      <h2 className="mt-3 text-3xl md:text-[2.5rem] font-semibold text-foreground leading-none">
+      <h2 className="mt-4 text-4xl md:text-5xl font-semibold text-foreground leading-none">
         {title}
       </h2>
 
       {/* Le filet se trace depuis le centre, en scaleX : pas de recalcul de
           largeur, l'animation reste sur le compositeur. */}
       <motion.span
-        className="mt-5 h-px w-20 bg-border origin-center"
+        className="mt-6 h-px w-24 bg-border origin-center"
         aria-hidden="true"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
@@ -48,7 +48,7 @@ export function SectionHeading({ index, title, lead, className }: SectionHeading
       />
 
       {lead && (
-        <p className="mt-5 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl text-balance">
+        <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl text-balance">
           {lead}
         </p>
       )}
@@ -66,7 +66,7 @@ export function RailLabel({ children, className }: RailLabelProps) {
   return (
     <p
       className={cn(
-        "font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground text-center",
+        "font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center",
         className
       )}
     >

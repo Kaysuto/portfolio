@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense } from 'react';
 import { PortfolioApp } from '@/PortfolioApp';
 import { BioPage, CVPage, MentionsLegales } from '@/routes/lazyRoutes';
+import { SqueletteRoute } from '@/routes/SqueletteRoute';
 import { Layout } from '@/components/Layout';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { EASE_OUT } from '@/lib/animations';
@@ -38,15 +39,23 @@ const RoutesAnimees: React.FC = () => {
         animate="enter"
         exit="exit"
       >
-        <Routes location={location}>
-          <Route path="/" element={<PortfolioApp />} />
-          <Route path="/bio" element={<Suspense fallback={null}><BioPage /></Suspense>} />
-          <Route path="/cv" element={<Suspense fallback={null}><CVPage /></Suspense>} />
-          <Route path="/legal-notice" element={<Suspense fallback={null}><MentionsLegales /></Suspense>} />
+        {/*
+          Une seule frontière `Suspense` au-dessus des routes : les trois pages
+          à la demande partagent la même attente, et l'accueil — importé
+          directement — n'a pas de chunk à attendre ici (ses sections ont leurs
+          propres frontières).
+        */}
+        <Suspense fallback={<SqueletteRoute />}>
+          <Routes location={location}>
+            <Route path="/" element={<PortfolioApp />} />
+            <Route path="/bio" element={<BioPage />} />
+            <Route path="/cv" element={<CVPage />} />
+            <Route path="/legal-notice" element={<MentionsLegales />} />
 
-          {/* 404 : redirection vers l'accueil */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* 404 : redirection vers l'accueil */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   );

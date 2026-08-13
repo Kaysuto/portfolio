@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 /*
-  Mira — la plus dense des déclinaisons shadcn/ui : coins courts (rounded-md,
-  soit 8 px via --radius), corps de texte en text-xs, anneau de focus de 2 px et
-  enfoncement d'un pixel au clic. Aucune ombre portée : le relief vient du
-  remplissage et de la bordure, pas d'un halo.
+  Mira — coins courts (rounded-md, soit 8 px via --radius), anneau de focus de
+  2 px et enfoncement d'un pixel au clic. Aucune ombre portée : le relief vient
+  du remplissage et de la bordure, pas d'un halo.
 
-  Seul écart assumé avec la définition d'origine : l'échelle est décalée d'un
-  cran vers le haut (h-8 au lieu de h-7 par défaut). Mira vise des tableaux de
-  bord au pointeur, là où ce portfolio est d'abord consulté au doigt — les
-  hauteurs d'origine passaient sous le seuil de confort tactile.
+  Écart assumé avec la définition d'origine : l'échelle est décalée de deux
+  crans vers le haut (h-9 au lieu de h-7, text-sm au lieu de text-xs). Mira vise
+  des tableaux de bord au pointeur, là où ce portfolio est un site vitrine lu à
+  distance de lecture et souvent consulté au doigt — la densité d'origine y
+  passait sous le seuil de confort, tactile comme visuel.
 */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-transparent bg-clip-padding text-xs font-medium transition-[color,background-color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/30 focus-visible:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:not-aria-[haspopup]:translate-y-px",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-transparent bg-clip-padding text-sm font-medium transition-[color,background-color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/30 focus-visible:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:not-aria-[haspopup]:translate-y-px",
   {
     variants: {
       variant: {
@@ -32,10 +32,10 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-8 px-2.5 has-[>svg]:px-2",
-        sm: "h-7 gap-1 px-2 has-[>svg]:px-1.5",
-        lg: "h-9 px-3.5 text-sm has-[>svg]:px-3 [&_svg:not([class*='size-'])]:size-4",
-        icon: "size-8",
+        default: "h-9 px-3.5 has-[>svg]:px-3",
+        sm: "h-8 gap-1.5 px-2.5 text-xs has-[>svg]:px-2 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-11 px-5 text-base has-[>svg]:px-4 [&_svg:not([class*='size-'])]:size-[18px]",
+        icon: "size-9",
       },
     },
     defaultVariants: {

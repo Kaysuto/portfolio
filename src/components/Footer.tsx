@@ -1,16 +1,39 @@
 import { motion } from "framer-motion"
 import { Scale, FileText, User, FolderOpen, Mail, BookOpen } from "lucide-react"
-import { GithubLogo as Github, LinkedinLogo as Linkedin } from "@phosphor-icons/react"
+import {
+  GithubLogo as Github,
+  LinkedinLogo as Linkedin,
+  TwitchLogo as Twitch,
+  YoutubeLogo as Youtube,
+} from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
-import { GitHubFooterModal, LinkedInFooterModal } from "./ui/SocialModals"
+import {
+  GitHubFooterModal,
+  LinkedInFooterModal,
+  TwitchFooterModal,
+  YouTubeFooterModal,
+} from "./ui/SocialModals"
 import { useState } from "react"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 
+/**
+ * Réseaux de la troisième colonne. Aucun n'ouvre son lien directement : chacun
+ * passe par l'interstitiel de sortie du site, comme partout ailleurs.
+ */
+const RESEAUX = [
+  { id: "github", label: "GitHub", icon: Github },
+  { id: "linkedin", label: "LinkedIn", icon: Linkedin },
+  { id: "youtube", label: "YouTube", icon: Youtube },
+  { id: "twitch", label: "Twitch", icon: Twitch },
+] as const
+
+type IdReseau = (typeof RESEAUX)[number]["id"]
+
 export function Footer() {
   const anneeCourante = new Date().getFullYear()
-  const [estModaleGithubOuverte, setEstModaleGithubOuverte] = useState(false)
-  const [estModaleLinkedinOuverte, setEstModaleLinkedinOuverte] = useState(false)
+  const [reseauOuvert, setReseauOuvert] = useState<IdReseau | null>(null)
+  const fermerModale = () => setReseauOuvert(null)
 
   const defilerVersSection = (id: string) => {
     const element = document.getElementById(id)
@@ -38,7 +61,7 @@ export function Footer() {
     */
     <footer className="px-3 sm:px-4 pt-8 pb-4">
       <motion.div
-        className="surface-flottante max-w-6xl mx-auto rounded-xl px-5 py-8 sm:px-8 sm:py-10 relative overflow-hidden"
+        className="surface-flottante max-w-6xl mx-auto rounded-2xl px-6 py-10 sm:px-10 sm:py-12 relative overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={VIEWPORT}
@@ -51,9 +74,9 @@ export function Footer() {
             onClick={() => defilerVersSection('accueil')}
             aria-label="Retour en haut de la page"
           >
-            <span className="font-display text-lg font-semibold text-foreground tracking-tight leading-none">Kimiya</span>
+            <span className="font-display text-xl font-semibold text-foreground tracking-tight leading-none">Kimiya</span>
           </button>
-          <p className="text-muted-foreground text-xs/relaxed max-w-sm mt-4">
+          <p className="text-muted-foreground text-sm/relaxed max-w-sm mt-4">
             Technicien Informatique le jour, Product Builder la nuit. Réseau, code &amp; créativité.
           </p>
         </motion.div>
@@ -61,7 +84,7 @@ export function Footer() {
         <div className="grid grid-cols-3 gap-x-6 gap-y-10 mb-10 text-center">
           {/* Colonne Navigation */}
           <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-[10px] font-medium text-muted-foreground tracking-[0.2em] uppercase">Navigation</h4>
+            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Navigation</h4>
             <nav className="flex flex-col items-center gap-2.5">
               {[
                 { id: 'apropos', label: 'À propos', icon: User },
@@ -71,9 +94,9 @@ export function Footer() {
                 <button
                   key={id}
                   onClick={() => defilerVersSection(id)}
-                  className="text-muted-foreground hover:text-accent-texte transition-colors text-xs group flex items-center gap-2"
+                  className="text-muted-foreground hover:text-accent-texte transition-colors text-sm group flex items-center gap-2"
                 >
-                  <Icone className="size-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icone className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                   {label}
                 </button>
               ))}
@@ -82,7 +105,7 @@ export function Footer() {
 
           {/* Colonne Pages */}
           <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-[10px] font-medium text-muted-foreground tracking-[0.2em] uppercase">Pages</h4>
+            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Pages</h4>
             <nav className="flex flex-col items-center gap-2.5">
               {[
                 { to: '/cv',           label: 'CV',              icon: FileText },
@@ -92,9 +115,9 @@ export function Footer() {
                 <Link
                   key={to}
                   to={to}
-                  className="text-muted-foreground hover:text-accent-texte transition-colors text-xs group flex items-center gap-2"
+                  className="text-muted-foreground hover:text-accent-texte transition-colors text-sm group flex items-center gap-2"
                 >
-                  <Icone className="size-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icone className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                   {label}
                 </Link>
               ))}
@@ -103,24 +126,21 @@ export function Footer() {
 
           {/* Colonne Réseaux Sociaux */}
           <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-[10px] font-medium text-muted-foreground tracking-[0.2em] uppercase">Réseaux</h4>
-            <div className="flex items-center justify-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="GitHub"
-                onClick={() => setEstModaleGithubOuverte(true)}
-              >
-                <Github className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="LinkedIn"
-                onClick={() => setEstModaleLinkedinOuverte(true)}
-              >
-                <Linkedin className="size-4" />
-              </Button>
+            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Réseaux</h4>
+            {/* `flex-wrap` : à quatre, les pastilles ne tiennent plus sur une
+                seule ligne dans un tiers de la largeur mobile. */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {RESEAUX.map(({ id, label, icon: Icone }) => (
+                <Button
+                  key={id}
+                  variant="outline"
+                  size="icon"
+                  aria-label={label}
+                  onClick={() => setReseauOuvert(id)}
+                >
+                  <Icone className="size-5" />
+                </Button>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -130,7 +150,7 @@ export function Footer() {
           className="pt-5 border-t border-border/60 flex flex-col items-center gap-3"
           variants={fadeInUp}
         >
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
             <span className="font-mono tabular-nums opacity-70">© 2015-{anneeCourante}</span>
             <span className="text-foreground font-medium tracking-tight">Kimiya</span>
             <span className="opacity-70">• Tous droits réservés</span>
@@ -139,14 +159,10 @@ export function Footer() {
       </motion.div>
 
       {/* Modales */}
-      <GitHubFooterModal
-        isOpen={estModaleGithubOuverte}
-        onClose={() => setEstModaleGithubOuverte(false)}
-      />
-      <LinkedInFooterModal
-        isOpen={estModaleLinkedinOuverte}
-        onClose={() => setEstModaleLinkedinOuverte(false)}
-      />
+      <GitHubFooterModal isOpen={reseauOuvert === "github"} onClose={fermerModale} />
+      <LinkedInFooterModal isOpen={reseauOuvert === "linkedin"} onClose={fermerModale} />
+      <YouTubeFooterModal isOpen={reseauOuvert === "youtube"} onClose={fermerModale} />
+      <TwitchFooterModal isOpen={reseauOuvert === "twitch"} onClose={fermerModale} />
     </footer>
   )
 }

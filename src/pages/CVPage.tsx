@@ -145,10 +145,10 @@ function Bande({ label, children }: { label: string; children: React.ReactNode }
       viewport={VIEWPORT}
       className="flex flex-col items-center py-12 border-t border-border/60"
     >
-      <h2 className="font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
+      <h2 className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
         {label}
       </h2>
-      <div className="mt-8 w-full max-w-3xl">{children}</div>
+      <div className="mt-10 w-full max-w-3xl">{children}</div>
     </motion.section>
   );
 }
@@ -194,25 +194,25 @@ const CVPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-accent-texte mb-4">
+            <p className="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent-texte mb-5">
               Curriculum vitæ
             </p>
             <div className="flex flex-col items-center gap-8">
               <div className="flex flex-col items-center">
-                <h1 className="text-4xl md:text-6xl font-semibold mb-6">
+                <h1 className="text-5xl md:text-7xl font-semibold mb-6">
                   Mon <span className="text-accent-texte">CV</span>
                 </h1>
-                <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+                <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
                   <li className="flex items-center gap-2">
-                    <Briefcase className="size-3.5 text-accent-texte" aria-hidden="true" />
+                    <Briefcase className="size-4 text-accent-texte" aria-hidden="true" />
                     <span>Technicien Informatique</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <MapPin className="size-3.5 text-accent-texte" aria-hidden="true" />
+                    <MapPin className="size-4 text-accent-texte" aria-hidden="true" />
                     <span>France</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Car className="size-3.5 text-accent-texte" aria-hidden="true" />
+                    <Car className="size-4 text-accent-texte" aria-hidden="true" />
                     <span>Permis B &amp; Véhiculé</span>
                   </li>
                 </ul>
@@ -242,13 +242,13 @@ const CVPage: React.FC = () => {
                     viewport={VIEWPORT}
                     transition={{ type: 'spring', stiffness: 500, damping: 18 }}
                   />
-                  <p className="font-mono text-[10px] font-medium text-accent-texte mb-2">{experience.period}</p>
-                  <h3 className="text-base font-medium text-foreground tracking-tight">{experience.role}</h3>
-                  <p className="text-xs text-muted-foreground mb-3">{experience.company}</p>
+                  <p className="font-mono text-xs font-medium text-accent-texte mb-2">{experience.period}</p>
+                  <h3 className="text-lg font-medium text-foreground tracking-tight">{experience.role}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{experience.company}</p>
                   <ul className="space-y-2">
                     {experience.missions.map((mission) => (
-                      <li key={mission} className="flex items-start gap-3 text-xs/relaxed text-muted-foreground">
-                        <CheckCircle2 className="size-3.5 text-accent-texte/50 mt-1 shrink-0" aria-hidden="true" />
+                      <li key={mission} className="flex items-start gap-3 text-sm/relaxed text-muted-foreground">
+                        <CheckCircle2 className="size-4 text-accent-texte/50 mt-0.5 shrink-0" aria-hidden="true" />
                         <span className="leading-relaxed">{mission}</span>
                       </li>
                     ))}
@@ -267,15 +267,15 @@ const CVPage: React.FC = () => {
                   variants={fadeInUp}
                   className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 first:pt-0 last:pb-0"
                 >
-                  <span className="flex items-center gap-2.5 sm:w-44 shrink-0">
-                    <Icone className="size-3.5 text-accent-texte" aria-hidden="true" />
-                    <span className="text-sm font-medium text-foreground">{category}</span>
+                  <span className="flex items-center gap-2.5 sm:w-48 shrink-0">
+                    <Icone className="size-4 text-accent-texte" aria-hidden="true" />
+                    <span className="text-base font-medium text-foreground">{category}</span>
                   </span>
-                  <span className="flex flex-wrap gap-1.5">
+                  <span className="flex flex-wrap gap-2">
                     {items.map((element) => (
                       <span
                         key={element}
-                        className="text-xs bg-input/20 dark:bg-input/30 text-muted-foreground px-2 py-0.5 rounded-md border border-border"
+                        className="text-sm bg-input/20 dark:bg-input/30 text-muted-foreground px-2.5 py-1 rounded-md border border-border"
                       >
                         {element}
                       </span>
@@ -288,22 +288,22 @@ const CVPage: React.FC = () => {
 
           {/* ── Outils ──────────────────────────────────────────────────────── */}
           <Bande label="Outils &amp; Techs">
-            <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-1.5">
+            <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-2">
               {OUTILS.map((outil) => (
                 <motion.button
                   key={outil.name}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => ouvrirOutil(outil)}
-                  className="flex items-center gap-2.5 h-7 px-2 bg-input/20 dark:bg-input/30 border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors group cursor-pointer"
+                  className="flex items-center gap-2.5 h-9 px-3 bg-input/20 dark:bg-input/30 border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors group cursor-pointer"
                 >
                   <img
                     src={outil.iconUrl || `https://cdn.simpleicons.org/${outil.slug}`}
                     alt=""
                     aria-hidden="true"
-                    className="size-3.5 grayscale group-hover:grayscale-0 transition-all object-contain"
+                    className="size-4 grayscale group-hover:grayscale-0 transition-all object-contain"
                   />
-                  <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                     {outil.name}
                   </span>
                 </motion.button>
@@ -316,9 +316,9 @@ const CVPage: React.FC = () => {
             <ul className="divide-y divide-border/50 text-left">
               {FORMATIONS.map(({ annee, intitule }) => (
                 <motion.li key={annee} variants={fadeInUp} className="flex items-start gap-5 py-4 first:pt-0 last:pb-0">
-                  <GraduationCap className="size-4 text-accent-texte shrink-0 mt-0.5" aria-hidden="true" />
-                  <span className="font-mono text-[10px] font-medium text-accent-texte tabular-nums pt-1 shrink-0">{annee}</span>
-                  <h3 className="text-sm font-medium text-foreground leading-snug">{intitule}</h3>
+                  <GraduationCap className="size-5 text-accent-texte shrink-0 mt-0.5" aria-hidden="true" />
+                  <span className="font-mono text-xs font-medium text-accent-texte tabular-nums pt-0.5 shrink-0">{annee}</span>
+                  <h3 className="text-base font-medium text-foreground leading-snug">{intitule}</h3>
                 </motion.li>
               ))}
             </ul>
@@ -334,14 +334,14 @@ const CVPage: React.FC = () => {
                   rel="noreferrer"
                   className="group flex items-center gap-5 py-4 hover:bg-muted rounded-md px-2 -mx-2 transition-colors"
                 >
-                  <ShieldCheck className="size-4 text-accent-texte shrink-0" aria-hidden="true" />
+                  <ShieldCheck className="size-5 text-accent-texte shrink-0" aria-hidden="true" />
                   <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-medium text-foreground group-hover:text-accent-texte transition-colors">
+                    <span className="block text-base font-medium text-foreground group-hover:text-accent-texte transition-colors">
                       Introduction to Cybersecurity
                     </span>
-                    <span className="block text-xs text-muted-foreground mt-0.5">Cisco — Credly Badge</span>
+                    <span className="block text-sm text-muted-foreground mt-1">Cisco — Credly Badge</span>
                   </span>
-                  <ExternalLink className="size-3.5 text-muted-foreground/50 group-hover:text-accent-texte transition-colors shrink-0" aria-hidden="true" />
+                  <ExternalLink className="size-4 text-muted-foreground/50 group-hover:text-accent-texte transition-colors shrink-0" aria-hidden="true" />
                 </a>
               </motion.li>
               <motion.li variants={fadeInUp}>
@@ -351,14 +351,14 @@ const CVPage: React.FC = () => {
                   rel="noreferrer"
                   className="group flex items-center gap-5 py-4 hover:bg-muted rounded-md px-2 -mx-2 transition-colors"
                 >
-                  <Cpu className="size-4 text-accent-texte shrink-0" aria-hidden="true" />
+                  <Cpu className="size-5 text-accent-texte shrink-0" aria-hidden="true" />
                   <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-medium text-foreground group-hover:text-accent-texte transition-colors">
+                    <span className="block text-base font-medium text-foreground group-hover:text-accent-texte transition-colors">
                       Introduction to IoT
                     </span>
-                    <span className="block text-xs text-muted-foreground mt-0.5">Cisco Networking Academy</span>
+                    <span className="block text-sm text-muted-foreground mt-1">Cisco Networking Academy</span>
                   </span>
-                  <ExternalLink className="size-3.5 text-muted-foreground/50 group-hover:text-accent-texte transition-colors shrink-0" aria-hidden="true" />
+                  <ExternalLink className="size-4 text-muted-foreground/50 group-hover:text-accent-texte transition-colors shrink-0" aria-hidden="true" />
                 </a>
               </motion.li>
             </ul>
@@ -372,8 +372,8 @@ const CVPage: React.FC = () => {
                 { langue: 'Anglais', niveau: 'Niveau B2 avancé' },
               ].map(({ langue, niveau }) => (
                 <motion.li key={langue} variants={fadeInUp} className="flex justify-between items-center py-4 first:pt-0 last:pb-0">
-                  <span className="text-sm font-medium text-foreground">{langue}</span>
-                  <span className="text-accent-texte text-xs">{niveau}</span>
+                  <span className="text-base font-medium text-foreground">{langue}</span>
+                  <span className="text-accent-texte text-sm">{niveau}</span>
                 </motion.li>
               ))}
             </ul>
@@ -381,14 +381,14 @@ const CVPage: React.FC = () => {
 
           {/* ── Centres d'intérêt ───────────────────────────────────────────── */}
           <Bande label="Centres d'Intérêt">
-            <motion.ul variants={fadeInUp} className="flex flex-wrap justify-center gap-1.5">
+            <motion.ul variants={fadeInUp} className="flex flex-wrap justify-center gap-2">
               {INTERETS.map(({ name, icon: Icone }) => (
                 <li
                   key={name}
-                  className="flex items-center gap-2.5 h-7 px-2 bg-input/20 dark:bg-input/30 border border-border rounded-md"
+                  className="flex items-center gap-2.5 h-9 px-3 bg-input/20 dark:bg-input/30 border border-border rounded-md"
                 >
-                  <Icone className="size-3.5 text-accent-texte shrink-0" aria-hidden="true" />
-                  <span className="text-xs text-foreground/90 tracking-tight">{name}</span>
+                  <Icone className="size-4 text-accent-texte shrink-0" aria-hidden="true" />
+                  <span className="text-sm text-foreground/90 tracking-tight">{name}</span>
                 </li>
               ))}
             </motion.ul>
