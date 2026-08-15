@@ -20,7 +20,7 @@ export function ProjectsSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          index="02"
+          index="03"
           title={<>Mes <span className="text-accent-texte">Projets</span></>}
           lead="Une sélection de projets qui illustrent ma passion pour la création d'expériences numériques innovantes et performantes."
         />

@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { BackToTop } from './BackToTop';
+import { LecteurAudio } from './LecteurAudio';
 import { Toaster } from './ui/sonner';
 
 interface LayoutProps {
@@ -21,6 +22,9 @@ export function Layout({ children }: LayoutProps) {
         <Footer />
       </div>
       <BackToTop />
+      {/* Monté ici, hors des routes : le morceau ne s'interrompt pas quand on
+          passe de l'accueil au CV. */}
+      <LecteurAudio />
       <Toaster />
     </div>
   );

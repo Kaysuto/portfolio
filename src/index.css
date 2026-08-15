@@ -221,9 +221,13 @@
   }
 
   section {
-    /* Arête basse de l'îlot desktop (16px du haut + 64px de haut) + une marge
-       de respiration, pour qu'une section ancrée ne s'arrête pas sous la barre. */
-    scroll-margin-top: 120px;
+    /* L'îlot desktop occupe les 80 premiers pixels (16px du haut + 64px de
+       haut). Les sections portent déjà 96px (`py-24`) à 128px (`lg:py-32`) de
+       marge intérieure haute : c'est elle, la respiration sous la barre. Les
+       120px d'origine la comptaient une seconde fois et faisaient tomber le
+       titre au quart de l'écran, avec plus de 200px de vide au-dessus. 24px
+       suffisent à dégager l'îlot sans repousser le contenu. */
+    scroll-margin-top: 24px;
   }
 
   /* Fond opaque sous les cartes translucides, pour que le motif de points
@@ -261,6 +265,39 @@
     background-color: color-mix(in oklch, var(--background) 62%, transparent);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     backdrop-filter: blur(12px) saturate(150%);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Ligne de paroles en cours, remplie au fil du son
+
+   Le dégradé est net (deux arrêts au même pourcentage) : la partie déjà
+   chantée prend la couleur pleine, le reste garde le gris du texte au repos.
+   Le pourcentage est écrit image par image depuis `LecteurAudio`, sur la
+   propriété `background-image` du nœud — passer par un état React à 60 Hz
+   ferait re-rendre tout le lecteur pour deux teintes.
+
+   « Blanc » n'a de sens que sur le thème sombre : sur le fond crème du thème
+   clair, du blanc serait illisible, donc la couleur pleine y est le chocolat
+   très foncé du texte courant.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.parole-active {
+  --parole-remplie: var(--foreground);
+  --parole-vide: color-mix(in oklch, var(--muted-foreground) 55%, transparent);
+  /* Repli des navigateurs sans découpe de fond : du texte lisible, sans effet. */
+  color: var(--parole-remplie);
+}
+
+.dark .parole-active {
+  --parole-remplie: #ffffff;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .parole-active {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 

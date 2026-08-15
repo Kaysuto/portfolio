@@ -155,7 +155,7 @@ export function ContactSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          index="03"
+          index="04"
           title={<>Travaillons <span className="text-accent-texte">ensemble.</span></>}
           lead={
             <>

@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kimiya-portfolio-v1.8';
-const STATIC_CACHE = 'static-v1.8';
+const CACHE_NAME = 'kimiya-portfolio-v1.9';
+const STATIC_CACHE = 'static-v1.9';
 
 const STATIC_ASSETS = [
   '/',
@@ -90,6 +90,14 @@ self.addEventListener('fetch', (event) => {
 
   if (skipPatterns.some(pattern => event.request.url.includes(pattern))) {
     return; // Let browser handle these requests normally
+  }
+
+  // Les médias sont laissés au navigateur : l'élément <audio> demande le fichier
+  // par plages d'octets, et une réponse 206 ne peut de toute façon pas entrer
+  // dans le Cache API. Passer par le service worker reviendrait à recopier
+  // plusieurs mégaoctets par piste dans le cache pour rien.
+  if (url.pathname.startsWith('/audio/') || /\.(mp3|m4a|aac|ogg|wav|flac)$/i.test(url.pathname)) {
+    return;
   }
 
   // Skip source files and development paths

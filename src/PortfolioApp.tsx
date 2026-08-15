@@ -1,6 +1,6 @@
 import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
-import { AboutSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
+import { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, StackSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function PortfolioApp() {
@@ -40,6 +40,9 @@ export function PortfolioApp() {
       <Suspense fallback={<AboutSectionSkeleton />}>
         <AboutSection />
       </Suspense>
+      <Suspense fallback={<StackSectionSkeleton />}>
+        <StackSection />
+      </Suspense>
       <Suspense fallback={<ProjectsSectionSkeleton />}>
         <ProjectsSection />
       </Suspense>
@@ -63,7 +66,7 @@ export function PortfolioApp() {
               "https://github.com/kaysuto",
               "https://linkedin.com/in/kimiya-kaysuto"
             ],
-            "knowsAbout": ["React", "TypeScript", "Node.js", "Réseau", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"],
+            "knowsAbout": ["React", "TypeScript", "Node.js", "Redis", "MySQL", "Docker", "Réseau", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"],
             "worksFor": {
               "@type": "Organization",
               "name": "Magna Engineered Glass Europe"

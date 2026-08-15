@@ -28,6 +28,7 @@ const obtenirTitreSection = (section: string, cheminBase: string = ""): string =
   const mapTitres: Record<string, string> = {
     accueil: "Accueil",
     apropos: "À propos",
+    stack: "Stack",
     projets: "Projets",
     contact: "Contact",
     bio: "Bio",

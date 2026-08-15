@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const AboutSection = lazy(() => import('./AboutSection').then(module => ({ default: module.AboutSection })))
+const StackSection = lazy(() => import('./StackSection').then(module => ({ default: module.StackSection })))
 const ProjectsSection = lazy(() => import('./ProjectsSection').then(module => ({ default: module.ProjectsSection })))
 const ContactSection = lazy(() => import('./ContactSection').then(module => ({ default: module.ContactSection })))
 
@@ -24,6 +25,22 @@ function AboutSkeleton() {
             <Skeleton key={i} className="h-32 rounded-lg" />
           ))}
         </div>
+      </div>
+    </div>
+  )
+}
+
+function StackSkeleton() {
+  return (
+    <div className="py-24 px-6 max-w-5xl mx-auto space-y-8">
+      <div className="text-center space-y-4">
+        <Skeleton className="h-10 w-48 mx-auto" />
+        <Skeleton className="h-5 w-96 mx-auto" />
+      </div>
+      <div className="space-y-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-40 rounded-lg" />
+        ))}
       </div>
     </div>
   )
@@ -63,5 +80,10 @@ function ContactSkeleton() {
   )
 }
 
-export { AboutSection, ProjectsSection, ContactSection, Suspense }
-export { AboutSkeleton as AboutSectionSkeleton, ProjectsSkeleton as ProjectsSectionSkeleton, ContactSkeleton as ContactSectionSkeleton }
+export { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense }
+export {
+  AboutSkeleton as AboutSectionSkeleton,
+  StackSkeleton as StackSectionSkeleton,
+  ProjectsSkeleton as ProjectsSectionSkeleton,
+  ContactSkeleton as ContactSectionSkeleton
+}

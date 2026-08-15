@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { Scale, FileText, User, FolderOpen, Mail, BookOpen } from "lucide-react"
+import { Scale, FileText, User, Layers, FolderOpen, Mail, BookOpen } from "lucide-react"
 import {
   GithubLogo as Github,
   LinkedinLogo as Linkedin,
@@ -35,20 +35,13 @@ export function Footer() {
   const [reseauOuvert, setReseauOuvert] = useState<IdReseau | null>(null)
   const fermerModale = () => setReseauOuvert(null)
 
+  /*
+    Même trajet que les liens de la barre de navigation : `scrollIntoView` et le
+    `scroll-margin-top` des sections. Le décalage de 80px calculé à la main ici
+    faisait atterrir le pied de page ailleurs que la navbar sur la même ancre.
+  */
   const defilerVersSection = (id: string) => {
-    const element = document.getElementById(id)
-    if (element) {
-      const decalage = 80
-      const rectCorps = document.body.getBoundingClientRect().top
-      const rectElement = element.getBoundingClientRect().top
-      const positionElement = rectElement - rectCorps
-      const positionAvecDecalage = positionElement - decalage
-
-      window.scrollTo({
-        top: positionAvecDecalage,
-        behavior: "smooth"
-      })
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   }
 
   return (
@@ -88,6 +81,7 @@ export function Footer() {
             <nav className="flex flex-col items-center gap-2.5">
               {[
                 { id: 'apropos', label: 'À propos', icon: User },
+                { id: 'stack',   label: 'Stack',    icon: Layers },
                 { id: 'projets', label: 'Projets',  icon: FolderOpen },
                 { id: 'contact', label: 'Contact',  icon: Mail },
               ].map(({ id, label, icon: Icone }) => (

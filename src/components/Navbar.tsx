@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { motion, useScroll, useSpring } from "framer-motion"
-import { User, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
+import { User, Layers, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
 import { ThemeController } from "./ThemeController"
 import { cn } from "@/lib/utils"
 import { useNavigate, useLocation } from "react-router-dom"
@@ -12,6 +12,7 @@ type NavLink = { href: string; id: string; label: string; icon: React.ElementTyp
 
 const LIENS_DEFILEMENT: NavLink[] = [
   { href: "#apropos", id: "apropos", label: "À propos", icon: User },
+  { href: "#stack", id: "stack", label: "Stack", icon: Layers },
   { href: "#projets", id: "projets", label: "Projets", icon: FolderOpen },
   { href: "#contact", id: "contact", label: "Contact", icon: Mail },
 ]
@@ -21,7 +22,13 @@ const LIENS_ROUTES: NavLink[] = [
   { href: "/bio", id: "bio", label: "Bio", icon: BookOpen },
 ]
 
-const TOUS_LIENS = [...LIENS_DEFILEMENT, ...LIENS_ROUTES]
+/**
+ * La barre d'onglets mobile reste à six colonnes : « Stack » y aurait fait une
+ * septième cellule de 45 px où plus aucun libellé ne tient. La section garde sa
+ * place dans l'espion de défilement et dans la barre desktop, et le pied de
+ * page en donne le raccourci.
+ */
+const LIENS_MOBILE = [...LIENS_DEFILEMENT.filter(lien => lien.id !== "stack"), ...LIENS_ROUTES]
 
 /** Entrée de la barre desktop, partagée par le groupe d'ancres et celui des pages. */
 function LienNav({
@@ -262,7 +269,7 @@ export function Navbar() {
         />
 
         <ul className="grid grid-cols-6">
-          {TOUS_LIENS.map((lien) => {
+          {LIENS_MOBILE.map((lien) => {
             const Icone = lien.icon
             const estActif = idActif === lien.id
             return (
