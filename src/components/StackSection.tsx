@@ -123,7 +123,6 @@ export function StackSection() {
                     <h3 className="text-base font-medium text-foreground tracking-tight">
                       {strate.title}
                     </h3>
-                    <span className="text-sm text-muted-foreground">— {strate.role}</span>
                     <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
                       {surDeuxChiffres(strate.techs.length)}
                     </span>

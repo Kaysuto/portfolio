@@ -5,8 +5,12 @@ export type Strate = {
   /** Repère de profondeur affiché dans la marge (« L1 »). */
   niveau: string
   title: string
-  /** Ce que la couche fait, en trois mots. */
-  role: string
+  /**
+   * Formule courte de ce que la couche fait. Les strates s'en passent — leur
+   * titre et leur résumé suffisent — ; seul l'atelier s'en sert, comme
+   * intertitre.
+   */
+  role?: string
   /** Une ligne de contexte, dépliée au survol de la strate. */
   resume: string
   techs: Tech[]
@@ -23,7 +27,6 @@ export const STRATES: Strate[] = [
     id: "interface",
     niveau: "L1",
     title: "Frontend & Design",
-    role: "Ce que l'on touche",
     resume:
       "La surface : composants typés, mouvement mesuré et un design system qui tient sur la durée.",
     techs: [
@@ -40,7 +43,6 @@ export const STRATES: Strate[] = [
     id: "services",
     niveau: "L2",
     title: "Backend & Cloud",
-    role: "Ce qui répond",
     resume:
       "Données, authentification, cache, indexation et temps réel, déployés au plus près des utilisateurs.",
     techs: [
@@ -64,7 +66,6 @@ export const STRATES: Strate[] = [
     id: "socle",
     niveau: "L3",
     title: "Infrastructure & DevOps",
-    role: "Ce qui porte",
     resume:
       "Le socle hérité du datacenter : hyperviseurs, conteneurs, reverse proxies et durcissement.",
     techs: [
