@@ -21,6 +21,14 @@ export type Piste = {
    * La ligne sans texte marque un silence — sans elle, la phrase précédente
    * resterait affichée pendant tout un pont instrumental. Sans fichier, le
    * panneau n'affiche simplement pas de zone de paroles.
+   *
+   * Le lecteur comprend aussi le LRC horodaté au mot, et c'est ce qu'il faut
+   * viser : le remplissage karaoké suit alors le chant au lieu de le deviner.
+   *
+   *   [00:12.30] <00:12.30>Première <00:12.74>phrase<00:13.10>
+   *
+   * Le dernier repère, sans mot derrière, ferme le vers : sans lui le
+   * remplissage s'étire jusqu'au vers suivant, silence compris.
    */
   paroles?: string
 }
@@ -41,7 +49,32 @@ export type Piste = {
  * ouverte et gratuite. Ils y ont été récupérés une fois et déposés en local :
  * interroger l'API depuis le navigateur du visiteur enverrait son adresse IP à
  * un tiers, ce qui n'irait pas avec la page « politique de cookies » du site.
- * Trois titres seulement y figurent, et deux d'entre eux sans horodatage.
+ *
+ * LRCLIB n'a d'horodatage que pour « Suicidal Love » et « Hit the Jackpot! ».
+ * Les deux NEFFEX n'y sont qu'en texte brut, et « Destined », « iDK »,
+ * « love me reckless » et « Drained » en sont absents : ne pas s'attendre à un
+ * re-téléchargement fructueux tant que la base n'a pas bougé.
+ *
+ * Les trois autres `.lrc` ont donc été fabriqués en local, sans rien envoyer :
+ * la voix est isolée de l'instrumental (Demucs), puis transcrite avec
+ * horodatage au mot (Whisper). Pour les NEFFEX, cette transcription ne sert que
+ * d'horloge — les mots restent ceux des paroles officielles, recalés dessus par
+ * alignement global. Pour « iDK », dont aucune parole n'est publiée nulle part,
+ * le texte lui-même vient de la transcription : il est fidèle dans l'ensemble
+ * mais comporte forcément des mots mal entendus. À corriger à l'oreille si
+ * l'artiste finit par publier ses paroles.
+ *
+ * Les deux fichiers LRCLIB sont passés par la même chaîne, mais seulement pour
+ * gagner le découpage au mot : leurs repères de vers, écrits à la main, valent
+ * mieux que l'alignement automatique sur les vers d'un seul mot (« So »,
+ * « Suicide », les ad-libs), que celui-ci accroche volontiers à la mauvaise
+ * occurrence. Les cinq fichiers portent donc un repère par mot.
+ *
+ * Exception pour « Hit the Jackpot! » : le fichier LRCLIB avance de 2,81 s sur
+ * ce MP3-ci — masterisation différente, et l'écart est constant d'un bout à
+ * l'autre (dérive mesurée : 0,09 s sur deux minutes). Ses vers ont donc été
+ * décalés d'autant avant d'y superposer les mots. Si le fichier audio est un
+ * jour remplacé par une autre version, ce décalage est à remesurer.
  *
  * Droits : les deux titres NEFFEX sont publiés « Copyright Free » et demandent
  * un crédit à l'artiste. Les autres sont des œuvres commerciales ordinaires ;
@@ -67,6 +100,7 @@ export const PLAYLIST: Piste[] = [
     titre: "Hit the Jackpot!",
     artiste: "Gameboy Jones",
     src: "/audio/gameboyjones-hit-the-jackpot.mp3",
+    paroles: "/lyrics/gameboyjones-hit-the-jackpot.lrc",
   },
   {
     id: "silent-destined",
@@ -86,6 +120,7 @@ export const PLAYLIST: Piste[] = [
     titre: "iDK",
     artiste: "Aria Byte",
     src: "/audio/aria-byte-idk.mp3",
+    paroles: "/lyrics/aria-byte-idk.lrc",
   },
   {
     id: "auritni-love-me-reckless",

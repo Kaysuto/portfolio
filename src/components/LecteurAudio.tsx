@@ -2,7 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ChevronUp, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react"
 import { PLAYLIST, type Piste } from "@/data/musique"
-import { analyserParoles, indexLigneCourante, AUCUNE_PAROLE, type Paroles } from "@/lib/lrc"
+import {
+  analyserParoles,
+  fenetresDesMots,
+  indexLigneCourante,
+  AUCUNE_PAROLE,
+  type LigneParole,
+  type Paroles,
+} from "@/lib/lrc"
 import { EASE_OUT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 
@@ -65,6 +72,37 @@ function Pochette({ piste }: { piste: Piste }) {
       {piste.titre.trim().charAt(0).toUpperCase()}
     </span>
   )
+}
+
+/**
+ * Texte d'une ligne voisine du quai — la précédente ou la suivante.
+ *
+ * Un refrain redit souvent la même phrase deux ou trois fois d'affilée, et les
+ * fichiers LRC gardent une entrée par répétition pour coller au chant. Affichée
+ * telle quelle, la voisine identique à la ligne en cours donne l'impression que
+ * le karaoké bégaie, ou qu'il allume deux vers à la fois. On préfère laisser la
+ * case vide : le minutage, lui, reste celui du chant.
+ */
+/**
+ * Mots d'un vers, dans l'ordre où ils seront allumés.
+ *
+ * Le découpage vient du fichier quand il est horodaté au mot, pour que les
+ * `<span>` rendus correspondent un pour un aux fenêtres de `fenetresDesMots`.
+ * Un vers absent rend une espace insécable de garde : la zone de paroles ne
+ * doit pas changer de hauteur entre deux phrases.
+ */
+function decouperEnMots(ligne: LigneParole | undefined): string[] {
+  if (ligne?.mots?.length) return ligne.mots.map((mot) => mot.texte)
+  const texte = ligne?.texte?.trim()
+  // `" ".split(" ")` rend deux chaînes vides, donc deux `<span>` fantômes sur
+  // les repères de silence : on rend l'espace de garde telle quelle.
+  return texte ? texte.split(/\s+/) : [" "]
+}
+
+function voisine(lignes: LigneParole[], rang: number, rangActif: number): string {
+  const texte = lignes[rang]?.texte
+  if (!texte || texte === lignes[rangActif]?.texte) return " "
+  return texte
 }
 
 /**
@@ -325,6 +363,13 @@ function Platine() {
     Elle ne tourne que panneau ouvert et paroles horodatées ; en pause, la
     lecture de `currentTime` est stable, donc rien ne bouge et aucun rendu
     n'est déclenché — mais un déplacement dans la piste reste suivi.
+
+    Le remplissage est écrit mot par mot, et non en un seul dégradé sur le vers.
+    Un dégradé horizontal s'étale sur toute la boîte : dès qu'un vers passe à la
+    ligne dans un quai de 19 rem, la fin de la deuxième ligne s'allume avant le
+    milieu de la première. Mot par mot, le balayage suit le texte où qu'il
+    retombe — et il suit l'horodatage du fichier plutôt qu'une cadence
+    théorique, ce qui est tout l'intérêt d'un `.lrc` horodaté au mot.
   */
   useEffect(() => {
     if (!ouvert || !paroles.synchronise) return
@@ -333,6 +378,8 @@ function Platine() {
 
     let image = 0
     let dernierRang = Number.NaN
+    let fenetres: Array<[number, number]> = []
+    let rangDesFenetres = Number.NaN
 
     const suivre = () => {
       const instant = audio.currentTime
@@ -345,17 +392,33 @@ function Platine() {
 
       const noeud = refLigneActive.current
       if (noeud && rang >= 0) {
-        const debut = paroles.lignes[rang].temps
-        const suivante = paroles.lignes[rang + 1]?.temps ?? audio.duration
-        // Une ligne finale sans successeur, ou deux horodatages identiques,
-        // donneraient une division par zéro : on plancher la durée à 200 ms.
-        const duree = Math.max(0.2, (suivante || debut + 4) - debut)
-        const avancement = mouvementReduit
-          ? 1
-          : Math.min(1, Math.max(0, (instant - debut) / duree))
-        const pourcentage = `${(avancement * 100).toFixed(2)}%`
-        noeud.style.backgroundImage =
-          `linear-gradient(90deg, var(--parole-remplie) ${pourcentage}, var(--parole-vide) ${pourcentage})`
+        const mots = noeud.children
+
+        // Les fenêtres sont recalculées au changement de vers, pas par image.
+        // Le test sur le nombre de mots rattrape l'image où le rang a déjà
+        // avancé mais où React n'a pas encore remonté les `<span>`.
+        if (rangDesFenetres !== rang || fenetres.length !== mots.length) {
+          rangDesFenetres = rang
+          fenetres = fenetresDesMots(
+            paroles.lignes,
+            rang,
+            Array.from(mots, (mot) => mot.textContent?.trim().length ?? 0),
+            audio.duration
+          )
+        }
+
+        for (let i = 0; i < mots.length; i++) {
+          const [ouverture, fermeture] = fenetres[i] ?? [0, 0]
+          const local = mouvementReduit
+            ? 1
+            : Math.min(
+                1,
+                Math.max(0, (instant - ouverture) / Math.max(0.05, fermeture - ouverture))
+              )
+          const pourcentage = `${(local * 100).toFixed(1)}%`
+          ;(mots[i] as HTMLElement).style.backgroundImage =
+            `linear-gradient(90deg, var(--parole-remplie) ${pourcentage}, var(--parole-vide) ${pourcentage})`
+        }
       }
 
       image = requestAnimationFrame(suivre)
@@ -446,13 +509,19 @@ function Platine() {
                     {paroles.synchronise ? (
                       <>
                         <p className="truncate text-[11px] leading-relaxed text-muted-foreground/50">
-                          {paroles.lignes[rangParole - 1]?.texte || " "}
+                          {voisine(paroles.lignes, rangParole - 1, rangParole)}
                         </p>
 
                         {/*
                           La clé sur le rang remonte le composant à chaque
                           changement de ligne : l'apparition rejoue, ce qui
                           donne le battement qu'on attend d'un karaoké.
+
+                          Un `<span>` par mot : c'est la boucle de
+                          synchronisation qui les allume un à un, en suivant les
+                          repères du fichier quand il en porte. L'espace est
+                          gardé dans le mot pour que la coupure de ligne tombe
+                          où elle tomberait sans le découpage.
                         */}
                         <motion.p
                           key={rangParole}
@@ -460,13 +529,17 @@ function Platine() {
                           initial={mouvementReduit ? false : { opacity: 0, y: 4 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.25, ease: EASE_OUT }}
-                          className="parole-active py-0.5 text-sm font-medium leading-relaxed"
+                          className="py-0.5 text-sm font-medium leading-relaxed"
                         >
-                          {paroles.lignes[rangParole]?.texte || " "}
+                          {decouperEnMots(paroles.lignes[rangParole]).map((mot, rang, tous) => (
+                            <span key={`${rang}-${mot}`} className="parole-active">
+                              {rang < tous.length - 1 ? `${mot} ` : mot}
+                            </span>
+                          ))}
                         </motion.p>
 
                         <p className="truncate text-[11px] leading-relaxed text-muted-foreground/50">
-                          {paroles.lignes[rangParole + 1]?.texte || " "}
+                          {voisine(paroles.lignes, rangParole + 1, rangParole)}
                         </p>
                       </>
                     ) : (

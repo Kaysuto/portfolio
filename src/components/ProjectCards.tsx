@@ -65,13 +65,13 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
         <div className="absolute bottom-3 right-3 z-20 flex gap-1.5">
           {!!project.stars && project.stars > 0 && (
             <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
-              <Star size={13} className="text-amber-300 fill-amber-300" aria-hidden="true" />
+              <Star size={13} className="text-accent fill-accent" aria-hidden="true" />
               {project.stars}
             </span>
           )}
           {!!project.likes && project.likes > 0 && (
             <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
-              <Heart size={13} className="text-rose-400 fill-rose-400" aria-hidden="true" />
+              <Heart size={13} className="text-corail fill-corail" aria-hidden="true" />
               {project.likes}
             </span>
           )}

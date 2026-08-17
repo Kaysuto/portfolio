@@ -3,16 +3,16 @@
     <!-- Gradient pour la lettre K -->
     <linearGradient id="icon192LetterK" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FFFFFF"/>
-      <stop offset="30%" style="stop-color:#F0EBE3"/>
-      <stop offset="70%" style="stop-color:#E6D3B7"/>
-      <stop offset="100%" style="stop-color:#D4BE9F"/>
+      <stop offset="30%" style="stop-color:#FEF7F2"/>
+      <stop offset="70%" style="stop-color:#F0E8E2"/>
+      <stop offset="100%" style="stop-color:#D8CCC4"/>
     </linearGradient>
     
     <!-- Gradient pour les accents -->
     <radialGradient id="icon192AccentGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#F0EBE3" stop-opacity="0.9"/>
-      <stop offset="70%" style="stop-color:#D4BE9F" stop-opacity="0.6"/>
-      <stop offset="100%" style="stop-color:#B5A089" stop-opacity="0.3"/>
+      <stop offset="0%" style="stop-color:#FEF7F2" stop-opacity="0.9"/>
+      <stop offset="70%" style="stop-color:#D8CCC4" stop-opacity="0.6"/>
+      <stop offset="100%" style="stop-color:#B4A79F" stop-opacity="0.3"/>
     </radialGradient>
     
     <!-- Filtre pour la lueur -->
@@ -32,8 +32,8 @@
   
   <!-- Motif subtil de fond (transparent) -->
   <g opacity="0.1">
-    <path d="M24,96 Q96,76 168,96" stroke="#D4BE9F" stroke-width="2.5" fill="none"/>
-    <path d="M24,116 Q96,96 168,116" stroke="#B5A089" stroke-width="2.5" fill="none"/>
+    <path d="M24,96 Q96,76 168,96" stroke="#D8CCC4" stroke-width="2.5" fill="none"/>
+    <path d="M24,116 Q96,96 168,116" stroke="#B4A79F" stroke-width="2.5" fill="none"/>
   </g>
   
   <!-- Particules décoratives -->
@@ -67,12 +67,12 @@
   <!-- Accents dans les coins -->
   <g opacity="0.4">
     <!-- Coin supérieur gauche -->
-    <path d="M24,24 L39,24 M24,24 L24,39" stroke="#D4BE9F" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M24,24 L39,24 M24,24 L24,39" stroke="#D8CCC4" stroke-width="3.5" stroke-linecap="round"/>
     
     <!-- Coin inférieur droit -->
-    <path d="M168,154 L153,154 M168,154 L168,139" stroke="#D4BE9F" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M168,154 L153,154 M168,154 L168,139" stroke="#D8CCC4" stroke-width="3.5" stroke-linecap="round"/>
   </g>
   
   <!-- Point lumineux central subtil -->
-  <circle cx="96" cy="96" r="2.5" fill="#F0EBE3" opacity="0.3"/>
+  <circle cx="96" cy="96" r="2.5" fill="#FEF7F2" opacity="0.3"/>
 </svg>

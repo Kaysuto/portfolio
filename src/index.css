@@ -40,107 +40,149 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Palette « Noisette » — crème & chocolat
-   Restituée telle quelle depuis le commit 3f9a255 : c'est la palette tirée du
-   personnage, elle porte l'identité du site et ne se négocie pas.
-     · crème et ivoire        → background / card / popover
-     · chocolat foncé          → foreground / primary
-     · beige et noisette       → secondary / muted / border
-     · noisette clair          → accent
+   Palette « Encre & Étincelle »
+   Relevée au compte-gouttes sur les stickers de `public/stickers/` : ce sont
+   les seules images du site qui montrent le personnage, la palette n'a pas à
+   être inventée ailleurs. Quatre matières s'y partagent la surface, et leurs
+   proportions décident de leur rôle ici.
+
+     · l'encre du manteau   #1A1A1A → 40 % des pixels opaques : c'est la masse.
+                            Elle devient le texte et le fond sombre, et surtout
+                            le remplissage des boutons pleins.
+     · la crème de l'écharpe #F0C8B0 → la lumière. Fond du thème clair, texte
+                            du thème sombre.
+     · le châtaigne des cheveux #503020 → le liant. Il ne devient pas une
+                            couleur à lui seul : il donne sa teinte (55) à
+                            toute la gamme neutre, qui reste ainsi chaude sans
+                            jamais virer au sépia comme la version précédente.
+     · l'ambre des étincelles #F09828 → 1 % des pixels, et la seule couleur
+                            franchement saturée du personnage. Un accent se
+                            mérite par sa rareté : c'est le seul endroit du
+                            site où la chroma dépasse 0,03.
+
+   Le contrepoint froid vient des yeux (#203040, teinte 250) : `--ardoise`. Il
+   sert le versant « jour » du parcours, quand l'ambre sert « la nuit ». La
+   page raconte une journée en deux temps, la palette suit.
+
+   Ce que la version précédente faisait et qu'on ne refait pas : tout tenir
+   entre les teintes 45 et 80. Sans contraste de teinte, un fond crème, une
+   bordure beige et un bouton chocolat se lisent comme trois valeurs d'une même
+   couleur — d'où l'impression de sépia. Ici les neutres sont désaturés
+   (chroma ≤ 0,02), et la couleur est concentrée sur l'ambre et l'ardoise.
+
+   Toutes les paires porteuses de sens sont vérifiées ≥ 4,5:1 (voir les
+   rapports notés en fin de ligne).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Thème clair ────────────────────────────────────────────────────────── */
-  --background: oklch(0.98 0.015 80); /* #F9F6F0 — crème */
-  --foreground: oklch(0.08 0.04 45); /* #1A0F08 — chocolat très foncé */
+  /* ── Thème clair — « le papier » ─────────────────────────────────────────── */
+  --background: oklch(0.98 0.01 55); /* #FEF7F2 — crème, chroma 0.01 seulement */
+  --foreground: oklch(0.205 0.014 55); /* #1C1611 — encre chaude,  16.9:1 */
 
-  --card: oklch(0.99 0.01 80); /* #FEFCF9 — blanc crème */
-  --card-foreground: oklch(0.08 0.04 45);
+  --card: oklch(0.995 0.004 55); /* #FFFDFB — la carte éclaircit le crème */
+  --card-foreground: oklch(0.205 0.014 55);
 
-  --popover: oklch(0.96 0.02 80); /* #F5F0E8 — ivoire */
-  --popover-foreground: oklch(0.08 0.04 45);
+  --popover: oklch(0.995 0.004 55);
+  --popover-foreground: oklch(0.205 0.014 55);
 
-  /* Chocolat #5D3A25 — la couleur que le commit d'origine annonçait en
-     commentaire. La valeur qui l'accompagnait, oklch(0.35 0.12 42), rend en
-     réalité #6A1B00 : un rouille saturé, étranger à la gamme crème/chocolat et
-     très voyant sur les boutons pleins. Chroma ramenée de 0.12 à 0.06, teinte
-     de 42 à 51 : on retrouve le chocolat décrit. */
-  --primary: oklch(0.385 0.06 51); /* #5D3A25 — chocolat riche */
-  --primary-foreground: oklch(0.98 0.01 80); /* crème, 9.5:1 dessus */
+  /* Le bouton plein prend l'encre du manteau, pas le châtaigne des cheveux :
+     c'est la couleur qui domine le personnage, et un aplat presque noir tient
+     le registre sobre du reste du site là où un marron plein le datait. */
+  --primary: oklch(0.245 0.016 55); /* #271F19            15.3:1 */
+  --primary-foreground: oklch(0.98 0.01 55);
 
-  --secondary: oklch(0.82 0.05 60); /* #D4BE9F — crème marquée */
-  --secondary-foreground: oklch(0.08 0.04 45);
+  --secondary: oklch(0.945 0.014 55); /* #F5EBE4 */
+  --secondary-foreground: oklch(0.245 0.016 55);
 
-  --muted: oklch(0.76 0.04 55); /* #C4B5A3 — beige */
-  --muted-foreground: oklch(0.25 0.03 50);
+  --muted: oklch(0.96 0.012 55); /* #F9F0EA */
+  --muted-foreground: oklch(0.515 0.02 55); /* #71655D             5.3:1 */
 
-  --accent: oklch(0.72 0.06 55); /* #B8956A — noisette */
-  --accent-foreground: oklch(0.15 0.04 45);
+  /* L'étincelle. Assombrie de 0.755 à 0.72 par rapport au pixel d'origine :
+     sur le crème, l'ambre pur perdait sa lisibilité de forme. */
+  --accent: oklch(0.72 0.155 64); /* #E68C1E */
+  --accent-foreground: oklch(0.205 0.03 55); /* sur aplat ambre     7.0:1 */
 
-  --destructive: oklch(0.5 0.25 25); /* #C41E3A */
-  --destructive-foreground: oklch(0.98 0.01 80);
+  --destructive: oklch(0.545 0.195 27); /* #C92A28              5.2:1 */
+  --destructive-foreground: oklch(0.98 0.01 55);
 
-  --border: oklch(0.7 0.04 55); /* #B3A28F */
-  --input: oklch(0.9 0.02 70); /* #EDE6D8 */
+  --border: oklch(0.885 0.014 55); /* #E1D7D1 — filet, pas trait */
+  --input: oklch(0.93 0.014 55); /* #F0E6DF */
 
-  /* Noisette approfondi, à réserver au texte et aux tracés fins.
-     --accent (#C39B81) est une couleur de *surface* : posée en texte sur le
-     crème elle ne donne que 2,4:1, très en deçà du seuil lisible de 4,5:1.
-     Cette variante reste dans la même famille (teinte 50-55, chroma proche)
-     mais assombrie jusqu'à 7,3:1. En thème sombre les deux se confondent :
-     l'accent clair y est déjà parfaitement lisible. */
-  --accent-texte: oklch(0.45 0.09 50); /* #7C4523 */
+  /* Même pigment que --accent, brûlé jusqu'au seuil lisible. La distinction
+     surface / texte est structurelle : posé en texte sur le crème, l'ambre de
+     surface ne donne que 2,4:1. Tout ce qui se lit ou se désigne passe par
+     ici ; --accent ne sert qu'aux aplats, filets et soulignés. */
+  --accent-texte: oklch(0.52 0.12 58); /* #9B540C               5.4:1 */
 
   /* L'anneau de focus est un repère d'accessibilité : il suit la teinte
      lisible, sans quoi il disparaissait sur le crème. */
-  --ring: oklch(0.45 0.09 50);
+  --ring: oklch(0.52 0.12 58); /*                              5.4:1 */
+
+  /* ── Contrepoint froid — la couleur des yeux ─────────────────────────────── */
+  /* Le versant « jour » du parcours (le parc, le support, la lumière de
+     bureau) contre l'ambre du versant « nuit » (l'atelier, la lampe). */
+  --ardoise: oklch(0.53 0.062 250); /* #536F8F                4.9:1 */
+
+  /* Le corail des joues (#F07050 sur les stickers). Réservé aux marques
+     d'affection — le cœur des « likes » —, seul endroit où ni l'ambre ni
+     l'ardoise ne veulent rien dire. Sans lui, ces pastilles retombaient sur
+     un `rose-400` de Tailwind, étranger à la gamme. */
+  --corail: oklch(0.69 0.165 35); /* #F07050 */
 
   /* ── Couleurs de statut ─────────────────────────────────────────────────── */
   /* Accordées à la palette : olive et ardoise plutôt que vert et bleu vifs. */
-  --success: oklch(0.48 0.09 135);
-  --info: oklch(0.46 0.07 240);
+  --success: oklch(0.5 0.1 145); /* #3B723E                 5.4:1 */
+  --info: oklch(0.48 0.07 250); /* #3E6084                 6.1:1 */
 
-  /* La palette est restituée telle quelle, mais pas les formes : le commit
-     d'origine posait 1rem, la densité Mira demande 8 px. L'échelle donne
-     4 / 8 / 12 / 16 / 24. */
+  /* La palette change, pas les formes : la densité Mira demande 8 px.
+     L'échelle donne 4 / 8 / 12 / 16 / 24. */
   --radius: 0.5rem;
 }
 
 .dark {
-  /* ── Thème sombre ───────────────────────────────────────────────────────── */
-  --background: oklch(0.25 0.02 45); /* chocolat foncé */
-  --foreground: oklch(0.92 0.02 80); /* crème claire */
+  /* ── Thème sombre — « l'atelier, 20:00 → 01:00 » ─────────────────────────── */
+  /* Le fond descend de 0.25 à 0.175 : l'ancien brun laiteux ne se lisait ni
+     comme un noir ni comme une couleur, et il ne restait plus assez de marches
+     en dessous des cartes pour les détacher du fond. */
+  --background: oklch(0.175 0.01 55); /* #140F0C — l'encre du manteau */
+  --foreground: oklch(0.935 0.012 55); /* #F0E8E2 — crème     15.7:1 */
 
-  --card: oklch(0.22 0.02 45);
-  --card-foreground: oklch(0.92 0.02 80);
+  --card: oklch(0.215 0.011 55); /* #1E1815 — la carte monte vers la lumière */
+  --card-foreground: oklch(0.935 0.012 55);
 
-  --popover: oklch(0.22 0.02 45);
-  --popover-foreground: oklch(0.92 0.02 80);
+  --popover: oklch(0.215 0.011 55);
+  --popover-foreground: oklch(0.935 0.012 55);
 
-  --primary: oklch(0.68 0.07 55);
-  --primary-foreground: oklch(0.1 0.02 45);
+  --primary: oklch(0.925 0.014 55); /* crème pleine       14.9:1 */
+  --primary-foreground: oklch(0.185 0.014 55);
 
-  --secondary: oklch(0.28 0.02 50);
-  --secondary-foreground: oklch(0.92 0.02 80);
+  --secondary: oklch(0.265 0.012 55);
+  --secondary-foreground: oklch(0.935 0.012 55);
 
-  --muted: oklch(0.3 0.02 50);
-  --muted-foreground: oklch(0.65 0.03 60);
+  --muted: oklch(0.27 0.012 55);
+  --muted-foreground: oklch(0.715 0.018 55); /* #ACA099            7.5:1 */
 
-  --accent: oklch(0.82 0.03 60);
-  --accent-foreground: oklch(0.15 0.04 45);
+  /* Sur l'encre, l'ambre remonte à 0.79 : c'est exactement ce que font les
+     étincelles des stickers, qui n'éclatent que sur le manteau sombre. */
+  --accent: oklch(0.79 0.15 66); /* #FBA541               9.5:1 */
+  --accent-foreground: oklch(0.195 0.03 55); /* sur aplat ambre     9.2:1 */
 
-  --destructive: oklch(0.65 0.2 25);
-  --destructive-foreground: oklch(0.92 0.02 80);
+  --destructive: oklch(0.64 0.185 27); /* #E7534A               5.2:1 */
+  --destructive-foreground: oklch(0.935 0.012 55);
 
-  --border: oklch(0.35 0.02 50);
-  --input: oklch(0.32 0.02 50);
-  --ring: oklch(0.82 0.03 60);
+  --border: oklch(0.315 0.012 55);
+  --input: oklch(0.29 0.012 55);
+  --ring: oklch(0.79 0.15 66);
 
-  /* Sur fond chocolat, l'accent clair passe déjà très bien en texte. */
-  --accent-texte: oklch(0.82 0.03 60);
+  /* Sur l'encre, l'accent est déjà largement lisible en texte : la variante
+     ne fait que l'éclaircir d'un cran pour les petits corps. */
+  --accent-texte: oklch(0.805 0.135 68); /* #F8AE56              10.1:1 */
 
-  --success: oklch(0.75 0.11 140);
-  --info: oklch(0.72 0.08 240);
+  --ardoise: oklch(0.72 0.06 250); /* #88A8C9               7.7:1 */
+  --corail: oklch(0.72 0.155 35); /* #FA8267 */
+
+  --success: oklch(0.76 0.12 145); /* #7FC581               9.2:1 */
+  --info: oklch(0.72 0.075 250); /* #81A9D2               7.7:1 */
 }
 
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -168,6 +210,8 @@
   --color-success: var(--success);
   --color-info: var(--info);
   --color-accent-texte: var(--accent-texte);
+  --color-ardoise: var(--ardoise);
+  --color-corail: var(--corail);
 
   --radius-sm: calc(var(--radius) * 0.5); /*  4px */
   --radius-md: var(--radius); /*  8px */
@@ -269,7 +313,12 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Ligne de paroles en cours, remplie au fil du son
+   Mot de la ligne en cours, rempli au fil du son
+
+   La classe se pose sur chaque mot, pas sur le vers entier. Un dégradé couvre
+   toute la boîte de son élément : appliqué au vers, il balaie de gauche à
+   droite sans rien savoir des retours à la ligne, et dans un quai de 19 rem la
+   fin de la deuxième ligne s'allumait avant le milieu de la première.
 
    Le dégradé est net (deux arrêts au même pourcentage) : la partie déjà
    chantée prend la couleur pleine, le reste garde le gris du texte au repos.
