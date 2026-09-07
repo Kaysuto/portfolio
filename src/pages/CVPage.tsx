@@ -275,7 +275,7 @@ const CVPage: React.FC = () => {
                     {items.map((element) => (
                       <span
                         key={element}
-                        className="text-sm bg-input/20 dark:bg-input/30 text-muted-foreground px-2.5 py-1 rounded-md border border-border"
+                        className="text-sm bg-[color-mix(in_oklch,var(--input),var(--background)_80%)] dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] text-muted-foreground px-2.5 py-1 rounded-md border border-border"
                       >
                         {element}
                       </span>
@@ -295,7 +295,7 @@ const CVPage: React.FC = () => {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => ouvrirOutil(outil)}
-                  className="flex items-center gap-2.5 h-9 px-3 bg-input/20 dark:bg-input/30 border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors group cursor-pointer"
+                  className="flex items-center gap-2.5 h-9 px-3 bg-[color-mix(in_oklch,var(--input),var(--background)_80%)] dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors group cursor-pointer"
                 >
                   <img
                     src={outil.iconUrl || `https://cdn.simpleicons.org/${outil.slug}`}
@@ -385,7 +385,7 @@ const CVPage: React.FC = () => {
               {INTERETS.map(({ name, icon: Icone }) => (
                 <li
                   key={name}
-                  className="flex items-center gap-2.5 h-9 px-3 bg-input/20 dark:bg-input/30 border border-border rounded-md"
+                  className="flex items-center gap-2.5 h-9 px-3 bg-[color-mix(in_oklch,var(--input),var(--background)_80%)] dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] border border-border rounded-md"
                 >
                   <Icone className="size-4 text-accent-texte shrink-0" aria-hidden="true" />
                   <span className="text-sm text-foreground/90 tracking-tight">{name}</span>

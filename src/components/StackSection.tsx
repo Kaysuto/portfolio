@@ -29,7 +29,7 @@ function PuceTech({ tech, onClic }: { tech: Tech; onClic: (tech: Tech) => void }
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.96 }}
       onClick={() => onClic(tech)}
-      className="flex items-center gap-2 h-9 px-3 bg-background/60 dark:bg-background/40 border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors cursor-pointer group"
+      className="flex items-center gap-2 h-9 px-3 bg-background border border-border rounded-md hover:bg-muted hover:border-accent/40 transition-colors cursor-pointer group"
     >
       <img
         src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
@@ -108,7 +108,7 @@ export function StackSection() {
                 <motion.li
                   key={strate.id}
                   variants={fadeInUp}
-                  className="group relative overflow-hidden rounded-lg border border-border bg-input/20 dark:bg-input/30 p-5 md:p-6 text-left transition-colors hover:border-accent/40"
+                  className="group relative overflow-hidden rounded-lg border border-border bg-[color-mix(in_oklch,var(--input),var(--background)_80%)] dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] p-5 md:p-6 text-left transition-colors hover:border-accent/40"
                 >
                   {/* Filet de profondeur, sur l'arête gauche de la strate */}
                   <span
@@ -144,8 +144,8 @@ export function StackSection() {
 
           <p className="mt-10 max-w-2xl text-center text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
             <Layers className="inline size-4 mr-2 -mt-1 text-accent-texte" aria-hidden="true" />
-            Je choisis rarement une couche sans comprendre celle d'en dessous : c'est le réflexe que
-            m'ont laissé douze ans d'apprentissage en autodidacte.
+            Je choisis rarement une couche sans comprendre celle d'en dessous : les couches basses,
+            je les ai apprises en premier, et sur du matériel qui tombait vraiment en panne.
           </p>
         </motion.div>
 
@@ -157,7 +157,10 @@ export function StackSection() {
           <RailLabel>{ATELIER.role}</RailLabel>
 
           <div className="mt-8 w-full md:pl-24">
-            <div className="rounded-lg border border-dashed border-border p-5 md:p-6">
+            {/* `bg-background` et non la teinte des strates : l'atelier reste à
+                plat, hors de la pile, mais son fond opaque arrête la trame de
+                points — sans lui, elle traverse le panneau. */}
+            <div className="rounded-lg border border-dashed border-border bg-background p-5 md:p-6">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <Wrench className="size-4 text-accent-texte self-center" aria-hidden="true" />
                 <h3 className="text-base font-medium text-foreground tracking-tight">

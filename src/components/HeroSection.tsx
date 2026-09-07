@@ -15,7 +15,7 @@ const TEXTES_ANIMES = [
 /** Repères affichés dans le bandeau bas du hero. */
 const REPERES = [
   { valeur: "24", libelle: "ans" },
-  { valeur: "12+", libelle: "ans d'autodidaxie" },
+  { valeur: "11", libelle: "ans de code en autodidacte" },
   { valeur: "3", libelle: "ans en datacenter" },
 ]
 

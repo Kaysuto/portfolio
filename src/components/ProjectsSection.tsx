@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { GithubLogo as Github } from "@phosphor-icons/react"
 import { ProjectCards } from "@/components/ProjectCards"
+import { Button } from "@/components/ui/button"
 import { GitHubModal } from "@/components/ui/GitHubModal"
 import { SectionHeading } from "@/components/ui/SectionHeading"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
@@ -33,14 +34,18 @@ export function ProjectsSection() {
           variants={fadeInUp}
           className="pt-10 border-t border-border/60 flex items-center justify-center gap-4"
         >
-          <button
+          {/* Un vrai bouton et non du texte cliquable : posé sur la trame de
+              points, un libellé sans surface ne se lit plus comme une cible. */}
+          <Button
+            variant="outline"
+            size="lg"
             onClick={() => setAfficherModale(true)}
-            className="inline-flex items-center gap-3 text-base font-medium text-foreground hover:text-accent-texte transition-colors group"
+            className="group gap-3"
           >
             <Github className="size-5 text-accent-texte" aria-hidden="true" />
             Voir tous mes projets
             <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          </Button>
         </motion.div>
       </motion.div>
 

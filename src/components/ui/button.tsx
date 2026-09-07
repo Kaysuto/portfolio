@@ -9,6 +9,13 @@ import { cn } from "@/lib/utils"
   2 px et enfoncement d'un pixel au clic. Aucune ombre portée : le relief vient
   du remplissage et de la bordure, pas d'un halo.
 
+  Aucun remplissage n'utilise d'alpha, et c'est délibéré : la page porte une
+  trame de points animée (`FondAnime`), qu'un aplat semi-transparent laisse
+  passer — le bouton cesse alors de se lire comme un objet posé dessus. Les
+  teintes de survol passent donc par `color-mix` avec `--background`, ce qui
+  donne exactement la couleur qu'un alpha aurait produite sur le fond de page,
+  mais opaque. Seul `ghost` reste transparent au repos : c'est sa définition.
+
   Écart assumé avec la définition d'origine : l'échelle est décalée de deux
   crans vers le haut (h-9 au lieu de h-7, text-sm au lieu de text-xs). Mira vise
   des tableaux de bord au pointeur, là où ce portfolio est un site vitrine lu à
@@ -20,15 +27,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        default:
+          "bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--background)_20%)]",
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:
-          "border-border hover:bg-input/50 hover:text-foreground dark:bg-input/30 aria-expanded:bg-muted",
+          "border-border bg-background hover:bg-[color-mix(in_oklch,var(--input),var(--background)_50%)] hover:text-foreground dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] dark:hover:bg-[color-mix(in_oklch,var(--input),var(--background)_40%)] aria-expanded:bg-muted",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]",
         ghost:
-          "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted",
+          "hover:bg-muted hover:text-foreground dark:hover:bg-[color-mix(in_oklch,var(--muted),var(--background)_50%)] aria-expanded:bg-muted",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

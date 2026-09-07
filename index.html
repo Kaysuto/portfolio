@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-palette="cafe">
 
 <head>
     <meta charset="UTF-8" />
@@ -70,6 +70,14 @@
         html.dark{background:#140F0C}
         body{margin:0;background:#FEF7F2;color:#1C1611;line-height:1.6}
         html.dark body{background:#140F0C;color:#F0E8E2}
+        /* Essai « Café » — même rôle que les quatre lignes ci-dessus, pour
+           l'attribut data-palette="cafe". Sans elles, la page flashe en crème
+           avant que index.css n'arrive. Valeurs alignées sur le bloc
+           html[data-palette='cafe'] de src/index.css. */
+        html[data-palette=cafe]{background:#F5F1EA}
+        html[data-palette=cafe].dark{background:#1A110D}
+        html[data-palette=cafe] body{background:#F5F1EA;color:#4A342A}
+        html[data-palette=cafe].dark body{background:#1A110D;color:#F5F1EA}
         #root{min-height:100vh}
         *{box-sizing:border-box}
     </style>
@@ -120,8 +128,8 @@
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya",
-            "jobTitle": "Product Builder",
-            "description": "Product Builder polyvalent spécialisé en réseau, développement, design pixel art et création de mini-jeux Minecraft",
+            "jobTitle": "Technicien Informatique & Product Builder",
+            "description": "Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe et Product Builder sur ses projets personnels. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et onze ans de développement fullstack en autodidacte.",
             "url": "https://kaysuto.fr",
             "image": "https://kaysuto.fr/og-image.jpg",
             "sameAs": [
@@ -129,11 +137,13 @@
                 "https://linkedin.com/in/kimiya-kaysuto"
             ],
             "knowsAbout": [
-                "React", "TypeScript", "Node.js", "PHP", "MySQL", "Docker", "Linux", "Network Administration"
+                "React", "TypeScript", "Node.js", "Redis", "MySQL", "Docker", "Linux",
+                "Réseau", "Systèmes", "IoT", "SEO", "Community Management",
+                "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"
             ],
             "worksFor": {
                 "@type": "Organization",
-                "name": "Freelance"
+                "name": "Magna Engineered Glass Europe"
             }
         }
         </script>

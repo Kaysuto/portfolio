@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
+import { enPosteDeNuit } from "@/lib/horaires"
 import {
   GitHubFooterModal,
   LinkedInFooterModal,
@@ -70,7 +71,10 @@ export function Footer() {
             <span className="font-display text-xl font-semibold text-foreground tracking-tight leading-none">Kimiya</span>
           </button>
           <p className="text-muted-foreground text-sm/relaxed max-w-sm mt-4">
-            Technicien Informatique le jour, Product Builder la nuit. Réseau, code &amp; créativité.
+            {enPosteDeNuit()
+              ? "Technicien Informatique la nuit, Product Builder le jour."
+              : "Technicien Informatique le jour, Product Builder la nuit."}{" "}
+            Réseau, code &amp; créativité.
           </p>
         </motion.div>
 

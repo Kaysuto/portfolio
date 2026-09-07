@@ -98,7 +98,6 @@ export const ATELIER: Omit<Strate, "niveau"> = {
     { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
     { name: "Git", slug: "git", url: "https://git-scm.com" },
     { name: "Bitwarden", slug: "bitwarden", url: "https://bitwarden.com" },
-    { name: "Raycast", slug: "raycast", url: "https://www.raycast.com" },
     { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png" },
     { name: "Byterover", slug: "byterover", url: "https://www.byterover.dev/", iconUrl: "https://i.imgur.com/jxUBre4.png" },
     { name: "Orca", slug: "orca", url: "https://www.onorca.dev", iconUrl: "https://www.onorca.dev/icon.png" },

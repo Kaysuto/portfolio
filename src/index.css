@@ -61,8 +61,10 @@
                             site où la chroma dépasse 0,03.
 
    Le contrepoint froid vient des yeux (#203040, teinte 250) : `--ardoise`. Il
-   sert le versant « jour » du parcours, quand l'ambre sert « la nuit ». La
-   page raconte une journée en deux temps, la palette suit.
+   sert le versant « parc » du parcours, quand l'ambre sert « l'atelier ». Les
+   deux couleurs suivent l'activité et non l'horloge : le poste passe de nuit
+   le 14 septembre 2026, et un parc qui changerait de couleur ce jour-là
+   perdrait son identité pour une raison qui ne le regarde pas.
 
    Ce que la version précédente faisait et qu'on ne refait pas : tout tenir
    entre les teintes 45 et 80. Sans contraste de teinte, un fond crème, une
@@ -119,8 +121,8 @@
   --ring: oklch(0.52 0.12 58); /*                              5.4:1 */
 
   /* ── Contrepoint froid — la couleur des yeux ─────────────────────────────── */
-  /* Le versant « jour » du parcours (le parc, le support, la lumière de
-     bureau) contre l'ambre du versant « nuit » (l'atelier, la lampe). */
+  /* Le versant « parc » du parcours (le support, la lumière de bureau) contre
+     l'ambre du versant « atelier » (les projets, la lampe). */
   --ardoise: oklch(0.53 0.062 250); /* #536F8F                4.9:1 */
 
   /* Le corail des joues (#F07050 sur les stickers). Réservé aux marques
@@ -245,6 +247,32 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Le curseur des boutons.
+
+     Le défaut du navigateur pour `<button>` est `cursor: default`, et le
+     Preflight de Tailwind v4 ne le corrige plus — la v3 posait `cursor: pointer`,
+     la v4 a choisi de suivre le navigateur. Résultat sur ce site : 37 boutons
+     sur 80 ne montraient pas qu'on pouvait cliquer, dont « Voir mes projets »,
+     « Voir CV », « Envoyer le message », la barre de navigation et les
+     commandes du lecteur audio. Les quelques-uns qui fonctionnaient portaient
+     un `cursor-pointer` posé à la main, au cas par cas.
+
+     La règle est ici et non dans `buttonVariants` : la moitié de ces boutons ne
+     passent pas par le composant `Button` (barre de navigation, lecteur audio,
+     déclencheurs Radix), et un bouton ajouté demain ne doit pas dépendre du fait
+     qu'on ait repensé à l'utilitaire. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  /* Sans effet là où `disabled:pointer-events-none` s'applique — le curseur n'y
+     est jamais interrogé —, mais juste partout ailleurs. */
+  button:disabled,
+  [role='button'][aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
   /* Geist est une grotesque : sans resserrement, les grands corps paraissent
      lâches. Le crénage suit le corps — plus le titre est gros, plus il serre. */
   h1,
@@ -285,6 +313,59 @@
     z-index: -1;
     pointer-events: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Fond animé  (voir `FondAnime.tsx`)
+
+   Une couche `fixed` sous le contenu : la trame de points, puis le grain.
+   Elle est `fixed` et non `absolute` parce que le fond doit rester immobile
+   pendant le défilement — une trame de plusieurs milliers de pixels de haut se
+   repeindrait à chaque frame de scroll pour un résultat identique à l'œil.
+
+   La trame est un canvas et non un `background-image` répété : voir l'en-tête
+   du composant. Les couleurs y sont lues sur les tokens côté JavaScript, il n'y
+   a donc rien à déclarer ici pour qu'elle suive le thème.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.fond-anime {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fond-trame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Vignette, et non fondu vertical. La couche est `fixed` : un dégradé
+     vertical serait ancré au viewport et non à la page, il ne s'alignerait sur
+     aucun contenu et ferait seulement voyager une bande de densité pendant le
+     défilement. Un masque radial est cohérent avec ce que la couche est : un
+     cadrage d'écran. Il dégage au passage les quatre coins, où flottent la
+     barre de navigation, le lecteur audio et le bouton de retour en haut. */
+  -webkit-mask-image: radial-gradient(125% 105% at 50% 38%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(125% 105% at 50% 38%, #000 30%, transparent 100%);
+}
+
+/* Grain. Un bruit fractal figé, pas une animation : le grain qui scintille est
+   un effet de film, pas de page web, et il interdit toute mise en cache de la
+   couche par le compositeur.
+
+   Il compte double sur cette famille de palettes : en dessous de 0,06 de
+   chroma, les grands dégradés partent en bandes visibles sur un écran 8 bits,
+   et un bruit à 3 % suffit à les casser. */
+.fond-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23b)'/%3E%3C/svg%3E");
+}
+
+.dark .fond-grain {
+  opacity: 0.045;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -445,4 +526,147 @@
 
 html {
   scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Palette d'essai « Café »
+   Activée par l'attribut `data-palette="cafe"` sur <html>. Retirer l'attribut
+   rend la page à « Encre & Étincelle » : aucun token au-dessus n'est modifié,
+   ce bloc ne fait que les surcharger avec une spécificité supérieure
+   (`html[data-palette]` = 0,1,1 contre `:root` = 0,1,0).
+
+   Cinq valeurs, une seule matière. Les étiquettes de la planche disent vrai
+   cette fois — relevé au compte-gouttes à ±3 unités près, l'écart tient au JPEG.
+
+     · Linen    #F5F1EA  oklch(0.959 0.010 82)
+     · Khaki    #D7C9B8  oklch(0.843 0.028 73)
+     · Camel    #B2967D  oklch(0.692 0.049 64)
+     · Cocoa    #7D5A44  oklch(0.499 0.057 53)
+     · Espresso #4A342A  oklch(0.347 0.036 46)
+
+   Ce n'est pas une palette, c'est une rampe : 36° de teinte du haut en bas,
+   chroma plafonné à 0,057. Elle se lit donc uniquement en clarté, et la
+   clarté décide seule des rôles. Les rapports de la rampe sur le Linen :
+
+     Espresso 10,3:1   → le texte courant, et le bouton plein.
+     Cocoa     5,5:1   → le texte secondaire, les liens, l'anneau de focus.
+     Camel     2,5:1   → aplats et pastilles. Jamais du texte.
+     Khaki     1,4:1   → filets et champs. Jamais du texte.
+
+   Le partage surface / texte de la palette d'origine (`--accent` contre
+   `--accent-texte`) tombe donc pile sur la marche Camel / Cocoa : la planche
+   contient déjà sa propre solution d'accessibilité, il suffit de la lire.
+
+   Ce que cette palette ne peut pas dire, et qui est écrit ailleurs dans ce
+   fichier : « tout tenir entre les teintes 45 et 80 » est exactement ce que
+   fait cette rampe, et c'est ce que la palette « Encre & Étincelle » avait
+   corrigé. Un fond crème, un filet khaki et un bouton espresso sont trois
+   valeurs d'une seule couleur. Assumé ici — c'est la planche demandée.
+
+   Conséquence directe : quatre tokens du site n'ont aucune source dans la
+   planche, et sont dérivés. Ils sont tirés à la clarté de Cocoa (clair) ou
+   d'accent-texte (sombre) pour rester dans la rampe, et leur chroma est
+   maintenu au plus bas qui les distingue encore les uns des autres :
+
+     --destructive  teinte 30, chroma 0,16  — le seul token où la chroma monte,
+                    parce qu'une erreur qui ne se distingue pas d'un lien brun
+                    n'est plus une erreur.
+     --success      teinte 140, chroma 0,085
+     --info         teinte 250, chroma 0,06
+     --ardoise      teinte 250, chroma 0,055 — le contrepoint froid du parcours.
+                    Il n'a plus d'ambre à quoi s'opposer : la rampe n'a pas
+                    d'accent. La bascule jour / nuit devient une bascule
+                    chaud / froid, plus faible qu'avec l'ambre.
+     --corail       teinte 38, chroma 0,115 — terre cuite plutôt que corail,
+                    pour rester dans la famille.
+
+   Toutes les paires porteuses de sens sont vérifiées ≥ 4,5:1.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html[data-palette='cafe'] {
+  /* ── Thème clair — « le lin » ────────────────────────────────────────────── */
+  --background: oklch(0.9593 0.0103 82); /* #F5F1EA — Linen, tel quel */
+  --foreground: oklch(0.3474 0.0362 45.5); /* #4A342A — Espresso   10.3:1 */
+
+  --card: oklch(0.988 0.005 82); /* #FDFBF7 — la carte blanchit le lin */
+  --card-foreground: oklch(0.3474 0.0362 45.5);
+
+  --popover: oklch(0.988 0.005 82);
+  --popover-foreground: oklch(0.3474 0.0362 45.5);
+
+  /* L'Espresso sert deux fois : texte courant et aplat plein. C'est le seul
+     ton de la rampe qui porte du Linen en libellé sans descendre sous 4,5. */
+  --primary: oklch(0.3474 0.0362 45.5); /* #4A342A            10.3:1 */
+  --primary-foreground: oklch(0.9593 0.0103 82);
+
+  --secondary: oklch(0.8427 0.028 72.8); /* #D7C9B8 — Khaki */
+  --secondary-foreground: oklch(0.3474 0.0362 45.5);
+
+  --muted: oklch(0.905 0.018 78); /* #E6DED3 — entre Linen et Khaki */
+  --muted-foreground: oklch(0.4987 0.057 53.2); /* #7D5A44 — Cocoa   5.5:1 */
+
+  --accent: oklch(0.6919 0.0486 63.7); /* #B2967D — Camel, aplats seuls */
+  /* Sur le Camel, l'Espresso brut ne donne que 4,16:1 : le libellé descend
+     d'un cran sous la rampe. C'est le seul ton hors planche du thème clair. */
+  --accent-foreground: oklch(0.29 0.033 46); /* #39261D            5.1:1 */
+
+  --destructive: oklch(0.505 0.16 30); /* #AD3426             5.7:1 */
+  --destructive-foreground: oklch(0.9593 0.0103 82);
+
+  --border: oklch(0.8427 0.028 72.8); /* #D7C9B8 — Khaki, filet visible */
+  --input: oklch(0.885 0.023 76); /* #E2D7C9 */
+
+  --accent-texte: oklch(0.4987 0.057 53.2); /* #7D5A44 — Cocoa    5.5:1 */
+  --ring: oklch(0.4987 0.057 53.2); /*                     5.5:1 */
+
+  --ardoise: oklch(0.505 0.055 250); /* #4C6783             5.2:1 */
+  --corail: oklch(0.6 0.115 38); /* #BA664C — aplat seulement */
+
+  --success: oklch(0.495 0.085 140); /* #476E3E             5.3:1 */
+  --info: oklch(0.49 0.06 250); /* #466381              5.5:1 */
+}
+
+html[data-palette='cafe'].dark {
+  /* ── Thème sombre — la rampe prolongée sous l'Espresso ───────────────────── */
+  /* La planche s'arrête à L 0,347 : posé en fond de page, l'Espresso brut est
+     un brun laiteux, pas un noir, et il ne reste plus de marche en dessous
+     pour détacher les cartes. Le fond descend donc à 0,19 sur la teinte de
+     l'Espresso, et l'Espresso lui-même remonte en surface secondaire. */
+  --background: oklch(0.19 0.017 46); /* #1A110D */
+  --foreground: oklch(0.9593 0.0103 82); /* #F5F1EA — Linen    16.5:1 */
+
+  --card: oklch(0.235 0.019 46); /* #261B17 */
+  --card-foreground: oklch(0.9593 0.0103 82);
+
+  --popover: oklch(0.235 0.019 46);
+  --popover-foreground: oklch(0.9593 0.0103 82);
+
+  --primary: oklch(0.9 0.02 78); /* #E5DDD0            13.7:1 */
+  --primary-foreground: oklch(0.2 0.018 46);
+
+  --secondary: oklch(0.295 0.024 48); /* #372922 — l'Espresso de la planche */
+  --secondary-foreground: oklch(0.9593 0.0103 82);
+
+  --muted: oklch(0.3 0.024 48);
+  --muted-foreground: oklch(0.755 0.035 68); /* #BFAC98            8.4:1 */
+
+  /* Sur le fond sombre, le Camel remonte en clarté : c'est le seul endroit où
+     la rampe donne quelque chose qui ressemble à un accent. */
+  --accent: oklch(0.75 0.05 64); /* #C5A88D             8.3:1 */
+  --accent-foreground: oklch(0.21 0.02 46); /* sur aplat Camel     7.9:1 */
+
+  --destructive: oklch(0.655 0.16 30); /* #E16453             5.4:1 */
+  --destructive-foreground: oklch(0.9593 0.0103 82);
+
+  --border: oklch(0.345 0.028 50);
+  --input: oklch(0.315 0.026 49);
+
+  --accent-texte: oklch(0.8 0.05 66); /* #D5B89C             9.8:1 */
+  --ring: oklch(0.8 0.05 66);
+
+  --ardoise: oklch(0.745 0.055 250); /* #93B0CE             8.2:1 */
+  --corail: oklch(0.73 0.115 38); /* #E68D72 */
+
+  --success: oklch(0.75 0.085 140); /* #91BC88             8.6:1 */
+  --info: oklch(0.735 0.06 250); /* #8DADCE              7.9:1 */
 }
