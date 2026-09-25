@@ -28,7 +28,7 @@ export const STRATES: Strate[] = [
     niveau: "L1",
     title: "Frontend & Design",
     resume:
-      "La surface : composants typés, mouvement mesuré et un design system qui tient sur la durée.",
+      "Ce que vous voyez : des composants typés, des animations sobres et un design system qui vieillit bien.",
     techs: [
       { name: "React", slug: "react", url: "https://react.dev" },
       { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
@@ -44,7 +44,7 @@ export const STRATES: Strate[] = [
     niveau: "L2",
     title: "Backend & Cloud",
     resume:
-      "Données, authentification, cache, indexation et temps réel, déployés au plus près des utilisateurs.",
+      "Ce qui se passe en coulisses : données, comptes, cache, recherche et temps réel, hébergés au plus près des utilisateurs.",
     techs: [
       { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
       { name: "Python", slug: "python", url: "https://www.python.org" },
@@ -67,7 +67,7 @@ export const STRATES: Strate[] = [
     niveau: "L3",
     title: "Infrastructure & DevOps",
     resume:
-      "Le socle hérité du datacenter : hyperviseurs, conteneurs, reverse proxies et durcissement.",
+      "Ce que j'ai appris en datacenter : hyperviseurs, conteneurs, reverse proxies et sécurisation des serveurs.",
     techs: [
       { name: "Linux", slug: "linux", url: "https://www.linux.org" },
       { name: "Docker", slug: "docker", url: "https://www.docker.com" },
@@ -78,6 +78,8 @@ export const STRATES: Strate[] = [
       { name: "VMware", slug: "vmware", url: "https://www.vmware.com" },
       { name: "Nomachine", slug: "nomachine", url: "https://www.nomachine.com", iconUrl: "https://i.imgur.com/zLq6xEm.png" },
       { name: "Nexterm", slug: "nexterm", url: "https://nexterm.dev", iconUrl: "https://raw.githubusercontent.com/gnmyt/Nexterm/main/client/public/assets/img/favicon.svg" },
+      { name: "XPipe", slug: "xpipe", url: "https://xpipe.io", iconUrl: "https://avatars.githubusercontent.com/u/93734037?s=48&v=4" },
+      { name: "WinSCP", slug: "winscp", url: "https://winscp.net", iconUrl: "https://avatars.githubusercontent.com/u/39923081?s=48&v=4" },
       { name: "YAML", slug: "yaml", url: "https://yaml.org/" },
     ],
   },
@@ -93,13 +95,13 @@ export const ATELIER: Omit<Strate, "niveau"> = {
   title: "Outils & Productivité",
   role: "Ce que j'ai sous la main",
   resume:
-    "L'établi : éditeur, gestion de versions, orchestration d'agents, systèmes et raccourcis du quotidien.",
+    "Mes outils de tous les jours : éditeur, gestion de versions, agents IA, systèmes d'exploitation et petits raccourcis.",
   techs: [
     { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
     { name: "Git", slug: "git", url: "https://git-scm.com" },
     { name: "Bitwarden", slug: "bitwarden", url: "https://bitwarden.com" },
     { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png" },
-    { name: "Byterover", slug: "byterover", url: "https://www.byterover.dev/", iconUrl: "https://i.imgur.com/jxUBre4.png" },
+    { name: "Obsidian", slug: "obsidian", url: "https://obsidian.md" },
     { name: "Orca", slug: "orca", url: "https://www.onorca.dev", iconUrl: "https://www.onorca.dev/icon.png" },
     { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png" },
     { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" },

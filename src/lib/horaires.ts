@@ -1,8 +1,7 @@
 /**
  * Le poste de Kimiya passe en horaires de nuit à cette date : 21:00 → 05:00 au
- * lieu de 08:00 → 17:00. Deux endroits du site racontent cette journée — la
- * frise de la section « À propos » et la ligne d'identité du pied de page —, et
- * les deux doivent basculer ensemble.
+ * lieu de 08:00 → 17:00. La frise de la section « À propos » et la
+ * description JSON-LD racontent cette journée, et doivent basculer ensemble.
  *
  * Une date écrite en ISO plutôt qu'un objet `Date` : c'est la journée de Kimiya
  * que le site raconte, pas celle du visiteur, donc la comparaison doit se faire

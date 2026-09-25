@@ -33,7 +33,7 @@ export const projects: Project[] = [
     id: '2',
     title: 'Clover Games',
     description: "Infrastructure complète pour serveur Minecraft et plateforme de gaming avec panels d'administration et monitoring.",
-    tech_stack: ['YAML', 'Pterodactyl', 'Node.js', 'MySQL'],
+    tech_stack: ['YAML', 'Pelican', 'Node.js', 'MySQL'],
     status: 'En développement',
     type: 'Game Dev',
     demo_url: 'https://clovergames.fr',

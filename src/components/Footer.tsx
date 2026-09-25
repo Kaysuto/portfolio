@@ -1,26 +1,25 @@
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Scale, FileText, User, Layers, FolderOpen, Mail, BookOpen } from "lucide-react"
 import {
   GithubLogo as Github,
   LinkedinLogo as Linkedin,
   TwitchLogo as Twitch,
   YoutubeLogo as Youtube,
 } from "@phosphor-icons/react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
-import { enPosteDeNuit } from "@/lib/horaires"
+import { preloadRoute } from "@/routes/lazyRoutes"
 import {
   GitHubFooterModal,
   LinkedInFooterModal,
   TwitchFooterModal,
   YouTubeFooterModal,
 } from "./ui/SocialModals"
-import { useState } from "react"
-import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
+import { fadeIn, VIEWPORT } from "@/lib/animations"
 
 /**
- * Réseaux de la troisième colonne. Aucun n'ouvre son lien directement : chacun
- * passe par l'interstitiel de sortie du site, comme partout ailleurs.
+ * Aucun réseau n'ouvre son lien directement : chacun passe par l'interstitiel
+ * de sortie du site, comme partout ailleurs.
  */
 const RESEAUX = [
   { id: "github", label: "GitHub", icon: Github },
@@ -31,136 +30,130 @@ const RESEAUX = [
 
 type IdReseau = (typeof RESEAUX)[number]["id"]
 
+const SECTIONS_ACCUEIL = [
+  { id: "apropos", label: "À propos" },
+  { id: "stack", label: "Stack" },
+  { id: "projets", label: "Projets" },
+  { id: "contact", label: "Contact" },
+]
+
+const PAGES = [
+  { to: "/cv", label: "CV" },
+  { to: "/bio", label: "Bio" },
+  { to: "/legal-notice", label: "Mentions légales" },
+]
+
+const intertitre = "font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
+const lien = "text-sm text-muted-foreground hover:text-foreground transition-colors"
+
 export function Footer() {
   const anneeCourante = new Date().getFullYear()
   const [reseauOuvert, setReseauOuvert] = useState<IdReseau | null>(null)
   const fermerModale = () => setReseauOuvert(null)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   /*
     Même trajet que les liens de la barre de navigation : `scrollIntoView` et le
-    `scroll-margin-top` des sections. Le décalage de 80px calculé à la main ici
-    faisait atterrir le pied de page ailleurs que la navbar sur la même ancre.
+    `scroll-margin-top` des sections. Hors de l'accueil (CV, Bio), la section
+    n'existe pas : la cible passe par `scrollToSection`, que la navbar consomme
+    une fois revenue sur « / ». Sans ce relais, les liens ne faisaient rien.
   */
   const defilerVersSection = (id: string) => {
+    if (pathname !== "/") {
+      sessionStorage.setItem("scrollToSection", id)
+      navigate("/")
+      return
+    }
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   }
 
   return (
     /*
-      Le pied de page est un îlot détaché : marges latérales, coins arrondis et
-      même flou que la barre de navigation, pour que les deux extrémités du site
-      se répondent. L'élément `footer` ne porte que l'espacement — la surface
-      flottante est le bloc intérieur, sinon le flou s'appliquerait à toute la
-      largeur de la page.
+      Un pied de page classique, sur toute la largeur et fermé par un filet : il
+      termine la page au lieu de flotter dessus comme une carte de plus. Le fond
+      opaque arrête la trame animée, qui s'arrête ainsi là où le contenu s'arrête.
     */
-    <footer className="px-3 sm:px-4 pt-8 pb-4">
-      <motion.div
-        className="surface-flottante max-w-6xl mx-auto rounded-2xl px-6 py-10 sm:px-10 sm:py-12 relative overflow-hidden"
-        initial="hidden"
-        whileInView="visible"
-        viewport={VIEWPORT}
-        variants={staggerContainer}
-      >
-        {/* Bandeau d'identité, centré et posé au-dessus des colonnes */}
-        <motion.div className="flex flex-col items-center text-center mb-12" variants={fadeInUp}>
+    <motion.footer
+      className="mt-16 border-t border-border/60 bg-background px-6 lg:px-12"
+      initial="hidden"
+      whileInView="visible"
+      viewport={VIEWPORT}
+      variants={fadeIn}
+    >
+      <div className="max-w-6xl mx-auto py-12 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        {/* Identité et réseaux */}
+        <div>
           <button
-            className="flex flex-col items-center"
-            onClick={() => defilerVersSection('accueil')}
-            aria-label="Retour en haut de la page"
+            onClick={() => defilerVersSection("accueil")}
+            className="font-display text-xl font-semibold text-foreground tracking-tight leading-none hover:text-accent-texte transition-colors"
+            aria-label="Retour en haut de la page d'accueil"
           >
-            <span className="font-display text-xl font-semibold text-foreground tracking-tight leading-none">Kimiya</span>
+            Kimiya
           </button>
-          <p className="text-muted-foreground text-sm/relaxed max-w-sm mt-4">
-            {enPosteDeNuit()
-              ? "Technicien Informatique la nuit, Product Builder le jour."
-              : "Technicien Informatique le jour, Product Builder la nuit."}{" "}
-            Réseau, code &amp; créativité.
+          <p className="mt-3 max-w-xs text-sm/relaxed text-muted-foreground">
+            Technicien informatique et développeur fullstack.
           </p>
-        </motion.div>
 
-        <div className="grid grid-cols-3 gap-x-6 gap-y-10 mb-10 text-center">
-          {/* Colonne Navigation */}
-          <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Navigation</h4>
-            <nav className="flex flex-col items-center gap-2.5">
-              {[
-                { id: 'apropos', label: 'À propos', icon: User },
-                { id: 'stack',   label: 'Stack',    icon: Layers },
-                { id: 'projets', label: 'Projets',  icon: FolderOpen },
-                { id: 'contact', label: 'Contact',  icon: Mail },
-              ].map(({ id, label, icon: Icone }) => (
-                <button
-                  key={id}
-                  onClick={() => defilerVersSection(id)}
-                  className="text-muted-foreground hover:text-accent-texte transition-colors text-sm group flex items-center gap-2"
-                >
-                  <Icone className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                  {label}
-                </button>
-              ))}
-            </nav>
-          </motion.div>
-
-          {/* Colonne Pages */}
-          <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Pages</h4>
-            <nav className="flex flex-col items-center gap-2.5">
-              {[
-                { to: '/cv',           label: 'CV',              icon: FileText },
-                { to: '/bio',          label: 'Bio',             icon: BookOpen },
-                { to: '/legal-notice', label: 'Mentions légales', icon: Scale },
-              ].map(({ to, label, icon: Icone }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className="text-muted-foreground hover:text-accent-texte transition-colors text-sm group flex items-center gap-2"
-                >
-                  <Icone className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                  {label}
-                </Link>
-              ))}
-            </nav>
-          </motion.div>
-
-          {/* Colonne Réseaux Sociaux */}
-          <motion.div className="space-y-4" variants={fadeInUp}>
-            <h4 className="font-mono text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">Réseaux</h4>
-            {/* `flex-wrap` : à quatre, les pastilles ne tiennent plus sur une
-                seule ligne dans un tiers de la largeur mobile. */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {RESEAUX.map(({ id, label, icon: Icone }) => (
-                <Button
-                  key={id}
-                  variant="outline"
-                  size="icon"
-                  aria-label={label}
-                  onClick={() => setReseauOuvert(id)}
-                >
-                  <Icone className="size-5" />
-                </Button>
-              ))}
-            </div>
-          </motion.div>
+          <div className="mt-6 flex items-center gap-2">
+            {RESEAUX.map(({ id, label, icon: Icone }) => (
+              <Button
+                key={id}
+                variant="outline"
+                size="icon"
+                aria-label={label}
+                onClick={() => setReseauOuvert(id)}
+              >
+                <Icone className="size-5" />
+              </Button>
+            ))}
+          </div>
         </div>
 
-        {/* Barre du bas */}
-        <motion.div
-          className="pt-5 border-t border-border/60 flex flex-col items-center gap-3"
-          variants={fadeInUp}
-        >
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-            <span className="font-mono tabular-nums opacity-70">© 2015-{anneeCourante}</span>
-            <span className="text-foreground font-medium tracking-tight">Kimiya</span>
-            <span className="opacity-70">• Tous droits réservés</span>
-          </div>
-        </motion.div>
-      </motion.div>
+        {/* Deux colonnes côte à côte même sur mobile : chacune ne tient que
+            quelques mots, les empiler allongeait le pied de page pour rien. */}
+        <div className="grid grid-cols-2 gap-10 md:contents">
+          <nav aria-label="Accueil">
+            <h2 className={intertitre}>Accueil</h2>
+            <ul className="mt-4 space-y-2.5">
+              {SECTIONS_ACCUEIL.map(({ id, label }) => (
+                <li key={id}>
+                  <button onClick={() => defilerVersSection(id)} className={lien}>
+                    {label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-      {/* Modales */}
+          <nav aria-label="Pages">
+            <h2 className={intertitre}>Pages</h2>
+            <ul className="mt-4 space-y-2.5">
+              {PAGES.map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    onMouseEnter={() => preloadRoute(to)}
+                    onFocus={() => preloadRoute(to)}
+                    className={lien}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto py-5 border-t border-border/60 text-xs text-muted-foreground">
+        <span className="font-mono tabular-nums">© 2015–{anneeCourante}</span> Kimiya · Tous droits réservés
+      </div>
+
       <GitHubFooterModal isOpen={reseauOuvert === "github"} onClose={fermerModale} />
       <LinkedInFooterModal isOpen={reseauOuvert === "linkedin"} onClose={fermerModale} />
       <YouTubeFooterModal isOpen={reseauOuvert === "youtube"} onClose={fermerModale} />
       <TwitchFooterModal isOpen={reseauOuvert === "twitch"} onClose={fermerModale} />
-    </footer>
+    </motion.footer>
   )
 }

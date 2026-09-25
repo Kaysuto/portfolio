@@ -72,26 +72,26 @@ const surAxe = (emploi: EmploiDuTemps, minutes: number) =>
 const PARC = {
   role: "Technicien Informatique Polyvalent",
   lieu: "Magna Engineered Glass Europe",
-  texte: "Un métier où la réussite se mesure aux journées pendant lesquelles personne n'appelle.",
-  mots: ["Parc", "Réseau", "Support", "Infra interne"],
+  texte: "Entre le support aux utilisateurs et l'amélioration des applications internes, je passe sans arrêt du téléphone à l'éditeur.",
+  mots: ["Support", "Applis internes", "Parc", "Réseau", "Infra interne"],
   filet: "bg-ardoise/70",
   teinte: "text-ardoise",
   bordureActive: "border-ardoise/55",
   bordureSurvol: "hover:border-ardoise/45",
-  etat: "je suis quelque part entre un switch et un poste à remonter",
+  etat: "je suis sûrement entre un appel de support et une appli interne à améliorer",
 }
 
 const ATELIER = {
   role: "Product Builder",
   lieu: "Projets personnels",
   texte:
-    "Le moment où je décide de tout : la maquette, le code, la mise en ligne. Personne à qui déléguer, donc rien à survoler.",
-  mots: ["Design", "Front", "Back", "Déploiement", "IA"],
+    "Mes projets à moi, de l'idée jusqu'au site en ligne. Ici, pas de ticket ni de validation : je fais tout, du design au serveur.",
+  mots: ["Design", "Front", "Back", "Déploiement"],
   filet: "bg-accent",
   teinte: "text-accent-texte",
   bordureActive: "border-accent/55",
   bordureSurvol: "hover:border-accent/45",
-  etat: "l'atelier est ouvert",
+  etat: "je travaille sur mes projets",
 }
 
 /** Jusqu'au 13 septembre 2026 : parc le jour, atelier le soir. */
@@ -215,24 +215,24 @@ const POSTE_DE_NUIT: EmploiDuTemps = {
  */
 const REGLES = [
   {
-    titre: "Ça doit tenir sans moi",
+    titre: "Je pars de l'utilisateur",
     texte:
-      "Sauvegardes, journaux, reprise après incident. Un service qu'il faut relancer à la main n'est pas fini.",
+      "Avant d'écrire une ligne, je regarde comment les gens se servent vraiment de l'outil. Le support m'a appris que le problème n'est presque jamais celui qu'on me décrit.",
   },
   {
-    titre: "J'ai décroché le téléphone",
+    titre: "Simple, mais qui marche",
     texte:
-      "Une interface mal fichue produit toujours la même chose : un appel. J'en ai pris assez pour savoir lesquels un meilleur écran aurait évités.",
+      "Je préfère livrer une petite version qui tient debout qu'une grosse qui reste en chantier. Les ajouts viennent après, pas avant.",
   },
   {
-    titre: "Fini veut dire en ligne",
+    titre: "Une panne, je veux la voir avant vous",
     texte:
-      "Nom de domaine, mise en production, mises à jour. Un projet qui ne tourne que sur ma machine est une maquette.",
+      "Logs, sauvegardes, alertes. Si j'apprends qu'un service est tombé parce qu'on m'appelle, c'est que j'ai mal fait mon travail.",
   },
   {
-    titre: "L'IA écrit vite, je relis lentement",
+    titre: "L'IA m'aide, c'est moi qui signe",
     texte:
-      "Copilote, jamais pilote. Ce qui part en production, je dois pouvoir l'expliquer ligne à ligne.",
+      "Je m'en sers tous les jours pour aller plus vite. Mais ce qui part en production, je l'ai relu et je sais l'expliquer.",
   },
 ]
 
@@ -367,7 +367,7 @@ export function AboutSection() {
         <SectionHeading
           index="01"
           title={<>À propos de <span className="text-accent-texte">moi</span></>}
-          lead="Chaque brique vient d'un endroit précis. L'électrotechnique m'a donné les objets connectés, le titre d'assistant web marketing le référencement et l'animation de communauté, l'exploitation en datacenter les systèmes et les réseaux. Le développement fullstack est le seul que personne ne m'a enseigné."
+          lead="Chaque compétence a son histoire. Mon bac pro d'électrotechnique m'a mené aux objets connectés, mon titre d'assistant web marketing au référencement et à l'animation de communauté, et le datacenter m'a appris les systèmes et les réseaux. Le développement fullstack, lui, je l'ai appris seul."
         />
 
         {/* La journée : la frise donne le rythme, les panneaux donnent le fond */}

@@ -61,7 +61,7 @@ export function PortfolioApp() {
             "@type": "Person",
             "name": "Kimiya",
             "jobTitle": "Technicien Informatique & Product Builder",
-            "description": `Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe ${enPosteDeNuit() ? "la nuit, Product Builder le jour" : "le jour, Product Builder la nuit"}. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et onze ans de développement fullstack en autodidacte.`,
+            "description": `Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe ${enPosteDeNuit() ? "la nuit, Product Builder le jour" : "le jour, Product Builder la nuit"}. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.`,
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",

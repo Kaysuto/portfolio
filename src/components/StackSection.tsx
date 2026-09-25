@@ -65,7 +65,7 @@ export function StackSection() {
         <SectionHeading
           index="02"
           title={<>Ma <span className="text-accent-texte">stack</span></>}
-          lead="Une liste de logos ne dit rien de la façon dont on construit. Voici la mienne rangée par profondeur : de l'interface que vous touchez au socle qui la porte."
+          lead="Aligner des logos ne dit pas grand-chose de ma façon de travailler. Alors je les ai rangés par profondeur, de l'interface que vous utilisez jusqu'aux serveurs qui la font tourner."
           className="mb-8"
         />
 
@@ -144,8 +144,8 @@ export function StackSection() {
 
           <p className="mt-10 max-w-2xl text-center text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
             <Layers className="inline size-4 mr-2 -mt-1 text-accent-texte" aria-hidden="true" />
-            Je choisis rarement une couche sans comprendre celle d'en dessous : les couches basses,
-            je les ai apprises en premier, et sur du matériel qui tombait vraiment en panne.
+            J'aime comprendre la couche du dessous avant de choisir celle du dessus. Les serveurs,
+            je ne les connais pas que dans le cloud : j'en ai installé et réparé de mes mains.
           </p>
         </motion.div>
 
