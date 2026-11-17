@@ -12,7 +12,10 @@ import {
   CheckCircle2,
   Globe,
   Layout as LayoutIcon,
-  Database,
+  Cloud,
+  Server,
+  Terminal,
+  Code,
   ShieldCheck,
   KeyRound,
   Palette,
@@ -37,7 +40,7 @@ const EXPERIENCES = [
   {
     company: "Magna Engineered Glass Europe",
     role: "Technicien Informatique Polyvalent Junior",
-    period: "2026 - Présent",
+    period: "Mai 2026 - Présent",
     missions: [
       "Gestion du parc informatique",
       "Support utilisateurs",
@@ -101,10 +104,14 @@ const EXPERIENCES = [
 ];
 
 const COMPETENCES = [
-  { category: "Systèmes", items: ["Windows", "MacOS", "Linux", "Cloud (AWS, Azure)"], icon: Globe },
-  { category: "Réseaux", items: ["Administration serveurs", "Sécurité", "Architecture"], icon: Database },
+  { category: "Systèmes", items: ["Windows (Active Directory)", "Linux (Debian/Ubuntu/Arch)", "MacOS"], icon: Globe },
+  { category: "Réseaux & Sécurité", items: ["TCP/IP", "SSH", "VPN", "Architecture Zero Trust"], icon: ShieldCheck },
+  { category: "Cloud & Virtualisation", items: ["Proxmox", "Hyper-V", "VMware", "Docker", "Notions AWS, Azure, GCP"], icon: Cloud },
+  { category: "Datacenter", items: ["Installation rack", "Câblage", "Maintenance", "Stocks & ticketing"], icon: Server },
+  { category: "Vibecoding", items: ["Scripting (Bash/Python)", "Git", "Automatisation & debug"], icon: Terminal },
+  { category: "Développement", items: ["React", "TypeScript", "Next.js", "Node.js", "Python", "SQL (MySQL)", "Redis"], icon: Code },
   { category: "Web Marketing", items: ["SEO/SEA", "Analytics", "Réseaux sociaux"], icon: LayoutIcon },
-  { category: "Outils", items: ["Bases de données SQL", "Gestion de projet", "Montage vidéo"], icon: Wrench }
+  { category: "Outils", items: ["Suite Adobe", "Gestion de projet", "Montage vidéo"], icon: Wrench }
 ];
 
 const OUTILS: Outil[] = [
@@ -209,7 +216,7 @@ const CVPage: React.FC = () => {
                   </li>
                   <li className="flex items-center gap-2">
                     <MapPin className="size-4 text-accent-texte" aria-hidden="true" />
-                    <span>France</span>
+                    <span>Haute-Marne, France</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Car className="size-4 text-accent-texte" aria-hidden="true" />
@@ -267,7 +274,7 @@ const CVPage: React.FC = () => {
                   variants={fadeInUp}
                   className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 first:pt-0 last:pb-0"
                 >
-                  <span className="flex items-center gap-2.5 sm:w-48 shrink-0">
+                  <span className="flex items-center gap-2.5 sm:w-56 shrink-0">
                     <Icone className="size-4 text-accent-texte" aria-hidden="true" />
                     <span className="text-base font-medium text-foreground">{category}</span>
                   </span>

@@ -46,7 +46,7 @@ export default function MentionsLegales() {
                 <div className="bg-card rounded-lg ring-1 ring-foreground/10 p-6 space-y-5">
                   <div>
                     <p className="text-base font-medium">Kimiya</p>
-                    <p className="text-sm text-muted-foreground">Entrepreneur individuel</p>
+                    <p className="text-sm text-muted-foreground">Entrepreneur individuel (micro-entreprise)</p>
                   </div>
                   <div className="space-y-1 pt-4 border-t border-border/50">
                     <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-texte/70">Identifiants</p>

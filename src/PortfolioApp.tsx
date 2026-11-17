@@ -65,7 +65,7 @@ export function PortfolioApp() {
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",
-              "https://linkedin.com/in/kimiya-kaysuto"
+              "https://www.linkedin.com/in/enzo-lauret/"
             ],
             "knowsAbout": ["React", "TypeScript", "Node.js", "Redis", "MySQL", "Docker", "Réseau", "Systèmes", "IoT", "SEO", "Community Management", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"],
             "worksFor": {
