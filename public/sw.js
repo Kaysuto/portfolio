@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kimiya-portfolio-v1.9';
-const STATIC_CACHE = 'static-v1.9';
+const CACHE_NAME = 'kimiya-portfolio-v2.0';
+const STATIC_CACHE = 'static-v2.0';
 
 const STATIC_ASSETS = [
   '/',

@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Source de public/og-image.jpg : capture 1200×630 de cette page (agent-browser), puis conversion en JPEG avec sharp. -->
+<html lang="fr">
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Geist; src: url(../../public/fonts/Geist-Variable.woff2); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url(../../public/fonts/GeistMono-Variable.woff2); font-weight: 100 900; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative; background: #100E0C; color: #F1EEEA; font-family: Geist, sans-serif;
+    background-image:
+      radial-gradient(60% 80% at 82% 100%, rgba(180,148,130,.28), transparent 70%),
+      linear-gradient(rgba(241,238,234,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(241,238,234,.05) 1px, transparent 1px);
+    background-size: auto, 48px 48px, 48px 48px;
+  }
+  .texte { position: absolute; left: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+  .site { font-family: "Geist Mono", monospace; font-size: 22px; letter-spacing: .2em; text-transform: uppercase; color: #B49482; display: flex; align-items: center; gap: 14px; }
+  .site::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #B49482; }
+  h1 { margin-top: 24px; font-size: 150px; font-weight: 600; line-height: .95; letter-spacing: -.045em; }
+  .role { margin-top: 20px; font-size: 40px; color: rgba(241,238,234,.72); letter-spacing: -.01em; }
+  ul { margin-top: 40px; display: flex; gap: 12px; list-style: none; padding: 0; }
+  li { border: 1px solid rgba(241,238,234,.16); border-radius: 999px; padding: 10px 20px; font-size: 22px; color: rgba(241,238,234,.8); background: rgba(241,238,234,.04); }
+  img { position: absolute; right: 40px; bottom: 0; height: 600px; }
+</style>
+<body>
+  <div class="texte">
+    <p class="site">Portfolio · kaysuto.fr</p>
+    <h1>Kimiya</h1>
+    <p class="role">Informaticien polyvalent</p>
+    <ul><li>Sites web</li><li>Serveurs</li><li>Réseaux</li><li>Sécurité</li></ul>
+  </div>
+  <img src="../../public/personnage/kimiya-portrait.webp" alt="">
+</body>
+</html>
