@@ -2,29 +2,31 @@ import { useState, useEffect, useCallback } from "react"
 import { motion, useScroll, useSpring } from "framer-motion"
 import { User, Layers, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
 import { ThemeController } from "./ThemeController"
+import { LangueController } from "./LangueController"
+import { useLangue, type Bilingue } from "@/lib/langue"
 import { cn } from "@/lib/utils"
 import { useNavigate, useLocation } from "react-router-dom"
 import { preloadRoute } from "@/routes/lazyRoutes"
 
 const LUMA_EASE = [0.22, 1, 0.36, 1] as const
 
-type NavLink = { href: string; id: string; label: string; icon: React.ElementType }
+type NavLink = { href: string; id: string; label: Bilingue; icon: React.ElementType }
 
 const LIENS_DEFILEMENT: NavLink[] = [
-  { href: "#apropos", id: "apropos", label: "À propos", icon: User },
-  { href: "#stack", id: "stack", label: "Stack", icon: Layers },
-  { href: "#projets", id: "projets", label: "Projets", icon: FolderOpen },
-  { href: "#contact", id: "contact", label: "Contact", icon: Mail },
+  { href: "#apropos", id: "apropos", label: { fr: "À propos", en: "About" }, icon: User },
+  { href: "#stack", id: "stack", label: { fr: "Stack", en: "Stack" }, icon: Layers },
+  { href: "#projets", id: "projets", label: { fr: "Projets", en: "Projects" }, icon: FolderOpen },
+  { href: "#contact", id: "contact", label: { fr: "Contact", en: "Contact" }, icon: Mail },
 ]
 
 const LIENS_ROUTES: NavLink[] = [
-  { href: "/cv", id: "cv", label: "CV", icon: FileText },
-  { href: "/bio", id: "bio", label: "Bio", icon: BookOpen },
+  { href: "/cv", id: "cv", label: { fr: "CV", en: "Resume" }, icon: FileText },
+  { href: "/bio", id: "bio", label: { fr: "Bio", en: "Bio" }, icon: BookOpen },
 ]
 
 /**
- * La barre d'onglets mobile reste à six colonnes : « Stack » y aurait fait une
- * septième cellule de 45 px où plus aucun libellé ne tient. La section garde sa
+ * La barre d'onglets mobile n'a pas de « Stack » : avec la langue et le thème,
+ * il aurait fait une huitième cellule où plus aucun libellé ne tient. La section garde sa
  * place dans l'espion de défilement et dans la barre desktop, et le pied de
  * page en donne le raccourci.
  */
@@ -42,6 +44,7 @@ function LienNav({
   onClic: (lien: NavLink) => void
   onSurvol: (lien: NavLink) => void
 }) {
+  const { l } = useLangue()
   return (
     <button
       onClick={() => onClic(lien)}
@@ -63,12 +66,13 @@ function LienNav({
           transition={{ type: "spring", stiffness: 400, damping: 34 }}
         />
       )}
-      <span className="relative z-10">{lien.label}</span>
+      <span className="relative z-10">{l(lien.label)}</span>
     </button>
   )
 }
 
 export function Navbar() {
+  const { l, t } = useLangue()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -192,7 +196,7 @@ export function Navbar() {
               leur propre URL. Les mêler dans une liste unique laissait croire
               que « CV » et « Bio » étaient des sections de la page d'accueil.
             */}
-            <ul className="flex items-center gap-0.5" aria-label="Sections de l'accueil">
+            <ul className="flex items-center gap-0.5" aria-label={t("Sections de l'accueil", "Home sections")}>
               {LIENS_DEFILEMENT.map(lien => (
                 <li key={lien.id}>
                   <LienNav
@@ -228,7 +232,8 @@ export function Navbar() {
               aria-hidden="true"
             />
 
-            <div className="shrink-0">
+            <div className="flex shrink-0 items-center">
+              <LangueController />
               <ThemeController />
             </div>
           </nav>
@@ -237,7 +242,7 @@ export function Navbar() {
 
       {/*
         ══ Mobile : barre d'onglets flottante ══
-        Six colonnes de largeur égale et libellés toujours visibles : n'afficher
+        Sept colonnes de largeur égale et libellés toujours visibles : n'afficher
         le libellé que sur l'onglet actif faisait sauter la largeur des voisins à
         chaque défilement.
 
@@ -252,7 +257,7 @@ export function Navbar() {
         transition={{ duration: 0.4, ease: LUMA_EASE, delay: 0.1 }}
         className="fixed inset-x-3 z-40 md:hidden rounded-xl surface-flottante overflow-hidden"
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
-        aria-label="Navigation principale"
+        aria-label={t("Navigation principale", "Main navigation")}
       >
         {/* Progression de lecture, filante sur l'arête haute de la barre */}
         <motion.div
@@ -261,7 +266,7 @@ export function Navbar() {
           aria-hidden="true"
         />
 
-        <ul className="grid grid-cols-6">
+        <ul className="grid grid-cols-7">
           {LIENS_MOBILE.map((lien) => {
             const Icone = lien.icon
             const estActif = idActif === lien.id
@@ -293,14 +298,17 @@ export function Navbar() {
                       estActif ? "text-accent-texte font-medium" : "text-muted-foreground font-normal"
                     )}
                   >
-                    {lien.label}
+                    {l(lien.label)}
                   </span>
                 </button>
               </li>
             )
           })}
 
-          {/* Sixième colonne : bascule de thème, au gabarit des onglets */}
+          {/* Deux dernières colonnes : langue et thème, au gabarit des onglets */}
+          <li>
+            <LangueController variante="onglet" />
+          </li>
           <li>
             <ThemeController variante="onglet" />
           </li>

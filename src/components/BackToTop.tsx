@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { ArrowUp } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { useLangue } from "@/lib/langue"
 
 /**
  * Bouton flottant « retour en haut » — apparaît après défilement.
@@ -10,6 +11,7 @@ import { cn } from "@/lib/utils"
 export function BackToTop() {
   const [estVisible, setEstVisible] = useState(false)
   const mouvementReduit = useReducedMotion()
+  const { t } = useLangue()
 
   useEffect(() => {
     const surDefilement = () => setEstVisible(window.scrollY > 600)
@@ -28,7 +30,7 @@ export function BackToTop() {
         <motion.button
           type="button"
           onClick={defilerVersHaut}
-          aria-label="Retour en haut de la page"
+          aria-label={t("Retour en haut de la page", "Back to top")}
           initial={{ opacity: 0, scale: 0.8, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 12 }}

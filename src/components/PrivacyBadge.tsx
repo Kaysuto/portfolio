@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Cookie, X, Settings, Check, ChevronRight, Lock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { useLangue } from '@/lib/langue'
 
 export function PrivacyBadge() {
   const { consent, choices, acceptAll, rejectAll, saveChoices, dismissCookies, isLoaded } = useCookieConsent()
@@ -12,6 +13,7 @@ export function PrivacyBadge() {
   const [vue, setVue] = useState<'summary' | 'manage'>('summary')
   const [choixTemporaires, setChoixTemporaires] = useState<CookieChoices>(choices)
   const [estEnregistre, setEstEnregistre] = useState(false)
+  const { t } = useLangue()
 
   if (!isLoaded) return null
 
@@ -74,13 +76,16 @@ export function PrivacyBadge() {
                     </div>
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-base font-medium text-foreground tracking-tight">Confidentialité</h3>
-                        <button onClick={gererFermeture} className="grid place-items-center size-7 hover:bg-muted rounded-sm transition-colors text-muted-foreground" aria-label="Fermer">
+                        <h3 className="text-base font-medium text-foreground tracking-tight">{t("Confidentialité", "Privacy")}</h3>
+                        <button onClick={gererFermeture} className="grid place-items-center size-7 hover:bg-muted rounded-sm transition-colors text-muted-foreground" aria-label={t("Fermer", "Close")}>
                           <X className="size-4" />
                         </button>
                       </div>
                       <p className="text-sm/relaxed text-muted-foreground">
-                        Nous utilisons des cookies pour optimiser votre expérience. Personnalisez vos choix ci-dessous.
+                        {t(
+                          "Nous utilisons des cookies pour optimiser votre expérience. Personnalisez vos choix ci-dessous.",
+                          "We use cookies to improve your experience. Customize your choices below."
+                        )}
                       </p>
                     </div>
                   </div>
@@ -97,7 +102,7 @@ export function PrivacyBadge() {
                             : ""
                         )}
                       >
-                        {consent === 'accepted' ? (<><Check /> Accepté</>) : "Accepter tout"}
+                        {consent === 'accepted' ? (<><Check /> {t("Accepté", "Accepted")}</>) : t("Accepter tout", "Accept all")}
                       </Button>
                       <Button
                         onClick={gererRefusTotal}
@@ -108,7 +113,7 @@ export function PrivacyBadge() {
                           consent === 'rejected' && "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/10 cursor-default"
                         )}
                       >
-                        {consent === 'rejected' ? (<><X /> Refusé</>) : "Refuser"}
+                        {consent === 'rejected' ? (<><X /> {t("Refusé", "Declined")}</>) : t("Refuser", "Decline")}
                       </Button>
                     </div>
                     <Button
@@ -120,7 +125,7 @@ export function PrivacyBadge() {
                       className="w-full text-muted-foreground hover:text-foreground group"
                     >
                       <Settings className="group-hover:rotate-45 transition-transform" />
-                      Gérer mes préférences
+                      {t("Gérer mes préférences", "Manage my preferences")}
                       <ChevronRight />
                     </Button>
                   </div>
@@ -136,17 +141,17 @@ export function PrivacyBadge() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-medium text-foreground flex items-center gap-2">
                       <Settings className="size-5 text-accent-texte" />
-                      Préférences cookies
+                      {t("Préférences cookies", "Cookie preferences")}
                     </h3>
-                    <button onClick={() => setVue('summary')} className="text-sm font-medium text-accent-texte hover:underline">Retour</button>
+                    <button onClick={() => setVue('summary')} className="text-sm font-medium text-accent-texte hover:underline">{t("Retour", "Back")}</button>
                   </div>
 
                   <div className="space-y-2">
                     {/* Interrupteurs granulaires */}
                     {[
-                      { key: 'essential', label: 'Essentiels', desc: 'Nécessaires au fonctionnement du site.', icon: Lock, required: true },
-                      { key: 'preferences', label: 'Personnalisation', desc: 'Mémorise vos thèmes et réglages.', icon: Settings },
-                      { key: 'analytics', label: 'Analytiques', desc: 'Améliore le site via des mesures anonymes.', icon: Check }
+                      { key: 'essential', label: t('Essentiels', 'Essential'), desc: t('Nécessaires au fonctionnement du site.', 'Required for the site to work.'), icon: Lock, required: true },
+                      { key: 'preferences', label: t('Personnalisation', 'Personalization'), desc: t('Mémorise vos thèmes et réglages.', 'Remembers your theme and settings.'), icon: Settings },
+                      { key: 'analytics', label: t('Analytiques', 'Analytics'), desc: t('Améliore le site via des mesures anonymes.', 'Helps improve the site through anonymous metrics.'), icon: Check }
                     ].map((element) => (
                       <div
                         key={element.key}
@@ -189,9 +194,9 @@ export function PrivacyBadge() {
                     {estEnregistre ? (
                       <>
                         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check className="size-4" /></motion.div>
-                        Choix enregistrés !
+                        {t("Choix enregistrés !", "Choices saved!")}
                       </>
-                    ) : 'Enregistrer ma sélection'}
+                    ) : t('Enregistrer ma sélection', 'Save my selection')}
                   </Button>
                 </motion.div>
               )}
@@ -207,7 +212,7 @@ export function PrivacyBadge() {
           whileTap={{ scale: 0.9 }}
           onClick={() => setEstDeploye(true)}
           className="surface-flottante fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.75rem)] md:bottom-4 left-4 size-12 rounded-md z-[100] flex items-center justify-center text-accent-texte hover:text-foreground transition-colors group"
-          aria-label="Préférences de confidentialité"
+          aria-label={t("Préférences de confidentialité", "Privacy preferences")}
         >
           <Cookie className="size-5 group-hover:rotate-12 transition-transform" />
         </motion.button>

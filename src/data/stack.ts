@@ -1,18 +1,20 @@
+import type { Bilingue } from "@/lib/langue"
+
 export type Tech = { name: string; slug: string; url: string; iconUrl?: string }
 
 export type Strate = {
   id: string
   /** Repère de profondeur affiché dans la marge (« L1 »). */
   niveau: string
-  title: string
+  title: Bilingue
   /**
    * Formule courte de ce que la couche fait. Les strates s'en passent — leur
    * titre et leur résumé suffisent — ; seul l'atelier s'en sert, comme
    * intertitre.
    */
-  role?: string
+  role?: Bilingue
   /** Une ligne de contexte, dépliée au survol de la strate. */
-  resume: string
+  resume: Bilingue
   techs: Tech[]
 }
 
@@ -26,9 +28,11 @@ export const STRATES: Strate[] = [
   {
     id: "interface",
     niveau: "L1",
-    title: "Frontend & Design",
-    resume:
-      "Ce que vous voyez : des composants typés, des animations sobres et un design system qui vieillit bien.",
+    title: { fr: "Frontend & Design", en: "Frontend & Design" },
+    resume: {
+      fr: "Ce que vous voyez : des composants typés, des animations sobres et un design system qui vieillit bien.",
+      en: "What you see: typed components, restrained animations and a design system that ages well.",
+    },
     techs: [
       { name: "React", slug: "react", url: "https://react.dev" },
       { name: "TypeScript", slug: "typescript", url: "https://www.typescriptlang.org" },
@@ -42,9 +46,11 @@ export const STRATES: Strate[] = [
   {
     id: "services",
     niveau: "L2",
-    title: "Backend & Cloud",
-    resume:
-      "Ce qui se passe en coulisses : données, comptes, cache, recherche et temps réel, hébergés au plus près des utilisateurs.",
+    title: { fr: "Backend & Cloud", en: "Backend & Cloud" },
+    resume: {
+      fr: "Ce qui se passe en coulisses : données, comptes, cache, recherche et temps réel, hébergés au plus près des utilisateurs.",
+      en: "What happens behind the scenes: data, accounts, caching, search and real time, hosted close to the users.",
+    },
     techs: [
       { name: "Node.js", slug: "nodedotjs", url: "https://nodejs.org" },
       { name: "Python", slug: "python", url: "https://www.python.org" },
@@ -53,7 +59,7 @@ export const STRATES: Strate[] = [
       { name: "Supabase", slug: "supabase", url: "https://supabase.com/", iconUrl: "https://i.imgur.com/xEZuSit.png" },
       { name: "Vercel", slug: "vercel", url: "https://vercel.com" },
       { name: "Cloudflare", slug: "cloudflare", url: "https://www.cloudflare.com" },
-      { name: "Infomaniak", slug: "infomaniak", url: "https://www.infomaniak.com", iconUrl: "https://i.imgur.com/v6v6v6v.png" },
+      { name: "Infomaniak", slug: "infomaniak", url: "https://www.infomaniak.com" },
       { name: "Brevo", slug: "brevo", url: "https://www.brevo.com" },
       { name: "MySQL", slug: "mysql", url: "https://www.mysql.com" },
       { name: "Redis", slug: "redis", url: "https://redis.io" },
@@ -65,9 +71,11 @@ export const STRATES: Strate[] = [
   {
     id: "socle",
     niveau: "L3",
-    title: "Infrastructure & DevOps",
-    resume:
-      "Ce que j'ai appris en datacenter : hyperviseurs, conteneurs, reverse proxies et sécurisation des serveurs.",
+    title: { fr: "Infrastructure & DevOps", en: "Infrastructure & DevOps" },
+    resume: {
+      fr: "Ce que j'ai appris en datacenter : hyperviseurs, conteneurs, reverse proxies et sécurisation des serveurs.",
+      en: "What I learned in the data center: hypervisors, containers, reverse proxies and server hardening.",
+    },
     techs: [
       { name: "Linux", slug: "linux", url: "https://www.linux.org" },
       { name: "Docker", slug: "docker", url: "https://www.docker.com" },
@@ -92,10 +100,12 @@ export const STRATES: Strate[] = [
  */
 export const ATELIER: Omit<Strate, "niveau"> = {
   id: "atelier",
-  title: "Outils & Productivité",
-  role: "Ce que j'ai sous la main",
-  resume:
-    "Mes outils de tous les jours : éditeurs, gestion de versions, agents IA, prise de notes, modélisation 3D et petits raccourcis.",
+  title: { fr: "Outils & Productivité", en: "Tools & Productivity" },
+  role: { fr: "Ce que j'ai sous la main", en: "What I keep at hand" },
+  resume: {
+    fr: "Mes outils de tous les jours : éditeurs, gestion de versions, agents IA, prise de notes, modélisation 3D et petits raccourcis.",
+    en: "My everyday tools: editors, version control, AI agents, note-taking, 3D modeling and handy little shortcuts.",
+  },
   techs: [
     { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
     { name: "JetBrains", slug: "jetbrains", url: "https://www.jetbrains.com" },

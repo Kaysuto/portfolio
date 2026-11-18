@@ -433,34 +433,36 @@
   }
 }
 
+/* Changement de langue : l'ancienne page s'efface en se floutant légèrement,
+   la nouvelle apparaît en se précisant. Limité à cette transition grâce au
+   marqueur posé par `setLangue` sur <html>. */
+html[data-transition="langue"]::view-transition-old(root) {
+  animation: langue-sortie 200ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+html[data-transition="langue"]::view-transition-new(root) {
+  animation: langue-entree 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes langue-sortie {
+  to {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+@keyframes langue-entree {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
 /* Texte en contour seul : les numéros de section géants, en filigrane derrière
    les titres. Le trait prend la couleur des filets, il reste un décor. */
 .texte-contour {
   color: transparent;
   -webkit-text-stroke: 1px var(--border);
-}
-
-/* Défilement continu de la bande de technologies (section Stack). La liste est
-   doublée dans le DOM : à -50 %, la deuxième moitié a pris la place exacte de
-   la première, la boucle ne se voit pas. */
-@keyframes defilement-bande {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.bande-defilante {
-  animation: defilement-bande 60s linear infinite;
-}
-
-.bande:hover .bande-defilante {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bande-defilante {
-    animation: none;
-  }
 }
 
 /* Grain, en couche `fixed` sous le contenu (voir `Layout.tsx`). Un bruit

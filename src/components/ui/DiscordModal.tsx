@@ -1,4 +1,5 @@
 import { ExternalLinkModal } from "./ExternalLinkModal";
+import { useLangue } from "@/lib/langue";
 
 const URL_DISCORD = "https://discord.gg/4fk7jZvKKw";
 
@@ -21,13 +22,14 @@ interface DiscordModalProps {
 }
 
 export function DiscordModal({ isOpen, onClose }: DiscordModalProps) {
+  const { t } = useLangue();
   return (
     <ExternalLinkModal
       isOpen={isOpen}
       onClose={onClose}
       icon={<DiscordIcon className="size-6 text-accent-texte" />}
       title="Discord"
-      subtitle="Rejoignez ma communauté d'échange"
+      subtitle={t("Rejoignez ma communauté d'échange", "Join my community")}
       url={URL_DISCORD}
     />
   );

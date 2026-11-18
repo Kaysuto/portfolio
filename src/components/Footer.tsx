@@ -16,6 +16,7 @@ import {
   YouTubeFooterModal,
 } from "./ui/SocialModals"
 import { fadeIn, VIEWPORT } from "@/lib/animations"
+import { useLangue, type Bilingue } from "@/lib/langue"
 
 /**
  * Aucun réseau n'ouvre son lien directement : chacun passe par l'interstitiel
@@ -30,23 +31,24 @@ const RESEAUX = [
 
 type IdReseau = (typeof RESEAUX)[number]["id"]
 
-const SECTIONS_ACCUEIL = [
-  { id: "apropos", label: "À propos" },
-  { id: "stack", label: "Stack" },
-  { id: "projets", label: "Projets" },
-  { id: "contact", label: "Contact" },
+const SECTIONS_ACCUEIL: { id: string; label: Bilingue }[] = [
+  { id: "apropos", label: { fr: "À propos", en: "About" } },
+  { id: "stack", label: { fr: "Stack", en: "Stack" } },
+  { id: "projets", label: { fr: "Projets", en: "Projects" } },
+  { id: "contact", label: { fr: "Contact", en: "Contact" } },
 ]
 
-const PAGES = [
-  { to: "/cv", label: "CV" },
-  { to: "/bio", label: "Bio" },
-  { to: "/legal-notice", label: "Mentions légales" },
+const PAGES: { to: string; label: Bilingue }[] = [
+  { to: "/cv", label: { fr: "CV", en: "Resume" } },
+  { to: "/bio", label: { fr: "Bio", en: "Bio" } },
+  { to: "/legal-notice", label: { fr: "Mentions légales", en: "Legal notice" } },
 ]
 
 const intertitre = "font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
 const lien = "text-sm text-muted-foreground hover:text-foreground transition-colors"
 
 export function Footer() {
+  const { t, l } = useLangue()
   const anneeCourante = new Date().getFullYear()
   const [reseauOuvert, setReseauOuvert] = useState<IdReseau | null>(null)
   const fermerModale = () => setReseauOuvert(null)
@@ -86,12 +88,12 @@ export function Footer() {
           <button
             onClick={() => defilerVersSection("accueil")}
             className="font-display text-xl font-semibold text-foreground tracking-tight leading-none hover:text-accent-texte transition-colors"
-            aria-label="Retour en haut de la page d'accueil"
+            aria-label={t("Retour en haut de la page d'accueil", "Back to the top of the home page")}
           >
             Kimiya
           </button>
           <p className="mt-3 max-w-xs text-sm/relaxed text-muted-foreground">
-            Merci pour la visite, à bientôt !
+            {t("Merci pour la visite, à bientôt !", "Thanks for stopping by, see you soon!")}
           </p>
 
           <div className="mt-6 flex items-center gap-2">
@@ -113,13 +115,13 @@ export function Footer() {
         {/* Deux colonnes côte à côte même sur mobile : chacune ne tient que
             quelques mots, les empiler allongeait le pied de page pour rien. */}
         <div className="grid grid-cols-2 gap-10 md:contents">
-          <nav aria-label="Accueil">
-            <h2 className={intertitre}>Accueil</h2>
+          <nav aria-label={t("Accueil", "Home")}>
+            <h2 className={intertitre}>{t("Accueil", "Home")}</h2>
             <ul className="mt-4 space-y-2.5">
               {SECTIONS_ACCUEIL.map(({ id, label }) => (
                 <li key={id}>
                   <button onClick={() => defilerVersSection(id)} className={lien}>
-                    {label}
+                    {l(label)}
                   </button>
                 </li>
               ))}
@@ -137,7 +139,7 @@ export function Footer() {
                     onFocus={() => preloadRoute(to)}
                     className={lien}
                   >
-                    {label}
+                    {l(label)}
                   </Link>
                 </li>
               ))}
@@ -147,7 +149,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-6xl mx-auto py-5 border-t border-border/60 text-xs text-muted-foreground">
-        <span className="font-mono tabular-nums">© 2015–{anneeCourante}</span> Kimiya · Tous droits réservés
+        <span className="font-mono tabular-nums">© 2015–{anneeCourante}</span> Kimiya · {t("Tous droits réservés", "All rights reserved")}
       </div>
 
       <GitHubFooterModal isOpen={reseauOuvert === "github"} onClose={fermerModale} />

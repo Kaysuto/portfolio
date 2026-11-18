@@ -1,4 +1,5 @@
 import { ExternalLinkModal } from "./ExternalLinkModal";
+import { useLangue } from "@/lib/langue";
 
 interface TechModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface TechModalProps {
 }
 
 export function TechModal({ isOpen, onClose, techName, techUrl, techIcon, iconUrl }: TechModalProps) {
+  const { t } = useLangue();
   return (
     <ExternalLinkModal
       isOpen={isOpen}
@@ -23,10 +25,10 @@ export function TechModal({ isOpen, onClose, techName, techUrl, techIcon, iconUr
         />
       }
       title={techName}
-      subtitle="Visiter le site officiel"
+      subtitle={t("Visiter le site officiel", "Visit the official website")}
       url={techUrl}
-      actionLabel="Visiter"
-      linkLabel="Lien officiel :"
+      actionLabel={t("Visiter", "Visit")}
+      linkLabel={t("Lien officiel :", "Official link:")}
     />
   );
 }

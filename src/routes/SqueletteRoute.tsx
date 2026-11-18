@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton"
+import { useLangue } from "@/lib/langue"
 
 /**
  * Attente commune aux routes chargées à la demande (/cv, /bio, /legal-notice).
@@ -11,13 +12,14 @@ import { Skeleton } from "@/components/ui/skeleton"
  * réel s'y substitue sans décalage.
  */
 export function SqueletteRoute() {
+  const { t } = useLangue()
   return (
     <div
       className="min-h-screen relative flex flex-col"
       role="status"
       aria-live="polite"
     >
-      <span className="sr-only">Chargement de la page…</span>
+      <span className="sr-only">{t("Chargement de la page…", "Loading page…")}</span>
 
       <div className="flex-1 py-24 md:py-32 px-6 lg:px-12 relative z-10">
         <div className="mx-auto max-w-5xl">
