@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react"
-import { motion, useInView, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion"
+import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue, type Variants } from "framer-motion"
 import { ArrowRight, ArrowUpRight, FileText, MapPin } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
@@ -203,40 +203,174 @@ function salutation() {
  * Le mot d'accueil, dit par le personnage : une bulle qui apparaît une fois la
  * tuile posée, avec un léger rebond.
  */
-function Bienvenue() {
+function Bienvenue({ className }: { className?: string }) {
   const [bonjour] = useState(salutation)
   return (
     <motion.p
       initial={{ opacity: 0, y: 10, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", duration: 0.6, bounce: 0.3, delay: 1.1 }}
-      className="absolute left-4 top-4 z-10 max-w-[80%] origin-bottom-left rounded-2xl rounded-bl-sm border border-border bg-background/85 px-4 py-3 text-sm leading-snug text-foreground shadow-lg backdrop-blur-md md:left-5 md:top-5"
+      className={cn(
+        "absolute z-10 origin-bottom-left rounded-2xl rounded-bl-sm border border-border bg-background/85 px-4 py-3 text-sm leading-snug text-foreground shadow-lg backdrop-blur-md",
+        className
+      )}
     >
       <span className="font-semibold text-accent-texte">{bonjour} !</span> Bienvenue sur mon portfolio, bonne visite.
     </motion.p>
   )
 }
 
-/** Le personnage. Tant que son image manque, la tuile garde un monogramme plutôt qu'une image cassée. */
-function Personnage() {
-  const [absent, setAbsent] = useState(false)
+type Etoile = { x: number; y: number; taille: number; duree: string; delai: string }
+
+/**
+ * Les deux cadrages de la scène. Repères en % de l'image : lueur de la
+ * lanterne (centre et largeur), étoile filante (point de départ), étoiles.
+ * - « carte » : image verticale 1080×1920, dans une tuile (mobile).
+ * - « fond » : image large 2400×1350, en fond du hero (grand écran), le
+ *   personnage dans le coin haut droit laissé libre par le bento.
+ */
+const CADRAGES: Record<"carte" | "fond", { prefixe: string; format: string; lanterne: { x: number; y: number; largeur: number }; filante: { x: number; y: number }; etoiles: Etoile[] }> = {
+  carte: {
+    prefixe: "",
+    format: "aspect-[9/16] left-1/2 -translate-x-1/2",
+    lanterne: { x: 58.1, y: 66.3, largeur: 14 },
+    filante: { x: 68, y: 17 },
+    etoiles: [
+      { x: 14, y: 9, taille: 2, duree: "3.2s", delai: "0s" },
+      { x: 31, y: 21, taille: 1.5, duree: "4.1s", delai: "1.2s" },
+      { x: 47, y: 6, taille: 2, duree: "3.6s", delai: "2.1s" },
+      { x: 63, y: 14, taille: 1.5, duree: "4.8s", delai: "0.6s" },
+      { x: 78, y: 8, taille: 2.5, duree: "3.9s", delai: "1.8s" },
+      { x: 86, y: 27, taille: 1.5, duree: "4.4s", delai: "2.7s" },
+      { x: 22, y: 36, taille: 1.5, duree: "5s", delai: "0.9s" },
+      { x: 55, y: 33, taille: 2, duree: "3.4s", delai: "3.1s" },
+      { x: 71, y: 42, taille: 1.5, duree: "4.6s", delai: "1.5s" },
+      { x: 9, y: 48, taille: 1.5, duree: "3.8s", delai: "2.4s" },
+    ],
+  },
+  fond: {
+    prefixe: "fond-",
+    // Le cadre est calé à 62 % plutôt qu'au centre : sur les écrans moins larges
+    // que le 16:9, c'est surtout la gauche qui est rognée, et le personnage
+    // reste dans la colonne libre au lieu de sortir par la droite.
+    format: "aspect-video left-[62%] -translate-x-[62%]",
+    lanterne: { x: 70.5, y: 52.4, largeur: 5.5 },
+    filante: { x: 90, y: 14 },
+    etoiles: [
+      { x: 6, y: 16, taille: 2, duree: "3.2s", delai: "0s" },
+      { x: 18, y: 22, taille: 1.5, duree: "4.1s", delai: "1.2s" },
+      { x: 33, y: 14, taille: 2, duree: "3.6s", delai: "2.1s" },
+      { x: 47, y: 15, taille: 1.5, duree: "4.8s", delai: "0.6s" },
+      { x: 61, y: 17, taille: 2.5, duree: "3.9s", delai: "1.8s" },
+      { x: 69, y: 27, taille: 1.5, duree: "4.4s", delai: "2.7s" },
+      { x: 78, y: 14, taille: 2, duree: "5s", delai: "0.9s" },
+      { x: 86, y: 31, taille: 1.5, duree: "3.4s", delai: "3.1s" },
+      { x: 93, y: 19, taille: 2, duree: "4.6s", delai: "1.5s" },
+      { x: 56, y: 38, taille: 1.5, duree: "3.8s", delai: "2.4s" },
+      { x: 25, y: 41, taille: 1.5, duree: "4.2s", delai: "3.4s" },
+    ],
+  },
+}
+
+/** Un plan de la scène, dans ses deux thèmes : on passe de l'un à l'autre en fondu au changement de thème. En `lazy`, le cadrage masqué (mobile ou grand écran) n'est pas téléchargé. */
+function Plan({ src }: { src: string }) {
   return (
     <>
-      {/* Halo couleur accent derrière le personnage, pour le détacher du fond de la tuile. */}
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-3/4 bg-[radial-gradient(70%_60%_at_50%_100%,color-mix(in_oklch,var(--accent)_35%,transparent),transparent)]" />
-      {absent ? (
-        <span aria-hidden="true" className="texte-contour absolute inset-0 flex items-center justify-center text-[10rem] font-semibold tracking-[-0.06em]">
-          K
-        </span>
-      ) : (
-        <img
-          src="/personnage/kimiya-portrait.webp"
-          alt="Kimiya, mon personnage : cheveux châtains en bataille et grande cape beige"
-          onError={() => setAbsent(true)}
-          className="absolute bottom-0 left-1/2 h-[96%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] motion-safe:group-hover:scale-[1.03]"
-        />
-      )}
+      <img src={`${src}-clair.webp`} alt="" loading="lazy" className="absolute inset-0 size-full transition-opacity duration-500 dark:opacity-0" />
+      <img src={`${src}-sombre.webp`} alt="" loading="lazy" className="absolute inset-0 size-full opacity-0 transition-opacity duration-500 dark:opacity-100" />
     </>
+  )
+}
+
+/**
+ * Le personnage assis au bord d'une falaise, une lanterne à côté de lui, façon
+ * fond d'écran minimaliste. Deux plans (ciel, falaise et personnage) glissent à
+ * des vitesses différentes vers le curseur et, en fond du hero, au défilement ;
+ * la lanterne vacille et, la nuit, les étoiles scintillent et une étoile
+ * filante passe de temps en temps. Sous « réduire les animations », la scène
+ * est fixe.
+ */
+function SceneLanterne({
+  cadrage,
+  defilement,
+  children,
+}: {
+  cadrage: keyof typeof CADRAGES
+  defilement?: MotionValue<number>
+  children?: ReactNode
+}) {
+  const { prefixe, format, lanterne, filante, etoiles } = CADRAGES[cadrage]
+  const dossier = `/personnage/lanterne/${prefixe}`
+  const mouvementReduit = useReducedMotion()
+  const curseurX = useSpring(0, { stiffness: 50, damping: 20 })
+  const curseurY = useSpring(0, { stiffness: 50, damping: 20 })
+  const cielX = useTransform(curseurX, (v) => v * -4)
+  const cielY = useTransform(curseurY, (v) => v * -3)
+  const avantX = useTransform(curseurX, (v) => v * 10)
+  const avantY = useTransform(curseurY, (v) => v * 6)
+
+  // Au défilement, le ciel descend plus vite que la falaise : il paraît plus loin.
+  const repli = useMotionValue(0)
+  const progression = defilement ?? repli
+  const cielDefile = useTransform(progression, [0, 1], ["0%", mouvementReduit ? "0%" : "22%"])
+  const avantDefile = useTransform(progression, [0, 1], ["0%", mouvementReduit ? "0%" : "8%"])
+
+  // Position du curseur dans la fenêtre, ramenée entre -1 et 1.
+  useEffect(() => {
+    if (mouvementReduit || !window.matchMedia("(pointer: fine)").matches) return
+    const suivre = (evenement: globalThis.PointerEvent) => {
+      curseurX.set((evenement.clientX / window.innerWidth) * 2 - 1)
+      curseurY.set((evenement.clientY / window.innerHeight) * 2 - 1)
+    }
+    window.addEventListener("pointermove", suivre, { passive: true })
+    return () => window.removeEventListener("pointermove", suivre)
+  }, [mouvementReduit, curseurX, curseurY])
+
+  return (
+    <div role="img" aria-label="Kimiya, mon personnage, assis au bord d'une falaise à côté d'une lanterne" className="absolute inset-0 overflow-hidden">
+      {/* Cadre au format de l'image, agrandi pour couvrir tout le conteneur : les repères en % restent justes. */}
+      <div className={cn("absolute top-1/2 min-h-full min-w-full -translate-y-1/2", format)}>
+        <motion.div className="absolute inset-0" style={{ y: cielDefile }}>
+          <motion.div className="absolute inset-0 scale-[1.04]" style={{ x: cielX, y: cielY }}>
+            <Plan src={`${dossier}ciel`} />
+            <div aria-hidden="true" className="absolute inset-0 hidden dark:block">
+              {etoiles.map((etoile, index) => (
+                <span
+                  key={index}
+                  className="etoile absolute rounded-full bg-[#F1EEEA]"
+                  style={{
+                    left: `${etoile.x}%`,
+                    top: `${etoile.y}%`,
+                    width: etoile.taille,
+                    height: etoile.taille,
+                    animationDuration: etoile.duree,
+                    animationDelay: etoile.delai,
+                  }}
+                />
+              ))}
+              <span
+                className="etoile-filante absolute h-px w-16 rounded-full bg-linear-to-r from-transparent to-[#F1EEEA]"
+                style={{ left: `${filante.x}%`, top: `${filante.y}%` }}
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+        <motion.div className="absolute inset-0" style={{ y: avantDefile }}>
+          <motion.div className="absolute inset-0 scale-[1.04]" style={{ x: avantX, y: avantY }}>
+            <Plan src={`${dossier}premier-plan`} />
+            {/* Lueur de la lanterne, centrée sur sa flamme, plus discrète de jour. */}
+            <span
+              aria-hidden="true"
+              className="absolute aspect-square -translate-x-1/2 -translate-y-1/2 opacity-50 mix-blend-screen dark:opacity-100"
+              style={{ left: `${lanterne.x}%`, top: `${lanterne.y}%`, width: `${lanterne.largeur}%` }}
+            >
+              <span className="lanterne-lueur absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,196,120,0.55),rgba(255,170,90,0.18)_40%,transparent_70%)]" />
+            </span>
+            {children}
+          </motion.div>
+        </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -254,37 +388,43 @@ export function HeroSection() {
 
   return (
     <section ref={ref} id="accueil" className="relative flex min-h-[100svh] flex-col overflow-hidden">
-      {/* Trame de grille, fixe et discrète : le motif du bento, prolongé jusqu'au bord de l'écran. */}
-      <div aria-hidden="true" className="fond-grille pointer-events-none absolute inset-0" />
+      {/* Mobile : trame de grille discrète. Grand écran : la scène du personnage en fond, en parallaxe. */}
+      <div aria-hidden="true" className="fond-grille pointer-events-none absolute inset-0 md:hidden" />
+      <div className="absolute inset-0 hidden md:block">
+        <SceneLanterne cadrage="fond" defilement={scrollYProgress}>
+          {/* La bulle flotte juste au-dessus de la tête du personnage (74 % ; 44 %). */}
+          <Bienvenue className="bottom-[58%] left-[74%] w-60 origin-bottom -translate-x-1/2 rounded-b-2xl" />
+        </SceneLanterne>
+      </div>
 
       <motion.div
         style={{ y, opacity: opacite }}
         variants={grille}
         initial="hidden"
         animate="visible"
-        className="relative z-10 mx-auto my-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-6 pt-28 pb-10 md:grid-cols-12 md:gap-4 lg:px-12 md:pt-32"
+        className="relative z-10 mx-auto my-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-6 pt-28 pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.1fr)] md:gap-4 lg:px-12 md:pt-28"
       >
         {/* Présentation */}
-        <Tuile className="flex flex-col justify-between p-7 md:col-span-8 md:row-span-2 md:p-10">
-          {/* Une affirmation, pas une salutation : « Je suis » et le nom au même corps, sur deux lignes. */}
-          <h1 className="text-[17vw] font-semibold leading-[0.9] tracking-[-0.05em] sm:text-7xl lg:text-8xl">
-            <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-              <motion.span
-                className="block text-foreground"
-                initial={{ y: "105%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 }}
-              >
-                Je suis
-              </motion.span>
-            </span>
-            <LettresMontantes texte="Kimiya." delai={0.3} className="text-accent-texte" />
-          </h1>
+        <Tuile className="flex flex-col justify-between p-7 md:col-span-2 md:col-start-1 md:p-8">
+          {/* Le poste en surtitre, le nom seul en titre : une ligne au lieu de deux. */}
           <div>
-            <p className="mt-8 text-lg tracking-tight text-muted-foreground md:text-2xl">
+            <motion.p
+              className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
+            >
+              Informaticien polyvalent
+            </motion.p>
+            <h1 className="mt-3 text-6xl font-semibold leading-[0.9] tracking-[-0.05em] lg:text-7xl">
+              <LettresMontantes texte="Kimiya" delai={0.2} className="text-accent-texte" />
+            </h1>
+          </div>
+          <div>
+            <p className="mt-6 text-lg tracking-tight text-muted-foreground md:text-2xl">
               Je <TexteTape />
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={() => defilerVers("projets")} size="lg" className="group">
                 Voir mes projets
                 <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
@@ -297,17 +437,18 @@ export function HeroSection() {
           </div>
         </Tuile>
 
-        {/* Personnage */}
-        <Tuile className="group aspect-[4/5] md:col-span-4 md:row-span-4 md:aspect-auto md:min-h-[36rem]">
-          <Personnage />
-          <Bienvenue />
+        {/* Mobile : la scène dans sa tuile. Grand écran : le bento tient dans les deux premières colonnes,
+            la troisième reste vide pour laisser voir le personnage du fond. */}
+        <Tuile className="aspect-[4/5] md:hidden">
+          <SceneLanterne cadrage="carte" />
+          <Bienvenue className="left-4 top-4 max-w-[80%]" />
         </Tuile>
 
         {/* Repères */}
-        <Tuile className="flex flex-col justify-center px-6 py-5 md:col-span-4">
+        <Tuile className="flex flex-col justify-center px-6 py-4 md:col-start-1">
           <dl className="divide-y divide-border">
             {REPERES.map(({ valeur, libelle }, index) => (
-              <div key={libelle} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
+              <div key={libelle} className="flex items-center gap-4 py-2.5 first:pt-0 last:pb-0">
                 <dt className="order-2 text-sm leading-snug text-muted-foreground">{libelle}</dt>
                 <dd className="order-1 shrink-0">
                   <NombreRouleaux valeur={valeur} delai={0.6 + index * 0.15} />
@@ -318,7 +459,7 @@ export function HeroSection() {
         </Tuile>
 
         {/* Où et quand */}
-        <Tuile className="flex flex-col justify-between gap-5 p-6 md:col-span-4">
+        <Tuile className="flex flex-col justify-between gap-5 p-6 md:col-start-2">
           <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <span aria-hidden="true" className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-[ping_2.4s_cubic-bezier(0,0,0.2,1)_infinite] rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
@@ -331,11 +472,11 @@ export function HeroSection() {
 
         {/* Projet phare : la porte d'entrée vers la section Projets */}
         {PROJET_PHARE && (
-          <Tuile className="group md:col-span-8">
+          <Tuile className="group md:col-span-2 md:col-start-1">
             <button
               type="button"
               onClick={() => defilerVers("projets")}
-              className="flex w-full items-center gap-5 p-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring md:p-5"
+              className="flex size-full items-center gap-5 p-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring md:p-5"
             >
               {PROJET_PHARE.image_url && (
                 <img
@@ -344,15 +485,17 @@ export function HeroSection() {
                   className="aspect-[16/10] w-20 shrink-0 rounded-lg object-cover object-top ring-1 ring-border sm:w-28 md:w-36"
                 />
               )}
-              <span className="min-w-0 flex-1">
-                <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Projet phare</span>
-                <span className="mt-1 block truncate text-xl font-semibold tracking-tight text-foreground md:text-2xl">{PROJET_PHARE.title}</span>
-              </span>
-              <span
-                aria-hidden="true"
-                className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border transition-[rotate,background-color,color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:rotate-45 group-hover:bg-foreground group-hover:text-background"
-              >
-                <ArrowUpRight className="size-4" />
+              <span className="flex min-w-0 flex-1 items-center gap-5">
+                <span className="min-w-0 flex-1">
+                  <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Projet phare</span>
+                  <span className="mt-1 block truncate text-xl font-semibold tracking-tight text-foreground md:text-2xl">{PROJET_PHARE.title}</span>
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border transition-[rotate,background-color,color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:rotate-45 group-hover:bg-foreground group-hover:text-background"
+                >
+                  <ArrowUpRight className="size-4" />
+                </span>
               </span>
             </button>
           </Tuile>
