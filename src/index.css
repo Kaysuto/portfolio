@@ -355,6 +355,84 @@
   }
 }
 
+/* Scène du hero (personnage à la lanterne) : étoiles qui scintillent, chacune
+   avec sa durée et son retard posés en style. */
+.etoile {
+  animation: etoile 4s ease-in-out infinite;
+}
+
+@keyframes etoile {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Une étoile filante toutes les 11 s : invisible la plupart du temps, elle
+   traverse la zone de ciel libre en moins d'une seconde, vers le bas à gauche. */
+.etoile-filante {
+  opacity: 0;
+  transform: rotate(-24deg);
+  animation: etoile-filante 11s cubic-bezier(0.23, 1, 0.32, 1) 3s infinite;
+}
+
+@keyframes etoile-filante {
+  0%,
+  90% {
+    opacity: 0;
+    transform: rotate(-24deg) translateX(0);
+  }
+  91% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0;
+    transform: rotate(-24deg) translateX(-260%);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-24deg) translateX(-260%);
+  }
+}
+
+/* Lueur de la lanterne : un vacillement irrégulier, comme une petite flamme. */
+.lanterne-lueur {
+  animation: lanterne 2.6s ease-in-out infinite;
+}
+
+@keyframes lanterne {
+  0%,
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+  20% {
+    scale: 0.94;
+    opacity: 0.75;
+  }
+  45% {
+    scale: 1.05;
+    opacity: 1;
+  }
+  70% {
+    scale: 0.97;
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etoile,
+  .lanterne-lueur {
+    animation: none;
+  }
+  .etoile-filante {
+    display: none;
+  }
+}
+
 /* Texte en contour seul : les numéros de section géants, en filigrane derrière
    les titres. Le trait prend la couleur des filets, il reste un décor. */
 .texte-contour {
