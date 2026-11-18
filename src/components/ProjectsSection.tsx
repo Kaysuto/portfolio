@@ -12,7 +12,7 @@ export function ProjectsSection() {
   const [afficherModale, setAfficherModale] = useState(false)
 
   return (
-    <section id="projets" className="py-24 lg:py-32 px-6 lg:px-12 relative overflow-hidden">
+    <section id="projets" className="py-10 lg:py-14 px-6 lg:px-12 relative overflow-hidden">
       <motion.div
         className="max-w-6xl mx-auto relative z-10"
         initial="hidden"
@@ -21,21 +21,19 @@ export function ProjectsSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          index="03"
           title={<>Mes <span className="text-accent-texte">Projets</span></>}
           lead="Une sélection de projets qui illustrent ma passion pour la création d'expériences numériques innovantes et performantes."
         />
 
-        <motion.div variants={fadeInUp} className="py-12 border-t border-border/60">
+        {/* La grille porte sa propre cascade. */}
+        <div className="py-8 border-t border-border/60">
           <ProjectCards />
-        </motion.div>
+        </div>
 
         <motion.div
           variants={fadeInUp}
-          className="pt-10 border-t border-border/60 flex items-center justify-center gap-4"
+          className="pt-8 border-t border-border/60 flex items-center justify-center gap-4"
         >
-          {/* Un vrai bouton et non du texte cliquable : posé sur la trame de
-              points, un libellé sans surface ne se lit plus comme une cible. */}
           <Button
             variant="outline"
             size="lg"

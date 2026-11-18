@@ -1,121 +1,111 @@
 import { useState, useCallback } from "react"
-import { ExternalLink, Calendar, Star, Heart, Rocket } from "lucide-react"
+import { ArrowUpRight, Rocket } from "lucide-react"
 import { GithubLogo as Github } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { motion, useReducedMotion, type Variants } from "framer-motion"
 import { DemoModal } from "@/components/ui/ProjectModal"
-import { motion } from "framer-motion"
+import { ExternalLinkModal } from "@/components/ui/ExternalLinkModal"
+import { projects, type Project } from "@/data/projects"
+import { EASE_OUT, VIEWPORT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
-import { projects as projetsLocaux, type Project } from "@/data/projects"
-import { scaleIn, VIEWPORT, EASE_OUT } from "@/lib/animations"
 
-/** Statuts déclinés sur la palette du site plutôt que sur les couleurs Tailwind par défaut. */
-const STYLES_STATUT: Record<Project["status"], string> = {
-  "En production": "bg-success/15 text-success border-success/35",
-  "Beta": "bg-accent/15 text-accent-texte border-accent/35",
-  "Alpha": "bg-info/15 text-info border-info/35",
-  "En développement": "bg-muted-foreground/15 text-muted-foreground border-muted-foreground/30",
+type Cible = "demo" | "github"
+
+const grille: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }
+const carte: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_OUT } },
+}
+/** La capture se découvre de haut en bas, un peu après l'arrivée de sa carte. */
+const volet: Variants = {
+  hidden: { clipPath: "inset(0% 0% 100% 0%)" },
+  visible: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.8, ease: EASE_OUT, delay: 0.15 } },
 }
 
-function formaterDate(chaineDate: string) {
-  return new Date(chaineDate).toLocaleDateString("fr-FR", { year: "numeric", month: "short" })
-}
+/**
+ * Cartes larges selon la place : en trois colonnes, rangées large + étroite, trois étroites,
+ * large + étroite ; en deux colonnes, seule la première est large pour que les autres tombent par paires.
+ */
+const LARGEUR: Record<number, string> = { 0: "sm:col-span-2", 5: "lg:col-span-2" }
 
-interface ProjectCardProps {
+/** Toute la carte est cliquable : le pseudo-élément du lien principal la recouvre. */
+const LIEN_PRINCIPAL =
+  "outline-none after:absolute after:inset-0 after:z-10 after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-ring"
+
+interface CarteProps {
   project: Project
-  index: number
-  onDiscover: (project: Project) => void
+  className?: string
+  onOuvrir: (project: Project, cible: Cible) => void
 }
 
-function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
+function CarteProjet({ project, className, onOuvrir }: CarteProps) {
+  const mouvementReduit = useReducedMotion()
+
   return (
     <motion.article
-      variants={scaleIn}
-      initial="hidden"
-      whileInView="visible"
-      viewport={VIEWPORT}
-      transition={{ delay: index * 0.06, duration: 0.4, ease: EASE_OUT }}
-      whileHover={{ y: -4 }}
-      className="group/card flex flex-col h-full rounded-xl ring-1 ring-foreground/10 bg-card overflow-hidden hover:ring-accent/40 transition-[box-shadow] duration-300"
+      variants={carte}
+      className={cn(
+        "group/carte relative h-64 overflow-hidden rounded-xl bg-muted ring-1 ring-foreground/10 sm:h-72",
+        className
+      )}
     >
-      {/* Visuel */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted isolate shrink-0">
+      <motion.div variants={mouvementReduit ? undefined : volet} className="absolute inset-0">
         {project.image_url ? (
           <img
             src={project.image_url}
             alt={project.image_alt ?? project.title}
-            className="object-cover w-full h-full group-hover/card:scale-[1.03] transition-transform duration-500"
             loading="lazy"
+            decoding="async"
+            className="size-full object-cover object-top transition-[scale] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] motion-safe:group-hover/carte:scale-105"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Rocket size={56} className="text-accent-texte/20 group-hover/card:text-accent-texte/40 transition-colors duration-300" />
+          <div className="flex size-full items-center justify-center">
+            <Rocket size={56} className="text-accent-texte/20" aria-hidden="true" />
           </div>
         )}
+      </motion.div>
 
-        <span
-          className={cn(
-            "absolute top-3 left-3 z-20 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider border",
-            STYLES_STATUT[project.status]
-          )}
-        >
-          {project.status}
-        </span>
+      {/* Voile pour que le titre reste lisible quelle que soit la capture. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-300 group-hover/carte:opacity-90"
+      />
 
-        <div className="absolute bottom-3 right-3 z-20 flex gap-1.5">
-          {!!project.stars && project.stars > 0 && (
-            <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
-              <Star size={13} className="text-accent fill-accent" aria-hidden="true" />
-              {project.stars}
-            </span>
-          )}
-          {!!project.likes && project.likes > 0 && (
-            <span className="flex items-center gap-1 text-white text-[11px] font-medium bg-black/60 px-2 py-0.5 rounded-sm tabular-nums">
-              <Heart size={13} className="text-corail fill-corail" aria-hidden="true" />
-              {project.likes}
-            </span>
-          )}
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 text-white">
+        <div className="min-w-0">
+          <p className="mb-1 truncate font-mono text-[11px] uppercase tracking-widest text-white/70">
+            {project.type} · {new Date(project.created_at).getFullYear()}
+          </p>
+          <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
+            {project.demo_url ? (
+              <button type="button" onClick={() => onOuvrir(project, "demo")} className={cn(LIEN_PRINCIPAL, "text-left")}>
+                {project.title}
+              </button>
+            ) : (
+              <button type="button" onClick={() => onOuvrir(project, "github")} className={cn(LIEN_PRINCIPAL, "text-left")}>
+                {project.title}
+                <span className="sr-only"> (dépôt GitHub)</span>
+              </button>
+            )}
+          </h3>
         </div>
-      </div>
 
-      {/* Contenu */}
-      <div className="flex-1 flex flex-col p-5 min-h-0">
-        <div className="flex items-center justify-between gap-3 mb-2">
-          <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 shrink-0">
-            <Calendar size={13} aria-hidden="true" />
-            {formaterDate(project.created_at)}
+        <div className="flex shrink-0 items-center gap-2">
+          {project.demo_url && project.github_url && (
+            <button
+              type="button"
+              onClick={() => onOuvrir(project, "github")}
+              aria-label={`Dépôt GitHub de ${project.title}`}
+              className="relative z-20 flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Github size={18} />
+            </button>
+          )}
+          <span
+            aria-hidden="true"
+            className="flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-[rotate,background-color,color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/carte:rotate-45 group-hover/carte:bg-white group-hover/carte:text-black"
+          >
+            <ArrowUpRight className="size-4" />
           </span>
-          <div className="flex gap-1 flex-wrap justify-end">
-            {project.tech_stack.slice(0, 3).map((tech) => (
-              <Badge key={tech} variant="secondary" className="text-[11px] px-2 py-0">
-                {tech}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <h3 className="text-lg font-semibold mb-2 group-hover/card:text-accent-texte transition-colors tracking-tight">
-          {project.title}
-        </h3>
-
-        <p className="text-muted-foreground text-sm/relaxed line-clamp-3 flex-1">
-          {project.description}
-        </p>
-
-        <div className="flex items-center gap-2 pt-4 mt-auto">
-          {project.demo_url && (
-            <Button className="flex-1 gap-2" onClick={() => onDiscover(project)}>
-              <ExternalLink size={16} aria-hidden="true" />
-              Découvrir
-            </Button>
-          )}
-          {project.github_url && (
-            <Button variant="outline" size="icon" asChild className="shrink-0">
-              <a href={project.github_url} target="_blank" rel="noreferrer" aria-label={`Dépôt GitHub de ${project.title}`}>
-                <Github size={18} />
-              </a>
-            </Button>
-          )}
         </div>
       </div>
     </motion.article>
@@ -123,32 +113,47 @@ function ProjectCard({ project, index, onDiscover }: ProjectCardProps) {
 }
 
 export function ProjectCards() {
-  const [projetModale, setProjetModale] = useState<Project | null>(null)
+  // Toute sortie du site passe par une confirmation : la démo comme le dépôt GitHub.
+  const [ouverture, setOuverture] = useState<{ projet: Project; cible: Cible } | null>(null)
   const [afficherModale, setAfficherModale] = useState(false)
 
-  const gererDecouverte = useCallback((projet: Project) => {
-    setProjetModale(projet)
+  const gererOuverture = useCallback((projet: Project, cible: Cible) => {
+    setOuverture({ projet, cible })
     setAfficherModale(true)
   }, [])
 
   const gererFermetureModale = useCallback(() => {
     setAfficherModale(false)
-    setTimeout(() => setProjetModale(null), 500)
+    setTimeout(() => setOuverture(null), 500)
   }, [])
 
   return (
     <>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {projetsLocaux.map((projet, index) => (
-          <ProjectCard key={projet.id} project={projet} index={index} onDiscover={gererDecouverte} />
+      <motion.div
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        variants={grille}
+        initial="hidden"
+        whileInView="visible"
+        viewport={VIEWPORT}
+      >
+        {projects.map((projet, index) => (
+          <CarteProjet key={projet.id} project={projet} className={LARGEUR[index]} onOuvrir={gererOuverture} />
         ))}
-      </div>
+      </motion.div>
 
       <DemoModal
-        isOpen={afficherModale && !!projetModale}
+        isOpen={afficherModale && ouverture?.cible === "demo"}
         onClose={gererFermetureModale}
-        projectTitle={projetModale?.title ?? ""}
-        projectUrl={projetModale?.demo_url ?? ""}
+        projectTitle={ouverture?.projet.title ?? ""}
+        projectUrl={ouverture?.projet.demo_url ?? ""}
+      />
+      <ExternalLinkModal
+        isOpen={afficherModale && ouverture?.cible === "github"}
+        onClose={gererFermetureModale}
+        icon={<Github className="size-6 text-accent-texte" />}
+        title={ouverture?.projet.title ?? ""}
+        subtitle="Voir le dépôt sur GitHub"
+        url={ouverture?.projet.github_url ?? ""}
       />
     </>
   )

@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils"
   2 px et enfoncement d'un pixel au clic. Aucune ombre portée : le relief vient
   du remplissage et de la bordure, pas d'un halo.
 
-  Aucun remplissage n'utilise d'alpha, et c'est délibéré : la page porte une
-  trame de points animée (`FondAnime`), qu'un aplat semi-transparent laisse
-  passer — le bouton cesse alors de se lire comme un objet posé dessus. Les
+  Aucun remplissage n'utilise d'alpha, et c'est délibéré : un aplat
+  semi-transparent laisse passer le grain du fond — le bouton cesse alors de se
+  lire comme un objet posé dessus. Les
   teintes de survol passent donc par `color-mix` avec `--background`, ce qui
   donne exactement la couleur qu'un alpha aurait produite sur le fond de page,
   mais opaque. Seul `ghost` reste transparent au repos : c'est sa définition.

@@ -88,26 +88,29 @@ export const STRATES: Strate[] = [
 /**
  * L'atelier n'est pas une quatrième strate : ces outils ne tournent pas dans le
  * produit, ils sont sous ma main pendant que je le construis. Les empiler avec
- * les autres laissait croire que macOS était une dépendance du backend.
+ * les autres laissait croire qu'un éditeur ou un OS était une dépendance du backend.
  */
 export const ATELIER: Omit<Strate, "niveau"> = {
   id: "atelier",
   title: "Outils & Productivité",
   role: "Ce que j'ai sous la main",
   resume:
-    "Mes outils de tous les jours : éditeur, gestion de versions, agents IA, systèmes d'exploitation et petits raccourcis.",
+    "Mes outils de tous les jours : éditeurs, gestion de versions, agents IA, prise de notes, modélisation 3D et petits raccourcis.",
   techs: [
     { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
+    { name: "JetBrains", slug: "jetbrains", url: "https://www.jetbrains.com" },
     { name: "Git", slug: "git", url: "https://git-scm.com" },
+    { name: "GitHub", slug: "github", url: "https://github.com" },
+    { name: "T3 Code", slug: "t3code", url: "https://t3.codes", iconUrl: "https://t3.codes/apple-touch-icon.png" },
+    { name: "Linear", slug: "linear", url: "https://linear.app" },
+    { name: "Obsidian", slug: "obsidian", url: "https://obsidian.md" },
+    { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png" },
     { name: "Bitwarden", slug: "bitwarden", url: "https://bitwarden.com" },
     { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png" },
-    { name: "Obsidian", slug: "obsidian", url: "https://obsidian.md" },
-    { name: "Orca", slug: "orca", url: "https://www.onorca.dev", iconUrl: "https://www.onorca.dev/icon.png" },
-    { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png" },
+    { name: "Discord", slug: "discord", url: "https://discord.com" },
+    { name: "Blockbench", slug: "blockbench", url: "https://www.blockbench.net" },
+    { name: "Blender", slug: "blender", url: "https://www.blender.org" },
+    { name: "OBS Studio", slug: "obsstudio", url: "https://obsproject.com" },
     { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" },
-    { name: "Ubuntu", slug: "ubuntu", url: "https://ubuntu.com" },
-    { name: "Debian", slug: "debian", url: "https://www.debian.org" },
-    { name: "Arch Linux", slug: "archlinux", url: "https://archlinux.org" },
-    { name: "macOS", slug: "apple", url: "https://www.apple.com/macos" },
   ],
 }

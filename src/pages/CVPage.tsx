@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -32,14 +32,14 @@ import { Button } from '@/components/ui/button';
 import { TechModal } from '@/components/ui/TechModal';
 import { useSeo } from '@/hooks/useSeo';
 import { LinkedInFooterModal } from '@/components/ui/SocialModals';
-import { fadeInUp, staggerContainer, VIEWPORT } from '@/lib/animations';
+import { fadeInUp, staggerContainer, VIEWPORT, EASE_OUT } from '@/lib/animations';
 
 type Outil = { name: string; slug: string; url: string; iconUrl?: string };
 
 const EXPERIENCES = [
   {
     company: "Magna Engineered Glass Europe",
-    role: "Technicien Informatique Polyvalent Junior",
+    role: "Informaticien Polyvalent",
     period: "Mai 2026 - Présent",
     missions: [
       "Gestion du parc informatique",
@@ -104,7 +104,7 @@ const EXPERIENCES = [
 ];
 
 const COMPETENCES = [
-  { category: "Systèmes", items: ["Windows (Active Directory)", "Linux (Debian/Ubuntu/Arch)", "MacOS"], icon: Globe },
+  { category: "Systèmes", items: ["Windows (Active Directory)", "Linux (Debian/Ubuntu/Arch)"], icon: Globe },
   { category: "Réseaux & Sécurité", items: ["TCP/IP", "SSH", "VPN", "Architecture Zero Trust"], icon: ShieldCheck },
   { category: "Cloud & Virtualisation", items: ["Proxmox", "Hyper-V", "VMware", "Docker", "Notions AWS, Azure, GCP"], icon: Cloud },
   { category: "Datacenter", items: ["Installation rack", "Câblage", "Maintenance", "Stocks & ticketing"], icon: Server },
@@ -142,7 +142,10 @@ const INTERETS = [
   { name: "Sport", icon: Dumbbell }
 ];
 
-/** Bande de section : étiquette collante à gauche, contenu à droite. */
+/**
+ * Bande de section : sur grand écran, l'intitulé reste collé à gauche pendant
+ * qu'on lit son contenu à droite ; il cède la place au suivant en fin de bande.
+ */
 function Bande({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <motion.section
@@ -150,20 +153,37 @@ function Bande({ label, children }: { label: string; children: React.ReactNode }
       initial="hidden"
       whileInView="visible"
       viewport={VIEWPORT}
-      className="flex flex-col items-center py-12 border-t border-border/60"
+      className="grid gap-8 border-t border-border/60 py-14 md:grid-cols-[13rem_1fr] md:gap-12"
     >
-      <h2 className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
+      <h2 className="flex items-center gap-3 self-start font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground md:sticky md:top-28">
+        <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
         {label}
       </h2>
-      <div className="mt-10 w-full max-w-3xl">{children}</div>
+      <div className="w-full min-w-0">{children}</div>
     </motion.section>
+  );
+}
+
+/** Frise du parcours : son trait se dessine à mesure qu'on la parcourt. */
+function FriseParcours({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.8', 'end 0.6'] });
+  return (
+    <ol ref={ref} className="relative ml-2 border-l border-border/60 text-left">
+      <motion.span
+        aria-hidden="true"
+        style={{ scaleY: scrollYProgress }}
+        className="absolute -left-px top-0 h-full w-px origin-top bg-accent"
+      />
+      {children}
+    </ol>
   );
 }
 
 const CVPage: React.FC = () => {
   useSeo({
     title: "Kimiya - CV",
-    description: "CV de Kimiya : Technicien Informatique Polyvalent Junior, expert infrastructure, réseau et développement web full-stack.",
+    description: "CV de Kimiya : Informaticien Polyvalent, expert infrastructure, réseau et développement web full-stack.",
     path: "/cv",
     type: "profile",
   });
@@ -196,27 +216,34 @@ const CVPage: React.FC = () => {
 
           {/* Bandeau d'en-tête pleine largeur */}
           <motion.header
-            className="pb-10 border-b border-border/60 flex flex-col items-center text-center"
-            initial={{ opacity: 0, y: -16 }}
+            className="pb-14 flex flex-col items-start text-left"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: EASE_OUT }}
           >
             <p className="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent-texte mb-5">
               Curriculum vitæ
             </p>
-            <div className="flex flex-col items-center gap-8">
-              <div className="flex flex-col items-center">
-                <h1 className="text-5xl md:text-7xl font-semibold mb-6">
-                  Mon <span className="text-accent-texte">CV</span>
+            <div className="flex flex-col items-start gap-8">
+              <div className="flex flex-col items-start">
+                <h1 className="overflow-hidden pb-2 -mb-2 text-6xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-8xl">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '110%' }}
+                    animate={{ y: '0%' }}
+                    transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 }}
+                  >
+                    Mon <span className="text-accent-texte">CV</span>
+                  </motion.span>
                 </h1>
-                <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <Briefcase className="size-4 text-accent-texte" aria-hidden="true" />
-                    <span>Technicien Informatique</span>
+                    <span>Informaticien polyvalent</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <MapPin className="size-4 text-accent-texte" aria-hidden="true" />
-                    <span>Haute-Marne, France</span>
+                    <span>France</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Car className="size-4 text-accent-texte" aria-hidden="true" />
@@ -238,7 +265,7 @@ const CVPage: React.FC = () => {
 
           {/* ── Parcours professionnel : frise verticale ────────────────────── */}
           <Bande label="Parcours Professionnel">
-            <ol className="relative border-l border-border/60 ml-2 text-left">
+            <FriseParcours>
               {EXPERIENCES.map((experience) => (
                 <motion.li key={`${experience.company}-${experience.period}`} variants={fadeInUp} className="relative pl-8 pb-10 last:pb-0">
                   <motion.span
@@ -262,7 +289,7 @@ const CVPage: React.FC = () => {
                   </ul>
                 </motion.li>
               ))}
-            </ol>
+            </FriseParcours>
           </Bande>
 
           {/* ── Compétences : lignes plutôt que cartes ──────────────────────── */}
@@ -295,7 +322,7 @@ const CVPage: React.FC = () => {
 
           {/* ── Outils ──────────────────────────────────────────────────────── */}
           <Bande label="Outils &amp; Techs">
-            <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-2">
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-2">
               {OUTILS.map((outil) => (
                 <motion.button
                   key={outil.name}
@@ -388,7 +415,7 @@ const CVPage: React.FC = () => {
 
           {/* ── Centres d'intérêt ───────────────────────────────────────────── */}
           <Bande label="Centres d'Intérêt">
-            <motion.ul variants={fadeInUp} className="flex flex-wrap justify-center gap-2">
+            <motion.ul variants={fadeInUp} className="flex flex-wrap gap-2">
               {INTERETS.map(({ name, icon: Icone }) => (
                 <li
                   key={name}

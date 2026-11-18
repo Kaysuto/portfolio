@@ -146,7 +146,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-24 lg:py-32 px-6 lg:px-12 relative overflow-hidden">
+    <section id="contact" className="py-10 lg:py-14 px-6 lg:px-12 relative overflow-hidden">
       <motion.div
         className="max-w-6xl mx-auto relative z-10"
         initial="hidden"
@@ -155,7 +155,6 @@ export function ContactSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          index="04"
           title={<>Travaillons <span className="text-accent-texte">ensemble.</span></>}
           lead={
             <>
@@ -172,23 +171,26 @@ export function ContactSection() {
           }
         />
 
-        <div className="flex flex-col items-center pt-12 border-t border-border/60">
-          {/* Mail direct */}
-          <motion.div variants={fadeInUp} className="flex flex-col items-center mb-10">
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground mb-3">
+        <div className="grid gap-12 border-t border-border/60 pt-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          {/* Mail direct : la plus grosse cible de la section, copiée d'un clic */}
+          <motion.div variants={fadeInUp} className="flex flex-col">
+            <p className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
               Mail direct
             </p>
             <button
               onClick={gererCopieEmail}
-              className="flex items-center gap-2.5 text-base font-medium text-foreground hover:text-accent-texte transition-colors group"
+              className="group mt-4 flex items-center gap-3 text-left text-2xl font-semibold tracking-tight text-foreground md:text-4xl"
             >
-              <span className="font-mono">{EMAIL}</span>
-              <Copy className="size-4 opacity-50 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+              <span className="break-all">{EMAIL}</span>
+              <Copy className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
             </button>
+            <p className="mt-6 max-w-sm text-sm/relaxed text-muted-foreground">
+              Un clic suffit à copier l'adresse.
+            </p>
           </motion.div>
 
           {/* Formulaire */}
-          <motion.div variants={fadeInUp} className="w-full max-w-2xl text-left">
+          <motion.div variants={fadeInUp} className="rounded-2xl border border-border bg-card/70 p-6 text-left backdrop-blur-sm md:p-8">
             <ContactForm />
           </motion.div>
         </div>

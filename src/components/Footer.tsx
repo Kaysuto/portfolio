@@ -22,10 +22,10 @@ import { fadeIn, VIEWPORT } from "@/lib/animations"
  * de sortie du site, comme partout ailleurs.
  */
 const RESEAUX = [
-  { id: "github", label: "GitHub", icon: Github },
-  { id: "linkedin", label: "LinkedIn", icon: Linkedin },
-  { id: "youtube", label: "YouTube", icon: Youtube },
-  { id: "twitch", label: "Twitch", icon: Twitch },
+  { id: "github", label: "GitHub", icon: Github, couleur: "hover:text-foreground hover:border-foreground/40" },
+  { id: "linkedin", label: "LinkedIn", icon: Linkedin, couleur: "hover:text-[#0A66C2] hover:border-[#0A66C2]/40" },
+  { id: "youtube", label: "YouTube", icon: Youtube, couleur: "hover:text-[#FF0000] hover:border-[#FF0000]/40" },
+  { id: "twitch", label: "Twitch", icon: Twitch, couleur: "hover:text-[#9146FF] hover:border-[#9146FF]/40" },
 ] as const
 
 type IdReseau = (typeof RESEAUX)[number]["id"]
@@ -71,11 +71,10 @@ export function Footer() {
   return (
     /*
       Un pied de page classique, sur toute la largeur et fermé par un filet : il
-      termine la page au lieu de flotter dessus comme une carte de plus. Le fond
-      opaque arrête la trame animée, qui s'arrête ainsi là où le contenu s'arrête.
+      termine la page au lieu de flotter dessus comme une carte de plus.
     */
     <motion.footer
-      className="mt-16 border-t border-border/60 bg-background px-6 lg:px-12"
+      className="mt-8 border-t border-border/60 bg-background px-6 lg:px-12"
       initial="hidden"
       whileInView="visible"
       viewport={VIEWPORT}
@@ -92,17 +91,18 @@ export function Footer() {
             Kimiya
           </button>
           <p className="mt-3 max-w-xs text-sm/relaxed text-muted-foreground">
-            Technicien informatique et développeur fullstack.
+            Merci pour la visite, à bientôt !
           </p>
 
           <div className="mt-6 flex items-center gap-2">
-            {RESEAUX.map(({ id, label, icon: Icone }) => (
+            {RESEAUX.map(({ id, label, icon: Icone, couleur }) => (
               <Button
                 key={id}
                 variant="outline"
                 size="icon"
                 aria-label={label}
                 onClick={() => setReseauOuvert(id)}
+                className={couleur}
               >
                 <Icone className="size-5" />
               </Button>

@@ -1,4 +1,4 @@
-# Robots.txt pour Portfolio Kimiya Kaysuto - Product Builder
+# Robots.txt pour Portfolio Kimiya Kaysuto - Informaticien polyvalent
 # Généré le 1 juin 2026
 
 # Autoriser tous les robots d'indexation
@@ -63,5 +63,5 @@ Sitemap: https://kaysuto.fr/sitemap.xml
 
 # Informations supplémentaires
 # Portfolio: https://kaysuto.fr
-# Propriétaire: Kimiya Kaysuto - Product Builder
+# Propriétaire: Kimiya Kaysuto - Informaticien polyvalent
 # Contact: contact@kaysuto.fr

@@ -27,8 +27,8 @@ export default function MentionsLegales() {
           </Link>
 
           <div className="space-y-8">
-            <header className="border-b border-border/50 pb-8">
-              <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+            <header className="border-b border-border/50 pb-10">
+              <h1 className="mb-6 text-5xl font-semibold leading-[0.95] tracking-[-0.04em] md:text-7xl">
                 Mentions <span className="text-accent-texte">Légales</span>
               </h1>
               <p className="text-sm text-muted-foreground">

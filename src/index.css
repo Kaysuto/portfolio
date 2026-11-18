@@ -40,101 +40,65 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Palette « Encre & Étincelle »
-   Relevée au compte-gouttes sur les stickers de `public/stickers/` : ce sont
-   les seules images du site qui montrent le personnage, la palette n'a pas à
-   être inventée ailleurs. Quatre matières s'y partagent la surface, et leurs
-   proportions décident de leur rôle ici.
+   Palette « Abysse »
+   Une seule couleur d'accent, le sable #B49482, posée sur des neutres à peine
+   réchauffés (chroma ≤ 0,015) : assez pour accompagner le sable, trop peu pour
+   virer au crème.
+   La couleur est concentrée sur l'accent, et c'est lui seul qui désigne ce
+   qui se lit comme un lien ou se clique.
 
-     · l'encre du manteau   #1A1A1A → 40 % des pixels opaques : c'est la masse.
-                            Elle devient le texte et le fond sombre, et surtout
-                            le remplissage des boutons pleins.
-     · la crème de l'écharpe #F0C8B0 → la lumière. Fond du thème clair, texte
-                            du thème sombre.
-     · le châtaigne des cheveux #503020 → le liant. Il ne devient pas une
-                            couleur à lui seul : il donne sa teinte (55) à
-                            toute la gamme neutre, qui reste ainsi chaude sans
-                            jamais virer au sépia comme la version précédente.
-     · l'ambre des étincelles #F09828 → 1 % des pixels, et la seule couleur
-                            franchement saturée du personnage. Un accent se
-                            mérite par sa rareté : c'est le seul endroit du
-                            site où la chroma dépasse 0,03.
+     · Thème clair : fond blanc cassé (teinte 75), encre brun-noir très
+       sombre (teinte 51, celle du sable) pour le texte et le bouton plein.
+     · Thème sombre : fond presque noir, quasi sans teinte (chroma 0,005). Les captures des projets, souvent sombres, ne se
+       mêlent pas à un fond coloré, et le sable ressort seul.
 
-   Le contrepoint froid vient des yeux (#203040, teinte 250) : `--ardoise`. Il
-   sert le versant « parc » du parcours, quand l'ambre sert « l'atelier ». Les
-   deux couleurs suivent l'activité et non l'horloge : le poste passe de nuit
-   le 14 septembre 2026, et un parc qui changerait de couleur ce jour-là
-   perdrait son identité pour une raison qui ne le regarde pas.
+   Comme avant, l'accent a deux versions : `--accent` pour les aplats, filets
+   et soulignés, `--accent-texte` pour tout ce qui se lit. Sur le fond clair,
+   le sable de surface ne donne que 2,7:1 en texte.
 
-   Ce que la version précédente faisait et qu'on ne refait pas : tout tenir
-   entre les teintes 45 et 80. Sans contraste de teinte, un fond crème, une
-   bordure beige et un bouton chocolat se lisent comme trois valeurs d'une même
-   couleur — d'où l'impression de sépia. Ici les neutres sont désaturés
-   (chroma ≤ 0,02), et la couleur est concentrée sur l'ambre et l'ardoise.
-
-   Toutes les paires porteuses de sens sont vérifiées ≥ 4,5:1 (voir les
-   rapports notés en fin de ligne).
+   Toutes les paires porteuses de sens sont vérifiées ≥ 4,5:1 (rapports notés
+   en fin de ligne, mesurés sur --background).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Thème clair — « le papier » ─────────────────────────────────────────── */
-  --background: oklch(0.98 0.01 55); /* #FEF7F2 — crème, chroma 0.01 seulement */
-  --foreground: oklch(0.205 0.014 55); /* #1C1611 — encre chaude,  16.9:1 */
+  /* ── Thème clair ─────────────────────────────────────────────────────────── */
+  --background: oklch(0.985 0.004 75); /* #FCFAF7 */
+  --foreground: oklch(0.21 0.012 51); /* #1D1713           17.0:1 */
 
-  --card: oklch(0.995 0.004 55); /* #FFFDFB — la carte éclaircit le crème */
-  --card-foreground: oklch(0.205 0.014 55);
+  --card: oklch(0.995 0.002 75); /* #FEFDFC — la carte éclaircit le fond */
+  --card-foreground: oklch(0.21 0.012 51);
 
-  --popover: oklch(0.995 0.004 55);
-  --popover-foreground: oklch(0.205 0.014 55);
+  --popover: oklch(0.995 0.002 75);
+  --popover-foreground: oklch(0.21 0.012 51);
 
-  /* Le bouton plein prend l'encre du manteau, pas le châtaigne des cheveux :
-     c'est la couleur qui domine le personnage, et un aplat presque noir tient
-     le registre sobre du reste du site là où un marron plein le datait. */
-  --primary: oklch(0.245 0.016 55); /* #271F19            15.3:1 */
-  --primary-foreground: oklch(0.98 0.01 55);
+  --primary: oklch(0.23 0.014 51); /* #221B17            16.2:1 */
+  --primary-foreground: oklch(0.985 0.004 75);
 
-  --secondary: oklch(0.945 0.014 55); /* #F5EBE4 */
-  --secondary-foreground: oklch(0.245 0.016 55);
+  --secondary: oklch(0.95 0.006 75);
+  --secondary-foreground: oklch(0.23 0.014 51);
 
-  --muted: oklch(0.96 0.012 55); /* #F9F0EA */
-  --muted-foreground: oklch(0.515 0.02 55); /* #71655D             5.3:1 */
+  --muted: oklch(0.955 0.005 75);
+  --muted-foreground: oklch(0.5 0.015 51); /* #6B615C   5.8:1 (5.3:1 sur muted) */
 
-  /* L'étincelle. Assombrie de 0.755 à 0.72 par rapport au pixel d'origine :
-     sur le crème, l'ambre pur perdait sa lisibilité de forme. */
-  --accent: oklch(0.72 0.155 64); /* #E68C1E */
-  --accent-foreground: oklch(0.205 0.03 55); /* sur aplat ambre     7.0:1 */
+  --accent: oklch(0.691 0.046 51); /* #B49482 — aplats seuls */
+  --accent-foreground: oklch(0.21 0.012 51); /* sur aplat sable     6.3:1 */
 
-  --destructive: oklch(0.545 0.195 27); /* #C92A28              5.2:1 */
-  --destructive-foreground: oklch(0.98 0.01 55);
+  --destructive: oklch(0.545 0.195 27); /* #C92A28              5.3:1 */
+  --destructive-foreground: oklch(0.985 0.004 75);
 
-  --border: oklch(0.885 0.014 55); /* #E1D7D1 — filet, pas trait */
-  --input: oklch(0.93 0.014 55); /* #F0E6DF */
+  --border: oklch(0.9 0.008 70); /* #E1DDD8 — filet, pas trait */
+  --input: oklch(0.93 0.006 70);
 
-  /* Même pigment que --accent, brûlé jusqu'au seuil lisible. La distinction
-     surface / texte est structurelle : posé en texte sur le crème, l'ambre de
-     surface ne donne que 2,4:1. Tout ce qui se lit ou se désigne passe par
-     ici ; --accent ne sert qu'aux aplats, filets et soulignés. */
-  --accent-texte: oklch(0.52 0.12 58); /* #9B540C               5.4:1 */
+  --accent-texte: oklch(0.5 0.055 51); /* #7D5A46               5.9:1 */
+  --ring: oklch(0.5 0.055 51);
 
-  /* L'anneau de focus est un repère d'accessibilité : il suit la teinte
-     lisible, sans quoi il disparaissait sur le crème. */
-  --ring: oklch(0.52 0.12 58); /*                              5.4:1 */
+  /* Contrepoint du versant « parc » du parcours, face au sable de « l'atelier ». */
+  --ardoise: oklch(0.52 0.06 110); /* #6B6C43 — olive    5.2:1 */
+  /* Réservé aux marques d'affection (le cœur des « likes »). */
+  --corail: oklch(0.69 0.165 35);
 
-  /* ── Contrepoint froid — la couleur des yeux ─────────────────────────────── */
-  /* Le versant « parc » du parcours (le support, la lumière de bureau) contre
-     l'ambre du versant « atelier » (les projets, la lampe). */
-  --ardoise: oklch(0.53 0.062 250); /* #536F8F                4.9:1 */
-
-  /* Le corail des joues (#F07050 sur les stickers). Réservé aux marques
-     d'affection — le cœur des « likes » —, seul endroit où ni l'ambre ni
-     l'ardoise ne veulent rien dire. Sans lui, ces pastilles retombaient sur
-     un `rose-400` de Tailwind, étranger à la gamme. */
-  --corail: oklch(0.69 0.165 35); /* #F07050 */
-
-  /* ── Couleurs de statut ─────────────────────────────────────────────────── */
-  /* Accordées à la palette : olive et ardoise plutôt que vert et bleu vifs. */
-  --success: oklch(0.5 0.1 145); /* #3B723E                 5.4:1 */
-  --info: oklch(0.48 0.07 250); /* #3E6084                 6.1:1 */
+  --success: oklch(0.5 0.1 150); /* #337344                 5.5:1 */
+  --info: oklch(0.52 0.06 110); /* même olive que --ardoise */
 
   /* La palette change, pas les formes : la densité Mira demande 8 px.
      L'échelle donne 4 / 8 / 12 / 16 / 24. */
@@ -142,49 +106,42 @@
 }
 
 .dark {
-  /* ── Thème sombre — « l'atelier, 20:00 → 01:00 » ─────────────────────────── */
-  /* Le fond descend de 0.25 à 0.175 : l'ancien brun laiteux ne se lisait ni
-     comme un noir ni comme une couleur, et il ne restait plus assez de marches
-     en dessous des cartes pour les détacher du fond. */
-  --background: oklch(0.175 0.01 55); /* #140F0C — l'encre du manteau */
-  --foreground: oklch(0.935 0.012 55); /* #F0E8E2 — crème     15.7:1 */
+  /* ── Thème sombre ────────────────────────────────────────────────────────── */
+  --background: oklch(0.165 0.005 51); /* #100E0C */
+  --foreground: oklch(0.95 0.006 75); /* #F1EEEA          16.7:1 */
 
-  --card: oklch(0.215 0.011 55); /* #1E1815 — la carte monte vers la lumière */
-  --card-foreground: oklch(0.935 0.012 55);
+  --card: oklch(0.205 0.006 51); /* #1A1615 */
+  --card-foreground: oklch(0.95 0.006 75);
 
-  --popover: oklch(0.215 0.011 55);
-  --popover-foreground: oklch(0.935 0.012 55);
+  --popover: oklch(0.205 0.006 51);
+  --popover-foreground: oklch(0.95 0.006 75);
 
-  --primary: oklch(0.925 0.014 55); /* crème pleine       14.9:1 */
-  --primary-foreground: oklch(0.185 0.014 55);
+  --primary: oklch(0.95 0.006 75);
+  --primary-foreground: oklch(0.18 0.005 51);
 
-  --secondary: oklch(0.265 0.012 55);
-  --secondary-foreground: oklch(0.935 0.012 55);
+  --secondary: oklch(0.26 0.007 51);
+  --secondary-foreground: oklch(0.95 0.006 75);
 
-  --muted: oklch(0.27 0.012 55);
-  --muted-foreground: oklch(0.715 0.018 55); /* #ACA099            7.5:1 */
+  --muted: oklch(0.26 0.007 51);
+  --muted-foreground: oklch(0.7 0.012 60); /* #A49D97   7.2:1 (6.7:1 sur card) */
 
-  /* Sur l'encre, l'ambre remonte à 0.79 : c'est exactement ce que font les
-     étincelles des stickers, qui n'éclatent que sur le manteau sombre. */
-  --accent: oklch(0.79 0.15 66); /* #FBA541               9.5:1 */
-  --accent-foreground: oklch(0.195 0.03 55); /* sur aplat ambre     9.2:1 */
+  --accent: oklch(0.691 0.046 51); /* #B49482                6.9:1 */
+  --accent-foreground: oklch(0.2 0.02 51); /* sur aplat sable     6.5:1 */
 
-  --destructive: oklch(0.64 0.185 27); /* #E7534A               5.2:1 */
-  --destructive-foreground: oklch(0.935 0.012 55);
+  --destructive: oklch(0.64 0.185 27); /* #E7534A               5.3:1 */
+  --destructive-foreground: oklch(0.95 0.006 75);
 
-  --border: oklch(0.315 0.012 55);
-  --input: oklch(0.29 0.012 55);
-  --ring: oklch(0.79 0.15 66);
+  --border: oklch(0.29 0.007 51);
+  --input: oklch(0.27 0.007 51);
+  --ring: oklch(0.691 0.046 51);
 
-  /* Sur l'encre, l'accent est déjà largement lisible en texte : la variante
-     ne fait que l'éclaircir d'un cran pour les petits corps. */
-  --accent-texte: oklch(0.805 0.135 68); /* #F8AE56              10.1:1 */
+  --accent-texte: oklch(0.78 0.045 55); /* #CFB09D               9.5:1 */
 
-  --ardoise: oklch(0.72 0.06 250); /* #88A8C9               7.7:1 */
-  --corail: oklch(0.72 0.155 35); /* #FA8267 */
+  --ardoise: oklch(0.75 0.06 110); /* #B0B286 — olive    8.8:1 */
+  --corail: oklch(0.72 0.155 35);
 
-  --success: oklch(0.76 0.12 145); /* #7FC581               9.2:1 */
-  --info: oklch(0.72 0.075 250); /* #81A9D2               7.7:1 */
+  --success: oklch(0.76 0.12 145); /* #7FC581               9.4:1 */
+  --info: oklch(0.75 0.06 110); /* même olive que --ardoise */
 }
 
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -315,51 +272,132 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   Fond animé  (voir `FondAnime.tsx`)
+/* Trame de grille du hero : des filets d'un pixel tous les 64 px, effacés vers
+   les bords par un masque radial. Statique : c'est un décor, pas un effet. */
+.fond-grille {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(80% 70% at 50% 40%, #000 20%, transparent 100%);
+  mask-image: radial-gradient(80% 70% at 50% 40%, #000 20%, transparent 100%);
+}
 
-   Une couche `fixed` sous le contenu : la trame de points, puis le grain.
-   Elle est `fixed` et non `absolute` parce que le fond doit rester immobile
-   pendant le défilement — une trame de plusieurs milliers de pixels de haut se
-   repeindrait à chaque frame de scroll pour un résultat identique à l'œil.
+/* Lueur d'une tuile du bento : un halo couleur accent posé sous le curseur
+   (position écrite en --x/--y par `Tuile`), visible seulement au survol. */
+.tuile-lumiere {
+  isolation: isolate;
+}
 
-   La trame est un canvas et non un `background-image` répété : voir l'en-tête
-   du composant. Les couleurs y sont lues sur les tokens côté JavaScript, il n'y
-   a donc rien à déclarer ici pour qu'elle suive le thème.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.fond-anime {
-  position: fixed;
+/* z-index -1 dans la tuile isolée : au-dessus de son fond, sous tout son contenu. */
+.tuile-lumiere::before {
+  content: "";
+  position: absolute;
   inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  z-index: -1;
   pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), color-mix(in oklch, var(--accent) 16%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
 
-.fond-trame {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* Vignette, et non fondu vertical. La couche est `fixed` : un dégradé
-     vertical serait ancré au viewport et non à la page, il ne s'alignerait sur
-     aucun contenu et ferait seulement voyager une bande de densité pendant le
-     défilement. Un masque radial est cohérent avec ce que la couche est : un
-     cadrage d'écran. Il dégage au passage les quatre coins, où flottent la
-     barre de navigation, le lecteur audio et le bouton de retour en haut. */
-  -webkit-mask-image: radial-gradient(125% 105% at 50% 38%, #000 30%, transparent 100%);
-  mask-image: radial-gradient(125% 105% at 50% 38%, #000 30%, transparent 100%);
+@media (hover: hover) and (pointer: fine) {
+  .tuile-lumiere:hover::before {
+    opacity: 1;
+  }
 }
 
-/* Grain. Un bruit fractal figé, pas une animation : le grain qui scintille est
-   un effet de film, pas de page web, et il interdit toute mise en cache de la
-   couche par le compositeur.
+/* Rouleaux de chiffres du hero : la colonne file vite puis ralentit longuement
+   sur sa valeur (courbe très « ease-out »), et se floute un peu au plus rapide
+   pour que le défilement paraisse continu plutôt que saccadé. */
+.rouleau {
+  transition: transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.rouleau-actif {
+  animation: rouleau-flou 2.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rouleau-flou {
+  0% { filter: blur(0); }
+  12% { filter: blur(3px); }
+  45% { filter: blur(1px); }
+  100% { filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rouleau {
+    transition: none;
+  }
+  .rouleau-actif {
+    animation: none;
+  }
+}
+
+/* Anneau en pointillés autour du portrait de la section À propos : un tour par
+   minute, assez lent pour rester un décor. */
+.anneau-lent {
+  animation: anneau-tour 60s linear infinite;
+}
+
+@keyframes anneau-tour {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anneau-lent {
+    animation: none;
+  }
+}
+
+/* Texte en contour seul : les numéros de section géants, en filigrane derrière
+   les titres. Le trait prend la couleur des filets, il reste un décor. */
+.texte-contour {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--border);
+}
+
+/* Défilement continu de la bande de technologies (section Stack). La liste est
+   doublée dans le DOM : à -50 %, la deuxième moitié a pris la place exacte de
+   la première, la boucle ne se voit pas. */
+@keyframes defilement-bande {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.bande-defilante {
+  animation: defilement-bande 60s linear infinite;
+}
+
+.bande:hover .bande-defilante {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bande-defilante {
+    animation: none;
+  }
+}
+
+/* Grain, en couche `fixed` sous le contenu (voir `Layout.tsx`). Un bruit
+   fractal figé, pas une animation : le grain qui scintille est un effet de
+   film, pas de page web, et il interdit toute mise en cache de la couche par
+   le compositeur.
 
    Il compte double sur cette famille de palettes : en dessous de 0,06 de
    chroma, les grands dégradés partent en bandes visibles sur un écran 8 bits,
    et un bruit à 3 % suffit à les casser. */
 .fond-grain {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 0;
+  pointer-events: none;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23b)'/%3E%3C/svg%3E");
 }
@@ -526,147 +564,4 @@
 
 html {
   scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   Palette d'essai « Café »
-   Activée par l'attribut `data-palette="cafe"` sur <html>. Retirer l'attribut
-   rend la page à « Encre & Étincelle » : aucun token au-dessus n'est modifié,
-   ce bloc ne fait que les surcharger avec une spécificité supérieure
-   (`html[data-palette]` = 0,1,1 contre `:root` = 0,1,0).
-
-   Cinq valeurs, une seule matière. Les étiquettes de la planche disent vrai
-   cette fois — relevé au compte-gouttes à ±3 unités près, l'écart tient au JPEG.
-
-     · Linen    #F5F1EA  oklch(0.959 0.010 82)
-     · Khaki    #D7C9B8  oklch(0.843 0.028 73)
-     · Camel    #B2967D  oklch(0.692 0.049 64)
-     · Cocoa    #7D5A44  oklch(0.499 0.057 53)
-     · Espresso #4A342A  oklch(0.347 0.036 46)
-
-   Ce n'est pas une palette, c'est une rampe : 36° de teinte du haut en bas,
-   chroma plafonné à 0,057. Elle se lit donc uniquement en clarté, et la
-   clarté décide seule des rôles. Les rapports de la rampe sur le Linen :
-
-     Espresso 10,3:1   → le texte courant, et le bouton plein.
-     Cocoa     5,5:1   → le texte secondaire, les liens, l'anneau de focus.
-     Camel     2,5:1   → aplats et pastilles. Jamais du texte.
-     Khaki     1,4:1   → filets et champs. Jamais du texte.
-
-   Le partage surface / texte de la palette d'origine (`--accent` contre
-   `--accent-texte`) tombe donc pile sur la marche Camel / Cocoa : la planche
-   contient déjà sa propre solution d'accessibilité, il suffit de la lire.
-
-   Ce que cette palette ne peut pas dire, et qui est écrit ailleurs dans ce
-   fichier : « tout tenir entre les teintes 45 et 80 » est exactement ce que
-   fait cette rampe, et c'est ce que la palette « Encre & Étincelle » avait
-   corrigé. Un fond crème, un filet khaki et un bouton espresso sont trois
-   valeurs d'une seule couleur. Assumé ici — c'est la planche demandée.
-
-   Conséquence directe : quatre tokens du site n'ont aucune source dans la
-   planche, et sont dérivés. Ils sont tirés à la clarté de Cocoa (clair) ou
-   d'accent-texte (sombre) pour rester dans la rampe, et leur chroma est
-   maintenu au plus bas qui les distingue encore les uns des autres :
-
-     --destructive  teinte 30, chroma 0,16  — le seul token où la chroma monte,
-                    parce qu'une erreur qui ne se distingue pas d'un lien brun
-                    n'est plus une erreur.
-     --success      teinte 140, chroma 0,085
-     --info         teinte 250, chroma 0,06
-     --ardoise      teinte 250, chroma 0,055 — le contrepoint froid du parcours.
-                    Il n'a plus d'ambre à quoi s'opposer : la rampe n'a pas
-                    d'accent. La bascule jour / nuit devient une bascule
-                    chaud / froid, plus faible qu'avec l'ambre.
-     --corail       teinte 38, chroma 0,115 — terre cuite plutôt que corail,
-                    pour rester dans la famille.
-
-   Toutes les paires porteuses de sens sont vérifiées ≥ 4,5:1.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-html[data-palette='cafe'] {
-  /* ── Thème clair — « le lin » ────────────────────────────────────────────── */
-  --background: oklch(0.9593 0.0103 82); /* #F5F1EA — Linen, tel quel */
-  --foreground: oklch(0.3474 0.0362 45.5); /* #4A342A — Espresso   10.3:1 */
-
-  --card: oklch(0.988 0.005 82); /* #FDFBF7 — la carte blanchit le lin */
-  --card-foreground: oklch(0.3474 0.0362 45.5);
-
-  --popover: oklch(0.988 0.005 82);
-  --popover-foreground: oklch(0.3474 0.0362 45.5);
-
-  /* L'Espresso sert deux fois : texte courant et aplat plein. C'est le seul
-     ton de la rampe qui porte du Linen en libellé sans descendre sous 4,5. */
-  --primary: oklch(0.3474 0.0362 45.5); /* #4A342A            10.3:1 */
-  --primary-foreground: oklch(0.9593 0.0103 82);
-
-  --secondary: oklch(0.8427 0.028 72.8); /* #D7C9B8 — Khaki */
-  --secondary-foreground: oklch(0.3474 0.0362 45.5);
-
-  --muted: oklch(0.905 0.018 78); /* #E6DED3 — entre Linen et Khaki */
-  --muted-foreground: oklch(0.4987 0.057 53.2); /* #7D5A44 — Cocoa   5.5:1 */
-
-  --accent: oklch(0.6919 0.0486 63.7); /* #B2967D — Camel, aplats seuls */
-  /* Sur le Camel, l'Espresso brut ne donne que 4,16:1 : le libellé descend
-     d'un cran sous la rampe. C'est le seul ton hors planche du thème clair. */
-  --accent-foreground: oklch(0.29 0.033 46); /* #39261D            5.1:1 */
-
-  --destructive: oklch(0.505 0.16 30); /* #AD3426             5.7:1 */
-  --destructive-foreground: oklch(0.9593 0.0103 82);
-
-  --border: oklch(0.8427 0.028 72.8); /* #D7C9B8 — Khaki, filet visible */
-  --input: oklch(0.885 0.023 76); /* #E2D7C9 */
-
-  --accent-texte: oklch(0.4987 0.057 53.2); /* #7D5A44 — Cocoa    5.5:1 */
-  --ring: oklch(0.4987 0.057 53.2); /*                     5.5:1 */
-
-  --ardoise: oklch(0.505 0.055 250); /* #4C6783             5.2:1 */
-  --corail: oklch(0.6 0.115 38); /* #BA664C — aplat seulement */
-
-  --success: oklch(0.495 0.085 140); /* #476E3E             5.3:1 */
-  --info: oklch(0.49 0.06 250); /* #466381              5.5:1 */
-}
-
-html[data-palette='cafe'].dark {
-  /* ── Thème sombre — la rampe prolongée sous l'Espresso ───────────────────── */
-  /* La planche s'arrête à L 0,347 : posé en fond de page, l'Espresso brut est
-     un brun laiteux, pas un noir, et il ne reste plus de marche en dessous
-     pour détacher les cartes. Le fond descend donc à 0,19 sur la teinte de
-     l'Espresso, et l'Espresso lui-même remonte en surface secondaire. */
-  --background: oklch(0.19 0.017 46); /* #1A110D */
-  --foreground: oklch(0.9593 0.0103 82); /* #F5F1EA — Linen    16.5:1 */
-
-  --card: oklch(0.235 0.019 46); /* #261B17 */
-  --card-foreground: oklch(0.9593 0.0103 82);
-
-  --popover: oklch(0.235 0.019 46);
-  --popover-foreground: oklch(0.9593 0.0103 82);
-
-  --primary: oklch(0.9 0.02 78); /* #E5DDD0            13.7:1 */
-  --primary-foreground: oklch(0.2 0.018 46);
-
-  --secondary: oklch(0.295 0.024 48); /* #372922 — l'Espresso de la planche */
-  --secondary-foreground: oklch(0.9593 0.0103 82);
-
-  --muted: oklch(0.3 0.024 48);
-  --muted-foreground: oklch(0.755 0.035 68); /* #BFAC98            8.4:1 */
-
-  /* Sur le fond sombre, le Camel remonte en clarté : c'est le seul endroit où
-     la rampe donne quelque chose qui ressemble à un accent. */
-  --accent: oklch(0.75 0.05 64); /* #C5A88D             8.3:1 */
-  --accent-foreground: oklch(0.21 0.02 46); /* sur aplat Camel     7.9:1 */
-
-  --destructive: oklch(0.655 0.16 30); /* #E16453             5.4:1 */
-  --destructive-foreground: oklch(0.9593 0.0103 82);
-
-  --border: oklch(0.345 0.028 50);
-  --input: oklch(0.315 0.026 49);
-
-  --accent-texte: oklch(0.8 0.05 66); /* #D5B89C             9.8:1 */
-  --ring: oklch(0.8 0.05 66);
-
-  --ardoise: oklch(0.745 0.055 250); /* #93B0CE             8.2:1 */
-  --corail: oklch(0.73 0.115 38); /* #E68D72 */
-
-  --success: oklch(0.75 0.085 140); /* #91BC88             8.6:1 */
-  --info: oklch(0.735 0.06 250); /* #8DADCE              7.9:1 */
 }
