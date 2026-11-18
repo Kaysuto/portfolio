@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="fr" data-palette="cafe">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="format-detection" content="telephone=no" />
-    <title>Kimiya - Product Builder</title>
+    <title>Kimiya - Informaticien polyvalent</title>
     <base href="/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <meta name="description" content="Portfolio de Kimiya, Product Builder polyvalent et expérimenté. Expert en réseau, développement, design pixel art, créateur de mini-jeux Minecraft et bien plus encore." />
-    <meta name="keywords" content="product builder, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya" />
+    <meta name="description" content="Portfolio de Kimiya, informaticien polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et bien plus encore." />
+    <meta name="keywords" content="informaticien polyvalent, développement web, réseau, pixel art, minecraft, programmation, polyvalent, portfolio, Kimiya" />
     <meta name="author" content="Kimiya" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kaysuto.fr" />
@@ -37,28 +37,28 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kaysuto.fr" />
-    <meta property="og:title" content="Kimiya - Product Builder" />
-    <meta property="og:description" content="Portfolio de Kimiya, Product Builder polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="og:title" content="Kimiya - Informaticien polyvalent" />
+    <meta property="og:description" content="Portfolio de Kimiya, informaticien polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="og:image" content="https://kaysuto.fr/og-image.jpg" />
     <!-- Type et dimensions déclarés : sans eux, plusieurs plateformes diffèrent le
          téléchargement de l'image et affichent le premier partage sans vignette. -->
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Kaysuto Kimiya — Product Builder" />
+    <meta property="og:image:alt" content="Kaysuto Kimiya — Informaticien polyvalent" />
     <meta property="og:locale" content="fr_FR" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://kaysuto.fr" />
-    <meta property="twitter:title" content="Kimiya - Product Builder" />
-    <meta property="twitter:description" content="Portfolio de Kimiya, Product Builder polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
+    <meta property="twitter:title" content="Kimiya - Informaticien polyvalent" />
+    <meta property="twitter:description" content="Portfolio de Kimiya, informaticien polyvalent : réseau, développement, design pixel art, mini-jeux Minecraft et plus encore." />
     <meta property="twitter:image" content="https://kaysuto.fr/og-image.jpg" />
     
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#140F0C" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#FEF7F2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#100E0C" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#FCFAF7" media="(prefers-color-scheme: light)" />
     <meta name="color-scheme" content="dark light" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -66,18 +66,10 @@
     <!-- CSS critique inline : évite le flash de couleur avant le chargement de index.css.
          Les valeurs doivent rester alignées sur --background / --foreground de src/index.css. -->
     <style>
-        html{font-family:'Geist',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;scroll-behavior:smooth;background:#FEF7F2}
-        html.dark{background:#140F0C}
-        body{margin:0;background:#FEF7F2;color:#1C1611;line-height:1.6}
-        html.dark body{background:#140F0C;color:#F0E8E2}
-        /* Essai « Café » — même rôle que les quatre lignes ci-dessus, pour
-           l'attribut data-palette="cafe". Sans elles, la page flashe en crème
-           avant que index.css n'arrive. Valeurs alignées sur le bloc
-           html[data-palette='cafe'] de src/index.css. */
-        html[data-palette=cafe]{background:#F5F1EA}
-        html[data-palette=cafe].dark{background:#1A110D}
-        html[data-palette=cafe] body{background:#F5F1EA;color:#4A342A}
-        html[data-palette=cafe].dark body{background:#1A110D;color:#F5F1EA}
+        html{font-family:'Geist',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;scroll-behavior:smooth;background:#FCFAF7}
+        html.dark{background:#100E0C}
+        body{margin:0;background:#FCFAF7;color:#1D1713;line-height:1.6}
+        html.dark body{background:#100E0C;color:#F1EEEA}
         #root{min-height:100vh}
         *{box-sizing:border-box}
     </style>
@@ -128,8 +120,8 @@
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya",
-            "jobTitle": "Technicien Informatique & Product Builder",
-            "description": "Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe et Product Builder sur ses projets personnels. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.",
+            "jobTitle": "Informaticien Polyvalent",
+            "description": "Informaticien Polyvalent chez Magna Engineered Glass Europe, qui conçoit et met en ligne ses propres projets. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.",
             "url": "https://kaysuto.fr",
             "image": "https://kaysuto.fr/og-image.jpg",
             "sameAs": [

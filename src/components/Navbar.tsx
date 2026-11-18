@@ -75,7 +75,7 @@ export function Navbar() {
   const [estCondensee, setEstCondensee] = useState(false)
   const [idActif, setIdActif] = useState<string | null>(null)
 
-  // Barre de progression de lecture, partagée par les deux affichages.
+  // Progression de lecture de la barre mobile ; sur grand écran, c'est le fil en haut de page qui la donne.
   const { scrollYProgress } = useScroll()
   const progression = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 })
 
@@ -231,13 +231,6 @@ export function Navbar() {
             <div className="shrink-0">
               <ThemeController />
             </div>
-
-            {/* Progression de lecture, filante sur l'arête basse de l'îlot */}
-            <motion.div
-              className="absolute bottom-0 inset-x-0 h-px origin-left bg-accent"
-              style={{ scaleX: progression }}
-              aria-hidden="true"
-            />
           </nav>
         </motion.header>
       </div>

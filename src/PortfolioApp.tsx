@@ -2,11 +2,10 @@ import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
 import { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, StackSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { enPosteDeNuit } from "@/lib/horaires";
 
 export function PortfolioApp() {
   // Titre fixe sans animation
-  useDocumentTitle("Product Builder", {
+  useDocumentTitle("Informaticien polyvalent", {
     enableTypingAnimation: false,
     dynamicSections: false
   });
@@ -60,8 +59,8 @@ export function PortfolioApp() {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Kimiya",
-            "jobTitle": "Technicien Informatique & Product Builder",
-            "description": `Technicien Informatique Polyvalent Junior chez Magna Engineered Glass Europe ${enPosteDeNuit() ? "la nuit, Product Builder le jour" : "le jour, Product Builder la nuit"}. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.`,
+            "jobTitle": "Informaticien Polyvalent",
+            "description": `Informaticien Polyvalent chez Magna Engineered Glass Europe, qui conçoit et met en ligne ses propres projets. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.`,
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",

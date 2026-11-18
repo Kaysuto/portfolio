@@ -1,13 +1,19 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Layers, Wrench } from "lucide-react"
+import { Layers } from "lucide-react"
 import { TechModal } from "@/components/ui/TechModal"
 import { SectionHeading, RailLabel } from "@/components/ui/SectionHeading"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
-import { STRATES, ATELIER, type Tech } from "@/data/stack"
+import { STRATES, ATELIER, type Strate, type Tech } from "@/data/stack"
 
-const TOTAL_TECHS =
-  STRATES.reduce((total, strate) => total + strate.techs.length, 0) + ATELIER.techs.length
+const TOTAL_TECHNOS = STRATES.reduce((total, strate) => total + strate.techs.length, 0)
+
+/** Les chiffres de la section, en pastilles plutôt qu'en ligne de code. */
+const CHIFFRES = [
+  { valeur: TOTAL_TECHNOS, libelle: "technologies" },
+  { valeur: STRATES.length, libelle: "couches" },
+  { valeur: ATELIER.techs.length, libelle: "outils au quotidien" },
+]
 
 /**
  * Intensité du filet de gauche : la couche de surface l'a discret, le socle
@@ -44,7 +50,80 @@ function PuceTech({ tech, onClic }: { tech: Tech; onClic: (tech: Tech) => void }
   )
 }
 
+const TOUTES_TECHS = [...STRATES.flatMap((strate) => strate.techs), ...ATELIER.techs]
+
+/**
+ * Bande de logos qui défile sans fin : un aperçu de toute la stack d'un coup
+ * d'œil, avant le détail par strate. Purement décorative (les mêmes techs sont
+ * cliquables plus bas), donc masquée aux technologies d'assistance.
+ */
+function BandeTechs() {
+  return (
+    <div
+      aria-hidden="true"
+      className="bande relative -mx-6 overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)] lg:-mx-12"
+    >
+      <div className="bande-defilante flex w-max gap-3">
+        {[...TOUTES_TECHS, ...TOUTES_TECHS].map((tech, index) => (
+          <span
+            key={index}
+            className="flex shrink-0 items-center gap-2.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground"
+          >
+            <img
+              src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
+              alt=""
+              loading="lazy"
+              className="size-4 object-contain"
+            />
+            {tech.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Une strate de la pile. Sur grand écran, chacune se colle un cran plus bas que
+ * la précédente : la pile grandit vers le bas, et la ligne de titre de chaque
+ * strate déjà posée reste visible au-dessus de la suivante, comme des onglets.
+ * Sur mobile, les strates sont trop hautes pour rester collées : elles
+ * s'enchaînent à plat.
+ */
+function CarteStrate({ strate, index, onClic }: { strate: Strate; index: number; onClic: (tech: Tech) => void }) {
+  return (
+    <motion.li
+      variants={fadeInUp}
+      style={{ top: `calc(7rem + ${index * 4.5}rem)` }}
+      className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 text-left shadow-[0_-12px_40px_-24px_color-mix(in_oklch,var(--foreground)_35%,transparent)] transition-colors hover:border-accent/40 md:sticky md:p-8 md:not-last:mb-10"
+    >
+      {/* Filet de profondeur, sur l'arête gauche de la strate */}
+      <span
+        className={`absolute left-0 inset-y-0 w-0.5 origin-center transition-transform duration-300 scale-y-75 group-hover:scale-y-100 ${FILETS[index]}`}
+        aria-hidden="true"
+      />
+
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span className="font-mono text-xs font-medium tracking-[0.2em] text-accent-texte">{strate.niveau}</span>
+        <h3 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{strate.title}</h3>
+        <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
+          {surDeuxChiffres(strate.techs.length)}
+        </span>
+      </div>
+
+      <p className="mt-3 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{strate.resume}</p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {strate.techs.map((tech) => (
+          <PuceTech key={tech.name} tech={tech} onClic={onClic} />
+        ))}
+      </div>
+    </motion.li>
+  )
+}
+
 export function StackSection() {
+
   const [techSelectionnee, setTechSelectionnee] = useState<Tech | null>(null)
   const [estModaleOuverte, setEstModaleOuverte] = useState(false)
 
@@ -54,7 +133,7 @@ export function StackSection() {
   }
 
   return (
-    <section id="stack" className="py-24 lg:py-32 px-6 lg:px-12 relative">
+    <section id="stack" className="py-10 lg:py-14 px-6 lg:px-12 relative">
       <motion.div
         className="max-w-6xl mx-auto relative z-10"
         initial="hidden"
@@ -63,23 +142,31 @@ export function StackSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          index="02"
           title={<>Ma <span className="text-accent-texte">stack</span></>}
-          lead="Aligner des logos ne dit pas grand-chose de ma façon de travailler. Alors je les ai rangés par profondeur, de l'interface que vous utilisez jusqu'aux serveurs qui la font tourner."
+          lead="Ce avec quoi je travaille, rangé par couche, du front jusqu'à l'infrastructure."
           className="mb-8"
         />
 
-        <motion.p
-          variants={fadeInUp}
-          className="mb-12 text-center font-mono text-xs tracking-[0.2em] text-muted-foreground tabular-nums"
-        >
-          {TOTAL_TECHS} technologies · {STRATES.length} strates · 1 atelier
-        </motion.p>
+        <motion.ul variants={fadeInUp} className="mb-8 flex flex-wrap gap-2">
+          {CHIFFRES.map(({ valeur, libelle }) => (
+            <li
+              key={libelle}
+              className="flex items-baseline gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground"
+            >
+              <span className="text-base font-semibold tabular-nums text-foreground">{valeur}</span>
+              {libelle}
+            </li>
+          ))}
+        </motion.ul>
+
+        <motion.div variants={fadeInUp} className="mb-10">
+          <BandeTechs />
+        </motion.div>
 
         {/* Les strates du produit, de la surface au socle */}
         <motion.div
           variants={fadeInUp}
-          className="flex flex-col items-center py-12 border-t border-border/60"
+          className="flex flex-col items-start py-10 border-t border-border/60"
         >
           <RailLabel>De la surface au socle</RailLabel>
 
@@ -103,46 +190,20 @@ export function StackSection() {
               </span>
             </div>
 
-            <ol className="space-y-3">
+            {/* Le pseudo-élément final laisse à la pile complète le temps d'être vue avant de repartir. */}
+            <ol className="space-y-4 md:space-y-0 md:after:block md:after:h-[10vh]">
               {STRATES.map((strate, index) => (
-                <motion.li
+                <CarteStrate
                   key={strate.id}
-                  variants={fadeInUp}
-                  className="group relative overflow-hidden rounded-lg border border-border bg-[color-mix(in_oklch,var(--input),var(--background)_80%)] dark:bg-[color-mix(in_oklch,var(--input),var(--background)_70%)] p-5 md:p-6 text-left transition-colors hover:border-accent/40"
-                >
-                  {/* Filet de profondeur, sur l'arête gauche de la strate */}
-                  <span
-                    className={`absolute left-0 inset-y-0 w-0.5 origin-center transition-transform duration-300 scale-y-75 group-hover:scale-y-100 ${FILETS[index]}`}
-                    aria-hidden="true"
-                  />
-
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="font-mono text-xs font-medium tracking-[0.2em] text-accent-texte">
-                      {strate.niveau}
-                    </span>
-                    <h3 className="text-base font-medium text-foreground tracking-tight">
-                      {strate.title}
-                    </h3>
-                    <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
-                      {surDeuxChiffres(strate.techs.length)}
-                    </span>
-                  </div>
-
-                  <p className="mt-3 max-w-2xl text-sm/relaxed text-muted-foreground">
-                    {strate.resume}
-                  </p>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {strate.techs.map((tech) => (
-                      <PuceTech key={tech.name} tech={tech} onClic={gererClicTech} />
-                    ))}
-                  </div>
-                </motion.li>
+                  strate={strate}
+                  index={index}
+                  onClic={gererClicTech}
+                />
               ))}
             </ol>
           </div>
 
-          <p className="mt-10 max-w-2xl text-center text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
+          <p className="mt-10 max-w-2xl text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
             <Layers className="inline size-4 mr-2 -mt-1 text-accent-texte" aria-hidden="true" />
             J'aime comprendre la couche du dessous avant de choisir celle du dessus. Les serveurs,
             je ne les connais pas que dans le cloud : j'en ai installé et réparé de mes mains.
@@ -152,36 +213,36 @@ export function StackSection() {
         {/* L'atelier : les outils, hors de la pile */}
         <motion.div
           variants={fadeInUp}
-          className="flex flex-col items-center pt-12 border-t border-border/60"
+          className="flex flex-col items-start pt-10 border-t border-border/60"
         >
           <RailLabel>{ATELIER.role}</RailLabel>
 
-          <div className="mt-8 w-full md:pl-24">
-            {/* `bg-background` et non la teinte des strates : l'atelier reste à
-                plat, hors de la pile, mais son fond opaque arrête la trame de
-                points — sans lui, elle traverse le panneau. */}
-            <div className="rounded-lg border border-dashed border-border bg-background p-5 md:p-6">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <Wrench className="size-4 text-accent-texte self-center" aria-hidden="true" />
-                <h3 className="text-base font-medium text-foreground tracking-tight">
-                  {ATELIER.title}
-                </h3>
-                <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
-                  {surDeuxChiffres(ATELIER.techs.length)}
-                </span>
-              </div>
+          <p className="mt-4 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{ATELIER.resume}</p>
 
-              <p className="mt-3 max-w-2xl text-sm/relaxed text-muted-foreground">
-                {ATELIER.resume}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {ATELIER.techs.map((tech) => (
-                  <PuceTech key={tech.name} tech={tech} onClic={gererClicTech} />
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Une grille d'outils plutôt qu'une carte de plus : chaque outil a sa case. */}
+          <ul className="mt-8 grid w-full grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {ATELIER.techs.map((tech) => (
+              <motion.li key={tech.name} variants={fadeInUp}>
+                <button
+                  type="button"
+                  onClick={() => gererClicTech(tech)}
+                  className="group flex w-full flex-col items-start gap-6 rounded-xl border border-border bg-card p-4 text-left transition-[border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <img
+                    src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className={`size-6 object-contain opacity-80 grayscale transition-[filter,opacity] group-hover:opacity-100 group-hover:filter-none ${
+                      // Les logos Simple Icons sont des silhouettes : en sombre, on les passe en blanc pour que les marques noires (GitHub, OBS) restent visibles. Les images matricielles, elles, ont leur propre fond.
+                      tech.iconUrl ? "" : "dark:brightness-0 dark:invert"
+                    }`}
+                  />
+                  <span className="text-sm font-medium text-foreground">{tech.name}</span>
+                </button>
+              </motion.li>
+            ))}
+          </ul>
         </motion.div>
       </motion.div>
 

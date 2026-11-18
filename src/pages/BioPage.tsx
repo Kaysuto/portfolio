@@ -22,7 +22,7 @@ import { ExternalLinkModal } from '@/components/ui/ExternalLinkModal';
 import { BioLinksService } from '@/services/bioLinksService';
 import { useModal } from '@/hooks/useModal';
 import { useSeo } from '@/hooks/useSeo';
-import { fadeInUp, staggerContainer, VIEWPORT } from '@/lib/animations';
+import { fadeInUp, staggerContainer, VIEWPORT, EASE_OUT } from '@/lib/animations';
 
 const MAP_ICONES: Record<string, React.ElementType> = {
   EnvelopeSimple: Mail,
@@ -86,24 +86,31 @@ const BioPage: React.FC = () => {
 
           {/* En-tête aligné à gauche, avec compteur en marge */}
           <motion.header
-            className="flex flex-col items-center text-center gap-4 pb-10 mb-4 border-b border-border/60"
-            initial={{ opacity: 0, y: -16 }}
+            className="relative flex flex-col items-start gap-4 pb-14 text-left"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: EASE_OUT }}
           >
-            <div className="flex flex-col items-center">
+            <div className="relative flex flex-col items-start">
               <p className="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent-texte mb-5">
                 Bio
               </p>
-              <h1 className="text-5xl md:text-7xl font-semibold mb-4">
-                Mes <span className="text-accent-texte">Liens</span>
+              <h1 className="overflow-hidden pb-2 -mb-2 text-6xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-8xl">
+                <motion.span
+                  className="block"
+                  initial={{ y: '110%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 }}
+                >
+                  Mes <span className="text-accent-texte">Liens</span>
+                </motion.span>
               </h1>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto">
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
                 Retrouvez-moi sur mes différentes plateformes et projets.
               </p>
             </div>
             <p
-              className="font-mono text-4xl font-medium text-accent-texte/30 tabular-nums leading-none"
+              className="texte-contour pointer-events-none absolute -top-6 right-0 select-none text-[8rem] font-semibold leading-none tracking-[-0.06em] tabular-nums md:text-[13rem]"
               title={`${nombreTotal} liens`}
             >
               {String(nombreTotal).padStart(2, '0')}
@@ -111,7 +118,7 @@ const BioPage: React.FC = () => {
           </motion.header>
 
           {/* Une catégorie par bande, intertitre centré au-dessus des liens */}
-          <div className="divide-y divide-border/60">
+          <div>
             {Object.entries(liensGroupes).map(([categorie, liens]) => (
               <motion.section
                 key={categorie}
@@ -119,13 +126,14 @@ const BioPage: React.FC = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={VIEWPORT}
-                className="flex flex-col items-center py-10"
+                className="grid gap-6 border-t border-border/60 py-12 md:grid-cols-[13rem_1fr] md:gap-12"
               >
-                <h2 className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center">
+                <h2 className="flex items-center gap-3 self-start font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground md:sticky md:top-28">
+                  <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
                   {LIBELLES_CATEGORIE[categorie] || categorie}
                 </h2>
 
-                <ul className="mt-8 w-full max-w-2xl divide-y divide-border/40">
+                <ul className="w-full min-w-0 divide-y divide-border/40">
                   {liens.map((lien) => (
                     <motion.li
                       key={lien.id}

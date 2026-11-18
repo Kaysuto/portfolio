@@ -1,19 +1,9 @@
 import type { ReactNode } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { fadeInUp, VIEWPORT, EASE_OUT } from "@/lib/animations"
-import { SECTIONS } from "@/constants"
 import { cn } from "@/lib/utils"
 
-/*
-  « accueil » est le hero : il ouvre la page sans porter de numéro. Le total est
-  donc dérivé d'ici plutôt qu'écrit en dur — ajouter une section au sommaire
-  met la jauge à jour toute seule.
-*/
-const NOMBRE_SECTIONS = SECTIONS.filter((section) => section !== "accueil").length
-
 interface SectionHeadingProps {
-  /** Numéro d'ordre affiché en tête, façon sommaire éditorial (« 01 »). */
-  index: string
   title: ReactNode
   /** Chapeau optionnel sous le titre. */
   lead?: ReactNode
@@ -21,81 +11,30 @@ interface SectionHeadingProps {
 }
 
 /**
- * En-tête de section commun à tout le site.
- *
- * Trois idées, toutes au service de la même question — « où en suis-je ? » :
- *
- * 1. Le numéro est donné sur son total (« 02 / 04 »). Seul, « 02 » disait
- *    l'ordre mais pas la longueur du parcours.
- * 2. Le filet unique est devenu une jauge : un segment par section, le segment
- *    courant allongé et en accent. C'est le même trait d'un pixel qu'avant,
- *    mais il situe au lieu de seulement décorer.
- * 3. Le titre se lève derrière une bande, comme un volet. C'est le seul geste
- *    purement graphique, et il s'efface si le visiteur a demandé moins
- *    d'animation.
+ * En-tête de section commun à tout le site : un titre aligné à gauche qui se
+ * lève derrière un masque, comme un volet, et un chapeau optionnel. Pas de
+ * numérotation : les sections se lisent à leur titre.
  */
-export function SectionHeading({ index, title, lead, className }: SectionHeadingProps) {
+export function SectionHeading({ title, lead, className }: SectionHeadingProps) {
   const mouvementReduit = useReducedMotion()
-  const rangCourant = Number(index)
 
   return (
-    <motion.div
-      variants={fadeInUp}
-      className={cn("mb-16 flex flex-col items-center text-center", className)}
-    >
-      <motion.p
-        className="flex items-baseline gap-1.5 font-mono text-xs font-medium tabular-nums"
-        initial={{ opacity: 0, y: -6 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={VIEWPORT}
-        transition={{ duration: 0.4, ease: EASE_OUT }}
-      >
-        <span className="tracking-[0.3em] text-accent-texte">{index}</span>
-        <span className="tracking-[0.2em] text-muted-foreground/60">
-          / {String(NOMBRE_SECTIONS).padStart(2, "0")}
-        </span>
-      </motion.p>
-
-      {/*
-        `overflow-hidden` sert de volet au titre. Le `pb-2 -mb-2` rend au bloc la
-        place des jambages : sans lui, le « j » de « Projets » se faisait couper
-        par la bande, `leading-none` ne laissant aucune marge sous la ligne.
-      */}
-      <h2 className="mt-4 overflow-hidden pb-2 -mb-2 text-4xl md:text-5xl font-semibold text-foreground leading-none">
+    <motion.div variants={fadeInUp} className={cn("relative mb-8 md:mb-10", className)}>
+      {/* `pb-3 -mb-3` rend au masque la place des jambages (le « j » de « Projets »). */}
+      <h2 className="relative overflow-hidden pb-3 -mb-3 text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-foreground md:text-7xl">
         <motion.span
           className="block"
           initial={mouvementReduit ? false : { y: "110%" }}
           whileInView={{ y: "0%" }}
           viewport={VIEWPORT}
-          transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.05 }}
+          transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.05 }}
         >
           {title}
         </motion.span>
       </h2>
 
-      {/*
-        La jauge de sommaire. Chaque segment se trace en `scaleX` depuis son
-        centre, en cascade : pas de recalcul de largeur, l'animation reste sur
-        le compositeur.
-      */}
-      <div className="mt-6 flex items-center gap-1.5" aria-hidden="true">
-        {Array.from({ length: NOMBRE_SECTIONS }).map((_, rang) => (
-          <motion.span
-            key={rang}
-            className={cn(
-              "h-px origin-center transition-[width,background-color] duration-500",
-              rang + 1 === rangCourant ? "w-12 bg-accent" : "w-5 bg-border"
-            )}
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={VIEWPORT}
-            transition={{ duration: 0.5, ease: EASE_OUT, delay: 0.15 + rang * 0.07 }}
-          />
-        ))}
-      </div>
-
       {lead && (
-        <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl text-balance">
+        <p className="relative mt-8 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           {lead}
         </p>
       )}
@@ -108,15 +47,16 @@ interface RailLabelProps {
   className?: string
 }
 
-/** Intertitre d'un bloc au sein d'une section, centré comme le reste. */
+/** Intertitre d'un bloc au sein d'une section. */
 export function RailLabel({ children, className }: RailLabelProps) {
   return (
     <p
       className={cn(
-        "font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground text-center",
+        "flex items-center gap-3 font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground",
         className
       )}
     >
+      <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
       {children}
     </p>
   )
