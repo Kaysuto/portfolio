@@ -42,8 +42,9 @@ export type Piste = {
  * finit toujours par se faire couper quelque part par un proxy ou un CDN.
  *
  * Aucun de ces fichiers ne portait de tag ID3 : titres et artistes sont donc
- * repris des noms de fichiers d'origine, et aucune pochette n'a pu être
- * extraite. Elles se déposent dans `public/pochettes/`.
+ * repris des noms de fichiers d'origine. Les pochettes de `public/pochettes/`
+ * sont celles des sorties officielles (Deezer, iTunes), récupérées une fois et
+ * réduites à 192 px : servies en local, elles n'envoient rien à un tiers.
  *
  * Les fichiers `.lrc` de `public/lyrics/` viennent de LRCLIB, base de paroles
  * ouverte et gratuite. Ils y ont été récupérés une fois et déposés en local :
@@ -86,6 +87,7 @@ export const PLAYLIST: Piste[] = [
     titre: "I Will Find a Way",
     artiste: "NEFFEX",
     src: "/audio/neffex-i-will-find-a-way.mp3",
+    pochette: "/pochettes/neffex-i-will-find-a-way.webp",
     paroles: "/lyrics/neffex-i-will-find-a-way.lrc",
   },
   {
@@ -93,6 +95,7 @@ export const PLAYLIST: Piste[] = [
     titre: "Never Coming Back",
     artiste: "NEFFEX",
     src: "/audio/neffex-never-coming-back.mp3",
+    pochette: "/pochettes/neffex-never-coming-back.webp",
     paroles: "/lyrics/neffex-never-coming-back.lrc",
   },
   {
@@ -100,6 +103,7 @@ export const PLAYLIST: Piste[] = [
     titre: "Hit the Jackpot!",
     artiste: "Gameboy Jones",
     src: "/audio/gameboyjones-hit-the-jackpot.mp3",
+    pochette: "/pochettes/gameboyjones-hit-the-jackpot.webp",
     paroles: "/lyrics/gameboyjones-hit-the-jackpot.lrc",
   },
   {
@@ -107,12 +111,14 @@ export const PLAYLIST: Piste[] = [
     titre: "Destined",
     artiste: "S!LENT",
     src: "/audio/silent-destined.mp3",
+    pochette: "/pochettes/silent-destined.webp",
   },
   {
     id: "aria-byte-suicidal-love",
     titre: "Suicidal Love",
     artiste: "Aria Byte",
     src: "/audio/aria-byte-suicidal-love.mp3",
+    pochette: "/pochettes/aria-byte-suicidal-love.webp",
     paroles: "/lyrics/aria-byte-suicidal-love.lrc",
   },
   {
@@ -120,6 +126,7 @@ export const PLAYLIST: Piste[] = [
     titre: "iDK",
     artiste: "Aria Byte",
     src: "/audio/aria-byte-idk.mp3",
+    pochette: "/pochettes/aria-byte-idk.webp",
     paroles: "/lyrics/aria-byte-idk.lrc",
   },
   {
@@ -127,11 +134,13 @@ export const PLAYLIST: Piste[] = [
     titre: "love me reckless (Slowed)",
     artiste: "auritni",
     src: "/audio/auritni-love-me-reckless-slowed.mp3",
+    pochette: "/pochettes/auritni-love-me-reckless.webp",
   },
   {
     id: "drained",
     titre: "Drained",
     artiste: "auritni",
     src: "/audio/drained.mp3",
+    pochette: "/pochettes/drained.webp",
   },
 ]

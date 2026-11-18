@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useLangue } from '@/lib/langue';
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export function Modal({
   maxWidth = "max-w-lg",
   className = "",
 }: ModalProps) {
+  const { t } = useLangue();
   // Gestion du scroll lock
   useEffect(() => {
     if (isOpen) {
@@ -77,7 +79,7 @@ export function Modal({
             <button
               onClick={onClose}
               className="absolute top-3 right-3 grid place-items-center size-9 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-              aria-label="Fermer"
+              aria-label={t("Fermer", "Close")}
             >
               <X className="size-[18px]" />
             </button>

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Portfolio personnel de Kimiya (kaysuto.fr) : SPA React 19 + Vite + TypeScript + Tailwind CSS 4, composants shadcn (`components.json`), Framer Motion et three.js. Hébergé sur Vercel ; une seule fonction serverless, `api/contact.ts`. Lire `README.md` pour la vue d'ensemble.
+Portfolio personnel de Kimiya (kaysuto.fr) : SPA React 19 + Vite + TypeScript + Tailwind CSS 4, composants shadcn (`components.json`), Framer Motion et three.js. Hébergé sur Coolify, sur un serveur personnel, derrière Cloudflare : pas de Vercel. Le formulaire de contact appelle `/api/contact` ; `api/contact.ts` est écrit au format des fonctions Vercel et la production ne répond pas comme lui, donc vérifier comment Coolify sert cette route avant d'y toucher. Lire `README.md` pour la vue d'ensemble.
 
 ## Commandes
 

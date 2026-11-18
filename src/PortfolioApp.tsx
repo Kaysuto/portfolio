@@ -2,10 +2,13 @@ import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
 import { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, StackSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useLangue } from "@/lib/langue";
 
 export function PortfolioApp() {
+  const { t } = useLangue();
+
   // Titre fixe sans animation
-  useDocumentTitle("Informaticien polyvalent", {
+  useDocumentTitle(t("Informaticien polyvalent", "IT generalist"), {
     enableTypingAnimation: false,
     dynamicSections: false
   });

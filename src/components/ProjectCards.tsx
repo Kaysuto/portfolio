@@ -5,6 +5,7 @@ import { motion, useReducedMotion, type Variants } from "framer-motion"
 import { DemoModal } from "@/components/ui/ProjectModal"
 import { ExternalLinkModal } from "@/components/ui/ExternalLinkModal"
 import { projects, type Project } from "@/data/projects"
+import { useLangue } from "@/lib/langue"
 import { EASE_OUT, VIEWPORT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 
@@ -39,6 +40,7 @@ interface CarteProps {
 
 function CarteProjet({ project, className, onOuvrir }: CarteProps) {
   const mouvementReduit = useReducedMotion()
+  const { t, l } = useLangue()
 
   return (
     <motion.article
@@ -52,7 +54,7 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
         {project.image_url ? (
           <img
             src={project.image_url}
-            alt={project.image_alt ?? project.title}
+            alt={project.image_alt ? l(project.image_alt) : project.title}
             loading="lazy"
             decoding="async"
             className="size-full object-cover object-top transition-[scale] duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] motion-safe:group-hover/carte:scale-105"
@@ -73,7 +75,7 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 text-white">
         <div className="min-w-0">
           <p className="mb-1 truncate font-mono text-[11px] uppercase tracking-widest text-white/70">
-            {project.type} · {new Date(project.created_at).getFullYear()}
+            {l(project.type)} · {new Date(project.created_at).getFullYear()}
           </p>
           <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
             {project.demo_url ? (
@@ -83,7 +85,7 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
             ) : (
               <button type="button" onClick={() => onOuvrir(project, "github")} className={cn(LIEN_PRINCIPAL, "text-left")}>
                 {project.title}
-                <span className="sr-only"> (dépôt GitHub)</span>
+                <span className="sr-only">{t(" (dépôt GitHub)", " (GitHub repository)")}</span>
               </button>
             )}
           </h3>
@@ -94,7 +96,7 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
             <button
               type="button"
               onClick={() => onOuvrir(project, "github")}
-              aria-label={`Dépôt GitHub de ${project.title}`}
+              aria-label={t(`Dépôt GitHub de ${project.title}`, `${project.title} GitHub repository`)}
               className="relative z-20 flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Github size={18} />
@@ -116,6 +118,7 @@ export function ProjectCards() {
   // Toute sortie du site passe par une confirmation : la démo comme le dépôt GitHub.
   const [ouverture, setOuverture] = useState<{ projet: Project; cible: Cible } | null>(null)
   const [afficherModale, setAfficherModale] = useState(false)
+  const { t } = useLangue()
 
   const gererOuverture = useCallback((projet: Project, cible: Cible) => {
     setOuverture({ projet, cible })
@@ -152,7 +155,7 @@ export function ProjectCards() {
         onClose={gererFermetureModale}
         icon={<Github className="size-6 text-accent-texte" />}
         title={ouverture?.projet.title ?? ""}
-        subtitle="Voir le dépôt sur GitHub"
+        subtitle={t("Voir le dépôt sur GitHub", "View the repository on GitHub")}
         url={ouverture?.projet.github_url ?? ""}
       />
     </>

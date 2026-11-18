@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button"
 import { GitHubModal } from "@/components/ui/GitHubModal"
 import { SectionHeading } from "@/components/ui/SectionHeading"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
+import { useLangue } from "@/lib/langue"
 
 export function ProjectsSection() {
   const [afficherModale, setAfficherModale] = useState(false)
+  const { t } = useLangue()
 
   return (
     <section id="projets" className="py-10 lg:py-14 px-6 lg:px-12 relative overflow-hidden">
@@ -21,8 +23,11 @@ export function ProjectsSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          title={<>Mes <span className="text-accent-texte">Projets</span></>}
-          lead="Une sélection de projets qui illustrent ma passion pour la création d'expériences numériques innovantes et performantes."
+          title={t(<>Mes <span className="text-accent-texte">Projets</span></>, <>My <span className="text-accent-texte">Projects</span></>)}
+          lead={t(
+            "Une sélection de projets qui illustrent ma passion pour la création d'expériences numériques innovantes et performantes.",
+            "A selection of projects that show my passion for building fast, inventive digital experiences."
+          )}
         />
 
         {/* La grille porte sa propre cascade. */}
@@ -41,7 +46,7 @@ export function ProjectsSection() {
             className="group gap-3"
           >
             <Github className="size-5 text-accent-texte" aria-hidden="true" />
-            Voir tous mes projets
+            {t("Voir tous mes projets", "See all my projects")}
             <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
           </Button>
         </motion.div>

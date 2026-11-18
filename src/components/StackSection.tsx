@@ -2,17 +2,19 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Layers } from "lucide-react"
 import { TechModal } from "@/components/ui/TechModal"
+import { LogoLoop, type Logo } from "@/components/ui/LogoLoop"
 import { SectionHeading, RailLabel } from "@/components/ui/SectionHeading"
 import { fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 import { STRATES, ATELIER, type Strate, type Tech } from "@/data/stack"
+import { useLangue } from "@/lib/langue"
 
 const TOTAL_TECHNOS = STRATES.reduce((total, strate) => total + strate.techs.length, 0)
 
 /** Les chiffres de la section, en pastilles plutôt qu'en ligne de code. */
 const CHIFFRES = [
-  { valeur: TOTAL_TECHNOS, libelle: "technologies" },
-  { valeur: STRATES.length, libelle: "couches" },
-  { valeur: ATELIER.techs.length, libelle: "outils au quotidien" },
+  { valeur: TOTAL_TECHNOS, libelle: { fr: "technologies", en: "technologies" } },
+  { valeur: STRATES.length, libelle: { fr: "couches", en: "layers" } },
+  { valeur: ATELIER.techs.length, libelle: { fr: "outils au quotidien", en: "everyday tools" } },
 ]
 
 /**
@@ -41,7 +43,7 @@ function PuceTech({ tech, onClic }: { tech: Tech; onClic: (tech: Tech) => void }
         src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
         alt=""
         aria-hidden="true"
-        className="size-4 grayscale group-hover:grayscale-0 transition-all object-contain"
+        className={`size-4 grayscale group-hover:grayscale-0 transition-all object-contain ${classeIcone(tech)}`}
       />
       <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
         {tech.name}
@@ -50,38 +52,28 @@ function PuceTech({ tech, onClic }: { tech: Tech; onClic: (tech: Tech) => void }
   )
 }
 
-const TOUTES_TECHS = [...STRATES.flatMap((strate) => strate.techs), ...ATELIER.techs]
+/** Toute la stack d'un coup d'œil, sans doublon (une tech peut figurer dans une strate et dans l'atelier). */
+const TOUTES_TECHS = [...STRATES.flatMap((strate) => strate.techs), ...ATELIER.techs].filter(
+  (tech, index, toutes) => toutes.findIndex((autre) => autre.name === tech.name) === index
+)
 
 /**
- * Bande de logos qui défile sans fin : un aperçu de toute la stack d'un coup
- * d'œil, avant le détail par strate. Purement décorative (les mêmes techs sont
- * cliquables plus bas), donc masquée aux technologies d'assistance.
+ * Marques dont la couleur officielle est noire ou presque (Simple Icons) : sur
+ * fond sombre, elles passent en blanc. Les autres gardent leur vraie couleur,
+ * y compris au survol — les blanchir toutes effaçait le bleu de React, l'orange
+ * de Cloudflare, etc.
  */
-function BandeTechs() {
-  return (
-    <div
-      aria-hidden="true"
-      className="bande relative -mx-6 overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)] lg:-mx-12"
-    >
-      <div className="bande-defilante flex w-max gap-3">
-        {[...TOUTES_TECHS, ...TOUTES_TECHS].map((tech, index) => (
-          <span
-            key={index}
-            className="flex shrink-0 items-center gap-2.5 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground"
-          >
-            <img
-              src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
-              alt=""
-              loading="lazy"
-              className="size-4 object-contain"
-            />
-            {tech.name}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
+const MARQUES_SOMBRES = new Set(["nextdotjs", "tanstack", "shadcnui", "vercel", "jetbrains", "github", "obsstudio"])
+
+/** Classe d'une icône Simple Icons de marque sombre, à blanchir en thème sombre. */
+const classeIcone = (tech: Tech) => (!tech.iconUrl && MARQUES_SOMBRES.has(tech.slug) ? "dark:brightness-0 dark:invert" : "")
+
+/** Les logos de la bande. */
+const LOGOS_TECHS: Logo[] = TOUTES_TECHS.map((tech) => ({
+  src: tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`,
+  titre: tech.name,
+  classeImage: classeIcone(tech),
+}))
 
 /**
  * Une strate de la pile. Sur grand écran, chacune se colle un cran plus bas que
@@ -91,6 +83,7 @@ function BandeTechs() {
  * s'enchaînent à plat.
  */
 function CarteStrate({ strate, index, onClic }: { strate: Strate; index: number; onClic: (tech: Tech) => void }) {
+  const { l } = useLangue()
   return (
     <motion.li
       variants={fadeInUp}
@@ -105,13 +98,13 @@ function CarteStrate({ strate, index, onClic }: { strate: Strate; index: number;
 
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-xs font-medium tracking-[0.2em] text-accent-texte">{strate.niveau}</span>
-        <h3 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{strate.title}</h3>
+        <h3 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{l(strate.title)}</h3>
         <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
           {surDeuxChiffres(strate.techs.length)}
         </span>
       </div>
 
-      <p className="mt-3 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{strate.resume}</p>
+      <p className="mt-3 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{l(strate.resume)}</p>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {strate.techs.map((tech) => (
@@ -123,7 +116,7 @@ function CarteStrate({ strate, index, onClic }: { strate: Strate; index: number;
 }
 
 export function StackSection() {
-
+  const { t, l } = useLangue()
   const [techSelectionnee, setTechSelectionnee] = useState<Tech | null>(null)
   const [estModaleOuverte, setEstModaleOuverte] = useState(false)
 
@@ -142,25 +135,34 @@ export function StackSection() {
         variants={staggerContainer}
       >
         <SectionHeading
-          title={<>Ma <span className="text-accent-texte">stack</span></>}
-          lead="Ce avec quoi je travaille, rangé par couche, du front jusqu'à l'infrastructure."
+          title={t(<>Ma <span className="text-accent-texte">stack</span></>, <>My <span className="text-accent-texte">stack</span></>)}
+          lead={t(
+            "Ce avec quoi je travaille, rangé par couche, du front jusqu'à l'infrastructure.",
+            "What I work with, sorted by layer, from the frontend down to the infrastructure."
+          )}
           className="mb-8"
         />
 
         <motion.ul variants={fadeInUp} className="mb-8 flex flex-wrap gap-2">
           {CHIFFRES.map(({ valeur, libelle }) => (
             <li
-              key={libelle}
+              key={libelle.fr}
               className="flex items-baseline gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground"
             >
               <span className="text-base font-semibold tabular-nums text-foreground">{valeur}</span>
-              {libelle}
+              {l(libelle)}
             </li>
           ))}
         </motion.ul>
 
-        <motion.div variants={fadeInUp} className="mb-10">
-          <BandeTechs />
+        {/* Toute la stack d'un coup d'œil ; un logo cliqué ouvre la même fenêtre que les puces plus bas. */}
+        <motion.div variants={fadeInUp} className="mb-6">
+          <LogoLoop
+            logos={LOGOS_TECHS}
+            onClic={(index) => gererClicTech(TOUTES_TECHS[index])}
+            ariaLabel={t("Toutes mes technologies", "All my technologies")}
+            className="-mx-6 lg:-mx-12"
+          />
         </motion.div>
 
         {/* Les strates du produit, de la surface au socle */}
@@ -168,7 +170,7 @@ export function StackSection() {
           variants={fadeInUp}
           className="flex flex-col items-start py-10 border-t border-border/60"
         >
-          <RailLabel>De la surface au socle</RailLabel>
+          <RailLabel>{t("De la surface au socle", "From surface to bedrock")}</RailLabel>
 
           {/*
             L'axe de profondeur vit dans une gouttière de 6 rem à gauche : le
@@ -186,7 +188,7 @@ export function StackSection() {
               </span>
               <span className="my-3 w-px flex-1 bg-linear-to-b from-border to-accent/60" />
               <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                Socle
+                {t("Socle", "Bedrock")}
               </span>
             </div>
 
@@ -205,8 +207,10 @@ export function StackSection() {
 
           <p className="mt-10 max-w-2xl text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
             <Layers className="inline size-4 mr-2 -mt-1 text-accent-texte" aria-hidden="true" />
-            J'aime comprendre la couche du dessous avant de choisir celle du dessus. Les serveurs,
-            je ne les connais pas que dans le cloud : j'en ai installé et réparé de mes mains.
+            {t(
+              "J'aime comprendre la couche du dessous avant de choisir celle du dessus. Les serveurs, je ne les connais pas que dans le cloud : j'en ai installé et réparé de mes mains.",
+              "I like to understand the layer below before choosing the one above. I don't just know servers from the cloud: I've installed and repaired them with my own hands."
+            )}
           </p>
         </motion.div>
 
@@ -215,9 +219,9 @@ export function StackSection() {
           variants={fadeInUp}
           className="flex flex-col items-start pt-10 border-t border-border/60"
         >
-          <RailLabel>{ATELIER.role}</RailLabel>
+          <RailLabel>{ATELIER.role && l(ATELIER.role)}</RailLabel>
 
-          <p className="mt-4 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{ATELIER.resume}</p>
+          <p className="mt-4 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{l(ATELIER.resume)}</p>
 
           {/* Une grille d'outils plutôt qu'une carte de plus : chaque outil a sa case. */}
           <ul className="mt-8 grid w-full grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -235,7 +239,7 @@ export function StackSection() {
                     loading="lazy"
                     className={`size-6 object-contain opacity-80 grayscale transition-[filter,opacity] group-hover:opacity-100 group-hover:filter-none ${
                       // Les logos Simple Icons sont des silhouettes : en sombre, on les passe en blanc pour que les marques noires (GitHub, OBS) restent visibles. Les images matricielles, elles, ont leur propre fond.
-                      tech.iconUrl ? "" : "dark:brightness-0 dark:invert"
+                      classeIcone(tech)
                     }`}
                   />
                   <span className="text-sm font-medium text-foreground">{tech.name}</span>

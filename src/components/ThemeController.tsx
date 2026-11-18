@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Sun, Moon } from "lucide-react"
 import { useTheme } from "@/hooks/use-theme"
 import { cn } from "@/lib/utils"
+import { useLangue } from "@/lib/langue"
 
 interface ThemeControllerProps {
   /**
@@ -14,11 +15,14 @@ interface ThemeControllerProps {
 
 export function ThemeController({ variante = "icone" }: ThemeControllerProps) {
   const { theme, setTheme } = useTheme()
+  const { t } = useLangue()
   const estSombre = theme === "dark"
   const Icone = estSombre ? Moon : Sun
 
   const basculer = () => setTheme(estSombre ? "light" : "dark")
-  const libelleAccessible = estSombre ? "Passer en mode clair" : "Passer en mode sombre"
+  const libelleAccessible = estSombre
+    ? t("Passer en mode clair", "Switch to light mode")
+    : t("Passer en mode sombre", "Switch to dark mode")
 
   /* Les deux icônes se croisent au même endroit : la boîte est dimensionnée en
      dur et l'icône animée posée en absolu, sinon la bascule ferait sauter la
@@ -54,7 +58,7 @@ export function ThemeController({ variante = "icone" }: ThemeControllerProps) {
           ferait respirer les voisins. L'état réel est porté par `aria-label`.
         */}
         <span className="relative z-10 text-[11px] leading-none tracking-tight font-normal">
-          Thème
+          {t("Thème", "Theme")}
         </span>
       </button>
     )

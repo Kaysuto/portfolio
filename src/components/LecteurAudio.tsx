@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { ChevronUp, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react"
+import { Music2, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react"
 import { PLAYLIST, type Piste } from "@/data/musique"
 import {
   analyserParoles,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/lrc"
 import { EASE_OUT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
+import { useLangue } from "@/lib/langue"
 
 const CLE_STOCKAGE = "kimiya-lecteur-v1"
 
@@ -75,15 +76,6 @@ function Pochette({ piste }: { piste: Piste }) {
 }
 
 /**
- * Texte d'une ligne voisine du quai — la précédente ou la suivante.
- *
- * Un refrain redit souvent la même phrase deux ou trois fois d'affilée, et les
- * fichiers LRC gardent une entrée par répétition pour coller au chant. Affichée
- * telle quelle, la voisine identique à la ligne en cours donne l'impression que
- * le karaoké bégaie, ou qu'il allume deux vers à la fois. On préfère laisser la
- * case vide : le minutage, lui, reste celui du chant.
- */
-/**
  * Mots d'un vers, dans l'ordre où ils seront allumés.
  *
  * Le découpage vient du fichier quand il est horodaté au mot, pour que les
@@ -97,12 +89,6 @@ function decouperEnMots(ligne: LigneParole | undefined): string[] {
   // `" ".split(" ")` rend deux chaînes vides, donc deux `<span>` fantômes sur
   // les repères de silence : on rend l'espace de garde telle quelle.
   return texte ? texte.split(/\s+/) : [" "]
-}
-
-function voisine(lignes: LigneParole[], rang: number, rangActif: number): string {
-  const texte = lignes[rang]?.texte
-  if (!texte || texte === lignes[rangActif]?.texte) return " "
-  return texte
 }
 
 /**
@@ -139,13 +125,16 @@ function Platine() {
   const [rangParole, setRangParole] = useState(-1)
 
   const refAudio = useRef<HTMLAudioElement>(null)
-  const refLigneActive = useRef<HTMLParagraphElement>(null)
+  const refLigneActive = useRef<HTMLSpanElement>(null)
+  const refListeParoles = useRef<HTMLDivElement>(null)
+  // Instant du dernier défilement à la main : le suivi automatique s'efface 3 s.
+  const refDefilementManuel = useRef(0)
   const refCanvas = useRef<HTMLCanvasElement>(null)
   const refGraphe = useRef<{ contexte: AudioContext; analyseur: AnalyserNode } | null>(null)
   const mouvementReduit = useReducedMotion()
+  const { t } = useLangue()
 
   const piste = PLAYLIST[index]
-  const progression = duree > 0 ? temps / duree : 0
 
   useEffect(() => {
     try {
@@ -242,9 +231,8 @@ function Platine() {
   /*
     Égaliseur.
 
-    La première version entassait douze barres dans 32 px : chacune faisait un
-    pixel et demi, et le tout se lisait comme du bruit. Cinq barres larges dans
-    44 px donnent une silhouette qu'on reconnaît du coin de l'œil, ce qui est
+    Il remplace la note du bouton rond pendant la lecture : trois barres larges
+    dans 20 px, une silhouette qu'on reconnaît du coin de l'œil, ce qui est
     tout ce qu'on demande à un témoin de lecture.
 
     Chaque barre moyenne une bande de fréquences au lieu d'échantillonner un
@@ -268,8 +256,8 @@ function Platine() {
 
     // `currentColor` suit le thème ; la couleur est lue une fois, pas par image.
     const couleur = getComputedStyle(canvas).color
-    const nombreBarres = 5
-    const ecart = 3
+    const nombreBarres = 3
+    const ecart = 2.5
     const largeurBarre = (largeur - ecart * (nombreBarres - 1)) / nombreBarres
     const rayon = largeurBarre / 2
     const socle = 2.5
@@ -351,6 +339,16 @@ function Platine() {
     [parolesChargees, piste.id]
   )
 
+  useEffect(() => {
+    const liste = refListeParoles.current
+    const active = liste?.querySelector<HTMLElement>('[aria-current="true"]')
+    if (!liste || !active || Date.now() - refDefilementManuel.current < 3000) return
+    liste.scrollTo({
+      top: active.offsetTop - liste.clientHeight / 2 + active.offsetHeight / 2,
+      behavior: mouvementReduit ? "auto" : "smooth",
+    })
+  }, [rangParole, mouvementReduit])
+
   /*
     Synchronisation des paroles.
 
@@ -381,8 +379,14 @@ function Platine() {
     let fenetres: Array<[number, number]> = []
     let rangDesFenetres = Number.NaN
 
+    // Le son sort du graphe Web Audio avec un léger retard sur `currentTime`
+    // (latence de sortie, 20 à 50 ms selon la machine) : les paroles suivent
+    // ce qu'on entend, pas ce que le décodeur vient de lire.
+    const contexte = refGraphe.current?.contexte
+    const latence = contexte ? (contexte.outputLatency || 0) + (contexte.baseLatency || 0) : 0
+
     const suivre = () => {
-      const instant = audio.currentTime
+      const instant = Math.max(0, audio.currentTime - latence)
       const rang = indexLigneCourante(paroles.lignes, instant)
 
       if (rang !== dernierRang) {
@@ -459,46 +463,45 @@ function Platine() {
 
   return (
     <div
-      className="fixed left-3 right-[4.5rem] md:right-auto md:left-4 md:w-[19rem] md:!bottom-5 z-30"
+      className="fixed left-3 md:left-4 md:!bottom-5 z-30"
       style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.75rem)" }}
     >
-      <motion.section
-        aria-label="Lecteur audio"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: mouvementReduit ? 0 : 0.4, ease: EASE_OUT, delay: 0.2 }}
-        className="rounded-2xl surface-flottante overflow-hidden"
-      >
-        <AnimatePresence initial={false}>
-          {ouvert && (
-            <motion.div
-              key="panneau"
-              id="lecteur-panneau"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: mouvementReduit ? 0 : 0.3, ease: EASE_OUT }}
-              className="overflow-hidden"
-            >
-              <div className="max-h-[calc(100dvh-14rem)] overflow-y-auto overscroll-contain border-b border-border/60 p-4">
+      {/*
+        Le panneau complet (pochette, paroles, réglages, liste) est une carte
+        posée au-dessus de la pastille : il s'ouvre depuis elle, coin bas
+        gauche, sans que la pastille change de taille.
+      */}
+      <AnimatePresence initial={false}>
+        {ouvert && (
+          <motion.div
+            key="panneau"
+            id="lecteur-panneau"
+            initial={mouvementReduit ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={mouvementReduit ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.97 }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
+            className="absolute bottom-full left-0 mb-2 w-[min(19rem,calc(100vw-1.5rem))] origin-bottom-left overflow-hidden rounded-2xl surface-flottante"
+          >
+              <div className="max-h-[calc(100dvh-12rem)] overflow-y-auto overscroll-contain p-4">
                 <div className="flex items-center gap-3">
                   <Pochette piste={piste} />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-foreground tracking-tight">
                       {piste.titre}
                     </p>
-                    {piste.artiste && (
+                    {(erreur || piste.artiste) && (
                       <p className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                        {piste.artiste}
+                        {erreur ? t("Piste indisponible", "Track unavailable") : piste.artiste}
                       </p>
                     )}
                   </div>
                 </div>
 
                 {/*
-                  Trois lignes seulement : la précédente pour le contexte, celle
-                  en cours, la suivante pour anticiper. Dérouler tout le texte
-                  dans un quai de 19 rem en ferait un mur illisible.
+                  Toutes les paroles, comme sur Spotify : la ligne en cours en
+                  clair et centrée, les passées atténuées, les suivantes plus
+                  encore. Un clic sur une ligne y amène la lecture, ce qui
+                  permet aussi de vérifier la synchronisation vers par vers.
 
                   `aria-live` est volontairement à « off » : une phrase relue par
                   le lecteur d'écran toutes les quatre secondes rendrait le reste
@@ -507,41 +510,55 @@ function Platine() {
                 {paroles.lignes.length > 0 && (
                   <div className="mt-4 border-t border-border/60 pt-3" aria-live="off">
                     {paroles.synchronise ? (
-                      <>
-                        <p className="truncate text-[11px] leading-relaxed text-muted-foreground/50">
-                          {voisine(paroles.lignes, rangParole - 1, rangParole)}
-                        </p>
-
-                        {/*
-                          La clé sur le rang remonte le composant à chaque
-                          changement de ligne : l'apparition rejoue, ce qui
-                          donne le battement qu'on attend d'un karaoké.
-
-                          Un `<span>` par mot : c'est la boucle de
-                          synchronisation qui les allume un à un, en suivant les
-                          repères du fichier quand il en porte. L'espace est
-                          gardé dans le mot pour que la coupure de ligne tombe
-                          où elle tomberait sans le découpage.
-                        */}
-                        <motion.p
-                          key={rangParole}
-                          ref={refLigneActive}
-                          initial={mouvementReduit ? false : { opacity: 0, y: 4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.25, ease: EASE_OUT }}
-                          className="py-0.5 text-sm font-medium leading-relaxed"
-                        >
-                          {decouperEnMots(paroles.lignes[rangParole]).map((mot, rang, tous) => (
-                            <span key={`${rang}-${mot}`} className="parole-active">
-                              {rang < tous.length - 1 ? `${mot} ` : mot}
-                            </span>
-                          ))}
-                        </motion.p>
-
-                        <p className="truncate text-[11px] leading-relaxed text-muted-foreground/50">
-                          {voisine(paroles.lignes, rangParole + 1, rangParole)}
-                        </p>
-                      </>
+                      <div
+                        ref={refListeParoles}
+                        onWheel={() => (refDefilementManuel.current = Date.now())}
+                        onTouchMove={() => (refDefilementManuel.current = Date.now())}
+                        className="relative h-44 overflow-y-auto overscroll-contain [mask-image:linear-gradient(transparent,black_18%,black_82%,transparent)] [scrollbar-width:none]"
+                      >
+                        {/* Marges hautes et basses : la première et la dernière ligne peuvent aussi se centrer. */}
+                        <div className="py-16">
+                          {paroles.lignes.map((ligne, rang) => {
+                            const enCours = rang === rangParole
+                            return (
+                              <button
+                                key={`${rang}-${ligne.temps}`}
+                                type="button"
+                                onClick={() => {
+                                  refDefilementManuel.current = 0
+                                  deplacerLecture(ligne.temps)
+                                }}
+                                aria-current={enCours ? "true" : undefined}
+                                className={cn(
+                                  "block w-full rounded-md px-1.5 py-1 text-left text-sm leading-snug transition-[color,opacity] duration-300 hover:bg-muted/60",
+                                  enCours
+                                    ? "font-semibold"
+                                    : rang < rangParole
+                                      ? "text-muted-foreground/70"
+                                      : "text-muted-foreground/45 hover:text-muted-foreground"
+                                )}
+                              >
+                                {enCours ? (
+                                  /*
+                                    Un `<span>` par mot : la boucle de
+                                    synchronisation les allume un à un, en suivant
+                                    les repères du fichier quand il en porte.
+                                  */
+                                  <span ref={refLigneActive}>
+                                    {decouperEnMots(ligne).map((mot, rangMot, tous) => (
+                                      <span key={`${rangMot}-${mot}`} className="parole-active">
+                                        {rangMot < tous.length - 1 ? `${mot} ` : mot}
+                                      </span>
+                                    ))}
+                                  </span>
+                                ) : (
+                                  ligne.texte || "♪"
+                                )}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
                     ) : (
                       /*
                         Sans horodatage, impossible de suivre la piste : le texte
@@ -550,7 +567,7 @@ function Platine() {
                       */
                       <>
                         <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70">
-                          Paroles non synchronisées
+                          {t("Paroles non synchronisées", "Unsynced lyrics")}
                         </p>
                         <div className="max-h-24 overflow-y-auto pr-1">
                           {paroles.lignes.map((ligne, rang) => (
@@ -578,7 +595,7 @@ function Platine() {
                     step={0.1}
                     value={temps}
                     onChange={(evenement) => deplacerLecture(Number(evenement.target.value))}
-                    aria-label="Position dans la piste"
+                    aria-label={t("Position dans la piste", "Track position")}
                     className="h-5 flex-1 accent-accent cursor-pointer"
                   />
                   <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -590,15 +607,24 @@ function Platine() {
                   <button
                     type="button"
                     onClick={() => allerA(-1)}
-                    aria-label="Piste précédente"
+                    aria-label={t("Piste précédente", "Previous track")}
                     className="grid size-9 md:size-8 place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     <SkipBack className="size-4" aria-hidden="true" />
                   </button>
                   <button
                     type="button"
+                    onClick={() => void basculerLecture()}
+                    aria-label={enLecture ? t("Mettre en pause", "Pause") : t("Lire", "Play")}
+                    aria-pressed={enLecture}
+                    className="grid size-9 place-items-center rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                  >
+                    {enLecture ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => allerA(1)}
-                    aria-label="Piste suivante"
+                    aria-label={t("Piste suivante", "Next track")}
                     className="grid size-9 md:size-8 place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     <SkipForward className="size-4" aria-hidden="true" />
@@ -607,7 +633,7 @@ function Platine() {
                   <button
                     type="button"
                     onClick={() => setMuet((precedent) => !precedent)}
-                    aria-label={muet ? "Rétablir le son" : "Couper le son"}
+                    aria-label={muet ? t("Rétablir le son", "Unmute") : t("Couper le son", "Mute")}
                     aria-pressed={muet}
                     className="ml-2 grid size-9 md:size-8 place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
@@ -647,9 +673,10 @@ function Platine() {
                               : "text-muted-foreground hover:text-foreground hover:bg-muted"
                           )}
                         >
-                          <span className="font-mono text-[10px] tabular-nums">
-                            {String(rang + 1).padStart(2, "0")}
-                          </span>
+                          <span
+                            aria-hidden="true"
+                            className={cn("size-1.5 shrink-0 self-center rounded-full", rang === index ? "bg-accent" : "bg-border")}
+                          />
                           <span className="truncate text-xs">{autre.titre}</span>
                         </button>
                       </li>
@@ -657,69 +684,37 @@ function Platine() {
                   </ul>
                 )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* Quai replié : une seule ligne, toujours visible */}
-        <div className="relative flex items-center gap-2 h-14 pl-2 pr-1.5">
-          <button
-            type="button"
-            onClick={() => void basculerLecture()}
-            aria-label={enLecture ? "Mettre en pause" : "Lire"}
-            aria-pressed={enLecture}
-            className="grid size-10 md:size-9 shrink-0 place-items-center rounded-md bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-          >
-            {enLecture ? (
-              <Pause className="size-4" aria-hidden="true" />
-            ) : (
-              <Play className="size-4" aria-hidden="true" />
-            )}
-          </button>
-
-          <canvas
-            ref={refCanvas}
-            aria-hidden="true"
-            /* Sous 360 px, ces 44 px valent mieux au titre qu'au témoin. */
-            className="hidden min-[360px]:block h-6 w-11 shrink-0 text-accent-texte"
-          />
-
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-medium text-foreground">
-              {erreur ? "Piste indisponible" : piste.titre}
-            </p>
-            {(erreur || piste.artiste) && (
-              <p className="truncate font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-                {erreur ? "Vérifier le fichier" : piste.artiste}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setOuvert((precedent) => !precedent)}
-            aria-label={ouvert ? "Replier le lecteur" : "Déplier le lecteur"}
-            aria-expanded={ouvert}
-            aria-controls="lecteur-panneau"
-            className="grid size-9 md:size-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          >
-            <ChevronUp
-              className={cn("size-4 transition-transform duration-300", ouvert && "rotate-180")}
-              aria-hidden="true"
-            />
-          </button>
-
-          {/*
-            Progression sur l'arête basse de l'îlot, comme la barre de lecture
-            de la navigation : même signal, même endroit, aucune place prise.
-          */}
-          <span
-            className="absolute bottom-0 inset-x-0 h-px origin-left bg-accent"
-            style={{ transform: `scaleX(${progression})` }}
-            aria-hidden="true"
-          />
-        </div>
-      </motion.section>
+      {/*
+        Fermé, le lecteur n'est qu'un bouton rond : une note de musique, qui
+        devient un petit égaliseur pendant la lecture. Il ouvre le panneau,
+        où se trouvent lecture, réglages et liste des pistes.
+      */}
+      <motion.button
+        type="button"
+        onClick={() => setOuvert((precedent) => !precedent)}
+        aria-label={ouvert ? t("Fermer le lecteur audio", "Close the audio player") : t("Ouvrir le lecteur audio", "Open the audio player")}
+        aria-expanded={ouvert}
+        aria-controls="lecteur-panneau"
+        title={piste.artiste ? `${piste.titre} — ${piste.artiste}` : piste.titre}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileTap={mouvementReduit ? undefined : { scale: 0.94 }}
+        transition={{ duration: mouvementReduit ? 0 : 0.3, ease: EASE_OUT, delay: 0.2 }}
+        className={cn(
+          "grid size-11 place-items-center rounded-full surface-flottante transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          enLecture || ouvert ? "text-accent-texte" : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        {enLecture ? (
+          <canvas ref={refCanvas} aria-hidden="true" className="h-4 w-5 text-accent-texte" />
+        ) : (
+          <Music2 className="size-[18px]" aria-hidden="true" />
+        )}
+      </motion.button>
 
       <audio
         ref={refAudio}
@@ -729,7 +724,20 @@ function Platine() {
         onPause={() => setEnLecture(false)}
         onTimeUpdate={(evenement) => setTemps(evenement.currentTarget.currentTime)}
         onLoadedMetadata={(evenement) => setDuree(evenement.currentTarget.duration)}
-        onEnded={() => (PLAYLIST.length > 1 ? allerA(1) : setEnLecture(false))}
+        /*
+          Fin de piste : on enchaîne sur la suivante (la dernière boucle sur la
+          première). L'élément a déjà émis « pause » juste avant « ended », ce
+          qui a remis `enLecture` à faux : on le relève ici, sinon l'effet de
+          changement de piste ne relancerait pas la lecture.
+        */
+        onEnded={() => {
+          if (PLAYLIST.length > 1) {
+            setEnLecture(true)
+            allerA(1)
+          } else {
+            setEnLecture(false)
+          }
+        }}
         onError={() => setErreur(true)}
       />
     </div>

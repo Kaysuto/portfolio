@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ExternalLink } from "lucide-react";
 import { Modal } from "./Modal";
 import { Button } from "./button";
+import { useLangue } from "@/lib/langue";
 
 interface ExternalLinkModalProps {
   isOpen: boolean;
@@ -11,9 +12,9 @@ interface ExternalLinkModalProps {
   title: string;
   subtitle: string;
   url: string;
-  /** Libellé du bouton de confirmation. */
+  /** Libellé du bouton de confirmation (« Ouvrir » par défaut, traduit). */
   actionLabel?: string;
-  /** Intitulé au-dessus de l'URL. */
+  /** Intitulé au-dessus de l'URL (« Lien externe : » par défaut, traduit). */
   linkLabel?: string;
 }
 
@@ -31,9 +32,10 @@ export function ExternalLinkModal({
   title,
   subtitle,
   url,
-  actionLabel = "Ouvrir",
-  linkLabel = "Lien externe :",
+  actionLabel,
+  linkLabel,
 }: ExternalLinkModalProps) {
+  const { t } = useLangue();
   const ouvrirLien = () => {
     window.open(url, "_blank", "noopener,noreferrer");
     onClose();
@@ -54,7 +56,7 @@ export function ExternalLinkModal({
 
         <div>
           <p className="font-mono text-xs text-muted-foreground mb-2 font-medium uppercase tracking-[0.2em]">
-            {linkLabel}
+            {linkLabel ?? t("Lien externe :", "External link:")}
           </p>
           <div className="bg-input/20 dark:bg-input/30 border border-input rounded-md px-3 py-2">
             <code className="text-sm break-all font-mono text-accent-texte">{url}</code>
@@ -63,7 +65,7 @@ export function ExternalLinkModal({
 
         <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={onClose} className="flex-1 h-10">
-            Annuler
+            {t("Annuler", "Cancel")}
           </Button>
           <Button
             type="button"
@@ -71,7 +73,7 @@ export function ExternalLinkModal({
             className="flex-1 h-10"
           >
             <ExternalLink />
-            {actionLabel}
+            {actionLabel ?? t("Ouvrir", "Open")}
           </Button>
         </div>
       </div>

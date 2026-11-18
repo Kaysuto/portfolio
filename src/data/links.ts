@@ -1,10 +1,12 @@
+import type { Bilingue } from '@/lib/langue';
+
 export interface BioLink {
   id: string;
   title: string;
   url: string;
   type: 'github' | 'live' | 'social' | 'bio_link' | 'other';
   category?: 'social' | 'community' | 'websites';
-  description?: string;
+  description?: Bilingue;
   icon?: string;
   is_active: boolean;
   click_count: number;
@@ -20,7 +22,7 @@ export const links: BioLink[] = [
     url: 'https://discord.gg/AYrvJCA2DW',
     type: 'bio_link',
     category: 'community',
-    description: 'Rejoindre Jelly',
+    description: { fr: 'Rejoindre Jelly', en: 'Join Jelly' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -32,7 +34,7 @@ export const links: BioLink[] = [
     url: 'https://discord.gg/BVVe2WqUvh',
     type: 'bio_link',
     category: 'community',
-    description: 'Rejoindre Clover Games',
+    description: { fr: 'Rejoindre Clover Games', en: 'Join Clover Games' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -46,7 +48,7 @@ export const links: BioLink[] = [
     url: 'mailto:contact@kaysuto.fr',
     type: 'bio_link',
     category: 'social',
-    description: 'Me contacter directement',
+    description: { fr: 'Me contacter directement', en: 'Contact me directly' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -58,7 +60,7 @@ export const links: BioLink[] = [
     url: 'https://git.new/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Mes projets open-source',
+    description: { fr: 'Mes projets open-source', en: 'My open-source projects' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -70,7 +72,7 @@ export const links: BioLink[] = [
     url: 'https://www.linkedin.com/in/enzo-lauret/',
     type: 'bio_link',
     category: 'social',
-    description: 'Mon profil professionnel',
+    description: { fr: 'Mon profil professionnel', en: 'My professional profile' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -82,7 +84,7 @@ export const links: BioLink[] = [
     url: 'https://twitch.tv/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Mes streams en direct',
+    description: { fr: 'Mes streams en direct', en: 'My live streams' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -94,7 +96,7 @@ export const links: BioLink[] = [
     url: 'https://spti.fi/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Ce que j\'écoute',
+    description: { fr: 'Ce que j\'écoute', en: 'What I listen to' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -106,7 +108,7 @@ export const links: BioLink[] = [
     url: 'https://steamcommunity.com/id/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Mon profil gaming',
+    description: { fr: 'Mon profil gaming', en: 'My gaming profile' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -118,7 +120,7 @@ export const links: BioLink[] = [
     url: 'https://roblox.com/users/2923044215',
     type: 'bio_link',
     category: 'social',
-    description: 'Profil Roblox',
+    description: { fr: 'Profil Roblox', en: 'Roblox profile' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -130,7 +132,7 @@ export const links: BioLink[] = [
     url: 'https://namemc.com/profile/Kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Profil Minecraft',
+    description: { fr: 'Profil Minecraft', en: 'Minecraft profile' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -142,7 +144,7 @@ export const links: BioLink[] = [
     url: 'https://pinterest.com/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Mes inspirations visuelles',
+    description: { fr: 'Mes inspirations visuelles', en: 'My visual inspiration' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -154,7 +156,7 @@ export const links: BioLink[] = [
     url: 'https://anilist.co/user/Kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Ma liste d\'animes',
+    description: { fr: 'Ma liste d\'animes', en: 'My anime list' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -166,7 +168,7 @@ export const links: BioLink[] = [
     url: 'https://letterboxd.com/kaysuto',
     type: 'bio_link',
     category: 'social',
-    description: 'Mes films préférés',
+    description: { fr: 'Mes films préférés', en: 'My favourite films' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),
@@ -178,7 +180,7 @@ export const links: BioLink[] = [
     url: 'https://stats.fm/kimiya',
     type: 'bio_link',
     category: 'social',
-    description: 'Mes statistiques musicales',
+    description: { fr: 'Mes statistiques musicales', en: 'My music stats' },
     is_active: true,
     click_count: 0,
     created_at: new Date().toISOString(),

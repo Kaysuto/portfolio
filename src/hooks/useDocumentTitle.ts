@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { SECTIONS } from '@/constants';
+import { useLangue, type Bilingue, type Langue } from '@/lib/langue';
 
 interface UseDocumentTitleOptions {
   enableTypingAnimation?: boolean;
@@ -24,26 +25,25 @@ const detecterSectionActive = (): string => {
   return sectionActive;
 };
 
-const obtenirTitreSection = (section: string, cheminBase: string = ""): string => {
-  const mapTitres: Record<string, string> = {
-    accueil: "Accueil",
-    apropos: "À propos",
-    stack: "Stack",
-    projets: "Projets",
-    contact: "Contact",
-    bio: "Bio",
-    maintenance: "Maintenance",
-    admin: "Administration",
-    login: "Connexion Admin"
-  };
+const TITRES_SECTIONS: Record<string, Bilingue> = {
+  accueil: { fr: "Accueil", en: "Home" },
+  apropos: { fr: "À propos", en: "About" },
+  stack: { fr: "Stack", en: "Stack" },
+  projets: { fr: "Projets", en: "Projects" },
+  contact: { fr: "Contact", en: "Contact" },
+  bio: { fr: "Bio", en: "Bio" },
+  maintenance: { fr: "Maintenance", en: "Maintenance" },
+  admin: { fr: "Administration", en: "Admin" },
+  login: { fr: "Connexion Admin", en: "Admin login" }
+};
 
-  if (cheminBase === "/bio") return mapTitres.bio;
-  if (cheminBase === "/maintenance") return mapTitres.maintenance;
-  if (cheminBase.includes("/admin")) {
-    return cheminBase.includes("/login") ? mapTitres.login : mapTitres.admin;
-  }
+const obtenirTitreSection = (langue: Langue, section: string, cheminBase: string = ""): string => {
+  let cle = TITRES_SECTIONS[section] ? section : "accueil";
+  if (cheminBase === "/bio") cle = "bio";
+  else if (cheminBase === "/maintenance") cle = "maintenance";
+  else if (cheminBase.includes("/admin")) cle = cheminBase.includes("/login") ? "login" : "admin";
 
-  return mapTitres[section] || mapTitres.accueil;
+  return TITRES_SECTIONS[cle][langue];
 };
 
 export const useDocumentTitle = (
@@ -57,6 +57,7 @@ export const useDocumentTitle = (
   } = options;
 
   const location = useLocation();
+  const { langue } = useLangue();
   const [titreAffiche, setTitreAffiche] = useState('');
   const [estEnFrappe, setEstEnFrappe] = useState(false);
   const [sectionCourante, setSectionCourante] = useState("accueil");
@@ -71,12 +72,12 @@ export const useDocumentTitle = (
     if (dynamicSections && location.pathname === "/") {
       const section = detecterSectionActive();
       setSectionCourante(section);
-      partieTitre = obtenirTitreSection(section);
+      partieTitre = obtenirTitreSection(langue, section);
     } else {
-      partieTitre = titreBase || obtenirTitreSection("", location.pathname);
+      partieTitre = titreBase || obtenirTitreSection(langue, "", location.pathname);
     }
     setTitreCourant(partieTitre);
-  }, [titreBase, location.pathname, dynamicSections]);
+  }, [titreBase, location.pathname, dynamicSections, langue]);
 
   // Suit le défilement pour les titres dynamiques des sections
   useEffect(() => {
@@ -88,7 +89,7 @@ export const useDocumentTitle = (
         const section = detecterSectionActive();
         if (section !== sectionCourante) {
           setSectionCourante(section);
-          setTitreCourant(obtenirTitreSection(section));
+          setTitreCourant(obtenirTitreSection(langue, section));
         }
       }, 100);
     };
@@ -98,7 +99,7 @@ export const useDocumentTitle = (
       window.removeEventListener('scroll', gererDefilement);
       if (refMinuteurDefilement.current) clearTimeout(refMinuteurDefilement.current);
     };
-  }, [dynamicSections, location.pathname, sectionCourante]);
+  }, [dynamicSections, location.pathname, sectionCourante, langue]);
 
   // Animation de frappe et mise à jour du titre du document
   useEffect(() => {

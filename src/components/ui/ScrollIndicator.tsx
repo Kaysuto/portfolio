@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 import { EASE_OUT } from "@/lib/animations"
+import { useLangue } from "@/lib/langue"
 
 /** Cible du geste : la première section sous le hero. */
 const ID_SECTION_SUIVANTE = "apropos"
@@ -20,6 +21,7 @@ const ID_SECTION_SUIVANTE = "apropos"
  */
 export function ScrollIndicator() {
   const mouvementReduit = useReducedMotion()
+  const { t } = useLangue()
 
   const allerSectionSuivante = () => {
     document.getElementById(ID_SECTION_SUIVANTE)?.scrollIntoView({
@@ -31,7 +33,7 @@ export function ScrollIndicator() {
     <motion.button
       type="button"
       onClick={allerSectionSuivante}
-      aria-label="Défiler vers la section suivante"
+      aria-label={t("Défiler vers la section suivante", "Scroll to the next section")}
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.2, duration: 0.6, ease: EASE_OUT }}
@@ -43,7 +45,7 @@ export function ScrollIndicator() {
       className="group relative z-10 mx-auto flex flex-col items-center gap-3 rounded-md p-2 mb-[calc(env(safe-area-inset-bottom,0px)+6rem)] md:mb-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
     >
       <span className="font-mono text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground group-hover:text-accent-texte transition-colors">
-        Défiler
+        {t("Défiler", "Scroll")}
       </span>
 
       {/*
