@@ -45,11 +45,10 @@ public/             # manifest.json, sw.js, icons, robots, sitemap
 
 ## 🚢 Déploiement
 
-```bash
-# Vercel (recommandé)
-npm i -g vercel && vercel --prod
+Le site est déployé par Coolify, sur un serveur personnel derrière Cloudflare : chaque fusion dans `main` déclenche un nouveau build.
 
-# Manuel — déployer le dossier dist/
+```bash
+# Build de production, généré dans dist/
 npm run build
 ```
 
