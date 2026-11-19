@@ -6,16 +6,13 @@ import { DemoModal } from "@/components/ui/ProjectModal"
 import { ExternalLinkModal } from "@/components/ui/ExternalLinkModal"
 import { projects, type Project } from "@/data/projects"
 import { useLangue } from "@/lib/langue"
-import { EASE_OUT, VIEWPORT } from "@/lib/animations"
+import { EASE_OUT, fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 
 type Cible = "demo" | "github"
 
-const grille: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }
-const carte: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_OUT } },
-}
+const grille = staggerContainer
+const carte = fadeInUp
 /** La capture se découvre de haut en bas, un peu après l'arrivée de sa carte. */
 const volet: Variants = {
   hidden: { clipPath: "inset(0% 0% 100% 0%)" },
