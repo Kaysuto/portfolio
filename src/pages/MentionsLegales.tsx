@@ -134,6 +134,13 @@ export default function MentionsLegales() {
                         <span><span className="text-foreground font-medium">Browsing data</span> — IP address and pages visited, collected automatically by the server and by Cloudflare for technical and security purposes. Retention period: 30 days.</span>
                       )}
                     </li>
+                    <li className="flex gap-3">
+                      <span className="text-accent-texte mt-0.5">•</span>
+                      {t(
+                        <span><span className="text-foreground font-medium">Avis sur le portfolio</span> — si vous notez le site, seule la note (de 1 à 5) et sa date sont enregistrées chez Supabase (région UE), sans nom, adresse e-mail ni adresse IP associés. Le site n'en publie que la moyenne et le nombre.</span>,
+                        <span><span className="text-foreground font-medium">Portfolio ratings</span> — if you rate the site, only the rating (1 to 5) and its date are stored with Supabase (EU region), with no name, email address or IP address attached. The site only publishes the average and the count.</span>
+                      )}
+                    </li>
                   </ul>
                 </div>
 
@@ -156,8 +163,8 @@ export default function MentionsLegales() {
                     <li className="flex gap-3">
                       <span className="text-accent-texte mt-0.5">•</span>
                       {t(
-                        <span><span className="text-foreground font-medium">Langue et lecteur audio</span> — la langue choisie (français / anglais), la dernière piste écoutée et le volume, stockés uniquement dans votre navigateur (localStorage), sans transmission à un serveur. Également exemptés de consentement.</span>,
-                        <span><span className="text-foreground font-medium">Language and audio player</span> — your chosen language (French / English), the last track played and the volume, stored only in your browser (localStorage) and never sent to a server. Also exempt from consent.</span>
+                        <span><span className="text-foreground font-medium">Langue et lecteur audio</span> — la langue choisie (français / anglais), la dernière piste écoutée et le volume, ainsi que la note déjà donnée au portfolio, stockés uniquement dans votre navigateur (localStorage), sans transmission à un serveur. Également exemptés de consentement.</span>,
+                        <span><span className="text-foreground font-medium">Language and audio player</span> — your chosen language (French / English), the last track played and the volume, plus any rating you already gave the portfolio, stored only in your browser (localStorage) and never sent to a server. Also exempt from consent.</span>
                       )}
                     </li>
                   </ul>

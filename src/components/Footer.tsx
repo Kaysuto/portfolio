@@ -17,6 +17,7 @@ import {
 } from "./ui/SocialModals"
 import { fadeIn, VIEWPORT } from "@/lib/animations"
 import { useLangue, type Bilingue } from "@/lib/langue"
+import { AvisPortfolio } from "./AvisPortfolio"
 
 /**
  * Aucun réseau n'ouvre son lien directement : chacun passe par l'interstitiel
@@ -110,6 +111,8 @@ export function Footer() {
               </Button>
             ))}
           </div>
+
+          <AvisPortfolio />
         </div>
 
         {/* Deux colonnes côte à côte même sur mobile : chacune ne tient que
