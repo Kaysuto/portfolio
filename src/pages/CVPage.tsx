@@ -306,12 +306,12 @@ const CVPage: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: EASE_OUT }}
         >
-          <Link to="/">
-            <Button variant="ghost" className="mb-8 -ml-3 text-muted-foreground hover:text-accent-texte">
+          <Button asChild variant="ghost" className="mb-8 -ml-3 text-muted-foreground hover:text-accent-texte">
+            <Link to="/">
               <ArrowLeft />
               {t("Retour à l'accueil", "Back to home")}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </motion.div>
         <motion.p
           className="mb-4 text-base font-medium tracking-tight text-accent-texte"

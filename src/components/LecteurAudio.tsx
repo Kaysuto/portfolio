@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { Music2, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react"
+import { Chargeur } from "@/components/ui/chargeur"
 import { PLAYLIST, type Piste } from "@/data/musique"
 import {
   analyserParoles,
@@ -111,6 +112,8 @@ function Platine() {
   const [temps, setTemps] = useState(0)
   const [duree, setDuree] = useState(0)
   const [erreur, setErreur] = useState(false)
+  // Lecture demandée mais données pas encore arrivées (premier clic, piste suivante, saut dans la piste).
+  const [enAttente, setEnAttente] = useState(false)
   /*
     Les paroles sont mémorisées avec l'identifiant de leur piste plutôt que
     remises à zéro à chaque changement de titre : ça évite un rendu
@@ -489,9 +492,13 @@ function Platine() {
                     <p className="truncate text-sm font-medium text-foreground tracking-tight">
                       {piste.titre}
                     </p>
-                    {(erreur || piste.artiste) && (
+                    {(erreur || enAttente || piste.artiste) && (
                       <p className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                        {erreur ? t("Piste indisponible", "Track unavailable") : piste.artiste}
+                        {erreur
+                          ? t("Piste indisponible", "Track unavailable")
+                          : enAttente
+                            ? t("Chargement…", "Loading…")
+                            : piste.artiste}
                       </p>
                     )}
                   </div>
@@ -617,9 +624,16 @@ function Platine() {
                     onClick={() => void basculerLecture()}
                     aria-label={enLecture ? t("Mettre en pause", "Pause") : t("Lire", "Play")}
                     aria-pressed={enLecture}
+                    aria-busy={enAttente}
                     className="grid size-9 place-items-center rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   >
-                    {enLecture ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
+                    {enAttente ? (
+                      <Chargeur />
+                    ) : enLecture ? (
+                      <Pause className="size-4" aria-hidden="true" />
+                    ) : (
+                      <Play className="size-4" aria-hidden="true" />
+                    )}
                   </button>
                   <button
                     type="button"
@@ -721,7 +735,12 @@ function Platine() {
         src={piste.src}
         preload="metadata"
         onPlay={() => setEnLecture(true)}
-        onPause={() => setEnLecture(false)}
+        onPause={() => {
+          setEnLecture(false)
+          setEnAttente(false)
+        }}
+        onWaiting={() => setEnAttente(true)}
+        onPlaying={() => setEnAttente(false)}
         onTimeUpdate={(evenement) => setTemps(evenement.currentTarget.currentTime)}
         onLoadedMetadata={(evenement) => setDuree(evenement.currentTarget.duration)}
         /*
@@ -738,7 +757,10 @@ function Platine() {
             setEnLecture(false)
           }
         }}
-        onError={() => setErreur(true)}
+        onError={() => {
+          setErreur(true)
+          setEnAttente(false)
+        }}
       />
     </div>
   )

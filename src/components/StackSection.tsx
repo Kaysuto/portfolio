@@ -43,7 +43,7 @@ function PuceTech({ tech, onClic }: { tech: Tech; onClic: (tech: Tech) => void }
         src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
         alt=""
         aria-hidden="true"
-        className={`size-4 grayscale group-hover:grayscale-0 transition-all object-contain ${classeIcone(tech)}`}
+        className={`size-4 grayscale group-hover:grayscale-0 transition-[filter] object-contain ${classeIcone(tech)}`}
       />
       <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
         {tech.name}
