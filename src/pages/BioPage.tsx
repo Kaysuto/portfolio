@@ -81,12 +81,12 @@ const BioPage: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Link to="/">
-              <Button variant="ghost" className="mb-10 text-muted-foreground hover:text-accent-texte">
+            <Button asChild variant="ghost" className="mb-10 text-muted-foreground hover:text-accent-texte">
+              <Link to="/">
                 <ArrowLeft />
                 {t("Retour à l'accueil", "Back to home")}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </motion.div>
 
           {/* En-tête aligné à gauche, avec compteur en marge */}
@@ -176,7 +176,7 @@ const BioPage: React.FC = () => {
                           </span>
                         </span>
                         <ArrowUpRight
-                          className="size-4 text-muted-foreground/50 group-hover:text-accent-texte group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                          className="size-4 text-muted-foreground/50 group-hover:text-accent-texte group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[color,translate] shrink-0"
                           aria-hidden="true"
                         />
                       </button>

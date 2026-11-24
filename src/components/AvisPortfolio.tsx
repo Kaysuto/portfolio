@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Star } from "lucide-react"
 import { toast } from "sonner"
 import { useLangue } from "@/lib/langue"
+import { Chargeur } from "@/components/ui/chargeur"
 import { avisDisponibles, envoyerAvis, lireResumeAvis, memoriserNote, noteDejaDonnee, type ResumeAvis } from "@/lib/avis"
 import { cn } from "@/lib/utils"
 
@@ -58,6 +59,7 @@ export function AvisPortfolio() {
         <div
           role="radiogroup"
           aria-label={t("Noter le portfolio sur 5", "Rate the portfolio out of 5")}
+          aria-busy={envoi}
           className="flex"
           onMouseLeave={() => setSurvol(0)}
         >
@@ -89,7 +91,9 @@ export function AvisPortfolio() {
             )
           })}
         </div>
-        {moyenne && resume && (
+        {envoi ? (
+          <Chargeur className="text-muted-foreground" />
+        ) : moyenne && resume && (
           <p className="text-sm text-muted-foreground">
             <span className="font-medium tabular-nums text-foreground">{moyenne}</span> / 5 ·{" "}
             {t(`${resume.total} avis`, `${resume.total} ${resume.total > 1 ? "ratings" : "rating"}`)}

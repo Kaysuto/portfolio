@@ -46,7 +46,7 @@ const PAGES: { to: string; label: Bilingue }[] = [
 ]
 
 const intertitre = "font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
-const lien = "text-sm text-muted-foreground hover:text-foreground transition-colors"
+const lien = "lien-souligne text-sm text-muted-foreground hover:text-foreground transition-colors"
 
 export function Footer() {
   const { t, l } = useLangue()

@@ -438,9 +438,13 @@ export function HeroSection() {
             {t("Je", "I")} <TexteTape key={langue} />
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button onClick={() => defilerVers("projets")} size="lg" className="group">
+            {/* `px-4` : la flèche, enveloppée, n'est plus l'enfant direct que `has-[>svg]` attend. */}
+            <Button onClick={() => defilerVers("projets")} size="lg" className="px-4">
               {t("Voir mes projets", "See my projects")}
-              <ArrowRight className="transition-transform group-hover:translate-x-0.5" />
+              <span aria-hidden="true" className="fleche-relais">
+                <ArrowRight />
+                <ArrowRight />
+              </span>
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/cv")}>
               <FileText />

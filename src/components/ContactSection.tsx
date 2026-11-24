@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, Loader2, Copy, Check, ArrowUpRight, Mail, RotateCcw } from "lucide-react"
+import { Send, Copy, Check, ArrowUpRight, Mail, RotateCcw } from "lucide-react"
 import { DiscordLogo, GithubLogo, LinkedinLogo } from "@phosphor-icons/react"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { Chargeur } from "@/components/ui/chargeur"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { DiscordModal } from "@/components/ui/DiscordModal"
 import { GitHubFooterModal, LinkedInFooterModal } from "@/components/ui/SocialModals"
@@ -137,13 +138,20 @@ function ContactForm() {
                 )}
               />
 
-              <Button type="submit" disabled={estEnEnvoi} size="lg" className="group h-11 w-full">
+              {/* Pendant l'envoi, le bouton reste plein : il est occupé, pas indisponible. */}
+              <Button
+                type="submit"
+                disabled={estEnEnvoi}
+                aria-busy={estEnEnvoi}
+                size="lg"
+                className="group h-11 w-full disabled:opacity-100"
+              >
                 {estEnEnvoi ? (
-                  <Loader2 className="animate-spin" />
+                  <Chargeur />
                 ) : (
                   <Send className="transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 )}
-                {t("Envoyer le message", "Send message")}
+                {estEnEnvoi ? t("Envoi en cours", "Sending") : t("Envoyer le message", "Send message")}
               </Button>
             </form>
           </Form>
