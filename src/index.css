@@ -337,24 +337,6 @@
   }
 }
 
-/* Anneau en pointillés autour du portrait de la section À propos : un tour par
-   minute, assez lent pour rester un décor. */
-.anneau-lent {
-  animation: anneau-tour 60s linear infinite;
-}
-
-@keyframes anneau-tour {
-  to {
-    rotate: 360deg;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .anneau-lent {
-    animation: none;
-  }
-}
-
 /* Scène du hero (personnage à la lanterne) : étoiles qui scintillent, chacune
    avec sa durée et son retard posés en style. */
 .etoile {

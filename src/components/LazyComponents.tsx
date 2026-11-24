@@ -6,24 +6,21 @@ const StackSection = lazy(() => import('./StackSection').then(module => ({ defau
 const ProjectsSection = lazy(() => import('./ProjectsSection').then(module => ({ default: module.ProjectsSection })))
 const ContactSection = lazy(() => import('./ContactSection').then(module => ({ default: module.ContactSection })))
 
+/** Même gabarit que la section : portrait à gauche, titre, chapeau et parcours à droite. */
 function AboutSkeleton() {
   return (
-    <div className="py-24 px-6 max-w-5xl mx-auto space-y-16">
-      <div className="text-center space-y-4">
-        <Skeleton className="h-10 w-64 mx-auto" />
-        <Skeleton className="h-5 w-96 mx-auto" />
-      </div>
-      <div className="grid lg:grid-cols-2 gap-16">
+    <div className="py-10 lg:py-14 px-6 lg:px-12">
+      <div className="max-w-6xl mx-auto grid items-start gap-y-8 lg:grid-cols-[25rem_1fr] lg:gap-x-18">
+        <Skeleton className="mx-auto aspect-square w-full max-w-xs rounded-2xl lg:aspect-[4/5] lg:max-w-none" />
         <div className="space-y-4">
-          <Skeleton className="h-7 w-48" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-lg" />
-          ))}
+          <Skeleton className="h-12 w-72 md:h-16" />
+          <Skeleton className="h-7 w-full" />
+          <Skeleton className="h-7 w-5/6" />
+          <div className="space-y-3 pt-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full" />
+            ))}
+          </div>
         </div>
       </div>
     </div>
