@@ -1,6 +1,13 @@
 import type { Bilingue } from "@/lib/langue"
 
-export type Tech = { name: string; slug: string; url: string; iconUrl?: string }
+export type Tech = {
+  name: string
+  slug: string
+  url: string
+  iconUrl?: string
+  /** À quoi sert l'outil, en deux ou trois mots : affiché sous son nom dans l'atelier. */
+  usage?: Bilingue
+}
 
 export type Strate = {
   id: string
@@ -103,24 +110,24 @@ export const ATELIER: Omit<Strate, "niveau"> = {
   title: { fr: "Outils & Productivité", en: "Tools & Productivity" },
   role: { fr: "Ce que j'ai sous la main", en: "What I keep at hand" },
   resume: {
-    fr: "Mes outils de tous les jours : éditeurs, gestion de versions, agents IA, prise de notes, modélisation 3D et petits raccourcis.",
-    en: "My everyday tools: editors, version control, AI agents, note-taking, 3D modeling and handy little shortcuts.",
+    fr: "Ce que j'ouvre chaque jour, pour coder comme pour tout le reste.",
+    en: "What I open every day, for coding and everything else.",
   },
   techs: [
-    { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png" },
-    { name: "JetBrains", slug: "jetbrains", url: "https://www.jetbrains.com" },
-    { name: "Git", slug: "git", url: "https://git-scm.com" },
-    { name: "GitHub", slug: "github", url: "https://github.com" },
-    { name: "T3 Code", slug: "t3code", url: "https://t3.codes", iconUrl: "https://t3.codes/apple-touch-icon.png" },
-    { name: "Linear", slug: "linear", url: "https://linear.app" },
-    { name: "Obsidian", slug: "obsidian", url: "https://obsidian.md" },
-    { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png" },
-    { name: "Bitwarden", slug: "bitwarden", url: "https://bitwarden.com" },
-    { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png" },
-    { name: "Discord", slug: "discord", url: "https://discord.com" },
-    { name: "Blockbench", slug: "blockbench", url: "https://www.blockbench.net" },
-    { name: "Blender", slug: "blender", url: "https://www.blender.org" },
-    { name: "OBS Studio", slug: "obsstudio", url: "https://obsproject.com" },
-    { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png" },
+    { name: "VS Code", slug: "visualstudiocode", url: "https://code.visualstudio.com", iconUrl: "https://i.imgur.com/bMFlLET.png", usage: { fr: "Éditeur de code", en: "Code editor" } },
+    { name: "JetBrains", slug: "jetbrains", url: "https://www.jetbrains.com", usage: { fr: "IDE", en: "IDEs" } },
+    { name: "Git", slug: "git", url: "https://git-scm.com", usage: { fr: "Versions du code", en: "Version control" } },
+    { name: "GitHub", slug: "github", url: "https://github.com", usage: { fr: "Dépôts et CI", en: "Repos and CI" } },
+    { name: "T3 Code", slug: "t3code", url: "https://t3.codes", iconUrl: "https://t3.codes/apple-touch-icon.png", usage: { fr: "Agents IA de code", en: "AI coding agents" } },
+    { name: "Linear", slug: "linear", url: "https://linear.app", usage: { fr: "Suivi des tâches", en: "Issue tracking" } },
+    { name: "Obsidian", slug: "obsidian", url: "https://obsidian.md", usage: { fr: "Notes et docs", en: "Notes and docs" } },
+    { name: "WisprFlow", slug: "wisprflow", url: "https://wisprflow.ai", iconUrl: "https://cdn.prod.website-files.com/682f84b3838c89f8ff7667db/684b3be32acf9b372f54d041_ws-favi.png", usage: { fr: "Dictée vocale", en: "Voice dictation" } },
+    { name: "Bitwarden", slug: "bitwarden", url: "https://bitwarden.com", usage: { fr: "Mots de passe", en: "Passwords" } },
+    { name: "PowerToys", slug: "microsoftpowertoys", url: "https://apps.microsoft.com/store/detail/microsoft-powertoys/XP89DCGQ3K6VLD", iconUrl: "https://i.imgur.com/T2hvadU.png", usage: { fr: "Raccourcis Windows", en: "Windows shortcuts" } },
+    { name: "Discord", slug: "discord", url: "https://discord.com", usage: { fr: "Communautés", en: "Communities" } },
+    { name: "Blockbench", slug: "blockbench", url: "https://www.blockbench.net", usage: { fr: "Modèles Minecraft", en: "Minecraft models" } },
+    { name: "Blender", slug: "blender", url: "https://www.blender.org", usage: { fr: "Modélisation 3D", en: "3D modeling" } },
+    { name: "OBS Studio", slug: "obsstudio", url: "https://obsproject.com", usage: { fr: "Enregistrement et live", en: "Recording and streaming" } },
+    { name: "Windows", slug: "windows", url: "https://www.microsoft.com/windows", iconUrl: "https://i.imgur.com/TptJIji.png", usage: { fr: "Poste de travail", en: "Daily driver" } },
   ],
 }
