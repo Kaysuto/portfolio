@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react"
 import { motion, type Variants } from "framer-motion"
+import { ArrowRight } from "lucide-react"
 import { projects } from "@/data/projects"
 import { GitHubModal } from "@/components/ui/GitHubModal"
 import { LinkedInFooterModal } from "@/components/ui/SocialModals"
@@ -10,16 +11,13 @@ import { useLangue, type Bilingue } from "@/lib/langue"
 import { cn } from "@/lib/utils"
 
 /**
- * Qui je suis, à la première personne. Chaque fait n'est dit qu'une fois sur
- * la page : le poste est dans le hero, l'employeur dans « Au travail », le
- * détail des projets dans « Sur mes projets ». Le chapeau ne fait qu'annoncer
- * ces deux terrains.
+ * Qui je suis : le pseudo, l'âge, le métier et les projets. L'employeur n'est
+ * jamais nommé : c'est privé.
  */
 const PRESENTATION: Bilingue = {
-  fr: "Mon pseudo de base, c'est Kaysuto, mais tout le monde m'appelle Kimiya : c'est plus simple à prononcer. Mon temps se partage entre deux terrains : mon poste en entreprise et mes propres projets.",
-  en: "My original handle is Kaysuto, but everyone calls me Kimiya: it's easier to say. My time is split between two fields: my job and my own projects.",
+  fr: "Mon pseudo de base, c'est Kaysuto, mais tout le monde m'appelle Kimiya : c'est plus simple à prononcer. J'ai 24 ans et ça fait plusieurs années que je travaille dans l'informatique. Au boulot, je suis informaticien polyvalent : support, parc, réseau et applis internes. Le reste du temps, je développe mes propres projets, que je dessine, code et mets en ligne moi-même.",
+  en: "My original handle is Kaysuto, but everyone calls me Kimiya: it's easier to say. I'm 24 and I've been working in IT for several years. At work, I'm an IT generalist: support, IT assets, network and internal apps. The rest of the time, I build my own projects, which I design, code and ship myself.",
 }
-
 /**
  * D'où vient chaque compétence. Deux diplômes, un poste en datacenter, et le
  * développement fullstack, le seul appris en autodidacte.
@@ -32,7 +30,10 @@ const PARCOURS: { quand: Bilingue; source: Bilingue; acquis: Bilingue }[] = [
   },
   {
     quand: { fr: "2022", en: "2022" },
-    source: { fr: "Titre pro assistant web marketing", en: "Web marketing assistant certification" },
+    source: {
+      fr: "Titre pro assistant web marketing, stage en marketing digital chez Naturopeps",
+      en: "Web marketing assistant certification, digital marketing internship at Naturopeps",
+    },
     acquis: { fr: "Le référencement et l'animation de communauté", en: "SEO and community management" },
   },
   {
@@ -47,48 +48,22 @@ const PARCOURS: { quand: Bilingue; source: Bilingue; acquis: Bilingue }[] = [
   },
 ]
 
-/** Trois aperçus en éventail sous « Sur mes projets » : ceux qui suivent le projet phare du hero. */
+/** Trois captures en éventail sous la présentation : celles qui suivent le projet phare du hero. */
 const APERCUS = projects.filter((projet) => projet.image_url).slice(1, 4)
 
-/** Inclinaison de chaque aperçu, au repos puis écarté au survol du bloc. */
+/** Inclinaison de chaque capture, au repos puis écartée au survol du lien. */
 const EVENTAIL = [
   "-rotate-8 -translate-x-12 translate-y-2 group-hover:-rotate-12 group-hover:-translate-x-20",
   "rotate-0 z-10 group-hover:-translate-y-2",
   "rotate-8 translate-x-12 translate-y-2 group-hover:rotate-12 group-hover:translate-x-20",
 ]
+const CARTE_EVENTAIL =
+  "absolute inset-0 m-auto aspect-[16/10] w-44 rounded-xl shadow-xl ring-1 ring-border transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
 
-const AU_TRAVAIL: Bilingue[] = [
-  { fr: "Support", en: "Support" },
-  { fr: "Applis internes", en: "Internal apps" },
-  { fr: "Parc", en: "IT assets" },
-  { fr: "Réseau", en: "Network" },
-  { fr: "Infra interne", en: "Internal infra" },
-]
-const SUR_MES_PROJETS: Bilingue[] = [
-  { fr: "Design", en: "Design" },
-  { fr: "Front", en: "Front" },
-  { fr: "Back", en: "Back" },
-  { fr: "Déploiement", en: "Deployment" },
-]
-
-/** Le filet au-dessus de chaque étape se trace de gauche à droite, à l'arrivée de l'étape. */
-const filet: Variants = {
+/** La ligne du parcours se trace de gauche à droite (de haut en bas sur mobile) avant que les étapes n'arrivent. */
+const trait: Variants = {
   hidden: { scaleX: 0 },
-  visible: { scaleX: 1, transition: { duration: 0.9, ease: EASE_OUT } },
-}
-
-/** Mots séparés par des points médians : une ligne de texte plutôt qu'une rangée de pastilles. */
-function Mots({ mots }: { mots: string[] }) {
-  return (
-    <p className="mt-4 text-sm text-foreground">
-      {mots.map((mot, index) => (
-        <span key={mot}>
-          {index > 0 && <span aria-hidden="true" className="text-muted-foreground"> · </span>}
-          {mot}
-        </span>
-      ))}
-    </p>
-  )
+  visible: { scaleX: 1, transition: { duration: 1.1, ease: EASE_OUT } },
 }
 
 function Intitule({ children }: { children: ReactNode }) {
@@ -112,21 +87,16 @@ export function AboutSection() {
         viewport={VIEWPORT}
         variants={staggerContainer}
       >
-        {/*
-          Mobile : titre, portrait, puis le texte. Grand écran : le portrait
-          occupe la colonne de gauche sur toute la hauteur et reste à l'écran
-          pendant qu'on lit la colonne de droite.
-        */}
-        <div className="grid items-start gap-y-8 lg:grid-cols-[25rem_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-18 lg:gap-y-0">
-          {/* L'écart vertical vient de la grille sur mobile, de la marge du titre sur grand écran. */}
+        {/* Mobile : titre, portrait, puis le texte. Grand écran : le portrait à gauche, le titre et les métiers à droite. */}
+        <div className="grid items-start gap-y-8 lg:grid-cols-[22rem_1fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-0">
           <SectionHeading
-            className="mb-0 md:mb-0 lg:col-start-2 lg:mb-10"
+            className="mb-0 md:mb-0 lg:col-start-2 lg:mb-8"
             title={t(<>À propos de <span className="text-accent-texte">moi</span></>, <>About <span className="text-accent-texte">me</span></>)}
           />
 
           <motion.figure
             variants={fadeInUp}
-            className="relative mx-auto w-full max-w-xs lg:sticky lg:top-28 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:max-w-none"
+            className="relative mx-auto w-full max-w-xs lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:max-w-none"
           >
             {/* Halo sable derrière le personnage, plus dense au niveau du buste. */}
             <div
@@ -158,80 +128,76 @@ export function AboutSection() {
           </motion.figure>
 
           <div className="lg:col-start-2">
-            <motion.div variants={fadeInUp}>
+            <motion.div variants={fadeInUp} className="mb-10">
               <ParagrapheRevele
                 key={langue}
                 texte={l(PRESENTATION)}
-                className="text-2xl font-normal leading-snug tracking-tight text-foreground text-pretty md:text-3xl md:leading-[1.25]"
+                className="max-w-[52ch] text-xl font-normal leading-relaxed tracking-tight text-foreground text-pretty md:text-2xl md:leading-[1.45]"
               />
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="mt-12">
-              <Intitule>{t("D'où vient ce que je sais faire", "Where my skills come from")}</Intitule>
-            </motion.div>
-            <motion.ol variants={staggerContainer} className="mt-4 border-b border-border">
-              {PARCOURS.map(({ quand, source, acquis }) => (
-                <motion.li
-                  key={source.fr}
-                  variants={fadeInUp}
-                  className="relative grid grid-cols-[6.5rem_1fr] gap-4 py-[1.125rem] sm:grid-cols-[8.25rem_1fr]"
-                >
-                  <motion.span aria-hidden="true" variants={filet} className="absolute inset-x-0 top-0 h-px origin-left bg-border" />
-                  <span className="pt-1.5 font-mono text-xs tabular-nums text-accent-texte">{l(quand)}</span>
-                  <div className="min-w-0">
-                    <p className="text-lg font-semibold tracking-tight text-foreground text-pretty md:text-xl">{l(acquis)}</p>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{l(source)}</p>
-                  </div>
-                </motion.li>
-              ))}
-            </motion.ol>
+            <motion.button
+              variants={fadeInUp}
+              type="button"
+              onClick={() => document.getElementById("projets")?.scrollIntoView({ behavior: "smooth" })}
+              className="group flex w-full items-center justify-between gap-8 rounded-sm border-t border-border pt-8 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span>
+                <span className="block font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                  {t("Ce que je construis", "What I build")}
+                </span>
+                <span className="mt-3 flex items-center gap-2 text-2xl font-semibold tracking-tight text-foreground">
+                  {t("Voir mes projets", "See my projects")}
+                  <ArrowRight className="size-5 text-accent-texte transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </span>
+              <span aria-hidden="true" className="relative hidden h-36 w-72 shrink-0 sm:block">
+                {APERCUS.map((projet, index) => (
+                  <img
+                    key={projet.id}
+                    src={projet.image_url}
+                    alt=""
+                    loading="lazy"
+                    className={cn(CARTE_EVENTAIL, EVENTAIL[index], "object-cover object-top")}
+                  />
+                ))}
+              </span>
+            </motion.button>
           </div>
         </div>
 
-        {/* Les deux terrains annoncés par le chapeau, côte à côte, séparés par un filet. */}
-        <div className="mt-16 grid gap-10 md:mt-18 md:grid-cols-[1fr_1.7fr] md:gap-14">
-          <motion.div variants={fadeInUp}>
-            <Intitule>
-              {t("Au travail", "At work")}
-              <span className="text-accent-texte"> · {t("depuis mai 2026", "since May 2026")}</span>
-            </Intitule>
-            <p className="mt-3.5 text-2xl font-semibold tracking-tight text-foreground text-balance">Magna Engineered Glass Europe</p>
-            <Mots mots={AU_TRAVAIL.map(l)} />
-          </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            className="group flex items-center justify-between gap-6 border-t border-border pt-10 md:border-t-0 md:border-l md:pt-0 md:pl-14"
-          >
-            <div>
-              <Intitule>{t("Sur mes projets", "On my own projects")}</Intitule>
-              <p className="mt-3.5 text-2xl font-semibold tracking-tight text-foreground text-balance">
-                {t("De l'idée à la mise en ligne", "From idea to launch")}
-              </p>
-              <p className="mt-2 max-w-[34ch] text-sm/relaxed text-muted-foreground">
-                {t(
-                  "Pas de ticket ni de validation : je décide, je dessine, je code et je déploie.",
-                  "No tickets, no sign-offs: I decide, design, code and ship."
-                )}
-              </p>
-              <Mots mots={SUR_MES_PROJETS.map(l)} />
-            </div>
-            <div aria-hidden="true" className="relative hidden h-36 w-72 shrink-0 sm:block">
-              {APERCUS.map((projet, index) => (
-                <img
-                  key={projet.id}
-                  src={projet.image_url}
-                  alt=""
-                  loading="lazy"
-                  className={cn(
-                    "absolute inset-0 m-auto aspect-[16/10] w-44 rounded-xl object-cover object-top shadow-xl ring-1 ring-border transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
-                    EVENTAIL[index]
-                  )}
-                />
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        {/*
+          Le parcours, en frise sur toute la largeur : une ligne qui se trace,
+          un point par étape. Sur mobile, la frise devient verticale. La
+          dernière étape n'est pas finie : son point bat doucement.
+        */}
+        <motion.div variants={fadeInUp} className="mt-16 md:mt-20">
+          <Intitule>{t("Mon parcours", "My background")}</Intitule>
+        </motion.div>
+        <motion.ol
+          variants={staggerContainer}
+          className="relative mt-8 grid gap-8 before:absolute before:inset-y-1 before:left-[5px] before:w-px before:bg-border sm:grid-cols-2 sm:before:hidden lg:grid-cols-4 lg:gap-6"
+        >
+          <motion.span
+            aria-hidden="true"
+            variants={trait}
+            className="absolute inset-x-0 top-[5px] hidden h-px origin-left bg-border sm:block"
+          />
+          {PARCOURS.map(({ quand, source, acquis }, index) => {
+            const enCours = index === PARCOURS.length - 1
+            return (
+              <motion.li key={source.fr} variants={fadeInUp} className="relative pl-8 sm:pl-0 sm:pt-9">
+                <span aria-hidden="true" className="absolute left-0 top-1 grid size-[11px] place-items-center sm:top-0">
+                  {enCours && <span className="absolute inset-0 rounded-full bg-accent/60 motion-safe:animate-ping" />}
+                  <span className="relative size-[11px] rounded-full bg-accent ring-4 ring-background" />
+                </span>
+                <p className="font-mono text-xs tabular-nums text-accent-texte">{l(quand)}</p>
+                <p className="mt-2 text-lg font-semibold tracking-tight text-foreground text-balance md:text-xl">{l(acquis)}</p>
+                <p className="mt-1.5 max-w-[32ch] text-sm/relaxed text-muted-foreground text-pretty">{l(source)}</p>
+              </motion.li>
+            )
+          })}
+        </motion.ol>
       </motion.div>
 
       <GitHubModal isOpen={modale === "github"} onClose={() => setModale(null)} />
