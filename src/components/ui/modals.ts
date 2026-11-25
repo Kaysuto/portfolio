@@ -1,6 +1,6 @@
 export { Modal } from './Modal';
 export { ExternalLinkModal } from './ExternalLinkModal';
-export { DemoModal } from './ProjectModal';
+export { ProjectModal } from './ProjectModal';
 export { GitHubModal } from './GitHubModal';
 export { DiscordModal } from './DiscordModal';
 export { KofiModal } from './KofiModal';

@@ -1,15 +1,11 @@
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import { ArrowUpRight, Rocket } from "lucide-react"
-import { GithubLogo as Github } from "@phosphor-icons/react"
 import { motion, useReducedMotion, type Variants } from "framer-motion"
-import { DemoModal } from "@/components/ui/ProjectModal"
-import { ExternalLinkModal } from "@/components/ui/ExternalLinkModal"
+import { ProjectModal } from "@/components/ui/ProjectModal"
 import { projects, type Project } from "@/data/projects"
 import { useLangue } from "@/lib/langue"
 import { EASE_OUT, fadeInUp, staggerContainer, VIEWPORT } from "@/lib/animations"
 import { cn } from "@/lib/utils"
-
-type Cible = "demo" | "github"
 
 const grille = staggerContainer
 const carte = fadeInUp
@@ -20,10 +16,16 @@ const volet: Variants = {
 }
 
 /**
- * Cartes larges selon la place : en trois colonnes, rangées large + étroite, trois étroites,
- * large + étroite ; en deux colonnes, seule la première est large pour que les autres tombent par paires.
+ * Cartes larges selon la place. En trois colonnes, les rangées alternent
+ * large + étroite, étroite + large, large + étroite. En deux colonnes, la
+ * première et la dernière prennent toute la largeur, les quatre autres vont par paires.
  */
-const LARGEUR: Record<number, string> = { 0: "sm:col-span-2", 5: "lg:col-span-2" }
+const LARGEUR: Record<number, string> = {
+  0: "sm:col-span-2",
+  3: "lg:col-span-2",
+  4: "lg:col-span-2",
+  5: "sm:col-span-2 lg:col-span-1",
+}
 
 /** Toute la carte est cliquable : le pseudo-élément du lien principal la recouvre. */
 const LIEN_PRINCIPAL =
@@ -32,7 +34,7 @@ const LIEN_PRINCIPAL =
 interface CarteProps {
   project: Project
   className?: string
-  onOuvrir: (project: Project, cible: Cible) => void
+  onOuvrir: (project: Project) => void
 }
 
 function CarteProjet({ project, className, onOuvrir }: CarteProps) {
@@ -75,30 +77,14 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
             {l(project.type)} · {new Date(project.created_at).getFullYear()}
           </p>
           <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
-            {project.demo_url ? (
-              <button type="button" onClick={() => onOuvrir(project, "demo")} className={cn(LIEN_PRINCIPAL, "text-left")}>
-                {project.title}
-              </button>
-            ) : (
-              <button type="button" onClick={() => onOuvrir(project, "github")} className={cn(LIEN_PRINCIPAL, "text-left")}>
-                {project.title}
-                <span className="sr-only">{t(" (dépôt GitHub)", " (GitHub repository)")}</span>
-              </button>
-            )}
+            <button type="button" onClick={() => onOuvrir(project)} className={cn(LIEN_PRINCIPAL, "text-left")}>
+              {project.title}
+              <span className="sr-only">{t(" : voir la fiche du projet", ": view project details")}</span>
+            </button>
           </h3>
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          {project.demo_url && project.github_url && (
-            <button
-              type="button"
-              onClick={() => onOuvrir(project, "github")}
-              aria-label={t(`Dépôt GitHub de ${project.title}`, `${project.title} GitHub repository`)}
-              className="relative z-20 flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <Github size={18} />
-            </button>
-          )}
           <span
             aria-hidden="true"
             className="flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-[rotate,background-color,color] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/carte:rotate-45 group-hover/carte:bg-white group-hover/carte:text-black"
@@ -112,20 +98,14 @@ function CarteProjet({ project, className, onOuvrir }: CarteProps) {
 }
 
 export function ProjectCards() {
-  // Toute sortie du site passe par une confirmation : la démo comme le dépôt GitHub.
-  const [ouverture, setOuverture] = useState<{ projet: Project; cible: Cible } | null>(null)
-  const [afficherModale, setAfficherModale] = useState(false)
-  const { t } = useLangue()
+  // Le dernier projet ouvert reste en mémoire : la fiche garde son contenu pendant l'animation de fermeture.
+  const [projet, setProjet] = useState<Project | null>(null)
+  const [ouvert, setOuvert] = useState(false)
 
-  const gererOuverture = useCallback((projet: Project, cible: Cible) => {
-    setOuverture({ projet, cible })
-    setAfficherModale(true)
-  }, [])
-
-  const gererFermetureModale = useCallback(() => {
-    setAfficherModale(false)
-    setTimeout(() => setOuverture(null), 500)
-  }, [])
+  const ouvrir = (choisi: Project) => {
+    setProjet(choisi)
+    setOuvert(true)
+  }
 
   return (
     <>
@@ -136,25 +116,12 @@ export function ProjectCards() {
         whileInView="visible"
         viewport={VIEWPORT}
       >
-        {projects.map((projet, index) => (
-          <CarteProjet key={projet.id} project={projet} className={LARGEUR[index]} onOuvrir={gererOuverture} />
+        {projects.map((choisi, index) => (
+          <CarteProjet key={choisi.id} project={choisi} className={LARGEUR[index]} onOuvrir={ouvrir} />
         ))}
       </motion.div>
 
-      <DemoModal
-        isOpen={afficherModale && ouverture?.cible === "demo"}
-        onClose={gererFermetureModale}
-        projectTitle={ouverture?.projet.title ?? ""}
-        projectUrl={ouverture?.projet.demo_url ?? ""}
-      />
-      <ExternalLinkModal
-        isOpen={afficherModale && ouverture?.cible === "github"}
-        onClose={gererFermetureModale}
-        icon={<Github className="size-6 text-accent-texte" />}
-        title={ouverture?.projet.title ?? ""}
-        subtitle={t("Voir le dépôt sur GitHub", "View the repository on GitHub")}
-        url={ouverture?.projet.github_url ?? ""}
-      />
+      <ProjectModal isOpen={ouvert} onClose={() => setOuvert(false)} project={projet} />
     </>
   )
 }
