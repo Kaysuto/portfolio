@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Layers } from "lucide-react"
 import { TechModal } from "@/components/ui/TechModal"
 import { LogoLoop, type Logo } from "@/components/ui/LogoLoop"
 import { SectionHeading, RailLabel } from "@/components/ui/SectionHeading"
@@ -137,8 +136,8 @@ export function StackSection() {
         <SectionHeading
           title={t(<>Ma <span className="text-accent-texte">stack</span></>, <>My <span className="text-accent-texte">stack</span></>)}
           lead={t(
-            "Ce avec quoi je travaille, rangé par couche, du front jusqu'à l'infrastructure.",
-            "What I work with, sorted by layer, from the frontend down to the infrastructure."
+            "Ce que j'utilise pour construire mes projets et les faire tourner.",
+            "What I use to build my projects and keep them running."
           )}
           className="mb-8"
         />
@@ -204,14 +203,6 @@ export function StackSection() {
               ))}
             </ol>
           </div>
-
-          <p className="mt-10 max-w-2xl text-balance text-base md:text-lg text-muted-foreground leading-relaxed">
-            <Layers className="inline size-4 mr-2 -mt-1 text-accent-texte" aria-hidden="true" />
-            {t(
-              "J'aime comprendre la couche du dessous avant de choisir celle du dessus. Les serveurs, je ne les connais pas que dans le cloud : j'en ai installé et réparé de mes mains.",
-              "I like to understand the layer below before choosing the one above. I don't just know servers from the cloud: I've installed and repaired them with my own hands."
-            )}
-          </p>
         </motion.div>
 
         {/* L'atelier : les outils, hors de la pile */}
@@ -223,26 +214,38 @@ export function StackSection() {
 
           <p className="mt-4 max-w-2xl text-sm/relaxed text-muted-foreground md:text-base/relaxed">{l(ATELIER.resume)}</p>
 
-          {/* Une grille d'outils plutôt qu'une carte de plus : chaque outil a sa case. */}
-          <ul className="mt-8 grid w-full grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {/*
+            Une case par outil : l'icône dans sa pastille, en couleur, puis le
+            nom et l'usage. Cinq colonnes sur grand écran, soit trois rangées pleines.
+          */}
+          <ul className="mt-8 grid w-full grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {ATELIER.techs.map((tech) => (
               <motion.li key={tech.name} variants={fadeInUp}>
                 <button
                   type="button"
                   onClick={() => gererClicTech(tech)}
-                  className="group flex w-full flex-col items-start gap-6 rounded-xl border border-border bg-card p-4 text-left transition-[border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group relative flex h-full w-full items-center gap-3.5 overflow-hidden rounded-xl border border-border bg-card p-3.5 text-left transition-[border-color,translate,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <img
-                    src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
-                    alt=""
+                  {/* Lueur d'accent qui monte du coin au survol. */}
+                  <span
                     aria-hidden="true"
-                    loading="lazy"
-                    className={`size-6 object-contain opacity-80 grayscale transition-[filter,opacity] group-hover:opacity-100 group-hover:filter-none ${
-                      // Les logos Simple Icons sont des silhouettes : en sombre, on les passe en blanc pour que les marques noires (GitHub, OBS) restent visibles. Les images matricielles, elles, ont leur propre fond.
-                      classeIcone(tech)
-                    }`}
+                    className="pointer-events-none absolute -left-6 -top-6 size-20 rounded-full bg-accent/25 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
                   />
-                  <span className="text-sm font-medium text-foreground">{tech.name}</span>
+                  <span className="relative grid size-11 shrink-0 place-items-center rounded-lg bg-muted ring-1 ring-foreground/5 transition-colors group-hover:bg-background">
+                    <img
+                      src={tech.iconUrl || `https://cdn.simpleicons.org/${tech.slug}`}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      className={`size-6 object-contain transition-[scale] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110 ${classeIcone(tech)}`}
+                    />
+                  </span>
+                  <span className="relative min-w-0">
+                    <span className="block truncate text-sm font-semibold text-foreground">{tech.name}</span>
+                    {tech.usage && (
+                      <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{l(tech.usage)}</span>
+                    )}
+                  </span>
                 </button>
               </motion.li>
             ))}

@@ -63,17 +63,13 @@ export function PortfolioApp() {
             "@type": "Person",
             "name": "Kimiya",
             "jobTitle": "Informaticien Polyvalent",
-            "description": `Informaticien Polyvalent chez Magna Engineered Glass Europe, qui conçoit et met en ligne ses propres projets. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.`,
+            "description": `Informaticien polyvalent expérimenté, qui conçoit et met en ligne ses propres projets. Électrotechnicien de formation (BAC PRO MELEC) et assistant web marketing (titre professionnel BAC+2), trois ans d'exploitation en datacenter pour les systèmes et réseaux, et treize ans de développement fullstack en autodidacte.`,
             "url": "https://kaysuto.fr",
             "sameAs": [
               "https://github.com/kaysuto",
               "https://www.linkedin.com/in/enzo-lauret/"
             ],
-            "knowsAbout": ["React", "TypeScript", "Node.js", "Redis", "MySQL", "Docker", "Réseau", "Systèmes", "IoT", "SEO", "Community Management", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"],
-            "worksFor": {
-              "@type": "Organization",
-              "name": "Magna Engineered Glass Europe"
-            }
+            "knowsAbout": ["React", "TypeScript", "Node.js", "Redis", "MySQL", "Docker", "Réseau", "Systèmes", "IoT", "SEO", "Community Management", "Pixel Art", "Minecraft", "Programmation", "Full-Stack Development"]
           })
         }}
       />
