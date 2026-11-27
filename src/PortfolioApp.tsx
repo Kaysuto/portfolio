@@ -1,6 +1,6 @@
 import { HeroSection } from "@/components/HeroSection"
 import { useEffect } from "react"
-import { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense, AboutSectionSkeleton, StackSectionSkeleton, ProjectsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
+import { AboutSection, StackSection, ProjectsSection, LoisirsSection, ContactSection, Suspense, AboutSectionSkeleton, StackSectionSkeleton, ProjectsSectionSkeleton, LoisirsSectionSkeleton, ContactSectionSkeleton } from "@/components/LazyComponents"
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useLangue } from "@/lib/langue";
 
@@ -48,6 +48,9 @@ export function PortfolioApp() {
       </Suspense>
       <Suspense fallback={<ProjectsSectionSkeleton />}>
         <ProjectsSection />
+      </Suspense>
+      <Suspense fallback={<LoisirsSectionSkeleton />}>
+        <LoisirsSection />
       </Suspense>
       <Suspense fallback={<ContactSectionSkeleton />}>
         <ContactSection />

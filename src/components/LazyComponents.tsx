@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 const AboutSection = lazy(() => import('./AboutSection').then(module => ({ default: module.AboutSection })))
 const StackSection = lazy(() => import('./StackSection').then(module => ({ default: module.StackSection })))
 const ProjectsSection = lazy(() => import('./ProjectsSection').then(module => ({ default: module.ProjectsSection })))
+const LoisirsSection = lazy(() => import('./LoisirsSection').then(module => ({ default: module.LoisirsSection })))
 const ContactSection = lazy(() => import('./ContactSection').then(module => ({ default: module.ContactSection })))
 
 /** Même gabarit que la section : portrait à gauche, titre, chapeau et parcours à droite. */
@@ -77,10 +78,11 @@ function ContactSkeleton() {
   )
 }
 
-export { AboutSection, StackSection, ProjectsSection, ContactSection, Suspense }
+export { AboutSection, StackSection, ProjectsSection, LoisirsSection, ContactSection, Suspense }
 export {
   AboutSkeleton as AboutSectionSkeleton,
   StackSkeleton as StackSectionSkeleton,
   ProjectsSkeleton as ProjectsSectionSkeleton,
+  StackSkeleton as LoisirsSectionSkeleton,
   ContactSkeleton as ContactSectionSkeleton
 }
