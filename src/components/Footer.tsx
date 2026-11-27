@@ -36,6 +36,7 @@ const SECTIONS_ACCUEIL: { id: string; label: Bilingue }[] = [
   { id: "apropos", label: { fr: "À propos", en: "About" } },
   { id: "stack", label: { fr: "Stack", en: "Stack" } },
   { id: "projets", label: { fr: "Projets", en: "Projects" } },
+  { id: "loisirs", label: { fr: "Loisirs", en: "Hobbies" } },
   { id: "contact", label: { fr: "Contact", en: "Contact" } },
 ]
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { motion, useScroll, useSpring } from "framer-motion"
-import { User, Layers, FolderOpen, Mail, FileText, BookOpen } from "lucide-react"
+import { User, Layers, FolderOpen, Gamepad2, Mail, FileText, BookOpen } from "lucide-react"
 import { ThemeController } from "./ThemeController"
 import { LangueController } from "./LangueController"
 import { useLangue, type Bilingue } from "@/lib/langue"
@@ -16,6 +16,7 @@ const LIENS_DEFILEMENT: NavLink[] = [
   { href: "#apropos", id: "apropos", label: { fr: "À propos", en: "About" }, icon: User },
   { href: "#stack", id: "stack", label: { fr: "Stack", en: "Stack" }, icon: Layers },
   { href: "#projets", id: "projets", label: { fr: "Projets", en: "Projects" }, icon: FolderOpen },
+  { href: "#loisirs", id: "loisirs", label: { fr: "Loisirs", en: "Hobbies" }, icon: Gamepad2 },
   { href: "#contact", id: "contact", label: { fr: "Contact", en: "Contact" }, icon: Mail },
 ]
 
@@ -25,12 +26,12 @@ const LIENS_ROUTES: NavLink[] = [
 ]
 
 /**
- * La barre d'onglets mobile n'a pas de « Stack » : avec la langue et le thème,
- * il aurait fait une huitième cellule où plus aucun libellé ne tient. La section garde sa
- * place dans l'espion de défilement et dans la barre desktop, et le pied de
- * page en donne le raccourci.
+ * La barre d'onglets mobile n'a ni « Stack » ni « Loisirs » : avec la langue et
+ * le thème, ils auraient fait des cellules où plus aucun libellé ne tient. Les
+ * sections gardent leur place dans l'espion de défilement et dans la barre
+ * desktop, et le pied de page en donne le raccourci.
  */
-const LIENS_MOBILE = [...LIENS_DEFILEMENT.filter(lien => lien.id !== "stack"), ...LIENS_ROUTES]
+const LIENS_MOBILE = [...LIENS_DEFILEMENT.filter(lien => lien.id !== "stack" && lien.id !== "loisirs"), ...LIENS_ROUTES]
 
 /** Entrée de la barre desktop, partagée par le groupe d'ancres et celui des pages. */
 function LienNav({
